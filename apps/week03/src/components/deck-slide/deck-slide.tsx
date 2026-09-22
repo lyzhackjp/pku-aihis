@@ -1,26 +1,32 @@
-import { Component, h, Prop, Element } from '@stencil/core';
+import { Component, h, Prop, Element } from "@stencil/core";
 
 @Component({
-  tag: 'deck-slide',
-  styleUrl: 'deck-slide.css',
+  tag: "deck-slide",
+  styleUrl: "deck-slide.css",
   shadow: false,
 })
 export class DeckSlide {
   @Element() el: HTMLElement;
 
-  @Prop() slideId: string = '';
-  @Prop() layout: 'hero' | 'split' | 'grid' | 'pipeline' | 'interactive' | 'normal' = 'normal';
-  @Prop() theme: 'light' | 'dark' | 'accent' = 'light';
-  @Prop() headerTitle: string = '';
-  @Prop() kicker: string = '';
-  @Prop() notes: string = '';
+  @Prop() slideId: string = "";
+  @Prop() layout:
+    | "hero"
+    | "split"
+    | "grid"
+    | "pipeline"
+    | "interactive"
+    | "normal" = "normal";
+  @Prop() theme: "light" | "dark" | "accent" = "light";
+  @Prop() headerTitle: string = "";
+  @Prop() kicker: string = "";
+  @Prop() notes: string = "";
   @Prop() duration: number = 2; // suggested minutes
 
   render() {
     return (
       <section
         class={{
-          'slide-page': true,
+          "slide-page": true,
           [`theme-${this.theme}`]: true,
           [`layout-${this.layout}`]: true,
         }}
@@ -30,8 +36,12 @@ export class DeckSlide {
           {/* Header Zone if title or kicker is provided */}
           {(this.headerTitle || this.kicker) && (
             <header class="slide-header">
-              {this.kicker && <div class="slide-kicker mono">{this.kicker}</div>}
-              {this.headerTitle && <h1 class="slide-title">{this.headerTitle}</h1>}
+              {this.kicker && (
+                <div class="slide-kicker mono">{this.kicker}</div>
+              )}
+              {this.headerTitle && (
+                <h1 class="slide-title">{this.headerTitle}</h1>
+              )}
               <div class="slide-header-actions">
                 <slot name="header-actions"></slot>
               </div>

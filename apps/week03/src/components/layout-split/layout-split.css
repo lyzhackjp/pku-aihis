@@ -31,7 +31,8 @@ layout-split {
   grid-template-columns: 3fr 1fr;
 }
 
-.split-left, .split-right {
+.split-left,
+.split-right {
   display: flex;
   flex-direction: column;
   height: 100%;

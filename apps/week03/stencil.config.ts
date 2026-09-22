@@ -1,28 +1,9 @@
 import { Config } from '@stencil/core';
-
 export const config: Config = {
-  namespace: 'deck',
-  globalStyle: 'src/global/app.css',
-  outputTargets: [
-    {
-      type: 'dist',
-      esmLoaderPath: '../loader',
-    },
-    {
-      type: 'dist-custom-elements',
-      customElementsExportBehavior: 'auto-define-custom-elements',
-      externalRuntime: false,
-    },
-    {
-      type: 'www',
-      serviceWorker: null,
-      copy: [
-        { src: 'assets', dest: 'assets', keepDirStructure: false }
-      ]
-    },
-  ],
-  devServer: {
-    reloadStrategy: 'pageReload',
-    port: 3333,
-  },
+ namespace: 'week03', globalStyle: 'src/global/app.css',
+ outputTargets: [{type:'www',serviceWorker:null,baseUrl:'/pku-aihis/week03/',copy:[
+  {src:'assets',dest:'assets',keepDirStructure:false},
+  {src:'coi-serviceworker.js',dest:'coi-serviceworker.js'},
+  {src:'bootstrap.js',dest:'bootstrap.js'}]}],
+ devServer:{reloadStrategy:'pageReload',port:3333},
 };

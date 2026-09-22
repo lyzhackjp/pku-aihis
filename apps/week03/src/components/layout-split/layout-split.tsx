@@ -1,12 +1,12 @@
-import { Component, h, Prop } from '@stencil/core';
+import { Component, h, Prop } from "@stencil/core";
 
 @Component({
-  tag: 'layout-split',
-  styleUrl: 'layout-split.css',
+  tag: "layout-split",
+  styleUrl: "layout-split.css",
   shadow: false,
 })
 export class LayoutSplit {
-  @Prop() ratio: '1-1' | '1-2' | '2-1' | '1-3' | '3-1' = '1-1';
+  @Prop() ratio: "1-1" | "1-2" | "2-1" | "1-3" | "3-1" = "1-1";
 
   render() {
     return (

@@ -1,238 +1,151 @@
-import { Component, h, State, Element, Listen, Prop } from '@stencil/core';
-
+import { Component, h, State, Element, Listen } from "@stencil/core";
+const CHANNEL = "pku-aihis-week03-20260922";
 @Component({
-  tag: 'deck-container',
-  styleUrl: 'deck-container.css',
+  tag: "deck-container",
+  styleUrl: "deck-container.css",
   shadow: false,
 })
 export class DeckContainer {
   @Element() el: HTMLElement;
-
-  @Prop() deckTitle: string = '高密度技术课件';
-  @Prop() autoSync: boolean = true;
-
-  @State() currentIndex: number = 0;
-  @State() totalSlides: number = 0;
-  @State() isOverviewOpen: boolean = false;
-  @State() isLowPower: boolean = false;
-
-  private channel: BroadcastChannel | null = null;
+  @State() current = 0;
+  @State() overview = false;
+  @State() total = 0;
+  @State() titles: any[] = [];
   private slides: HTMLElement[] = [];
-
-  componentWillLoad() {
-    if (typeof window !== 'undefined' && 'BroadcastChannel' in window && this.autoSync) {
-      this.channel = new BroadcastChannel('courseware_channel');
-      this.channel.onmessage = (event) => {
-        if (event.data && event.data.type === 'NAVIGATE') {
-          this.goToSlide(event.data.index, false);
-        }
-      };
-    }
-  }
-
+  private channel: BroadcastChannel;
   componentDidLoad() {
-    this.updateSlides();
-    this.initFromHash();
-
-    // Check query param for presenter mode
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('presenter') === 'true') {
-      this.openPresenterWindow();
-    }
+    this.slides = [...this.el.querySelectorAll("deck-slide")] as HTMLElement[];
+    this.total = this.slides.length;
+    this.titles = this.slides.map((s) => ({
+      id: s.getAttribute("slide-id"),
+      title: s.getAttribute("header-title"),
+      section: s.getAttribute("kicker"),
+    }));
+    this.channel = new BroadcastChannel(CHANNEL);
+    this.channel.onmessage = (e) => {
+      if (e.data.type === "REQUEST") this.sync();
+      if (e.data.type === "NAV") this.go(e.data.id);
+    };
+    this.go(location.hash.slice(1) || "D00");
   }
-
   disconnectedCallback() {
-    if (this.channel) {
-      this.channel.close();
-    }
+    this.channel?.close();
   }
-
-  private updateSlides() {
-    this.slides = Array.from(this.el.querySelectorAll('deck-slide'));
-    this.totalSlides = this.slides.length;
-    this.slides.forEach((slide, index) => {
-      slide.setAttribute('data-index', String(index));
-      slide.style.display = index === this.currentIndex ? 'block' : 'none';
+  private sync() {
+    this.channel?.postMessage({
+      type: "STATE",
+      index: this.current,
+      ...this.titles[this.current],
+      next: this.titles[this.current + 1],
+      notes: this.slides[this.current]?.getAttribute("notes"),
+      total: this.total,
     });
   }
-
-  private initFromHash() {
-    const hash = window.location.hash.replace('#', '');
-    const pageNum = parseInt(hash, 10);
-    if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= this.totalSlides) {
-      this.goToSlide(pageNum - 1, false);
-    } else {
-      this.goToSlide(0, false);
-    }
-  }
-
-  private goToSlide(index: number, broadcast: boolean = true) {
-    if (index < 0 || index >= this.totalSlides) return;
-    this.currentIndex = index;
-    window.location.hash = String(index + 1);
-
-    this.slides.forEach((slide, idx) => {
-      slide.style.display = idx === index ? 'block' : 'none';
-      if (idx === index) {
-        slide.dispatchEvent(new CustomEvent('slideActive', { bubbles: true }));
-      }
+  private go(id: string | number) {
+    const i =
+      typeof id === "number" ? id : this.titles.findIndex((s) => s.id === id);
+    if (i < 0 || i >= this.slides.length) return;
+    this.current = i;
+    this.slides.forEach((s, j) => {
+      s.style.display = i === j ? "block" : "none";
     });
-
-    if (broadcast && this.channel) {
-      this.channel.postMessage({
-        type: 'NAVIGATE',
-        index: this.currentIndex,
-        total: this.totalSlides,
-        slideId: this.slides[index]?.getAttribute('slide-id') || `slide-${index + 1}`,
-        title: this.slides[index]?.getAttribute('header-title') || `Slide #${index + 1}`,
-        notes: this.slides[index]?.getAttribute('notes') || '（无演讲备注）',
-        nextTitle: this.slides[index + 1]?.getAttribute('header-title') || '（演讲结束）',
-      });
-    }
+    history.replaceState(null, "", "#" + this.titles[i].id);
+    this.overview = false;
+    this.sync();
   }
-
-  @Listen('keydown', { target: 'window' })
-  handleKeyDown(ev: KeyboardEvent) {
-    // Ignore when typing inside an input, textarea, or contenteditable
-    const active = document.activeElement;
-    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.getAttribute('contenteditable') === 'true')) {
+  @Listen("hashchange", { target: "window" }) hash() {
+    this.go(location.hash.slice(1));
+  }
+  @Listen("keydown", { target: "window" }) key(e: KeyboardEvent) {
+    if (
+      e.isComposing ||
+      e
+        .composedPath()
+        .some((x: any) =>
+          x?.matches?.(
+            "input,textarea,select,button,a[href],summary,[contenteditable=true]",
+          ),
+        )
+    )
       return;
+    if (this.overview && e.key !== "Escape") return;
+    const map = {
+      ArrowRight: 1,
+      PageDown: 1,
+      " ": 1,
+      ArrowLeft: -1,
+      PageUp: -1,
+    };
+    if (map[e.key]) {
+      e.preventDefault();
+      this.go(this.current + map[e.key]);
     }
-
-    switch (ev.key) {
-      case 'ArrowRight':
-      case 'PageDown':
-      case ' ':
-        ev.preventDefault();
-        this.goToSlide(this.currentIndex + 1);
-        break;
-      case 'ArrowLeft':
-      case 'PageUp':
-        ev.preventDefault();
-        this.goToSlide(this.currentIndex - 1);
-        break;
-      case 'Home':
-        ev.preventDefault();
-        this.goToSlide(0);
-        break;
-      case 'End':
-        ev.preventDefault();
-        this.goToSlide(this.totalSlides - 1);
-        break;
-      case 'Escape':
-      case 'o':
-      case 'O':
-        ev.preventDefault();
-        this.isOverviewOpen = !this.isOverviewOpen;
-        break;
-      case 'p':
-      case 'P':
-        ev.preventDefault();
-        this.openPresenterWindow();
-        break;
-      case 'b':
-      case 'B':
-        ev.preventDefault();
-        this.isLowPower = !this.isLowPower;
-        document.body.classList.toggle('low-power', this.isLowPower);
-        break;
-      case 'f':
-      case 'F':
-        ev.preventDefault();
-        this.toggleFullscreen();
-        break;
-    }
+    if (e.key === "Home") this.go(0);
+    if (e.key === "End") this.go(this.total - 1);
+    if (e.key === "Escape") this.overview = !this.overview;
+    if (e.key.toLowerCase() === "p") this.presenter();
+    if (e.key.toLowerCase() === "b")
+      document.body.classList.toggle("low-power");
   }
-
-  private toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
-    } else {
-      document.exitFullscreen().catch(() => {});
-    }
+  private presenter() {
+    const url = new URL(location.href);
+    url.searchParams.set("presenter", "1");
+    window.open(url.href, "week03-presenter", "width=1150,height=780");
+    setTimeout(() => this.sync(), 800);
   }
-
-  private openPresenterWindow() {
-    const presenterUrl = `${window.location.pathname}?presenter_view=true#${this.currentIndex + 1}`;
-    window.open(presenterUrl, 'deck_presenter_window', 'width=1100,height=750,menubar=no,toolbar=no');
-  }
-
   render() {
-    const progress = this.totalSlides > 0 ? ((this.currentIndex + 1) / this.totalSlides) * 100 : 0;
-    const currentSlideEl = this.slides[this.currentIndex];
-    const currentTitle = currentSlideEl?.getAttribute('header-title') || this.deckTitle;
-
     return (
-      <div class={{ 'deck-wrapper': true, 'low-power-mode': this.isLowPower }}>
-        {/* Top Progress Line */}
-        <div class="deck-progress-bar">
-          <div class="deck-progress-fill" style={{ width: `${progress}%` }}></div>
+      <div class="deck-shell">
+        <div class="deck-top">
+          <a href="../">PKU / AI × HISTORY</a>
+          <span>第三周 · 检索与证据</span>
+          <button onClick={() => (this.overview = !this.overview)}>
+            课程地图
+          </button>
+          <button onClick={() => this.presenter()}>演讲者视图 ↗</button>
         </div>
-
-        {/* Main Slide Stage */}
-        <main class="deck-stage">
-          <slot></slot>
+        <main>
+          <slot />
         </main>
-
-        {/* Bottom Control & Status Bar */}
-        <footer class="deck-statusbar">
-          <div class="status-left">
-            <span class="deck-badge mono">PKU-AIHIS</span>
-            <span class="deck-title-text">{currentTitle}</span>
-          </div>
-
-          <div class="status-center mono">
-            <button class="nav-btn" onClick={() => this.goToSlide(this.currentIndex - 1)} disabled={this.currentIndex === 0}>
-              ←
-            </button>
-            <span class="slide-counter">
-              {String(this.currentIndex + 1).padStart(2, '0')} / {String(this.totalSlides).padStart(2, '0')}
-            </span>
-            <button class="nav-btn" onClick={() => this.goToSlide(this.currentIndex + 1)} disabled={this.currentIndex === this.totalSlides - 1}>
-              →
-            </button>
-          </div>
-
-          <div class="status-right">
-            <button class="status-tool-btn" title="概览 (ESC)" onClick={() => (this.isOverviewOpen = true)}>
-              <span class="mono">[O] 概览</span>
-            </button>
-            <button class="status-tool-btn" title="演讲者视图 (P)" onClick={() => this.openPresenterWindow()}>
-              <span class="mono">[P] 演讲者</span>
-            </button>
-            <button class="status-tool-btn" title="全屏 (F)" onClick={() => this.toggleFullscreen()}>
-              <span class="mono">[F]</span>
-            </button>
-          </div>
-        </footer>
-
-        {/* Overview Grid Overlay */}
-        {this.isOverviewOpen && (
-          <div class="overview-modal" onClick={() => (this.isOverviewOpen = false)}>
-            <div class="overview-header" onClick={(e) => e.stopPropagation()}>
-              <h2>课件总览 ({this.totalSlides} 页)</h2>
-              <button class="close-btn" onClick={() => (this.isOverviewOpen = false)}>✕</button>
+        <nav class="deck-nav">
+          <button
+            aria-label="上一页"
+            disabled={!this.current}
+            onClick={() => this.go(this.current - 1)}
+          >
+            ← 上一页
+          </button>
+          <span>
+            <b>{this.titles[this.current]?.id}</b>　{this.current + 1} /{" "}
+            {this.total}　
+            <span class="nav-hint">方向键翻页 · P 备注 · B 静态</span>
+          </span>
+          <button
+            aria-label="下一页"
+            disabled={this.current === this.total - 1}
+            onClick={() => this.go(this.current + 1)}
+          >
+            下一页 →
+          </button>
+        </nav>
+        {this.overview && (
+          <div class="overview" role="dialog" aria-label="课程地图">
+            <div class="overview-top">
+              <h2>沿着材料流动的方向</h2>
+              <button onClick={() => (this.overview = false)}>关闭 ×</button>
             </div>
-            <div class="overview-grid" onClick={(e) => e.stopPropagation()}>
-              {this.slides.map((slide, idx) => {
-                const title = slide.getAttribute('header-title') || `Slide ${idx + 1}`;
-                const layout = slide.getAttribute('layout') || 'normal';
-                return (
-                  <div
-                    class={{ 'overview-card': true, 'active': idx === this.currentIndex }}
-                    onClick={() => {
-                      this.goToSlide(idx);
-                      this.isOverviewOpen = false;
-                    }}
-                  >
-                    <div class="card-meta mono">
-                      <span>#{String(idx + 1).padStart(2, '0')}</span>
-                      <span class="card-layout-tag">{layout}</span>
-                    </div>
-                    <div class="card-title">{title}</div>
-                  </div>
-                );
-              })}
+            <div class="overview-grid">
+              {this.titles.map((s, i) => (
+                <button
+                  class={i === this.current ? "selected" : ""}
+                  onClick={() => this.go(i)}
+                >
+                  <small>
+                    {s.id} · {s.section}
+                  </small>
+                  <strong>{s.title}</strong>
+                </button>
+              ))}
             </div>
           </div>
         )}
