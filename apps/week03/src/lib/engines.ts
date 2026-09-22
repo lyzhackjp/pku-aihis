@@ -137,6 +137,10 @@ export async function embed(text: string, onProgress?: (s: string) => void) {
       );
       env.allowLocalModels = false;
       env.backends.onnx.wasm.numThreads = 1;
+      env.backends.onnx.wasm.wasmPaths = new URL(
+        "assets/vendor/transformers/",
+        document.baseURI,
+      ).href;
       return pipeline("feature-extraction", manifest.model, {
         revision: manifest.revision,
         dtype: "q8",
