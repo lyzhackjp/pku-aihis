@@ -1,6 +1,6 @@
 # 重算课堂向量
 
-先按根目录说明安装 `apps/week03` 的锁定 Node 依赖。模型的固定修订及文件散列在 models.json；下载约380MB，权重不进入Git。Python图像程序需要 `requests==2.32.5`、`onnxruntime==1.30.0`、`Pillow==12.1.1`、`numpy`。本次运行环境与模型见数据包内manifest。
+先按根目录说明安装 `apps/week03` 的锁定 Node 依赖。模型的固定修订及文件散列在 models.json；下载约380MB，权重不进入Git。Python图像程序需要 `requests==2.34.2`、`onnxruntime==1.30.0`、`Pillow==12.3.0`、`numpy==2.5.3`。本次运行环境与模型见数据包内manifest。
 
 ```sh
 python local/download-models.py models
