@@ -17,6 +17,7 @@ import shutil
 import unicodedata
 
 import fitz
+from forum_content_review import apply_review, DEFAULT_REVIEW
 
 
 def digest(data):
@@ -84,6 +85,7 @@ def main():
     parser.add_argument("--evidence", required=True, type=Path)
     parser.add_argument("--reply-snapshot", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--content-review", type=Path, default=DEFAULT_REVIEW)
     args = parser.parse_args()
     inp, ev, out = args.input, args.evidence, args.output
     if out.exists() and any(out.iterdir()):
@@ -325,7 +327,8 @@ def main():
                     "Forum original URLs not exhaustively requested; provenance is to pinned upstream records",
                     "No embeddings, RAG evaluation or live website deployment"])
     write_json(out / "audit/summary.json", summary)
-    print(json.dumps(summary, ensure_ascii=False, indent=2))
+    apply_review(out, args.content_review)
+    print(json.dumps(read_json(out / "audit/summary.json"), ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

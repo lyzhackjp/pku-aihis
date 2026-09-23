@@ -573,16 +573,17 @@
   },
   {
     "key": "tieba-4728759743",
-    "requested_url": "https://tieba.baidu.com/p/4728759743?fr=good",
+    "requested_url": null,
     "status": "403",
-    "final_url": "https://tieba.baidu.com/p/4728759743?fr=good",
+    "final_url": null,
     "content_type": "text/html; charset=utf-8",
     "checked_at": "2026-09-23T13:44:01.044121+00:00",
     "curl_exit": 22,
     "error": "curl: (22) The requested URL returned error: 403",
     "evidence_file": "tieba-4728759743.html",
     "bytes": 0,
-    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original_url_withheld_from_public_audit": true
   },
   {
     "key": "cc-by-3.0",

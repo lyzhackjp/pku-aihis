@@ -39,5 +39,16 @@
     "PDF equations, tables and reading order not manually proofread",
     "Forum original URLs not exhaustively requested; provenance is to pinned upstream records",
     "No embeddings, RAG evaluation or live website deployment"
-  ]
+  ],
+  "forum_content_review": {
+    "input_titles": 2487,
+    "input_replies": 13,
+    "approved_titles": 239,
+    "approved_replies": 3,
+    "excluded_by_rule": 1301,
+    "not_selected_after_semantic_review": 947,
+    "excluded_replies": 10
+  },
+  "forum_public_text_records": 0,
+  "forum_original_links_in_record_audit": 0
 }

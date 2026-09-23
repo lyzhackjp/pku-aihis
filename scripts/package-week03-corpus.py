@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import re
 import zipfile
+from forum_content_review import validate_review
 
 DEFAULT = Path(__file__).resolve().parents[1] / "data/week03/cross-domain"
 LIMIT = 100_000_000
@@ -40,7 +41,8 @@ def validate(root, check_manifest=True):
     assert len({s["source_id"] for s in sources}) == len(sources)
     assert len(accepted) == summary["included_sources"]
     expected = {"README.md", "sources.json", "audit/input-records.jsonl",
-                "audit/retrieval.json", "audit/summary.json"}
+                "audit/retrieval.json", "audit/summary.json", "audit/forum-content-review.json"}
+    validate_review(root)
     ids, count, pages = set(), 0, 0
     raw_cache = {}
     for s in accepted:

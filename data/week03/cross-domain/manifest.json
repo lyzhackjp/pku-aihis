@@ -3,23 +3,27 @@
   "corpus": "week03-cross-domain-20260923",
   "limit_bytes": 100000000,
   "included_records": 2686,
-  "payload_bytes": 31390267,
+  "payload_bytes": 31657061,
   "files": {
     "README.md": {
-      "bytes": 5862,
-      "sha256": "0849cdd12cb77ab4545bf8a61aab52fa04008d3fab444526312eb5c6a8c84c27"
+      "bytes": 6432,
+      "sha256": "c3c2651b1e78ccb3bbaeb2c000c5945eb712dd3c4d6aace428a282b3cb6df6f0"
+    },
+    "audit/forum-content-review.json": {
+      "bytes": 60526,
+      "sha256": "d160446b47c9b89729d7fe252a22943d607f89cb44abc8ed998be35be16cfacd"
     },
     "audit/input-records.jsonl": {
-      "bytes": 2137322,
-      "sha256": "1e4170289f0c3682cb1d0caf099eccbc90daf8ae360581550c7b18cfa9490d0f"
+      "bytes": 2342478,
+      "sha256": "49fe6aafc62fbeca4e5ec7029b1f746071828aa6ebe3a6da62808356353dc801"
     },
     "audit/retrieval.json": {
-      "bytes": 23307,
-      "sha256": "1b9182b564d03664635cb346a777a194674d41a3420a9e14cd5f9afc7bff00b1"
+      "bytes": 23276,
+      "sha256": "baab16ddeaacda030c786b80c0dd284ba0f7efebc68fc3f1e9e894a96c8b4af0"
     },
     "audit/summary.json": {
-      "bytes": 1269,
-      "sha256": "b5181214fb835488fbf24768677cbc75e51983913c7a601567e7d08d19275ee5"
+      "bytes": 1591,
+      "sha256": "883021837c8a4bffdcd6ebe7f65e8b2d2d3bd64d64653f1bb745f6e2515e001e"
     },
     "imports/1606.07772v1.jsonl": {
       "bytes": 108695,
@@ -118,8 +122,8 @@
       "sha256": "a84e3cd594135f18d85e97878ae3c10786ea9c2212ab8d9f007b5b83ffdffc73"
     },
     "sources.json": {
-      "bytes": 48700,
-      "sha256": "cf065f1a8489d744bba4bf9e3333f8993886119a4b4c7a78a4a728deab90062d"
+      "bytes": 48951,
+      "sha256": "0da7456d46f9d471f54ba85470987f5e6d16dd7f4db818dd7cae494fca38e118"
     },
     "texts/1606.07772v1.txt": {
       "bytes": 65813,

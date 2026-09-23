@@ -943,17 +943,22 @@
     "upstream_commit": "0c801f85a4506dcfdb9afced4ceaa5ab2757987d",
     "upstream_blob_sha1": "d1798183207035f833de4ffe16bc1fa9e076549d",
     "reason": "no_repository_license_or_post_author_redistribution_permission",
-    "record_count": 2487
+    "record_count": 2487,
+    "content_review_file": "audit/forum-content-review.json",
+    "content_review_does_not_grant_redistribution": true
   },
   {
     "source_id": "LEYMORE-REPLIES",
     "decision": "exclude",
     "license": "not_verified",
-    "source_url": "https://tieba.baidu.com/p/4728759743?fr=good",
+    "source_url": null,
     "upstream_commit": "0c801f85a4506dcfdb9afced4ceaa5ab2757987d",
     "upstream_blob_sha1": "d1798183207035f833de4ffe16bc1fa9e076549d",
     "reason": "no_repository_license_or_post_author_redistribution_permission",
-    "record_count": 13
+    "record_count": 13,
+    "content_review_file": "audit/forum-content-review.json",
+    "content_review_does_not_grant_redistribution": true,
+    "original_url_withheld_from_public_audit": true
   },
   {
     "source_id": "acm_3497842",

@@ -38,6 +38,8 @@ python3 local/start-full-classroom.py
 
 第三周另备[已核验跨领域语料包](data/week03/cross-domain/README.md)：6篇论文、4部英语著作，合计2,686条，可在D01按文件导入。目录附原件、许可、逐条来源核验和打包说明；不替换默认史料，不自动发布到网站。收录与排除结果见[核验记录](docs/week03/cross-domain-corpus-audit.md)。
 
+Leymore另经[课堂内容复核](docs/week03/leymore-content-review.md)，仅239条标题摘要与3条回复进入本地白名单；政治敏感、性别贬损及其他不适宜材料不选入。论坛正文仍未公开入库，来源核验、内容筛选和再分发许可分别记录。
+
 ## 助教接续
 
 [逐页设计](docs/week03/page-map.json) · [开发方案](docs/week03/design.md) · [课程制作skill](.agents/skills/history-demo-courseware/SKILL.md) · [贡献流程](CONTRIBUTING.md) · [发布流程](docs/ci-and-release.md) · [来源许可](docs/third-party-notices.md)
