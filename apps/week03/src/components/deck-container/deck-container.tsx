@@ -82,6 +82,9 @@ export class DeckContainer {
     });
   }
   private go(id: string | number) {
+    // Preserve links from the detailed edition; page IDs elsewhere stay stable.
+    const aliases = { D16: "D15", D17: "D15", D19: "D18", D20: "D18" };
+    if (typeof id === "string") id = aliases[id] || id;
     const i =
       typeof id === "number" ? id : this.titles.findIndex((s) => s.id === id);
     if (i < 0 || i >= this.slides.length) return;

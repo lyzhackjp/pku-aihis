@@ -8,7 +8,7 @@ const payload=(name,data)=>({name,mimeType:'application/json',buffer:Buffer.from
 const textOnly=d=>{const {vector,...rest}=d;return rest;};const records=data.records.slice(0,3),expected=29;
 const checks=[];await fs.mkdir(v.output,{recursive:true});
 try{
- await p.goto(v.url);await p.waitForFunction(()=>document.querySelectorAll('lesson-lab.hydrated').length===33);
+ await p.goto(v.url);await p.waitForFunction(()=>document.querySelectorAll('lesson-lab.hydrated,tool-family.hydrated').length===document.querySelectorAll('deck-slide').length && document.querySelectorAll('deck-slide').length>0);
  await p.getByRole('button',{name:'语料库管理',exact:true}).click();const overlay=p.locator('.corpus-overlay'),input=overlay.getByLabel('导入整卷语料');
  const count=()=>overlay.locator('.corpus-dialog-toolbar [role=status]').innerText();
  const upload=async (files,expected)=>{await input.setInputFiles(files);await p.waitForFunction(expected=>{const x=document.querySelector('.corpus-overlay');return !x.querySelector('input[type=file]').disabled&&[x.querySelector('.corpus-import-summary')?.textContent,x.querySelector('[role=alert]')?.textContent].some(text=>text?.includes(expected));},expected);};

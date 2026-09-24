@@ -49,11 +49,12 @@ async function search(id,query,button){
 let currentFile='';
 try{
  await page.goto(v.url,{waitUntil:'domcontentloaded'});
- await page.waitForFunction(()=>document.querySelectorAll('lesson-lab.hydrated').length===33 && crossOriginIsolated);
- for(let i=0;i<33;i++){const s=await go('D'+String(i).padStart(2,'0'));assert(!/TypeError:|语料载入失败/.test(await s.innerText()));}
+ await page.waitForFunction(()=>document.querySelectorAll('lesson-lab.hydrated,tool-family.hydrated').length===document.querySelectorAll('deck-slide').length && document.querySelectorAll('deck-slide').length>0 && crossOriginIsolated);
+ const pageIDs=await page.locator('deck-slide').evaluateAll(slides=>slides.map(s=>s.getAttribute('slide-id')));
+ for(const id of pageIDs){const s=await go(id);assert(!/TypeError:|语料载入失败/.test(await s.innerText()));}
  docs=new Map((await (await context.request.get(new URL('assets/data/corpus.json',v.url).href)).json()).records.map(d=>[d.id,d]));
  const defaultCount=docs.size;
- check('33 pages and cross-origin isolation');
+ check(`${pageIDs.length} pages and cross-origin isolation`);
  const queries={'1606.07772v1':'emotional','1710.05832v1':'neutron','1906.11238v1':'M87','B01-INTRO':'Socrates','B01':'justice','B02':'selection','B03':'Rabbit','B04':'Sherlock','P01':'black hole','acm_3497842':'archaeology','plos_0323185':'radiocarbon'};
  const sources=await read(path.join(corpus,'sources.json'));
  for(const [name,q] of Object.entries(queries)){
@@ -86,7 +87,8 @@ try{
  await search('D08','a rabbit carrying a watch','精确余弦');
  await search('D09','Rabbit watch','混合检索');await search('D12','a rabbit carrying a watch','运行EdgeVec');
  await page.screenshot({path:path.join(v.output,'all-public-EdgeVec.png'),fullPage:true});
- s=await go('D17');assert((await s.innerText()).includes('语料库管理导入不会自动重建'));
+ if(pageIDs.includes('D17')){s=await go('D17');assert((await s.innerText()).includes('语料库管理导入不会自动重建'));}
+ else {s=await go('D15');await s.getByRole('button',{name:'查看保存示例',exact:true}).click();assert((await s.innerText()).includes('不会自动更新本机应用库'));}
  check('External application corpus scope is explicit');
  if(v['forum-text']){
   for(const [name,q] of [['推荐帖','刘翔'],['已筛选回复','助跑']]){

@@ -1,8 +1,10 @@
 # pku-aihis
 
-《人工智能赋能历史研究与写作》的网页演示源码与协作仓库。第三周包含33页可操作的“检索与证据”演示，教案、完整OCR与私人原件保留在课程文件夹。
+《人工智能赋能历史研究与写作》的网页演示源码与协作仓库。第三周包含29页“检索与证据”演示，教案、完整OCR与私人原件保留在课程文件夹。
 
-课堂入口部署到 **[第三周](https://lyzhackjp.github.io/pku-aihis/week03/)**；实际发布提交和检查范围见 [交接与运行状态](docs/week03/handoff.md)。
+教师已确认将原D14—D20合为“知识库产品、搜索引擎、向量数据库”三页。页面对应及核验见[简化版说明](docs/week03/tool-families-preview.md)；无需修改源码的本地／线上语料操作见[导入说明](apps/week03/src/assets/guides/corpus-import.md)。
+
+主线课堂入口部署到 **[第三周](https://lyzhackjp.github.io/pku-aihis/week03/)**；实际发布提交和检查范围见 [交接与运行状态](docs/week03/handoff.md)。
 
 ## 本地使用
 
