@@ -169,13 +169,13 @@ export function rocchio(
   return unit(q.map((x, i) => alpha * x + beta * p[i] - gamma * n[i]));
 }
 export function validateCorpus(data) {
-  const records = Array.isArray(data) ? data : data.records;
+  const records = Array.isArray(data) ? data : data?.records;
   if (!Array.isArray(records) || !records.length)
     throw Error("文件须为记录数组或含records数组的对象");
   const ids = new Set();
   const emb = data.manifest?.embedding;
   const vectors = records.filter((d) => d.vector);
-  if (vectors.length) {
+  if (vectors.length || data.queries?.length) {
     if (!emb?.model || !emb?.revision || !emb.dimensions)
       throw Error("向量包必须声明模型、修订与维数");
     if (emb.normalize !== true) throw Error("本课堂向量入口要求L2归一化配置");
@@ -206,4 +206,51 @@ export function validateCorpus(data) {
       author: d.author || null,
     };
   });
+}
+
+// A corpus has one compatible embedding space; run metadata does not define it.
+function embeddingKey(embedding) {
+  const metadata = new Set(["runtime", "device", "computed_at", "actual_dimension"]);
+  return JSON.stringify(Object.fromEntries(Object.entries(embedding || {})
+    .filter(([key]) => !metadata.has(key)).sort(([a], [b]) => a.localeCompare(b))));
+}
+export function mergeCorpus(current, incoming) {
+  const additions = validateCorpus(incoming);
+  const currentRecords = current.records || [];
+  const oldEmbedding = current.manifest?.embedding;
+  const nextEmbedding = incoming.manifest?.embedding;
+  const oldHasVectors = currentRecords.some(d => d.vector?.length) || current.queries?.length;
+  const newHasVectors = additions.some(d => d.vector?.length) || incoming.queries?.length;
+  if (oldHasVectors && newHasVectors && embeddingKey(oldEmbedding) !== embeddingKey(nextEmbedding))
+    throw Error("向量模型或编码配置与当前库不兼容；本批未导入，已有语料保持不变。请使用相同模型生成配套向量，或改导入不含向量的文本包。");
+  const records = [...currentRecords];
+  const positions = new Map(records.map((d, i) => [d.id, i]));
+  const summary = { added: 0, enriched: 0, skipped: 0, queriesAdded: 0, total: 0 };
+  const identity = ["text", "title", "source_id", "author", "year", "pdf_page", "printed_page", "locator", "start_char", "end_char", "text_file", "raw_file", "source_url", "role", "text_role"];
+  for (const doc of additions) {
+    const index = positions.get(doc.id);
+    if (index === undefined) {
+      positions.set(doc.id, records.length);
+      records.push(doc);
+      summary.added++;
+      continue;
+    }
+    const existing = records[index];
+    if (identity.some(key => (existing[key] ?? null) !== (doc[key] ?? null)))
+      throw Error(`编号冲突：${doc.id} 的正文或来源与已有记录不同。本批未导入，已有语料保持不变；请核对编号。`);
+    if (!existing.vector?.length && doc.vector?.length) {
+      records[index] = { ...existing, vector: doc.vector };
+      if (doc.embedding_text_sha256) records[index].embedding_text_sha256 = doc.embedding_text_sha256;
+      summary.enriched++;
+    } else summary.skipped++;
+  }
+  const queries = [...(current.queries || [])];
+  for (const query of incoming.queries || []) {
+    if (typeof query.text !== "string" || !query.text.trim()) throw Error("配套查询缺少text；本批未导入。");
+    if (!queries.some(q => q.text === query.text)) { queries.push(query); summary.queriesAdded++; }
+  }
+  const manifest = { ...(current.manifest || {}) };
+  if (!oldHasVectors && newHasVectors) manifest.embedding = nextEmbedding;
+  summary.total = records.length;
+  return { records, queries, manifest, summary };
 }
