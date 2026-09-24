@@ -157,7 +157,7 @@ export class DeckContainer {
       <div class="deck-shell">
         <div class="deck-top">
           <a href="../">PKU / AI × HISTORY</a>
-          <span>第三周 · 工具分类简化预览</span>
+          <span>第三周 · 检索与证据</span>
           <button onClick={() => (this.overview = !this.overview)}>
             课程地图
           </button>
