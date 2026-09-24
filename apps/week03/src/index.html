@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>第三周 · 检索与证据 | PKU AI History</title><link rel="stylesheet" href="build/week03.css"><script src="bootstrap.js" defer></script><script type="module" src="build/week03.esm.js"></script></head><body><div id="app"></div><template id="deck-template"><deck-container><deck-slide slide-id="D00" header-title="材料怎样进入答案" kicker="D00 / 教案 导入" theme="dark" notes="目的：材料怎样进入答案
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>第三周 · 工具分类简化预览</title><link rel="stylesheet" href="build/week03.css"><script src="bootstrap.js" defer></script><script type="module" src="build/week03.esm.js"></script></head><body><div id="app"></div><template id="deck-template"><deck-container><deck-slide slide-id="D00" header-title="材料怎样进入答案" kicker="D00 / 教案 导入" theme="dark" notes="目的：材料怎样进入答案
 操作：沿同一问题查看候选、上下文和回答的区别
 观察：一条论断可以回到材料页
 运行边界：静态导览
@@ -55,36 +55,25 @@
 观察：检索/上下文/生成模式独立标识，逐项证据
 运行边界：网页＋可选本地模型适配器
 失败时：保留错误提示，回到来源或本地指南，不把构造输出当实跑。
-模型入口：右上角模型接入；本页模型实跑与示例。先说明当前是新运行还是保存示例，再对照上下文与原页。"><lesson-lab demo-id="D13"></lesson-lab><div slot="footer">D13 · 每项命中保留出处；模型分数不等于史实置信度。</div></deck-slide><deck-slide slide-id="D14" header-title="AnythingLLM" kicker="D14 / 教案 3.3" theme="light" notes="目的：AnythingLLM
-操作：观看工作区/切块/模型配置路径并按本地指南重做
-观察：桌面客户端真实边界，网页不冒充运行客户端
-运行边界：本地应用；网页指南
-失败时：保留错误提示，回到来源或本地指南，不把构造输出当实跑。
-模型入口：右上角模型接入；本页模型实跑与示例。先说明当前是新运行还是保存示例，再对照上下文与原页。"><lesson-lab demo-id="D14"></lesson-lab><div slot="footer">D14 · 每项命中保留出处；模型分数不等于史实置信度。</div></deck-slide><deck-slide slide-id="D15" header-title="Elasticsearch" kicker="D15 / 教案 3.3" theme="light" notes="目的：Elasticsearch
-操作：分析器→索引文档→BM25查询→返回来源
-观察：版本化REST请求与响应；无服务时不可标实时
-运行边界：本地服务；网页请求台
-失败时：保留错误提示，回到来源或本地指南，不把构造输出当实跑。"><lesson-lab demo-id="D15"></lesson-lab><div slot="footer">D15 · 每项命中保留出处；模型分数不等于史实置信度。</div></deck-slide><deck-slide slide-id="D16" header-title="OpenSearch" kicker="D16 / 教案 3.3" theme="light" notes="目的：OpenSearch
-操作：按独立版本请求写入、查询、过滤
-观察：与ES接口差异和服务状态
-运行边界：本地服务；网页请求台
-失败时：保留错误提示，回到来源或本地指南，不把构造输出当实跑。"><lesson-lab demo-id="D16"></lesson-lab><div slot="footer">D16 · 每项命中保留出处；模型分数不等于史实置信度。</div></deck-slide><deck-slide slide-id="D17" header-title="Tantivy" kicker="D17 / 教案 3.3" theme="light" notes="目的：Tantivy
-操作：字段模式→写入→commit→query
-观察：本地库真实输出，词项分析器可见
-运行边界：本地库；网页代码与运行记录
-失败时：保留错误提示，回到来源或本地指南，不把构造输出当实跑。"><lesson-lab demo-id="D17"></lesson-lab><div slot="footer">D17 · 每项命中保留出处；模型分数不等于史实置信度。</div></deck-slide><deck-slide slide-id="D18" header-title="Chroma" kicker="D18 / 教案 3.3" theme="light" notes="目的：Chroma
-操作：集合→带页码记录→向量查询→过滤
-观察：显式向量及同模型约束、来源回查
-运行边界：本地库；网页运行记录
-失败时：保留错误提示，回到来源或本地指南，不把构造输出当实跑。"><lesson-lab demo-id="D18"></lesson-lab><div slot="footer">D18 · 每项命中保留出处；模型分数不等于史实置信度。</div></deck-slide><deck-slide slide-id="D19" header-title="Qdrant" kicker="D19 / 教案 3.3" theme="light" notes="目的：Qdrant
-操作：points/payload→filter→nearest
-观察：本地模式与独立服务的差别
-运行边界：本地库/服务；网页运行记录
-失败时：保留错误提示，回到来源或本地指南，不把构造输出当实跑。"><lesson-lab demo-id="D19"></lesson-lab><div slot="footer">D19 · 每项命中保留出处；模型分数不等于史实置信度。</div></deck-slide><deck-slide slide-id="D20" header-title="Milvus" kicker="D20 / 教案 3.3" theme="light" notes="目的：Milvus
-操作：schema→insert→search
-观察：维数与字段约束、Lite边界
-运行边界：本地Lite/服务；网页运行记录
-失败时：保留错误提示，回到来源或本地指南，不把构造输出当实跑。"><lesson-lab demo-id="D20"></lesson-lab><div slot="footer">D20 · 每项命中保留出处；模型分数不等于史实置信度。</div></deck-slide><deck-slide slide-id="D21" header-title="相关反馈与检索日志" kicker="D21 / 教案 4.1" theme="light" notes="目的：相关反馈与检索日志
+模型入口：右上角模型接入；本页模型实跑与示例。先说明当前是新运行还是保存示例，再对照上下文与原页。"><lesson-lab demo-id="D13"></lesson-lab><div slot="footer">D13 · 每项命中保留出处；模型分数不等于史实置信度。</div></deck-slide><deck-slide slide-id="D14" header-title="知识库产品：从材料到问答" kicker="D14 / 教案 3.3" theme="light" notes="目的：知识库产品：从材料到问答
+衔接：承接D13：刚才拆开了RAG，现在看这些环节如何组成一个产品。
+操作：看AnythingLLM的一次实际回答，再打开它使用的片段
+观察：分清导入、检索与回答，检查回答是否有依据
+讲解顺序：这一类解决什么→看一次实际例子→布置课后任选一种工具尝试。课堂不展开接口与配置细节。
+运行边界：保存结果来自本机应用原有27条课堂库；顶部追加语料不自动更新应用库。本机重跑使用应用当前配置。
+失败时：保留错误提示，明确切换到保存示例，不把旧结果说成刚刚运行。"><tool-family demo-id="D14"></tool-family><div slot="footer">D14 · 每项命中保留出处；模型分数不等于史实置信度。</div></deck-slide><deck-slide slide-id="D15" header-title="搜索引擎：先找出候选材料" kicker="D15 / 教案 3.3" theme="light" notes="目的：搜索引擎：先找出候选材料
+衔接：承接知识库产品：搜索引擎提供候选，问答还需要选择上下文和生成。
+操作：保持同一查询，切换Elasticsearch、OpenSearch和Tantivy，读前三条候选
+观察：比较命中的材料，不横比不同引擎的原始分数
+讲解顺序：这一类解决什么→看一次实际例子→布置课后任选一种工具尝试。课堂不展开接口与配置细节。
+运行边界：保存结果来自本机应用原有27条课堂库；顶部追加语料不自动更新应用库。本机重跑使用应用当前配置。
+失败时：保留错误提示，明确切换到保存示例，不把旧结果说成刚刚运行。"><tool-family demo-id="D15"></tool-family><div slot="footer">D15 · 每项命中保留出处；模型分数不等于史实置信度。</div></deck-slide><deck-slide slide-id="D18" header-title="向量数据库：查找相近片段" kicker="D18 / 教案 3.3" theme="light" notes="目的：向量数据库：查找相近片段
+衔接：承接搜索引擎：换一种查找关系，仍然要保留出处并检查原文。
+操作：切换Chroma、Qdrant和Milvus Lite，查看候选并回读原文
+观察：注意距离与相似度的方向；同维度不代表模型兼容
+讲解顺序：这一类解决什么→看一次实际例子→布置课后任选一种工具尝试。课堂不展开接口与配置细节。
+运行边界：保存结果来自本机应用原有27条课堂库；顶部追加语料不自动更新应用库。本机重跑使用应用当前配置。
+失败时：保留错误提示，明确切换到保存示例，不把旧结果说成刚刚运行。"><tool-family demo-id="D18"></tool-family><div slot="footer">D18 · 每项命中保留出处；模型分数不等于史实置信度。</div></deck-slide><deck-slide slide-id="D21" header-title="相关反馈与检索日志" kicker="D21 / 教案 4.1" theme="light" notes="目的：相关反馈与检索日志
 操作：判断相关性，运行Rocchio或手动改查询
 观察：每轮查询、证据新增、问题漂移可见
 运行边界：浏览器实时

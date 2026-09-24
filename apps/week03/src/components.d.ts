@@ -63,6 +63,9 @@ export namespace Components {
          */
         "examplesOnly": boolean;
     }
+    interface ToolFamily {
+        "demoId": string;
+    }
 }
 declare global {
     interface HTMLDeckContainerElement extends Components.DeckContainer, HTMLStencilElement {
@@ -107,6 +110,12 @@ declare global {
         prototype: HTMLModelExperimentElement;
         new (): HTMLModelExperimentElement;
     };
+    interface HTMLToolFamilyElement extends Components.ToolFamily, HTMLStencilElement {
+    }
+    var HTMLToolFamilyElement: {
+        prototype: HTMLToolFamilyElement;
+        new (): HTMLToolFamilyElement;
+    };
     interface HTMLElementTagNameMap {
         "deck-container": HTMLDeckContainerElement;
         "deck-presenter": HTMLDeckPresenterElement;
@@ -115,6 +124,7 @@ declare global {
         "lesson-lab": HTMLLessonLabElement;
         "model-connection": HTMLModelConnectionElement;
         "model-experiment": HTMLModelExperimentElement;
+        "tool-family": HTMLToolFamilyElement;
     }
 }
 declare namespace LocalJSX {
@@ -175,6 +185,9 @@ declare namespace LocalJSX {
          */
         "examplesOnly"?: boolean;
     }
+    interface ToolFamily {
+        "demoId"?: string;
+    }
 
     interface DeckSlideAttributes {
         "slideId": string;
@@ -200,6 +213,9 @@ declare namespace LocalJSX {
         "demoId": string;
         "examplesOnly": boolean;
     }
+    interface ToolFamilyAttributes {
+        "demoId": string;
+    }
 
     interface IntrinsicElements {
         "deck-container": DeckContainer;
@@ -209,6 +225,7 @@ declare namespace LocalJSX {
         "lesson-lab": Omit<LessonLab, keyof LessonLabAttributes> & { [K in keyof LessonLab & keyof LessonLabAttributes]?: LessonLab[K] } & { [K in keyof LessonLab & keyof LessonLabAttributes as `attr:${K}`]?: LessonLabAttributes[K] } & { [K in keyof LessonLab & keyof LessonLabAttributes as `prop:${K}`]?: LessonLab[K] };
         "model-connection": ModelConnection;
         "model-experiment": Omit<ModelExperiment, keyof ModelExperimentAttributes> & { [K in keyof ModelExperiment & keyof ModelExperimentAttributes]?: ModelExperiment[K] } & { [K in keyof ModelExperiment & keyof ModelExperimentAttributes as `attr:${K}`]?: ModelExperimentAttributes[K] } & { [K in keyof ModelExperiment & keyof ModelExperimentAttributes as `prop:${K}`]?: ModelExperiment[K] };
+        "tool-family": Omit<ToolFamily, keyof ToolFamilyAttributes> & { [K in keyof ToolFamily & keyof ToolFamilyAttributes]?: ToolFamily[K] } & { [K in keyof ToolFamily & keyof ToolFamilyAttributes as `attr:${K}`]?: ToolFamilyAttributes[K] } & { [K in keyof ToolFamily & keyof ToolFamilyAttributes as `prop:${K}`]?: ToolFamily[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -222,6 +239,7 @@ declare module "@stencil/core" {
             "lesson-lab": LocalJSX.IntrinsicElements["lesson-lab"] & JSXBase.HTMLAttributes<HTMLLessonLabElement>;
             "model-connection": LocalJSX.IntrinsicElements["model-connection"] & JSXBase.HTMLAttributes<HTMLModelConnectionElement>;
             "model-experiment": LocalJSX.IntrinsicElements["model-experiment"] & JSXBase.HTMLAttributes<HTMLModelExperimentElement>;
+            "tool-family": LocalJSX.IntrinsicElements["tool-family"] & JSXBase.HTMLAttributes<HTMLToolFamilyElement>;
         }
     }
 }

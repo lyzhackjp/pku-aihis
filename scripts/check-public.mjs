@@ -4,7 +4,14 @@ import path from "node:path";
 const root = path.resolve(import.meta.dirname, "..");
 const site = path.join(root, "site");
 const html = await fs.readFile(path.join(site, "week03/index.html"), "utf8");
-assert.equal((html.match(/<deck-slide /g) || []).length, 33);
+const pages = JSON.parse(await fs.readFile(path.join(site, 'week03/assets/data/pages.json')));
+const pageMap = JSON.parse(await fs.readFile(path.join(root, 'docs/week03/page-map.json')));
+const slideIDs = [...html.matchAll(/<deck-slide\b[^>]*slide-id="([^"]+)"/g)].map(m => m[1]);
+assert.equal(slideIDs.length, 29);
+assert.equal(new Set(slideIDs).size, slideIDs.length);
+assert.deepEqual(slideIDs, pages.map(p => p.id));
+assert.deepEqual(slideIDs, pageMap.map(p => p.id));
+assert.deepEqual([...html.matchAll(/<tool-family demo-id="([^"]+)"/g)].map(m => m[1]), ['D14', 'D15', 'D18']);
 const c = JSON.parse(
   await fs.readFile(path.join(site, "week03/assets/data/corpus.json")),
 );
@@ -43,7 +50,7 @@ for (const row of manifest.files) {
 for (const d of [...c.records, ...m.pages.items, ...m.kuzushi.items])
   if (d.image) await fs.access(path.join(site, "week03", d.image));
 console.log(
-  "33 pages, source locators, vector dimensions, assets and public paths checked",
+  "29 pages, matching maps, source locators, vector dimensions, assets and public paths checked",
 );
 const examples = JSON.parse(
   await fs.readFile(
