@@ -106,7 +106,7 @@ def validate(root, check_manifest=True):
         assert re.fullmatch(r"[0-9a-f]{64}", r["text_sha256"])
         assert "text" not in r and "title" not in r, "Rejected fulltext must not enter audit metadata"
         assert r.get("text_offsets_match") or r.get("snapshot_content_and_identity_match")
-    actual = {str(p.relative_to(root)) for p in root.rglob("*") if p.is_file()}
+    actual = {p.relative_to(root).as_posix() for p in root.rglob("*") if p.is_file()}
     assert not any(p.is_symlink() for p in root.rglob("*")), "Symlinks are not distributable inputs"
     assert actual - {"manifest.json"} == expected, (actual - expected, expected - actual)
     total = sum(safe_file(root, f).stat().st_size for f in actual)

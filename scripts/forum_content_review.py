@@ -50,7 +50,7 @@ def apply_review(root, review_path=DEFAULT_REVIEW):
     review = read_json(review_path)
     policy = decisions(review)
     rows_path = root / "audit/input-records.jsonl"
-    rows = [json.loads(line) for line in rows_path.read_text().split("\n") if line.strip()]
+    rows = [json.loads(line) for line in rows_path.read_text(encoding="utf-8").split("\n") if line.strip()]
     seen = set()
     for r in rows:
         if r["source_id"] not in {"LEYMORE-GOOD", "LEYMORE-REPLIES"}:
@@ -94,7 +94,7 @@ def apply_review(root, review_path=DEFAULT_REVIEW):
 def validate_review(root):
     review = read_json(root / "audit/forum-content-review.json")
     policy = decisions(review)
-    rows = [json.loads(line) for line in (root / "audit/input-records.jsonl").read_text().split("\n") if line.strip()]
+    rows = [json.loads(line) for line in (root / "audit/input-records.jsonl").read_text(encoding="utf-8").split("\n") if line.strip()]
     seen = set()
     for r in rows:
         if r["source_id"] not in {"LEYMORE-GOOD", "LEYMORE-REPLIES"}:
@@ -115,7 +115,7 @@ def validate_review(root):
     assert all(not s["source_id"].startswith("LEY") or s["decision"] == "exclude"
                for s in read_json(root / "sources.json"))
     for name in ["sources.json", "audit/retrieval.json", "audit/input-records.jsonl"]:
-        assert "tieba.baidu.com" not in (root / name).read_text(), (name, "unreviewed thread link")
+        assert "tieba.baidu.com" not in (root / name).read_text(encoding="utf-8"), (name, "unreviewed thread link")
     return review["counts"]
 
 

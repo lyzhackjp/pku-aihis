@@ -17,6 +17,20 @@ export function tokenize(text, mode = "bigram") {
 export function count(items) {
   return items.reduce((m, x) => ((m[x] = (m[x] || 0) + 1), m), {});
 }
+export function tfidfForTerm(docs, bags, term) {
+  if (docs.length !== bags.length) throw Error("词袋与语料数量不一致");
+  const n = docs.length;
+  const df = bags.filter((bag) => (bag[term] || 0) > 0).length;
+  const idf = Math.log((1 + n) / (1 + df)) + 1;
+  const rows = docs.map((doc, i) => ({
+    id: doc.id,
+    title: doc.title,
+    tf: bags[i][term] || 0,
+    value: (bags[i][term] || 0) * idf,
+  })).filter((row) => row.tf > 0)
+    .sort((a, b) => b.value - a.value || a.id.localeCompare(b.id));
+  return { n, df, idf, rows };
+}
 export function bm25(
   docs,
   query,
@@ -108,6 +122,21 @@ export function metrics(ids, qrels, k) {
     ideal,
     recall: null,
   };
+}
+export function parseStopwords(raw) {
+  return new Set(
+    (raw || "")
+      .split(/[\s、，,;；]+/)
+      .map((x) => x.normalize("NFKC").toLocaleLowerCase())
+      .filter(Boolean),
+  );
+}
+export function filterStopwords(tokens, stopwords, drop = true) {
+  if (!drop || !stopwords?.size) return { kept: tokens, removed: [] };
+  const kept = [],
+    removed = [];
+  for (const t of tokens) (stopwords.has(t) ? removed : kept).push(t);
+  return { kept, removed };
 }
 export function chunks(text, size = 180, overlap = 30) {
   if (size <= overlap || overlap < 0) throw Error("块长必须大于重叠");
