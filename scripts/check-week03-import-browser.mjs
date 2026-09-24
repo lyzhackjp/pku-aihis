@@ -22,12 +22,12 @@ let docs=new Map();
 async function importFile(file){
  const text=await fs.readFile(file,'utf8');let parsed;
  try{parsed=JSON.parse(text);}catch{parsed={records:text.split(/\r?\n/).filter(Boolean).map(JSON.parse)};}
- docs=new Map((parsed.records||parsed).map(d=>[d.id,d]));
+ for(const d of parsed.records||parsed){const old=docs.get(d.id);docs.set(d.id,old?{...old,...(d.vector?{vector:d.vector}:{})}:d);}
  await page.getByRole('button',{name:'语料库管理',exact:true}).click();
  const overlay=page.locator('.corpus-overlay');
  await overlay.locator('input[aria-label="导入整卷语料"]').setInputFiles(file);
  await page.waitForFunction(count=>document.querySelector('.corpus-dialog-toolbar [role="status"]')?.textContent?.includes(`当前 ${count} 条`),docs.size);
- assert((await overlay.innerText()).includes('本机导入'));
+ assert((await overlay.innerText()).includes('课堂节录＋本机追加'));
  await overlay.getByRole('button',{name:'关闭 ×',exact:true}).click();
  await overlay.waitFor({state:'hidden'});
 }
@@ -37,7 +37,7 @@ async function search(id,query,button){
  await page.waitForFunction(id=>{const s=document.querySelector(`deck-slide[slide-id="${id}"]`);return /已完成.*条候选/.test(s.textContent)||s.textContent.includes('Error:');},id,{timeout:120000});
  assert(!(await s.innerText()).includes('Error:'),(await s.innerText()).slice(0,2000));
  const count=await s.locator('.result').count();assert(count>0,`${id} returned no results for ${query}`);
- await s.locator('.result').first().click();
+ await s.locator('.result').first().click();await s.locator('.source-evidence .paper-text').waitFor({state:'visible'});
  const panel=s.locator('.source-evidence'), key=await panel.getAttribute('data-source-id'), d=docs.get(key);
  assert(d,`Stale or unknown result ${key}`);
  assert.equal(await panel.locator('.paper-text').textContent(),d.text);
@@ -51,6 +51,8 @@ try{
  await page.goto(v.url,{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>document.querySelectorAll('lesson-lab.hydrated').length===33 && crossOriginIsolated);
  for(let i=0;i<33;i++){const s=await go('D'+String(i).padStart(2,'0'));assert(!/TypeError:|语料载入失败/.test(await s.innerText()));}
+ docs=new Map((await (await context.request.get(new URL('assets/data/corpus.json',v.url).href)).json()).records.map(d=>[d.id,d]));
+ const defaultCount=docs.size;
  check('33 pages and cross-origin isolation');
  const queries={'1606.07772v1':'emotional','1710.05832v1':'neutron','1906.11238v1':'M87','B01-INTRO':'Socrates','B01':'justice','B02':'selection','B03':'Rabbit','B04':'Sherlock','P01':'black hole','acm_3497842':'archaeology','plos_0323185':'radiocarbon'};
  const sources=await read(path.join(corpus,'sources.json'));
@@ -72,14 +74,14 @@ try{
  }
  check('11 text imports: original bytes, character offsets, page/chapter locators and result identities');
  currentFile=path.join(corpus,'imports/B03.jsonl');await importFile(currentFile);
- let s=await go('D08');await s.getByLabel('检索问题').fill('Alice');await s.getByRole('button',{name:'精确余弦',exact:true}).click();
- await page.waitForFunction(()=>document.querySelector('deck-slide[slide-id="D08"]').textContent.includes('请在语料库管理中导入配套向量JSON'));
- check('Text-only import explains missing vectors instead of claiming semantic retrieval');
+ let s=await go('D08');
+ assert((await s.locator('.corpus-coverage').innerText()).includes(`向量使用 ${defaultCount} 条兼容记录`));
+ check('Text-only appends preserve original vectors and disclose partial vector coverage');
  for(const name of Object.keys(queries)){
   currentFile=path.join(v.vectors,name+'.vectors.json');await importFile(currentFile);
   await search('D08',queries[name],'精确余弦');
  }
- currentFile=path.join(v.vectors,'全部公开语料.vectors.json');await importFile(currentFile);assert.equal(docs.size,2686);
+ currentFile=path.join(v.vectors,'全部公开语料.vectors.json');await importFile(currentFile);assert.equal(docs.size,2686+defaultCount);
  await search('D07','Rabbit','BM25排序');await search('D11','Rabbit','全文命中');
  await search('D08','a rabbit carrying a watch','精确余弦');
  await search('D09','Rabbit watch','混合检索');await search('D12','a rabbit carrying a watch','运行EdgeVec');
@@ -92,9 +94,9 @@ try{
    await search('D07',q,'BM25排序');await search('D11',q,'全文命中');
    currentFile=path.join(v.vectors,name+'.vectors.json');await importFile(currentFile);
    await search('D08',q,'精确余弦');await search('D09',q,'混合检索');await search('D12',q,'运行EdgeVec');
-   assert(!docs.has('LEY-GOOD-00041'));assert([...docs.values()].every(d=>d.author==='论坛用户（课堂匿名展示）'));
+   assert(!docs.has('LEY-GOOD-00041'));assert([...docs.values()].filter(d=>d.id.startsWith('LEY-')).every(d=>d.author==='论坛用户（课堂匿名展示）'));
   }
-  check('242 local forum records: new corpus replaces old indexes, anonymous display, excluded ID absent');
+  check('242 local forum records appended: existing corpus retained, indexes rebuilt, anonymous display, excluded ID absent');
  }
  currentFile=path.join(v.vectors,'B03.vectors.json');await importFile(currentFile);
  s=await go('D13');await s.getByLabel('检索问题').fill('White Rabbit waistcoat pocket watch：兔子从哪里取出表？只依据原文回答并引用片段编号。');
@@ -117,7 +119,7 @@ try{
   check('Actual local model generated answer with valid new-corpus IDs',report.generation);
  }
  await page.screenshot({path:path.join(v.output,'RAG-source-review.png'),fullPage:true});
- // Negative UI check uses a clearly labeled response fixture, after the real model run above.
+ // Negative UI check uses a labeled fixture; an actual generation above is optional.
  await page.route('**/api/generate',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({text:'受控错误引用测试 [B03-NOT-IN-CONTEXT]',model:'TEST-FIXTURE',provider:'local',finish_reason:'stop'})}));
  await s.getByRole('button',{name:'4 调用生成',exact:true}).click();
  await page.waitForFunction(()=>document.querySelector('deck-slide[slide-id="D13"] .citation-status')?.textContent.includes('引用核验未通过'));

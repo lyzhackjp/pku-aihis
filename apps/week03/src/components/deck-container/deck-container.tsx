@@ -1,5 +1,5 @@
 import { Component, Fragment, h, State, Element, Listen } from "@stencil/core";
-import { importCorpusFile, loadCorpus, removeCorpusRecord, state } from "../../lib/store";
+import { importCorpusFiles, loadCorpus, removeCorpusRecord, state } from "../../lib/store";
 import { sourceLocation } from "../../lib/provenance";
 const CHANNEL = "pku-aihis-week03-20260922";
 @Component({
@@ -21,6 +21,7 @@ export class DeckContainer {
   @State() corpusVersion = 0;
   @State() corpusImportBusy = false;
   @State() corpusImportError = "";
+  @State() corpusImportSummary = "";
   private slides: HTMLElement[] = [];
   private channel: BroadcastChannel;
   componentDidLoad() {
@@ -55,12 +56,14 @@ export class DeckContainer {
       this.corpusError = String(error);
     }
   }
-  private async importCorpus(file: File) {
-    if (!file) return;
+  private async importCorpus(files: File[]) {
+    if (!files.length || this.corpusImportBusy) return;
     this.corpusImportError = "";
+    this.corpusImportSummary = "";
     this.corpusImportBusy = true;
     try {
-      await importCorpusFile(file);
+      const summary = await importCorpusFiles(files);
+      this.corpusImportSummary = `${summary.files} 个文件处理完成：新增 ${summary.added} 条，补齐向量 ${summary.enriched} 条，跳过重复 ${summary.skipped} 条；累计 ${summary.total} 条。`;
       this.corpusVersion = state.version;
     } catch (error) {
       this.corpusImportError = String(error);
@@ -146,6 +149,7 @@ export class DeckContainer {
     const pageSize = 50;
     const pageCount = Math.max(1, Math.ceil(corpusRows.length / pageSize));
     const page = Math.min(this.corpusPage, pageCount - 1);
+    const vectorCount = state.docs.filter(d => d.vector?.length).length;
     return (
       <div class="deck-shell">
         <div class="deck-top">
@@ -216,7 +220,7 @@ export class DeckContainer {
               <div class="corpus-dialog-head">
                 <div>
                   <h2>语料库管理</h2>
-                  <p>当前页面内存中的记录；删除后本次课堂立即生效，刷新页面会恢复原始语料。</p>
+                  <p>新文件追加到当前库；同编号同内容去重，配套向量可补齐到已有文本。修改仅在本次页面内存中生效，刷新恢复默认语料。</p>
                 </div>
                 <button onClick={() => (this.corpusOpen = false)}>关闭 ×</button>
               </div>
@@ -227,8 +231,11 @@ export class DeckContainer {
                     <span role="status">当前 {state.docs.length} 条；匹配 {corpusRows.length} 条。至少保留一条，以便课堂页面继续运行。</span>
                   </div>
                   <div class="corpus-import">
-                    <label>导入整卷语料 <input type="file" accept=".json,.jsonl" aria-label="导入整卷语料" disabled={this.corpusImportBusy} onChange={(e: any) => { const input = e.target as HTMLInputElement; const file = input.files?.[0]; if (file) this.importCorpus(file); input.value = ""; }} /></label>
-                    {this.corpusImportError ? <span class="status-error" role="alert">{this.corpusImportError}</span> : <span>{state.local ? "本机导入" : "公开课堂节录"} · {state.docs.some((d) => d.vector?.length) ? "已含配套向量，可用关键词、全文、向量及混合检索。" : "纯文本包：可用关键词与全文检索；向量、混合和近邻检索请导入配套向量 JSON。"} 导入内容在本浏览器内处理，刷新页面恢复原始语料。</span>}
+                    <label>追加语料（可多选） <input type="file" accept=".json,.jsonl" multiple aria-label="导入整卷语料" disabled={this.corpusImportBusy} onChange={(e: any) => { const input = e.target as HTMLInputElement; const files = Array.from(input.files || []); if (files.length) this.importCorpus(files); input.value = ""; }} /></label>
+                    {this.corpusImportBusy && <span role="status">正在核对并追加；本批全部通过后才更新语料。</span>}
+                    {this.corpusImportError && <span class="status-error" role="alert">{this.corpusImportError} 当前库未因这批失败而改变。</span>}
+                    {this.corpusImportSummary && <p class="corpus-import-summary" role="status">{this.corpusImportSummary}</p>}
+                    <span>{state.local ? "课堂节录＋本机追加" : "公开课堂节录"} · 关键词／全文覆盖 {state.docs.length} 条，向量检索覆盖 {vectorCount} 条。{vectorCount < state.docs.length && "未附向量的记录不会进入向量一路；可继续追加同模型的配套向量JSON补齐，混合检索的关键词一路仍可命中。"} 文件在本浏览器内处理，不自动写入外部应用数据库。</span>
                   </div>
                   <div class="corpus-table-wrap">
                     <table class="corpus-table">
@@ -238,7 +245,7 @@ export class DeckContainer {
                           <tr>
                             <td>{d.id}</td><td>{d.title}</td><td>{d.author || "待核"}</td>
                             <td>{sourceLocation(d)}</td><td>{d.status || "未标注"}</td>
-                            <td><button aria-label={`删除 ${d.id}`} disabled={state.docs.length <= 1} onClick={() => removeCorpusRecord(d.id)}>删除</button></td>
+                            <td><button aria-label={`删除 ${d.id}`} disabled={this.corpusImportBusy || state.docs.length <= 1} onClick={() => removeCorpusRecord(d.id)}>删除</button></td>
                           </tr>
                         ))}
                       </tbody>

@@ -174,7 +174,7 @@ export class LessonLab {
     this.lastSearch = null;
     this.text = state.docs[0]?.text || "";
     this.results = [];
-    this.output = null;
+    if (this.demoId !== "D22") this.output = null;
     this.contextIds = [];
     this.logs = [];
     this.qrels = {};
@@ -187,7 +187,7 @@ export class LessonLab {
     this.normalized = "";
     this.d04BagVersion = -1;
     this.tfidfShowAll = false;
-    this.message = `语料已更新：${state.docs.length}条。修改只在当前页面内存中生效；选择API运行时会发送选中的片段。`;
+    this.message = `语料已更新：${state.docs.length}条；其中${state.docs.filter(d=>d.vector?.length).length}条有兼容向量。修改只在当前页面内存中生效；选择API运行时会发送选中的片段。`;
   }
   private doc() {
     return state.docs[this.selected] || state.docs[0];
@@ -751,7 +751,7 @@ export class LessonLab {
               )}
               <p class="lab-note">
                 当前 {state.docs.length} 条 ·{" "}
-                {state.local ? "本机导入" : "公开课堂节录"}
+                {state.local ? "课堂节录＋本机追加" : "公开课堂节录"}
                 。整卷语料请在顶部“语料库管理”中导入；本页用于对照原页、转录与出处。
               </p>
             </div>
@@ -1960,7 +1960,7 @@ export class LessonLab {
                   onChange={(e: any) => this.importFile(e.target.files[0])}
                 />
                 <p class="lab-note">
-                  当前 {state.docs.length} 条 · {state.local ? "本机导入" : "公开课堂节录"}
+                  当前 {state.docs.length} 条 · {state.local ? "课堂节录＋本机追加" : "公开课堂节录"}
                   。导入内容在本浏览器内处理，首次建立本机索引后查询。
                 </p>
               </div>
@@ -2042,7 +2042,7 @@ export class LessonLab {
                 />
                 <p class="lab-note">
                   当前 {state.docs.filter((d) => d.vector?.length).length} 条带向量 ·{" "}
-                  {state.local ? "本机导入" : "公开课堂节录"}。导入内容在本浏览器内处理。
+                  {state.local ? "课堂节录＋本机追加" : "公开课堂节录"}。导入内容在本浏览器内处理。
                 </p>
               </div>
               <div class="controls">
@@ -5049,6 +5049,9 @@ export class LessonLab {
     else body = this.tools();
     return (
       <div class="lab">
+        {["D07", "D08", "D09", "D11", "D12", "D13", "D21", "D24"].includes(this.demoId) && (
+          <p class="corpus-coverage">当前库 {state.docs.length} 条 · 关键词／全文使用全部记录 · 向量使用 {state.docs.filter(d=>d.vector?.length).length} 条兼容记录{state.docs.some(d=>!d.vector?.length) ? "（其余需补齐向量；混合检索仍保留关键词一路）" : ""}</p>
+        )}
         {this.busy && <span class="mode">正在执行，请稍候…</span>}
         {this.message && (
           <div
