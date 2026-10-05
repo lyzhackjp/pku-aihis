@@ -37,3 +37,5 @@ pnpm preview
 通用导入器在另一分支，通过精确 origin 与已打开窗口身份交换项目；也可手工上传 ZIP，核心工作台不依赖另一分支才能构建。Zotero 请求仅查询 25 条题录，不取得整库全文，不修改远端库。Patchouli 和 AnythingLLM 未装载用户实例，页面保留实际状态和比较问题；Obsidian 本体没有嵌入浏览器，Markdown 以真实独立文件与可解析链接导出。
 
 本轮不改变全站发布白名单，不合并 main，不部署。新增独立 CI 检查仅测试和构建应用。详细实测记录见 docs/week04/development.md。
+
+[公开题录四栏预览](../../docs/week04/preview.png)只载入公开题录，不含私人原件和研究笔记。
