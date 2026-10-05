@@ -78,6 +78,8 @@ export function validateProject(value) {
   for (const n of value.notes) {
     if (n.sourceId && !sources.has(n.sourceId))
       throw Error("笔记缺少对应材料。");
+    if (n.sourceIds && !n.sourceIds.every((id) => sources.has(id)))
+      throw Error("笔记缺少对应材料集合。");
     if (n.segmentId && !segments.has(n.segmentId))
       throw Error("笔记缺少对应片段。");
     if (

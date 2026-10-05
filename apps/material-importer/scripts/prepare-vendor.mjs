@@ -1,8 +1,9 @@
-import { mkdir, copyFile, cp } from "node:fs/promises";
+import { mkdir, copyFile, cp, rm } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 const require = createRequire(import.meta.url),
   target = "public/vendor";
+await rm(target, {recursive:true,force:true});
 await mkdir(target, { recursive: true });
 const pdf = dirname(require.resolve("pdfjs-dist/package.json"));
 await cp(join(pdf, "cmaps"), join(target, "cmaps"), { recursive: true });

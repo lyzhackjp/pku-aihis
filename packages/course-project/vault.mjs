@@ -38,6 +38,31 @@ export async function exportVault(JSZip, project) {
           `[[Notes/${l.to}|${p.notes.find((x) => x.id === l.to)?.title || l.to}]] · ${l.type} · ${l.reason || "理由待补"}`,
       )
       .join("\n");
+    const sourceIds = [
+      ...new Set(
+        [
+          n.sourceId,
+          ...(n.sourceIds || []),
+          ...(n.inputSnapshot || []).map((x) => x.sourceId),
+        ].filter(Boolean),
+      ),
+    ];
+    const sourceLinks = sourceIds
+      .map(
+        (id) =>
+          `[[Sources/${id}|${p.sources.find((s) => s.id === id)?.title || id}]]`,
+      )
+      .join("\n");
+    const snapshot = (n.inputSnapshot || [])
+      .map(
+        (x) =>
+          `### ${x.sourceTitle || x.sourceId} · ${x.id}\n\n${x.location || "定位待核"} · 修订 ${x.revision || 1}\n\n${x.text || ""}\n`,
+      )
+      .join("\n");
+    const provenance = snapshot ? `\n\n## 本轮输入快照\n\n${snapshot}` : "";
+    const original = n.generatedText
+      ? `\n\n## 模型原始候选（待核）\n\n${n.generatedText}\n`
+      : "";
     zip.file(
       `Notes/${n.id}.md`,
       fm({
@@ -48,8 +73,14 @@ export async function exportVault(JSZip, project) {
         segment: n.segmentId,
         decision: n.decision,
         stale: !!n.stale,
+        source_ids: sourceIds,
+        model: n.model,
+        model_endpoint: n.endpoint,
+        generated_at: n.time,
+        parent_note: n.parentNoteId,
+        verification_reason: n.reason,
       }) +
-        `# ${n.title}\n\n${n.body || ""}\n\n## 原话与出处\n\n${n.quote || ""}\n\n${n.sourceId ? "[[Sources/" + n.sourceId + "]]" : ""}\n\n语境：${n.context || "待补"}\n\n${links}\n`,
+        `# ${n.title}\n\n${n.body || ""}\n\n## 原话与出处\n\n${n.quote || ""}\n\n${sourceLinks}\n\n语境：${n.context || "待补"}\n\n${links}\n${provenance}${original}`,
     );
   }
   zip.file(
