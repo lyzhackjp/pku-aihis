@@ -1,0 +1,22 @@
+name: Week 4 checks
+on:
+  pull_request:
+    paths: ['apps/week04/**', 'packages/course-project/**', '.github/workflows/week04-check.yml']
+  push:
+    branches: [main]
+    paths: ['apps/week04/**', 'packages/course-project/**', '.github/workflows/week04-check.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: .node-version
+      - run: npm install --global pnpm@11.19.0
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+        working-directory: apps/week04
+      - run: pnpm test && pnpm run check && pnpm run build
+        working-directory: apps/week04
