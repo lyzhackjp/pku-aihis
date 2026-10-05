@@ -14,7 +14,9 @@ export class DeckPresenter {
   private timer: any;
   async componentDidLoad() {
     this.pages = await (await fetch("assets/data/pages.json")).json();
-    const id = location.hash.slice(1) || "P01";
+    const requestedId = location.hash.slice(1) || "P01";
+    const id = requestedId === "P39" ? "P40" : requestedId;
+    if (id !== requestedId) history.replaceState(null, "", "#" + id);
     this.update(this.pages.find((p) => p.id === id) || this.pages[0]);
     this.channel = new BroadcastChannel("pku-aihis-week04-20261005");
     this.channel.onmessage = (e) => {

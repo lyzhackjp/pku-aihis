@@ -512,45 +512,6 @@ export class SystemFlow {
           {sourceTrail()}
         </div>
       );
-    } else if (id === "P39") {
-      question = "Patchouli 框架如何与当前研究工作台对应？";
-      first = card(
-        "已有研究工作的产物",
-        <p>
-          来源、处理副本、阅读记录与问题索引已有独立身份，可比较另一平台怎样保存这些关系。
-        </p>,
-      );
-      action = (
-        <div>
-          {field(
-            "拟请助教演示／商榷的功能",
-            this.result,
-            (v) => (this.result = v),
-            true,
-          )}
-          <button
-            onClick={() =>
-              update(
-                "记录 Patchouli 比较问题",
-                state.project.id,
-                () => (state.project.patchouliQuestions = this.result),
-              )
-            }
-          >
-            保存商榷问题
-          </button>
-        </div>
-      );
-      result = (
-        <div>
-          <p>
-            本页保留平台作者演示入口。尚未接入真实 Patchouli
-            实例，不把当前工作台称作其移植版。
-          </p>
-          <p>候选比较：来源锚点、处理记录、检索入口与部署门槛。</p>
-        </div>
-      );
-      last = recent(state.project.id);
     } else {
       question = "新增一个工具，究竟解决了什么重复劳动？";
       first = card(

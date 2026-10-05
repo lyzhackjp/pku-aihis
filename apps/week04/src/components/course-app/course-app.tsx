@@ -80,6 +80,8 @@ export class CourseApp {
       }
   }
   private go(id: string | number) {
+    // 已撤下的入口接续到下一页，其余稳定编号保持原有对应。
+    if (id === "P39") id = "P40";
     const i = typeof id === "number" ? id : pages.findIndex((p) => p.id === id);
     if (i < 0 || i >= pages.length) return;
     this.current = i;

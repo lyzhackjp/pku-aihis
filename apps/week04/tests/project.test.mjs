@@ -76,7 +76,7 @@ test("invalid page numbers, dangling source references and credentials are rejec
   p.model = { apiKey: "do-not-export" };
   assert.throws(() => validateProject(p), /凭据/);
 });
-test("published seed and all 42 stable page entries have a real curriculum mapping", async () => {
+test("published seed and all active stable page entries have a real curriculum mapping", async () => {
   const p = validateProject(
     JSON.parse(await readFile("src/assets/data/example.json", "utf8")),
   );
@@ -84,8 +84,8 @@ test("published seed and all 42 stable page entries have a real curriculum mappi
   const pages = JSON.parse(
     await readFile("src/assets/data/pages.json", "utf8"),
   );
-  assert.equal(pages.length, 42);
-  assert.equal(new Set(pages.map((x) => x.id)).size, 42);
+  assert.equal(pages.length, 41);
+  assert.equal(new Set(pages.map((x) => x.id)).size, 41);
   assert(pages.every((x) => x.section && x.notes && x.action));
 });
 
