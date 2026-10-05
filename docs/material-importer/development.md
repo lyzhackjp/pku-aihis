@@ -1,0 +1,46 @@
+# 开发与验证记录（2026-10-05）
+
+对象：本应用及 packages/course-project/v1；浏览器为 macOS Chrome 154.0.8037.93。课堂桌面 1600×1000，窄屏 390×844。材料采用用户授权的本机德教研究样本；正文、未刊研究文件及截图留在本机交付目录，不写入公开仓库。
+
+## 实际验证
+
+| 检查 | 结果 |
+|---|---|
+| 第四周合同/队列/派生排除/失效/题录与页面映射 | 12 项单元测试通过 |
+| 完整备份、损坏附件、缺原件、追加附件、笔记库链接 | 导入器分支 5 项测试通过 |
+| TypeScript 与生产构建 | 两应用通过；导入器约 954KB 主 JS，另按需加载 OCR/阅读资源，Vite 发出包体积提示 |
+| 42 页面与四栏 | Chrome 实际遍历，四栏数量、导航与编辑控件翻页保护通过 |
+| 真实中文 PDF、用户 DOCX、无文字层扫描 PDF | 提取正文/段落成功；扫描页空文字层明确返回未提取，没有伪造文本 |
+| 导入器 → 课件 → 阅读队列/笔记 | 原件与文本真实转移，个人笔记保存；跨窗口更新通过 |
+| 完整 ZIP → 空白项目 → 恢复 → 打开原件 | 通过；原件、定位、笔记可恢复 |
+| RIS/BibTeX/CSV | 三种明确标注的技术测试题录通过；它们不是史实证据 |
+| 模型请求 | 以本机拦截响应验证明确选文、输入快照、401 错误、key 不入项目、人工笔记另存；未调用付费生成服务 |
+| Zotero 批注与阅读器切换 | 批注按附件保存、重新打开恢复、切换材料移除旧阅读器，最终无浏览器错误 |
+| 教师窗口 | 初始页面及翻页同步通过 |
+| 第三周回归 | 原仓库 27 项测试通过；已有源码未改动 |
+
+## 三组组合的判断
+
+第一组已经形成主线：课件容器＋统一项目记录＋PDF.js＋DOCX/题录导入＋笔记/队列/完整备份。这组无需模型即可使用。
+
+第二组完成独立比较：Zotero Reader 能真实打开扫描原件并进行项目批注；PDF.js 适合直接暴露定位过程。Scribe.js 0.16.1 在中文单页上完成已有文字层提取（约 0.3 秒，2675 字，含分隔空格）；PDF.js 同页取得约 1464 字。不同文字规范不能直接以字数评胜负。
+
+日文样本来自 1906《声》第359号 PDF物理页2，包括文章与目录。NDLOCR-Lite 本机浏览器 Worker 首轮约14.95秒，75个检测行，1521字；Tesseract.js7/jpn_vert/纵排约13.60秒，8606字但噪声和杂项明显；Scribe.js0.16.1/LSTM/日文默认版面在同一物理页的图像上约5.7秒，88字，未正确恢复纵排正文。Tesseract与NDL走同一导入器页图路径，Scribe另用导出的同页PNG；没有建立逐字金标、CER 或统一光栅参数，不能据此宣称普遍准确率。该样本支持优先NDL，并保留人工核对与错误比较。
+
+第三组采用可验证的窄连接：Zotero Web API v3 只读题录接口与实际可解压的 Obsidian 笔记库 ZIP，内部链接有对应文件。未提供用户 Zotero 库编号/key，未把代码和模拟测试写成私人库联通；Obsidian 本体、ZotLit、AnythingLLM、Patchouli 的真实实例未运行。
+
+## 软件与费用依据
+
+[Zotero 数据同步](https://www.zotero.org/support/sync)免费；[附件存储](https://www.zotero.org/storage)免费300MB，2GB每年20美元、6GB每年60美元、不限量每年120美元。普通[Web API v3](https://www.zotero.org/support/dev/web_api/v3/basics)题录接入不要求先买附件存储套餐；请求受429/Backoff限制，不能称为无限免费调用。公开库与私有库授权、题录与附件下载是不同条件。
+
+[Zotero Reader](https://github.com/zotero/reader)：692c28989629acf920fadb683747e18e5506b214，AGPL3。PDF子模块61b3f391354f3be9feff4c4d435b9eebe844af20；generic-legacy/minified-legacy构建，按网页产物目录装配。官方固定语言提交a6a919234a360f5cc0f8dbf45b84e1fafc546f41；补装源码遗漏的raw-loader4.0.2后webpack web构建成功，仍有大包警告。完整源代码/许可留在独立本机检出。
+
+[Scribe.js](https://github.com/scribeocr/scribe.js)、[API](https://github.com/scribeocr/scribe.js/blob/master/docs/API.md)：固定npm包0.16.1，AGPL3，完整模块本机同源提供，核心应用不打包它。
+
+[NDLOCR-Lite](https://github.com/ndl-lab/ndlocr-lite)与[浏览器移植](https://github.com/yuta1984/ndlocrlite-web)：固定移植提交50216ccc3e600f6d0d152862c5a201fdade78112，CC BY4.0。本轮用仓库内PARSeq16px权重，未混用当前loader引用的24px模型；ONNX Runtime Web锁定1.24.3。只验证单线程WASM，未验证WebGPU；ONNX文件存在并不自动保证所有算子和预处理兼容。
+
+## 合并与发布
+
+两个分支只新增自己的应用、相同的共享项目合同、各自测试及说明。相同.gitignore条目避免顺次合并的末行冲突。共享合同不要求两应用同时上线。每支有独立CI构建检查，既有发布白名单与主页不变。未合并main、未部署，线上运行效果不在本轮通过范围。
+
+AI 自检不代替教师与助教对当前版本的独立审阅。
