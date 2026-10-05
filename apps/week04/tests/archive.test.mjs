@@ -98,12 +98,28 @@ test("new attachments of an existing record append while handwritten notes survi
 });
 test("vault links resolve to individual exported notes and sources", async () => {
   const { p } = await sample();
+  p.notes[0].inputSnapshot = [
+    {
+      id: "g1",
+      sourceId: "s1",
+      sourceTitle: "示例",
+      text: "实际输入范围",
+      revision: 2,
+      location: "PDF物理页 2",
+    },
+  ];
+  p.notes[0].generatedText = "原始候选：待核";
+  p.notes[0].model = "fixture-model";
   const z = await JSZip.loadAsync(
     await (await exportVault(JSZip, p)).arrayBuffer(),
   );
   const n = await z.file("Notes/n1.md").async("string");
   assert(n.includes("[[Notes/n2|问题二]]"));
-  assert(n.includes("[[Sources/s1]]"));
+  assert(n.includes("[[Sources/s1|示例]]"));
+  assert(n.includes("实际输入范围"));
+  assert(n.includes("PDF物理页 2"));
+  assert(n.includes("原始候选：待核"));
+  assert(n.includes('model: "fixture-model"'));
   assert(z.file("Notes/n2.md"));
   assert((await z.file("Sources/s1.md").async("string")).includes("段落1"));
 });

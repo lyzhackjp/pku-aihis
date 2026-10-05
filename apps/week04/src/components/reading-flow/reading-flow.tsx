@@ -35,25 +35,36 @@ export class ReadingFlow {
   @State() busy = false;
   @State() hidden = false;
   @State() lastSource = "";
+  @State() acrossSources = false;
   private abort: AbortController;
   @Listen("project-change", { target: "window" }) changed() {
     this.revision++;
     if (this.lastSource !== state.sourceId) {
-      this.chosen = null;
-      this.answer = "";
+      if (!this.acrossSources) {
+        this.chosen = null;
+        this.answer = "";
+      }
       this.lastSource = state.sourceId;
     }
   }
   disconnectedCallback() {
     this.abort?.abort();
   }
-  private inputs() {
-    const candidates = state.project.segments.filter(
-      (x: any) => x.sourceId === state.sourceId && !x.derived,
+  private candidates() {
+    return state.project.segments.filter(
+      (x: any) =>
+        !x.derived &&
+        (this.acrossSources || x.sourceId === state.sourceId) &&
+        state.project.sources.find((s) => s.id === x.sourceId)?.included !==
+          false,
     );
-    return this.chosen !== null
-      ? candidates.filter((x: any) => this.chosen.includes(x.id))
-      : candidates.slice(0, 1);
+  }
+  private inputs() {
+    const candidates = this.candidates();
+    if (this.chosen !== null)
+      return candidates.filter((x) => this.chosen.includes(x.id));
+    const current = candidates.find((x) => x.id === segment()?.id);
+    return current ? [current] : candidates.slice(0, 1);
   }
   private async run() {
     this.busy = true;
@@ -62,6 +73,9 @@ export class ReadingFlow {
     const snapshot = this.inputs().map((x: any) => ({
       id: x.id,
       sourceId: x.sourceId,
+      sourceTitle:
+        state.project.sources.find((s) => s.id === x.sourceId)?.title ||
+        x.sourceId,
       revision: x.revision || 1,
       text: x.text,
       location: location(x),
@@ -73,15 +87,21 @@ export class ReadingFlow {
       runEndpoint = model.endpoint;
     try {
       if (!snapshot.length) throw Error("当前没有可发送的正文。");
+      if (runType === "比较" && snapshot.length < 2)
+        throw Error("比较至少需要选择两处实际依据。");
       const input = snapshot
-        .map((x: any) => `[${x.id}] ${x.location}\n${x.text}`)
+        .map(
+          (x: any) => `[${x.id}] ${x.sourceTitle} · ${x.location}\n${x.text}`,
+        )
         .join("\n\n");
       this.answer = await readWithModel(input, runType, this.abort.signal);
       if (state.project.id !== runProjectId)
         throw Error("项目已切换，本轮结果未写入另一个项目。");
+      const sourceIds = [...new Set(snapshot.map((x) => x.sourceId))];
       const n = {
         id: uid("note"),
-        sourceId: runSourceId,
+        sourceId: sourceIds.length === 1 ? sourceIds[0] : "",
+        sourceIds,
         title: `${runType}：模型候选`,
         kind: "模型候选",
         body: this.answer,
@@ -100,7 +120,8 @@ export class ReadingFlow {
       };
       await update("保存本轮模型阅读候选", n.id, () => {
         state.project.notes.push(n);
-        if (state.sourceId === runSourceId) state.noteId = n.id;
+        if (state.sourceId === runSourceId || this.acrossSources)
+          state.noteId = n.id;
       });
       this.message = "本轮实时生成已保存为待核候选。";
     } catch (e) {
@@ -151,22 +172,29 @@ export class ReadingFlow {
           (v) => (this.type = v),
         )}
         <p>{needs[this.type]}</p>
-        {state.project.segments
-          .filter((x: any) => x.sourceId === state.sourceId && !x.derived)
-          .map((x: any) =>
-            check(
-              `${location(x)} · ${x.id}`,
-              inputs.some((a: any) => a.id === x.id),
-              (v) => {
-                const set = new Set(inputs.map((a: any) => a.id));
-                if (v) set.add(x.id);
-                else set.delete(x.id);
-                this.chosen = [...set] as string[];
-              },
-            ),
-          )}
+        {check("跨材料选择片段（用于比较或回找）", this.acrossSources, (v) => {
+          const selected = this.inputs().map((x) => x.id);
+          this.acrossSources = v;
+          this.chosen = selected;
+        })}
+        {this.candidates().map((x: any) =>
+          check(
+            `${state.project.sources.find((s) => s.id === x.sourceId)?.title || x.sourceId} · ${location(x)} · ${x.id}`,
+            inputs.some((a: any) => a.id === x.id),
+            (v) => {
+              const set = new Set(inputs.map((a: any) => a.id));
+              if (v) set.add(x.id);
+              else set.delete(x.id);
+              this.chosen = [...set] as string[];
+            },
+          ),
+        )}
         <button
-          disabled={this.busy || !inputs.length}
+          disabled={
+            this.busy ||
+            !inputs.length ||
+            (this.type === "比较" && inputs.length < 2)
+          }
           onClick={() => this.run()}
         >
           将所选范围交给模型
@@ -191,7 +219,23 @@ export class ReadingFlow {
         <button
           onClick={() => {
             const a = addNote("人工阅读记录");
-            update("保存人工阅读产物", a.id, () => (a.body = this.answer));
+            update("保存人工阅读产物", a.id, () => {
+              a.body = this.answer;
+              if (n?.generatedText) {
+                Object.assign(a, {
+                  kind: "来源笔记",
+                  sourceId: n.sourceId,
+                  sourceIds: structuredClone(n.sourceIds || []),
+                  segmentId: "",
+                  parentNoteId: n.id,
+                  inputSnapshot: structuredClone(n.inputSnapshot || []),
+                  generatedText: n.generatedText,
+                  model: n.model,
+                  endpoint: n.endpoint,
+                  time: n.time,
+                });
+              }
+            });
           }}
         >
           保存人工产物
@@ -245,7 +289,7 @@ export class ReadingFlow {
           {sourceTrail()}
           {n?.inputSnapshot?.map((x: any) =>
             card(
-              `本轮快照 · ${x.id}`,
+              `本轮快照 · ${x.sourceTitle || x.sourceId} · ${x.id}`,
               <div>
                 <p>
                   {x.location} · 修订 {x.revision}
