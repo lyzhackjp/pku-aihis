@@ -9,6 +9,7 @@ import {
   uid,
   now,
   addNote,
+  ensureTask,
 } from "../../lib/project";
 import { readWithModel, model } from "../../lib/model";
 import {
@@ -189,6 +190,23 @@ export class ReadingFlow {
             },
           ),
         )}
+        <details class="input-preview">
+          <summary>
+            检查本轮实际输入：{inputs.length}个片段、
+            {inputs.reduce((total, x) => total + x.text.length, 0)}个字符
+          </summary>
+          {inputs.map((x) =>
+            card(`[${x.id}] ${location(x)}`, <pre>{x.text}</pre>),
+          )}
+          <p>当前未自动截断；未选择的页段没有发送。</p>
+        </details>
+        {t &&
+          field(
+            "本次尚未覆盖什么",
+            t.uncovered,
+            (v) => this.editTask("uncovered", v),
+            true,
+          )}
         <button
           disabled={
             this.busy ||
@@ -437,6 +455,9 @@ export class ReadingFlow {
       );
       action = (
         <div>
+          {!t && (
+            <button onClick={() => ensureTask()}>为当前材料建立阅读记录</button>
+          )}
           {field(
             "阅读前的问题",
             t?.before,
@@ -481,6 +502,7 @@ export class ReadingFlow {
         { title: "核对与接续", body: last },
       ],
       "限定一个真实阅读范围；未读部分保持可见。",
+      "compare",
     );
   }
 }

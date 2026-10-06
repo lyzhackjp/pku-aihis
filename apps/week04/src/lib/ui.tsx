@@ -118,29 +118,26 @@ export function flow(
   question: string,
   columns: { title: string; body: any; why?: string }[],
   tryText: string,
+  layout = "workspace",
 ) {
   return (
-    <div class="flow-shell">
+    <div class={`flow-shell flow-layout-${layout}`}>
       <p class="flow-question">{question}</p>
-      <div class="flow-rail" aria-label="本页四个环节">
-        {columns.map((x, i) => (
-          <span>
-            {i + 1} · {x.title}
-          </span>
-        ))}
-      </div>
       <div class="flow-grid">
-        {columns.map((c, i) => (
+        {columns.slice(0, 3).map((c, i) => (
           <section class="flow-col">
-            <header>
-              <b>{String(i + 1).padStart(2, "0")}</b>
-              {c.title}
-            </header>
+            <header>{c.title}</header>
             {c.why && <p class="flow-why">{c.why}</p>}
             {c.body}
           </section>
         ))}
       </div>
+      {columns[3] && (
+        <details class="flow-provenance">
+          <summary>{columns[3].title} · 展开查看</summary>
+          {columns[3].body}
+        </details>
+      )}
       <p class="flow-try">动手观察：{tryText}</p>
     </div>
   );

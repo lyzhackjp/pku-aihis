@@ -69,7 +69,7 @@ export class NoteFlow {
               state.noteId = n.id;
               if (n.sourceId) state.sourceId = n.sourceId;
               if (n.segmentId) state.segmentId = n.segmentId;
-              this.changed();
+              window.dispatchEvent(new CustomEvent("project-change"));
             }}
           >
             <b>{n.title}</b>
@@ -231,6 +231,15 @@ export class NoteFlow {
       result: any = this.noteList(),
       last: any = sourceTrail();
     if (id === "P20") {
+      first = this.noteList();
+      last = (
+        <div>
+          {chooser()}
+          {segmentChooser()}
+          {evidence()}
+          {sourceTrail()}
+        </div>
+      );
       question = "同一段文字，进入摘录、释义和问题笔记后各承担什么职责？";
       result = (
         <div>
@@ -567,34 +576,33 @@ export class NoteFlow {
       first = this.noteList();
       action = this.editor();
       result = (
-        <table class="flow-table">
-          <thead>
-            <tr>
-              <th>题名</th>
-              <th>职责</th>
-              <th>核验</th>
-              <th>来源</th>
-            </tr>
-          </thead>
-          <tbody>
-            {state.project.notes.map((x: any) => (
-              <tr>
-                <td>{x.title}</td>
-                <td>{x.kind}</td>
-                <td>{x.decision}</td>
-                <td>
-                  {
-                    state.project.sources.find((a: any) => a.id === x.sourceId)
-                      ?.title
-                  }
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      );
-      last = (
         <div>
+          <table class="flow-table">
+            <thead>
+              <tr>
+                <th>题名</th>
+                <th>职责</th>
+                <th>核验</th>
+                <th>来源</th>
+              </tr>
+            </thead>
+            <tbody>
+              {state.project.notes.map((x: any) => (
+                <tr>
+                  <td>{x.title}</td>
+                  <td>{x.kind}</td>
+                  <td>{x.decision}</td>
+                  <td>
+                    {
+                      state.project.sources.find(
+                        (a: any) => a.id === x.sourceId,
+                      )?.title
+                    }
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           <button
             onClick={async () =>
               download(await vaultBackup(), "个人知识系统_Obsidian笔记库.zip")
@@ -606,8 +614,18 @@ export class NoteFlow {
             导出后介绍 Obsidian 属性、Bases 或 Dataview；网页没有运行 Obsidian
             本体。
           </p>
+          <button
+            onClick={() =>
+              window.dispatchEvent(
+                new CustomEvent("navigate-page", { detail: "P35" }),
+              )
+            }
+          >
+            在此恢复／追加，检验个人解释仍在
+          </button>
         </div>
       );
+      last = sourceTrail();
     } else {
       question = "重新取得外部题录时，自己的阅读理解能否保留？";
       first = this.noteList();
@@ -638,6 +656,7 @@ export class NoteFlow {
         { title: "保留出处与限制", body: last },
       ],
       "先形成一条可回查的笔记，再观察它怎样进入问题与链接。",
+      id === "P28" || id === "P36" ? "table" : "workspace",
     );
   }
 }

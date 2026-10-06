@@ -110,6 +110,24 @@ export const segment = () =>
   );
 export const task = () =>
   state.project.tasks.find((x: any) => x.sourceId === state.sourceId);
+export function ensureTask() {
+  if (task() || !source()) return task();
+  const t = {
+    id: uid("task"),
+    sourceId: state.sourceId,
+    status: "待读",
+    priority: 2,
+    type: "筛选",
+    range: "",
+    readRange: "",
+    next: "核对题录并选择阅读范围",
+    blocker: "",
+    understanding: "",
+    updatedAt: now(),
+  };
+  update("建立阅读任务", t.id, () => state.project.tasks.push(t));
+  return t;
+}
 export const note = () =>
   state.project.notes.find(
     (x: any) =>

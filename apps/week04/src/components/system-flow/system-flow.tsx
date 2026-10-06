@@ -35,6 +35,9 @@ export class SystemFlow {
   @State() rule = "NFKC";
   @State() rowUnit = "材料";
   @State() result = "";
+  @State() copyResult = "";
+  @State() correction = "";
+  private selectedSegment = "";
   @State() message = "";
   @State() library = "";
   @State() libraryType = "groups";
@@ -44,6 +47,12 @@ export class SystemFlow {
   @State() append = false;
   @Listen("project-change", { target: "window" }) changed() {
     this.revision++;
+    const selected = `${state.project.id}/${segment()?.id || ""}`;
+    if (selected !== this.selectedSegment) {
+      this.selectedSegment = selected;
+      this.copyResult = "";
+      this.correction = "";
+    }
   }
   private async export() {
     this.busy = true;
@@ -184,12 +193,15 @@ export class SystemFlow {
             "处理副本的规则",
             this.rule,
             ["NFKC", "NFC", "徳→德、敎→教（本例人工规则）"],
-            (v) => (this.rule = v),
+            (v) => {
+              this.rule = v;
+              this.copyResult = "";
+            },
           )}
           <button
             disabled={!seg}
             onClick={() => {
-              this.result = this.rule.startsWith("徳")
+              this.copyResult = this.rule.startsWith("徳")
                 ? seg.text.replaceAll("徳", "德").replaceAll("敎", "教")
                 : seg.text.normalize(this.rule);
             }}
@@ -197,10 +209,10 @@ export class SystemFlow {
             生成检索副本
           </button>
           <button
-            disabled={!seg || !this.result}
+            disabled={!seg || !this.copyResult}
             onClick={() =>
               update("保存规范化检索副本", seg.id, () => {
-                seg.normalized = this.result;
+                seg.normalized = this.copyResult;
                 seg.normalizationRule = this.rule;
                 seg.normalizationRevision = seg.revision || 1;
               })
@@ -213,7 +225,7 @@ export class SystemFlow {
       result = (
         <div>
           <h3>规范化副本</h3>
-          <pre>{this.result || seg?.normalized || "尚未生成"}</pre>
+          <pre>{this.copyResult || seg?.normalized || "尚未生成"}</pre>
           <p>规则：{seg?.normalizationRule || "未保存"}</p>
         </div>
       );
@@ -260,15 +272,15 @@ export class SystemFlow {
         <div>
           {field(
             "校订文字",
-            this.result || seg?.text,
-            (v) => (this.result = v),
+            this.correction || seg?.text,
+            (v) => (this.correction = v),
             true,
           )}
           <button
-            disabled={!seg || !this.result}
+            disabled={!seg || !this.correction}
             onClick={() =>
               update("校订所选正文", seg.id, () =>
-                editSegment(state.project, seg.id, this.result),
+                editSegment(state.project, seg.id, this.correction),
               )
             }
           >
@@ -591,6 +603,7 @@ export class SystemFlow {
         { title: "保留与恢复", body: last },
       ],
       "保存后重新打开项目，检验能否从已有记录继续。",
+      ["P29", "P35", "P38", "P42"].includes(id) ? "table" : "compare",
     );
   }
 }

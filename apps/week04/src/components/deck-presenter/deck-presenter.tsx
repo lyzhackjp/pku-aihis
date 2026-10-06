@@ -1,4 +1,5 @@
 import { Component, h, State } from "@stencil/core";
+import { resolveView, viewData } from "../../lib/navigation.mjs";
 @Component({
   tag: "deck-presenter",
   styleUrl: "deck-presenter.css",
@@ -7,17 +8,20 @@ import { Component, h, State } from "@stencil/core";
 export class DeckPresenter {
   @State() data: any = {};
   @State() pages: any[] = [];
+  private topics: any[] = [];
+  private remembered: Record<string, string> = {};
   @State() seconds = 0;
   @State() running = false;
   @State() notes = "";
   private channel: BroadcastChannel;
   private timer: any;
   async componentDidLoad() {
-    this.pages = await (await fetch("assets/data/pages.json")).json();
-    const requestedId = location.hash.slice(1) || "P01";
-    const id = requestedId === "P39" ? "P40" : requestedId;
-    if (id !== requestedId) history.replaceState(null, "", "#" + id);
-    this.update(this.pages.find((p) => p.id === id) || this.pages[0]);
+    this.pages = await (await fetch("assets/data/processes.json")).json();
+    this.topics = await (await fetch("assets/data/pages.json")).json();
+    const view =
+      resolveView(this.pages, location.hash.slice(1) || "W01") ||
+      resolveView(this.pages, "W01");
+    this.update(viewData(view, this.topics));
     this.channel = new BroadcastChannel("pku-aihis-week04-20261005");
     this.channel.onmessage = (e) => {
       if (e.data.type === "STATE") this.update(e.data);
@@ -33,29 +37,55 @@ export class DeckPresenter {
   }
   update(p: any) {
     this.data = p;
+    this.remembered[p.id] = p.mode?.id;
+    history.replaceState(null, "", "#" + (p.route || p.id));
     this.notes =
-      sessionStorage.getItem("week04-notes-" + p.id) ||
+      sessionStorage.getItem("week04-notes-" + p.route) ||
       p.notes ||
       `目的：${p.title}\n操作：${p.action || ""}\n观察：${p.evidence || ""}`;
   }
+  private navigate(target: string) {
+    const view = resolveView(this.pages, target, this.remembered);
+    if (!view) return;
+    this.channel.postMessage({
+      type: "NAV",
+      id: `${view.process.id}/${view.mode.id}`,
+    });
+    this.update(viewData(view, this.topics));
+  }
   move(delta: number) {
     const i = this.pages.findIndex((p) => p.id === this.data.id) + delta;
-    if (i >= 0 && i < this.pages.length) {
-      this.channel.postMessage({ type: "NAV", id: this.pages[i].id });
-      this.update(this.pages[i]);
-    }
+    if (i >= 0 && i < this.pages.length) this.navigate(this.pages[i].id);
   }
   render() {
     return (
       <main class="presenter">
         <header>
           <span>第四周 / 教师视图</span>
-          <a target="week04-audience" href={"./#" + (this.data.id || "P01")}>
+          <a
+            target="week04-audience"
+            href={"./#" + (this.data.route || "W01/P01")}
+          >
             打开／恢复观众窗口 ↗
           </a>
         </header>
-        <p class="eyebrow">当前 {this.data.id}</p>
+        <p class="eyebrow">
+          当前环节 {this.data.id} · {this.data.mode?.label}
+        </p>
         <h1>{this.data.title}</h1>
+        <nav class="process-tabs" aria-label="教师页内功能">
+          {this.data.modes?.map((m) => (
+            <button
+              aria-pressed={m.id === this.data.mode?.id ? "true" : "false"}
+              onClick={() => this.navigate(`${this.data.id}/${m.id}`)}
+            >
+              {m.label}
+            </button>
+          ))}
+        </nav>
+        {this.data.related && (
+          <p>观众正在临时回看：{this.data.related}；关闭后接续当前环节。</p>
+        )}
         <div class="presenter-grid">
           <section>
             <h2>讲解备注</h2>
@@ -65,7 +95,7 @@ export class DeckPresenter {
               onInput={(e: any) => {
                 this.notes = e.target.value;
                 sessionStorage.setItem(
-                  "week04-notes-" + this.data.id,
+                  "week04-notes-" + this.data.route,
                   this.notes,
                 );
               }}
@@ -83,7 +113,7 @@ export class DeckPresenter {
               {this.running ? "暂停" : "开始"}计时
             </button>{" "}
             <button onClick={() => (this.seconds = 0)}>重置</button>
-            <h2>下一页</h2>
+            <h2>下一环节</h2>
             <p>
               {this.data.next?.title ||
                 this.pages[
@@ -91,8 +121,8 @@ export class DeckPresenter {
                 ]?.title ||
                 "课程结束"}
             </p>
-            <button onClick={() => this.move(-1)}>← 上一页</button>{" "}
-            <button onClick={() => this.move(1)}>下一页 →</button>
+            <button onClick={() => this.move(-1)}>← 上一环节</button>{" "}
+            <button onClick={() => this.move(1)}>下一环节 →</button>
             <p>双屏状态通过当前课程专用频道同步。</p>
           </section>
         </div>

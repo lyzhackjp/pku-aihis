@@ -344,7 +344,7 @@ pre {
   float: right;
   font-size: 12px;
 }
-.deck-shell > main {
+.deck-interface > main {
   flex: 1;
   min-height: 600px;
 }
@@ -704,7 +704,7 @@ button:disabled {
     height: 100vh;
     overflow: hidden;
   }
-  .deck-shell:not(.workbench) > main {
+  .deck-shell:not(.workbench) .deck-interface > main {
     min-height: 0;
     overflow: hidden;
   }
@@ -747,5 +747,183 @@ button:disabled {
   }
   .deck-shell:not(.workbench) .flow-question {
     font-size: 17px;
+  }
+}
+
+/* 一个处理环节一页；页内操作与按需回看承担原来的细分入口。 */
+[hidden] {
+  display: none !important;
+}
+.deck-interface,
+process-workspace,
+.process-tools,
+.process-tools > :not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+.process-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 0 10px;
+  flex: none;
+}
+.process-tabs button {
+  padding: 7px 12px;
+}
+.process-tabs button[aria-pressed="true"],
+.workspace-tabs button[aria-current="page"] {
+  background: var(--color-accent);
+  color: white;
+  border-color: var(--color-accent);
+}
+.flow-grid {
+  grid-template-columns: minmax(210px, 0.72fr) minmax(300px, 1.05fr) minmax(
+      330px,
+      1.3fr
+    );
+  align-items: stretch;
+}
+.flow-layout-compare .flow-grid {
+  grid-template-columns: minmax(250px, 1fr) minmax(320px, 1.15fr) minmax(
+      330px,
+      1.25fr
+    );
+}
+.flow-layout-table .flow-grid {
+  grid-template-columns: minmax(210px, 0.65fr) minmax(260px, 0.85fr) minmax(
+      420px,
+      1.8fr
+    );
+}
+.flow-provenance {
+  flex: none;
+  border-top: 1px solid var(--color-border);
+  padding-top: 8px;
+}
+.flow-provenance[open] {
+  max-height: 30vh;
+  overflow: auto;
+}
+.flow-provenance > summary {
+  color: var(--color-accent);
+  cursor: pointer;
+}
+.flow-provenance .card {
+  display: inline-block;
+  vertical-align: top;
+  width: min(100%, 380px);
+  margin-right: 12px;
+}
+.project-start {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.95fr) minmax(350px, 1.3fr) minmax(
+      250px,
+      0.8fr
+    );
+  gap: 24px;
+  flex: 1;
+  min-height: 0;
+}
+.project-start > section {
+  min-width: 0;
+  overflow: auto;
+  padding-right: 12px;
+}
+.project-start h2 {
+  font-size: 21px;
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: 8px;
+}
+.project-start p {
+  line-height: 1.8;
+  margin-top: 12px;
+}
+.project-start button {
+  margin: 6px 6px 6px 0;
+}
+.related-dialog {
+  height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.related-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  flex: none;
+}
+.related-header h2 {
+  margin: 7px 0 14px;
+}
+.related-header button {
+  flex: none;
+}
+.related-dialog .flow-col {
+  overflow: auto;
+  padding-right: 12px;
+}
+.related-dialog .flow-grid {
+  min-height: 0;
+}
+.input-preview {
+  margin: 12px 0;
+  border: 1px solid var(--color-border);
+  padding: 10px;
+}
+.input-preview summary {
+  color: var(--color-accent);
+  cursor: pointer;
+}
+@media (max-width: 1100px) {
+  .flow-grid,
+  .flow-layout-compare .flow-grid,
+  .flow-layout-table .flow-grid {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.3fr);
+  }
+  .flow-col:last-child {
+    grid-column: 1 / -1;
+  }
+  .project-start {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  }
+  .start-results {
+    grid-column: 1 / -1;
+  }
+  .related-dialog {
+    height: auto;
+    min-height: calc(100vh - 60px);
+  }
+  .related-header {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 650px) {
+  .flow-grid,
+  .flow-layout-compare .flow-grid,
+  .flow-layout-table .flow-grid,
+  .project-start {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .process-tabs button {
+    flex: 1 1 auto;
+  }
+  .project-start > section {
+    padding: 0;
+    overflow: visible;
+  }
+  .flow-provenance[open] {
+    max-height: none;
+  }
+  .related-header button {
+    width: 100%;
+  }
+  .related-dialog {
+    padding: 14px;
   }
 }

@@ -10,6 +10,7 @@ import {
   queue,
   search,
   chooseSource,
+  ensureTask,
 } from "../../lib/project";
 import {
   flow,
@@ -33,6 +34,7 @@ export class MaterialFlow {
   @State() term = "徳教";
   @State() relation = "暂不能判定";
   @State() other = "";
+  @State() groupTerm = "";
   @Listen("project-change", { target: "window" }) changed() {
     this.revision++;
   }
@@ -45,7 +47,7 @@ export class MaterialFlow {
       title: "新材料（待补题录）",
       author: "",
       date: "",
-      kind: "二手文献",
+      kind: "待分类",
       attachments: [],
       tags: [],
       collections: [],
@@ -59,21 +61,7 @@ export class MaterialFlow {
     });
   }
   private newTask() {
-    if (task()) return;
-    const t = {
-      id: uid("task"),
-      sourceId: state.sourceId,
-      status: "待读",
-      priority: 2,
-      type: "筛选",
-      range: "",
-      readRange: "",
-      next: "核对题录并选择阅读范围",
-      blocker: "",
-      understanding: "",
-      updatedAt: now(),
-    };
-    update("建立阅读任务", t.id, () => state.project.tasks.push(t));
+    ensureTask();
   }
   render() {
     const s = source(),
@@ -110,10 +98,24 @@ export class MaterialFlow {
           {select(
             "材料角色",
             s.kind,
-            ["史料", "二手文献", "教师研究草稿"],
+            ["待分类", "史料", "二手文献", "教师研究草稿"],
             (v) => this.edit("kind", v),
           )}
           {field("取得渠道", s.acquisition, (v) => this.edit("acquisition", v))}
+          <details>
+            <summary>版本、日期与空值性质</summary>
+            {field("扫描／取得日期", s.acquiredAt, (v) =>
+              this.edit("acquiredAt", v),
+            )}
+            {field("版本／刊载来源", s.edition, (v) => this.edit("edition", v))}
+            {select(
+              "空值性质",
+              s.missing,
+              ["未知", "未载", "难辨", "不适用"],
+              (v) => this.edit("missing", v),
+            )}
+            <p>出版年代与取得日期分别保存；未知字段保持未知。</p>
+          </details>
         </div>
       );
       result = (
@@ -296,6 +298,7 @@ export class MaterialFlow {
       );
     } else if (id === "P07") {
       question = "本次材料库的边界，会怎样限制“没有找到”的含义？";
+      first = materialList();
       action = (
         <div>
           {field(
@@ -323,40 +326,77 @@ export class MaterialFlow {
           {check("纳入当前研究范围", s.included !== false, (v) =>
             this.edit("included", v),
           )}
+          {field(
+            "收藏（逗号分隔，可有多个）",
+            (s.collections || []).join("，"),
+            (v) =>
+              this.edit(
+                "collections",
+                v
+                  .split(/[,，]/)
+                  .map((x) => x.trim())
+                  .filter(Boolean),
+              ),
+          )}
+          {field("主题标签", (s.tags || []).join("，"), (v) =>
+            this.edit(
+              "tags",
+              v
+                .split(/[,，]/)
+                .map((x) => x.trim())
+                .filter(Boolean),
+            ),
+          )}
+          {select(
+            "处理状态",
+            s.status,
+            ["待核", "待取得", "待读", "已摘录", "已核对"],
+            (v) => this.edit("status", v),
+          )}
         </div>
       );
       result = card(
         "实际登记范围",
-        <ul>
-          <li>本库登记 {state.project.sources.length} 项</li>
-          <li>
-            有附件{" "}
-            {
-              state.project.sources.filter((x: any) => x.attachments.length)
-                .length
-            }{" "}
-            项
-          </li>
-          <li>
-            有处理正文{" "}
-            {
-              new Set(
-                state.project.segments
-                  .filter((x: any) => !x.derived)
-                  .map((x: any) => x.sourceId),
-              ).size
-            }{" "}
-            项
-          </li>
-          <li>
-            纳入检索{" "}
-            {
-              state.project.sources.filter((x: any) => x.included !== false)
-                .length
-            }{" "}
-            项
-          </li>
-        </ul>,
+        <div>
+          <ul>
+            <li>本库登记 {state.project.sources.length} 项</li>
+            <li>
+              有附件{" "}
+              {
+                state.project.sources.filter((x: any) => x.attachments.length)
+                  .length
+              }{" "}
+              项
+            </li>
+            <li>
+              有处理正文{" "}
+              {
+                new Set(
+                  state.project.segments
+                    .filter((x: any) => !x.derived)
+                    .map((x: any) => x.sourceId),
+                ).size
+              }{" "}
+              项
+            </li>
+            <li>
+              纳入检索{" "}
+              {
+                state.project.sources.filter((x: any) => x.included !== false)
+                  .length
+              }{" "}
+              项
+            </li>
+          </ul>
+          {field("筛选主题／收藏", this.groupTerm, (v) => (this.groupTerm = v))}
+          {materialList(
+            (x) =>
+              !this.groupTerm ||
+              [...(x.tags || []), ...(x.collections || [])].some((a) =>
+                a.includes(this.groupTerm),
+              ),
+          )}
+        </div>,
       );
       last = (
         <div>
@@ -528,6 +568,22 @@ export class MaterialFlow {
             true,
           )}
           <p>此队列由实际字段实时筛选；没有自动“读懂率”。</p>
+          <button
+            onClick={() =>
+              update("暂停并保留接续记录", t.id, () => (t.status = "待核"))
+            }
+          >
+            暂停并进入待核队列
+          </button>
+          <button
+            onClick={() =>
+              window.dispatchEvent(
+                new CustomEvent("navigate-page", { detail: "P05" }),
+              )
+            }
+          >
+            从所选定位继续阅读
+          </button>
         </div>
       ) : (
         <p>尚无阅读任务。</p>
@@ -536,17 +592,6 @@ export class MaterialFlow {
         <div>
           {evidence()}
           {recent(t?.id)}
-          {t && (
-            <button
-              onClick={() =>
-                window.dispatchEvent(
-                  new CustomEvent("navigate-page", { detail: "P05" }),
-                )
-              }
-            >
-              从所选定位继续阅读
-            </button>
-          )}
         </div>
       );
     } else if (id === "P12") {
@@ -578,6 +623,15 @@ export class MaterialFlow {
             </button>
           ))}
           <p>此处实际运行关键词回找；RAG 原理沿用第三周。</p>
+          {check("当前材料纳入检索", s.included !== false, (v) =>
+            this.edit("included", v),
+          )}
+          {field(
+            "纳入／排除理由",
+            s.inclusionReason,
+            (v) => this.edit("inclusionReason", v),
+            true,
+          )}
         </div>
       );
       result = (
@@ -592,13 +646,6 @@ export class MaterialFlow {
           >
             进入来源笔记
           </button>
-        </div>
-      );
-      last = (
-        <div>
-          {state.project.notes
-            .filter((x: any) => x.sourceId === s.id)
-            .map((x: any) => card(x.title, <p>{x.body || "待写个人理解"}</p>))}
           <button
             onClick={() =>
               window.dispatchEvent(
@@ -608,6 +655,13 @@ export class MaterialFlow {
           >
             进入问题索引
           </button>
+        </div>
+      );
+      last = (
+        <div>
+          {state.project.notes
+            .filter((x: any) => x.sourceId === s.id)
+            .map((x: any) => card(x.title, <p>{x.body || "待写个人理解"}</p>))}
         </div>
       );
     } else {

@@ -57,6 +57,14 @@ export namespace Components {
          */
         "pageId": string;
     }
+    interface ProcessWorkspace {
+        /**
+          * @default "P01"
+         */
+        "topicId": string;
+    }
+    interface ProjectStart {
+    }
     interface ReadingFlow {
         /**
           * @default "P14"
@@ -111,6 +119,18 @@ declare global {
         prototype: HTMLNoteFlowElement;
         new (): HTMLNoteFlowElement;
     };
+    interface HTMLProcessWorkspaceElement extends Components.ProcessWorkspace, HTMLStencilElement {
+    }
+    var HTMLProcessWorkspaceElement: {
+        prototype: HTMLProcessWorkspaceElement;
+        new (): HTMLProcessWorkspaceElement;
+    };
+    interface HTMLProjectStartElement extends Components.ProjectStart, HTMLStencilElement {
+    }
+    var HTMLProjectStartElement: {
+        prototype: HTMLProjectStartElement;
+        new (): HTMLProjectStartElement;
+    };
     interface HTMLReadingFlowElement extends Components.ReadingFlow, HTMLStencilElement {
     }
     var HTMLReadingFlowElement: {
@@ -135,6 +155,8 @@ declare global {
         "deck-slide": HTMLDeckSlideElement;
         "material-flow": HTMLMaterialFlowElement;
         "note-flow": HTMLNoteFlowElement;
+        "process-workspace": HTMLProcessWorkspaceElement;
+        "project-start": HTMLProjectStartElement;
         "reading-flow": HTMLReadingFlowElement;
         "source-reader": HTMLSourceReaderElement;
         "system-flow": HTMLSystemFlowElement;
@@ -192,6 +214,14 @@ declare namespace LocalJSX {
          */
         "pageId"?: string;
     }
+    interface ProcessWorkspace {
+        /**
+          * @default "P01"
+         */
+        "topicId"?: string;
+    }
+    interface ProjectStart {
+    }
     interface ReadingFlow {
         /**
           * @default "P14"
@@ -235,6 +265,9 @@ declare namespace LocalJSX {
     interface NoteFlowAttributes {
         "pageId": string;
     }
+    interface ProcessWorkspaceAttributes {
+        "topicId": string;
+    }
     interface ReadingFlowAttributes {
         "pageId": string;
     }
@@ -252,6 +285,8 @@ declare namespace LocalJSX {
         "deck-slide": Omit<DeckSlide, keyof DeckSlideAttributes> & { [K in keyof DeckSlide & keyof DeckSlideAttributes]?: DeckSlide[K] } & { [K in keyof DeckSlide & keyof DeckSlideAttributes as `attr:${K}`]?: DeckSlideAttributes[K] } & { [K in keyof DeckSlide & keyof DeckSlideAttributes as `prop:${K}`]?: DeckSlide[K] };
         "material-flow": Omit<MaterialFlow, keyof MaterialFlowAttributes> & { [K in keyof MaterialFlow & keyof MaterialFlowAttributes]?: MaterialFlow[K] } & { [K in keyof MaterialFlow & keyof MaterialFlowAttributes as `attr:${K}`]?: MaterialFlowAttributes[K] } & { [K in keyof MaterialFlow & keyof MaterialFlowAttributes as `prop:${K}`]?: MaterialFlow[K] };
         "note-flow": Omit<NoteFlow, keyof NoteFlowAttributes> & { [K in keyof NoteFlow & keyof NoteFlowAttributes]?: NoteFlow[K] } & { [K in keyof NoteFlow & keyof NoteFlowAttributes as `attr:${K}`]?: NoteFlowAttributes[K] } & { [K in keyof NoteFlow & keyof NoteFlowAttributes as `prop:${K}`]?: NoteFlow[K] };
+        "process-workspace": Omit<ProcessWorkspace, keyof ProcessWorkspaceAttributes> & { [K in keyof ProcessWorkspace & keyof ProcessWorkspaceAttributes]?: ProcessWorkspace[K] } & { [K in keyof ProcessWorkspace & keyof ProcessWorkspaceAttributes as `attr:${K}`]?: ProcessWorkspaceAttributes[K] } & { [K in keyof ProcessWorkspace & keyof ProcessWorkspaceAttributes as `prop:${K}`]?: ProcessWorkspace[K] };
+        "project-start": ProjectStart;
         "reading-flow": Omit<ReadingFlow, keyof ReadingFlowAttributes> & { [K in keyof ReadingFlow & keyof ReadingFlowAttributes]?: ReadingFlow[K] } & { [K in keyof ReadingFlow & keyof ReadingFlowAttributes as `attr:${K}`]?: ReadingFlowAttributes[K] } & { [K in keyof ReadingFlow & keyof ReadingFlowAttributes as `prop:${K}`]?: ReadingFlow[K] };
         "source-reader": Omit<SourceReader, keyof SourceReaderAttributes> & { [K in keyof SourceReader & keyof SourceReaderAttributes]?: SourceReader[K] } & { [K in keyof SourceReader & keyof SourceReaderAttributes as `attr:${K}`]?: SourceReaderAttributes[K] } & { [K in keyof SourceReader & keyof SourceReaderAttributes as `prop:${K}`]?: SourceReader[K] };
         "system-flow": Omit<SystemFlow, keyof SystemFlowAttributes> & { [K in keyof SystemFlow & keyof SystemFlowAttributes]?: SystemFlow[K] } & { [K in keyof SystemFlow & keyof SystemFlowAttributes as `attr:${K}`]?: SystemFlowAttributes[K] } & { [K in keyof SystemFlow & keyof SystemFlowAttributes as `prop:${K}`]?: SystemFlow[K] };
@@ -266,6 +301,8 @@ declare module "@stencil/core" {
             "deck-slide": LocalJSX.IntrinsicElements["deck-slide"] & JSXBase.HTMLAttributes<HTMLDeckSlideElement>;
             "material-flow": LocalJSX.IntrinsicElements["material-flow"] & JSXBase.HTMLAttributes<HTMLMaterialFlowElement>;
             "note-flow": LocalJSX.IntrinsicElements["note-flow"] & JSXBase.HTMLAttributes<HTMLNoteFlowElement>;
+            "process-workspace": LocalJSX.IntrinsicElements["process-workspace"] & JSXBase.HTMLAttributes<HTMLProcessWorkspaceElement>;
+            "project-start": LocalJSX.IntrinsicElements["project-start"] & JSXBase.HTMLAttributes<HTMLProjectStartElement>;
             "reading-flow": LocalJSX.IntrinsicElements["reading-flow"] & JSXBase.HTMLAttributes<HTMLReadingFlowElement>;
             "source-reader": LocalJSX.IntrinsicElements["source-reader"] & JSXBase.HTMLAttributes<HTMLSourceReaderElement>;
             "system-flow": LocalJSX.IntrinsicElements["system-flow"] & JSXBase.HTMLAttributes<HTMLSystemFlowElement>;
