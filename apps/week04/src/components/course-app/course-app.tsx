@@ -321,7 +321,7 @@ export class CourseApp {
                   </button>
                 ))}
               </nav>
-              <process-workspace topic-id={mode.id} />
+              <process-workspace key={state.project.id} topic-id={mode.id} />
               <div slot="footer">
                 {p.purpose} ·
                 页内功能切换不改变本环节；原件和相关工具可临时回看。
@@ -381,7 +381,10 @@ export class CourseApp {
                   </button>
                 ))}
               </nav>
-              <process-workspace topic-id={relatedView.mode.id} />
+              <process-workspace
+                key={state.project.id}
+                topic-id={relatedView.mode.id}
+              />
             </div>
           </div>
         )}
