@@ -409,16 +409,16 @@ export class SystemFlow {
               onChange={async (e: any) => {
                 const f = e.target.files[0];
                 if (!f) return;
+                this.message = "";
                 try {
-                  const r = await restore(f, this.append);
-                  this.message = `恢复完成；随包原件 ${r.files.length} 个，未随包原件 ${r.missing.length} 个。`;
+                  await restore(f, this.append);
                 } catch (error) {
                   this.message = `恢复失败：${error.message}`;
                 }
               }}
             />
           </label>
-          <p role="status">{this.message}</p>
+          <p role="status">{this.message || state.status}</p>
         </div>
       );
       last = (

@@ -198,6 +198,9 @@ export async function restore(file: File, append = false) {
         missing: [],
       };
   await install(result.project, result.files, append);
+  // 恢复可能切换项目并重建工作区；完成反馈随应用状态保留。
+  state.status = `恢复完成；随包原件 ${result.files.length} 个，未随包原件 ${result.missing.length} 个。`;
+  changed();
   return result;
 }
 export function addNote(kind = "来源笔记") {
