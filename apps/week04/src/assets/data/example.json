@@ -1,0 +1,162 @@
+{
+  "schema": "pku-history-project/v1",
+  "id": "public-dejiao-example",
+  "title": "德教研究：课程题录示例",
+  "question": "不同语境中的“德教”，承担怎样的解释和规范作用？",
+  "scope": "公开示例只含五项题录；载入教师本机项目后再查看正文与原件。",
+  "revision": 0,
+  "sources": [
+    {
+      "id": "L03",
+      "title": "日曜講壇",
+      "author": "徳富猪一郎",
+      "date": "1900",
+      "kind": "史料",
+      "attachments": [],
+      "tags": [
+        "德教"
+      ],
+      "collections": [
+        "课程示例"
+      ],
+      "included": true,
+      "status": "待取得",
+      "acquisition": "教师提供的题录，版本信息待核"
+    },
+    {
+      "id": "L05",
+      "title": "學校敎育に於る德敎の地位",
+      "author": "",
+      "date": "1906",
+      "kind": "史料",
+      "attachments": [],
+      "tags": [
+        "德教"
+      ],
+      "collections": [
+        "课程示例"
+      ],
+      "included": true,
+      "status": "待取得",
+      "acquisition": "教师提供的题录，版本信息待核"
+    },
+    {
+      "id": "L40",
+      "title": "日本支那西洋倫理学要領",
+      "author": "中島徳蔵",
+      "date": "1907",
+      "kind": "史料",
+      "attachments": [],
+      "tags": [
+        "德教"
+      ],
+      "collections": [
+        "课程示例"
+      ],
+      "included": true,
+      "status": "待取得",
+      "acquisition": "教师提供的题录，版本信息待核"
+    },
+    {
+      "id": "L42",
+      "title": "倫理と教育",
+      "author": "井上哲次郎",
+      "date": "1908",
+      "kind": "史料",
+      "attachments": [],
+      "tags": [
+        "德教"
+      ],
+      "collections": [
+        "课程示例"
+      ],
+      "included": true,
+      "status": "待取得",
+      "acquisition": "教师提供的题录，版本信息待核"
+    },
+    {
+      "id": "L45",
+      "title": "南北朝問題と国体の大義",
+      "author": "姉崎正治",
+      "date": "1911",
+      "kind": "史料",
+      "attachments": [],
+      "tags": [
+        "德教"
+      ],
+      "collections": [
+        "课程示例"
+      ],
+      "included": true,
+      "status": "待取得",
+      "acquisition": "教师提供的题录，版本信息待核"
+    }
+  ],
+  "segments": [],
+  "notes": [],
+  "links": [],
+  "claims": [],
+  "events": [],
+  "tasks": [
+    {
+      "id": "task-L03",
+      "sourceId": "L03",
+      "status": "待读",
+      "priority": 2,
+      "type": "筛选",
+      "range": "待选择",
+      "readRange": "",
+      "next": "取得原件，核对版本与阅读范围",
+      "blocker": "尚无全文",
+      "understanding": ""
+    },
+    {
+      "id": "task-L05",
+      "sourceId": "L05",
+      "status": "待读",
+      "priority": 2,
+      "type": "筛选",
+      "range": "待选择",
+      "readRange": "",
+      "next": "取得原件，核对版本与阅读范围",
+      "blocker": "尚无全文",
+      "understanding": ""
+    },
+    {
+      "id": "task-L40",
+      "sourceId": "L40",
+      "status": "待读",
+      "priority": 2,
+      "type": "筛选",
+      "range": "待选择",
+      "readRange": "",
+      "next": "取得原件，核对版本与阅读范围",
+      "blocker": "尚无全文",
+      "understanding": ""
+    },
+    {
+      "id": "task-L42",
+      "sourceId": "L42",
+      "status": "待读",
+      "priority": 2,
+      "type": "筛选",
+      "range": "待选择",
+      "readRange": "",
+      "next": "取得原件，核对版本与阅读范围",
+      "blocker": "尚无全文",
+      "understanding": ""
+    },
+    {
+      "id": "task-L45",
+      "sourceId": "L45",
+      "status": "待读",
+      "priority": 2,
+      "type": "筛选",
+      "range": "待选择",
+      "readRange": "",
+      "next": "取得原件，核对版本与阅读范围",
+      "blocker": "尚无全文",
+      "understanding": ""
+    }
+  ]
+}
