@@ -85,12 +85,13 @@ export class DeckContainer {
     this.overview = false;
     this.sync();
   }
+  @Listen('week04-open-material-package',{target:'window'}) openMaterialPackage(){if(this.libState==='ready')this.packageOpen=true;}
   @Listen("hashchange", { target: "window" }) hash() {
     this.go(location.hash.slice(1));
   }
   @Listen("keydown", { target: "window" }) key(e: KeyboardEvent) {
     if (e.isComposing) return;
-    if(this.packageOpen){if(e.key==='Escape')this.packageOpen=false;return;}
+    if(this.packageOpen){if(e.key==='Escape'&&!this.el.querySelector('material-package [aria-busy=true]'))this.packageOpen=false;return;}
     if(this.importing){if(e.key==='Escape'){e.preventDefault();this.importing=false;}return;}
     if (
       e

@@ -855,3 +855,89 @@ FRAD 讨论名称等规范数据的功能需求，FRSAD 讨论主题规范数据
 页面：D31
 
 本试做把阅读轮次、候选、人工版本和复核保存在题录扩展字段中，随 SQLite 一起保留。它是课程增加的研究记录，原生桌面界面未必提供同样的编辑入口。
+
+## 本轮技术补充：由可见字段回到对象
+
+### BibTeX引用键 | citation key
+
+页面：D10
+
+.bib条目中类型后花括号里的第一个名字，如Linden2022Milk；写作中的\cite{Linden2022Milk}用它找到该条记录。它可编辑、需在所用库内避免重名，不是全球永久ID。file字段另指附件路径；引用键不包含PDF正文。
+
+参考：https://docs.jabref.org/setup/citationkeypatterns
+
+### 附件父条目 | parentItem
+
+页面：D10
+
+Zotero附件条目用parentItem指向同一用户或群组库中的父文献key。附件有自己的key，不把文件路径、父条目key与库版本号混成一种身份。
+
+参考：https://www.zotero.org/support/dev/web_api/v3/file_upload
+
+### FTS行号与映射 | rowid and fts_row_map
+
+页面：D10
+
+本例FTS的rowid取自映射表自增fts_row_id。它把倒排词项命中接回unit_id和文档实例；重建时可能重新分配，不是PDF页码或长期引文地址。三表应按键关联，不按屏幕同一行的视觉位置对应。
+
+参考：https://www.sqlite.org/fts5.html
+
+### 正文检索单元 | unit_id
+
+页面：D10
+
+本浏览器每个合格正文框产生一项search_units记录。同一tree_revision_id与box_id再次建索引时复用unit_id；提交新正文修订通常形成新单元，不承诺跨修订永久不变。
+
+### 文档实例与页对象 | document_instance_id and page_id
+
+页面：D10
+
+文档实例指具体扫描或文件与题录的关联；page_id指其一页对象的UUID。PDF显示页序来自page_index加1；印刷页码仍须原图核查，一张扫描可能含两个印刷页。
+
+### 工作文字与检索文字 | resolved_text
+
+页面：D10
+
+同名列须区分所在表：search_units保存从一个正文框取出的工作文字，FTS中则是经规范化、小写、CJK片段和去重的检索文本。后者不能还原原句、原始重复次数或字符坐标，不能直接充作史料引文。
+
+### 倒排词项实例 | fts5vocab(instance)
+
+页面：D10
+
+term是词项，doc在instance模式为FTS行号，col是出现词项的列名，offset为该索引列中的零起始词项位置。这里doc不是文档UUID、offset不是字符位置；其他vocab模式的同名列可能表示计数。
+
+参考：https://www.sqlite.org/fts5.html#the_fts5vocab_virtual_table_module
+
+### MARC字段、指示符与子字段 | tag, indicator and subfield
+
+页面：D12
+
+245等三位号码表示字段；随后两格指示符说明具体编码安排；$a、$b、$c把题名、余题名信息、责任说明分开。它们编码描述职责，不是文献身份。人读字段节录不等于含记录头与目录的完整MARC交换记录。
+
+参考：https://www.loc.gov/marc/bibliographic/bd245.html
+
+### CSL数据、样式与输出 | citation data, style and output
+
+页面：D12
+
+CSL-JSON是结构化文献输入；CSL XML是取字段、排序与显示的规则；处理器还结合语言规则产生引文。换样式不会核正元数据，XML节录不等于完整可加载样式；MARC到CSL需要字段映射，可能丢失信息。
+
+参考：https://docs.citationstyles.org/en/stable/specification.html
+
+### 原生备份与完整课程备份 | native and classroom backup
+
+页面：D27
+
+浏览器原生ZIP保存SQLite和PDF，数据库已含已存阅读轮次、候选、人工版本与复核。完整课程ZIP还带独立Markdown、卡片和词表草稿。外层阅读JSON是供核查的重复导出，不是第二套覆盖源；备份只涵盖已保存状态。
+
+### 多词表与旧稿迁移 | vocabulary datasets and migration
+
+页面：D25
+
+每份词表独立保留原稿、当前稿及来源，三种视图同源；默认公开词表与本机导入稿分开。旧单键草稿原样迁入，不凭标题猜主题；语法错误仍保留文本，不能展示旧有效图冒充新稿结果。
+
+### 草稿与轮次版本 | draft and reading version
+
+页面：D19
+
+Markdown按页面保存为可覆盖草稿，同一Dxx在主线与综合页共用；换材料不自动重置成材料专属笔记。阅读轮次另存冻结输入、实际候选、历次人工版本及来源；两种保存不能互相替代。

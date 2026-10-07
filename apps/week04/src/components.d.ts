@@ -338,6 +338,7 @@ export namespace Components {
           * @default true
          */
         "active": boolean;
+        "confirmLeave": () => Promise<boolean>;
     }
 }
 export interface ConceptMapCustomEvent<T> extends CustomEvent<T> {

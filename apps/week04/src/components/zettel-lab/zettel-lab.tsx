@@ -1,4 +1,4 @@
-import { Component, h, State, Prop, Element } from '@stencil/core';
+import { Component, h, State, Prop, Element, Listen, Watch, Method } from '@stencil/core';
 import { liveLibrary } from '../../lib/live-library';
 import { CARD_SOURCES, SEED_CARDS, ReadingCard, noteUri, cardMarkdown, isExactEvidence } from '../../lib/card-box';
 import { cardMarkdownView, markdownInline } from '../shared/card-markdown';
@@ -35,17 +35,23 @@ export class ZettelLab {
   private get visibleCards() { return this.cards.slice(this.rackPage * 8, this.rackPage * 8 + 8); }
   private get animating() { return ['taking', 'returning', 'filing', 'burning'].includes(this.phase); }
   private duration(ms: number) { return matchMedia('(prefers-reduced-motion: reduce)').matches || document.body.classList.contains('low-power') ? 30 : ms; }
-  componentWillLoad() {
+  private savedCards() {
+    const cards=[...SEED_CARDS];
     try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE) || '[]');
-      if (Array.isArray(saved)) {
-        const ids = new Set(this.cards.map(card => card.id));
-        for (const card of saved) {
-          if (!validId.test(card.id) || ids.has(card.id) || typeof card.title !== 'string' || typeof card.body !== 'string' || !Array.isArray(card.citations) || !card.citations.length || !card.citations.every(c => typeof c.reason === 'string' && c.reason.trim() && typeof c.label === 'string' && isExactEvidence(c.uri))) continue;
-          this.cards = [...this.cards, card]; ids.add(card.id);
-        }
+      const saved=JSON.parse(localStorage.getItem(STORAGE)||'[]');
+      if(Array.isArray(saved))for(const card of saved){
+        if(!validId.test(card.id)||cards.some(c=>c.id===card.id)||typeof card.title!=='string'||typeof card.body!=='string'||!Array.isArray(card.citations)||!card.citations.length||!card.citations.every(c=>typeof c.reason==='string'&&c.reason.trim()&&typeof c.label==='string'&&isExactEvidence(c.uri)))continue;
+        cards.push(card);
       }
-    } catch { /* Authored cards remain available if local storage is unavailable. */ }
+    }catch { /* Preserve authored cards if a stored draft is unreadable. */ }
+    return cards;
+  }
+  @Listen('week04-cardbox-change',{target:'window'}) peer(){if(!this.isDraft&&!this.animating)this.cards=this.savedCards();}
+  @Listen('storage',{target:'window'}) storage(e:StorageEvent){if(e.key===STORAGE)this.peer();}
+  @Watch('active') activate(){if(this.active)this.peer();}
+  @Method() async confirmLeave(){if(this.isDraft)return confirm('这张新卡片尚未放入卡片盒。确认放弃并切换？');return !this.sourceEditing;}
+  componentWillLoad() {
+    this.cards=this.savedCards();
     this.off = liveLibrary.subscribe(state => this.libraryReady = state === 'ready');
     window.addEventListener('keydown', this.key, true);
   }
@@ -99,8 +105,9 @@ export class ZettelLab {
         else if (uri.hostname === 'notes') { if (!this.cards.some(item => noteUri(item.id) === match[1]) && noteUri(card.id) !== match[1]) throw Error('正文中的卡片地址不在这个卡片盒中。'); }
         else throw Error('卡片引用只接受 texts 或 notes VFS 地址。');
       }
-      const next = [...this.cards, card];
+      const next = [...this.savedCards(), card];
       localStorage.setItem(STORAGE, JSON.stringify(next.filter(item => !SEED_CARDS.some(seed => seed.id === item.id))));
+      window.dispatchEvent(new CustomEvent('week04-cardbox-change'));
       this.current = card; this.cards = next; this.originId = card.id; this.editing = false; this.phase = 'filing';
       this.rackPage = Math.floor((next.length - 1) / 8);
       this.after(700, () => this.finish('新卡片已放入卡片盒'));
