@@ -141,6 +141,7 @@ export class PatchouliApp {
     event.preventDefault();event.stopImmediatePropagation();if(event.key==='Escape')this.returnFromReader();else this.movePage(this.readerPage+step);
   };
   @Method() async navigate(request:PatchouliRequest) {
+    if(request.collectionId!==undefined)this.collection=request.collectionId;
     if(this.pdfEditing){if(request.keepDraft){const reader=this.el.querySelector('pdf-reader') as any;if(!await reader?.suspendEditing()){this.log='修订正在提交，请稍候';return;}this.pdfEditing=false;}else{this.log='请先保存或取消边界框编辑';return;}}
     const lib=liveLibrary.getLibrary();if(!lib){this.pendingRequest=request;this.view=request.page;return;}
     this.cacheTools();

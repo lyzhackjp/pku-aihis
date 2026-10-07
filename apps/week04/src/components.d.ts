@@ -90,6 +90,12 @@ export namespace Components {
          */
         "transition": string;
     }
+    interface DejiaoWorkbench {
+        /**
+          * @default false
+         */
+        "active": boolean;
+    }
     interface DocumentIdentity {
     }
     interface FrbrLab {
@@ -172,6 +178,12 @@ export namespace Components {
           * @default true
          */
         "showDiagram": boolean;
+    }
+    interface MaterialPackage {
+        /**
+          * @default false
+         */
+        "opened": boolean;
     }
     interface MermaidDiagram {
         /**
@@ -292,6 +304,12 @@ export namespace Components {
          */
         "active": boolean;
     }
+    interface ResearchLedger {
+        /**
+          * @default 'D18'
+         */
+        "pageId": string;
+    }
     interface SkosLab {
         /**
           * @default false
@@ -329,6 +347,10 @@ export interface ConceptMapCustomEvent<T> extends CustomEvent<T> {
 export interface LibraryBrowserCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLLibraryBrowserElement;
+}
+export interface MaterialPackageCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMaterialPackageElement;
 }
 export interface MermaidDiagramCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -400,6 +422,12 @@ declare global {
         prototype: HTMLDeckSlideElement;
         new (): HTMLDeckSlideElement;
     };
+    interface HTMLDejiaoWorkbenchElement extends Components.DejiaoWorkbench, HTMLStencilElement {
+    }
+    var HTMLDejiaoWorkbenchElement: {
+        prototype: HTMLDejiaoWorkbenchElement;
+        new (): HTMLDejiaoWorkbenchElement;
+    };
     interface HTMLDocumentIdentityElement extends Components.DocumentIdentity, HTMLStencilElement {
     }
     var HTMLDocumentIdentityElement: {
@@ -470,6 +498,23 @@ declare global {
     var HTMLMarkdownLabElement: {
         prototype: HTMLMarkdownLabElement;
         new (): HTMLMarkdownLabElement;
+    };
+    interface HTMLMaterialPackageElementEventMap {
+        "packageClosed": void;
+    }
+    interface HTMLMaterialPackageElement extends Components.MaterialPackage, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMaterialPackageElementEventMap>(type: K, listener: (this: HTMLMaterialPackageElement, ev: MaterialPackageCustomEvent<HTMLMaterialPackageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMaterialPackageElementEventMap>(type: K, listener: (this: HTMLMaterialPackageElement, ev: MaterialPackageCustomEvent<HTMLMaterialPackageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLMaterialPackageElement: {
+        prototype: HTMLMaterialPackageElement;
+        new (): HTMLMaterialPackageElement;
     };
     interface HTMLMermaidDiagramElementEventMap {
         "diagramReady": void;
@@ -593,6 +638,12 @@ declare global {
         prototype: HTMLRequirementsLabElement;
         new (): HTMLRequirementsLabElement;
     };
+    interface HTMLResearchLedgerElement extends Components.ResearchLedger, HTMLStencilElement {
+    }
+    var HTMLResearchLedgerElement: {
+        prototype: HTMLResearchLedgerElement;
+        new (): HTMLResearchLedgerElement;
+    };
     interface HTMLSkosLabElement extends Components.SkosLab, HTMLStencilElement {
     }
     var HTMLSkosLabElement: {
@@ -631,6 +682,7 @@ declare global {
         "deck-container": HTMLDeckContainerElement;
         "deck-presenter": HTMLDeckPresenterElement;
         "deck-slide": HTMLDeckSlideElement;
+        "dejiao-workbench": HTMLDejiaoWorkbenchElement;
         "document-identity": HTMLDocumentIdentityElement;
         "frbr-lab": HTMLFrbrLabElement;
         "frbr-split": HTMLFrbrSplitElement;
@@ -641,6 +693,7 @@ declare global {
         "library-treegrid": HTMLLibraryTreegridElement;
         "library-workbench": HTMLLibraryWorkbenchElement;
         "markdown-lab": HTMLMarkdownLabElement;
+        "material-package": HTMLMaterialPackageElement;
         "mermaid-diagram": HTMLMermaidDiagramElement;
         "metadata-split": HTMLMetadataSplitElement;
         "model-connection": HTMLModelConnectionElement;
@@ -653,6 +706,7 @@ declare global {
         "projection-lab": HTMLProjectionLabElement;
         "reading-agent": HTMLReadingAgentElement;
         "requirements-lab": HTMLRequirementsLabElement;
+        "research-ledger": HTMLResearchLedgerElement;
         "skos-lab": HTMLSkosLabElement;
         "standalone-lab": HTMLStandaloneLabElement;
         "tag-lab": HTMLTagLabElement;
@@ -742,6 +796,12 @@ declare namespace LocalJSX {
          */
         "transition"?: string;
     }
+    interface DejiaoWorkbench {
+        /**
+          * @default false
+         */
+        "active"?: boolean;
+    }
     interface DocumentIdentity {
     }
     interface FrbrLab {
@@ -823,6 +883,13 @@ declare namespace LocalJSX {
           * @default true
          */
         "showDiagram"?: boolean;
+    }
+    interface MaterialPackage {
+        "onPackageClosed"?: (event: MaterialPackageCustomEvent<void>) => void;
+        /**
+          * @default false
+         */
+        "opened"?: boolean;
     }
     interface MermaidDiagram {
         /**
@@ -943,6 +1010,12 @@ declare namespace LocalJSX {
          */
         "active"?: boolean;
     }
+    interface ResearchLedger {
+        /**
+          * @default 'D18'
+         */
+        "pageId"?: string;
+    }
     interface SkosLab {
         /**
           * @default false
@@ -998,6 +1071,9 @@ declare namespace LocalJSX {
         "notes": string;
         "duration": number;
     }
+    interface DejiaoWorkbenchAttributes {
+        "active": boolean;
+    }
     interface FrbrSplitAttributes {
         "active": boolean;
     }
@@ -1023,6 +1099,9 @@ declare namespace LocalJSX {
         "pageId": string;
         "showDiagram": boolean;
         "active": boolean;
+    }
+    interface MaterialPackageAttributes {
+        "opened": boolean;
     }
     interface MermaidDiagramAttributes {
         "diagram": 'needs'|'capital';
@@ -1061,6 +1140,9 @@ declare namespace LocalJSX {
     interface RequirementsLabAttributes {
         "active": boolean;
     }
+    interface ResearchLedgerAttributes {
+        "pageId": string;
+    }
     interface SkosLabAttributes {
         "active": boolean;
     }
@@ -1080,6 +1162,7 @@ declare namespace LocalJSX {
         "deck-container": DeckContainer;
         "deck-presenter": DeckPresenter;
         "deck-slide": Omit<DeckSlide, keyof DeckSlideAttributes> & { [K in keyof DeckSlide & keyof DeckSlideAttributes]?: DeckSlide[K] } & { [K in keyof DeckSlide & keyof DeckSlideAttributes as `attr:${K}`]?: DeckSlideAttributes[K] } & { [K in keyof DeckSlide & keyof DeckSlideAttributes as `prop:${K}`]?: DeckSlide[K] };
+        "dejiao-workbench": Omit<DejiaoWorkbench, keyof DejiaoWorkbenchAttributes> & { [K in keyof DejiaoWorkbench & keyof DejiaoWorkbenchAttributes]?: DejiaoWorkbench[K] } & { [K in keyof DejiaoWorkbench & keyof DejiaoWorkbenchAttributes as `attr:${K}`]?: DejiaoWorkbenchAttributes[K] } & { [K in keyof DejiaoWorkbench & keyof DejiaoWorkbenchAttributes as `prop:${K}`]?: DejiaoWorkbench[K] };
         "document-identity": DocumentIdentity;
         "frbr-lab": FrbrLab;
         "frbr-split": Omit<FrbrSplit, keyof FrbrSplitAttributes> & { [K in keyof FrbrSplit & keyof FrbrSplitAttributes]?: FrbrSplit[K] } & { [K in keyof FrbrSplit & keyof FrbrSplitAttributes as `attr:${K}`]?: FrbrSplitAttributes[K] } & { [K in keyof FrbrSplit & keyof FrbrSplitAttributes as `prop:${K}`]?: FrbrSplit[K] };
@@ -1090,6 +1173,7 @@ declare namespace LocalJSX {
         "library-treegrid": Omit<LibraryTreegrid, keyof LibraryTreegridAttributes> & { [K in keyof LibraryTreegrid & keyof LibraryTreegridAttributes]?: LibraryTreegrid[K] } & { [K in keyof LibraryTreegrid & keyof LibraryTreegridAttributes as `attr:${K}`]?: LibraryTreegridAttributes[K] } & { [K in keyof LibraryTreegrid & keyof LibraryTreegridAttributes as `prop:${K}`]?: LibraryTreegrid[K] };
         "library-workbench": Omit<LibraryWorkbench, keyof LibraryWorkbenchAttributes> & { [K in keyof LibraryWorkbench & keyof LibraryWorkbenchAttributes]?: LibraryWorkbench[K] } & { [K in keyof LibraryWorkbench & keyof LibraryWorkbenchAttributes as `attr:${K}`]?: LibraryWorkbenchAttributes[K] } & { [K in keyof LibraryWorkbench & keyof LibraryWorkbenchAttributes as `prop:${K}`]?: LibraryWorkbench[K] };
         "markdown-lab": Omit<MarkdownLab, keyof MarkdownLabAttributes> & { [K in keyof MarkdownLab & keyof MarkdownLabAttributes]?: MarkdownLab[K] } & { [K in keyof MarkdownLab & keyof MarkdownLabAttributes as `attr:${K}`]?: MarkdownLabAttributes[K] } & { [K in keyof MarkdownLab & keyof MarkdownLabAttributes as `prop:${K}`]?: MarkdownLab[K] };
+        "material-package": Omit<MaterialPackage, keyof MaterialPackageAttributes> & { [K in keyof MaterialPackage & keyof MaterialPackageAttributes]?: MaterialPackage[K] } & { [K in keyof MaterialPackage & keyof MaterialPackageAttributes as `attr:${K}`]?: MaterialPackageAttributes[K] } & { [K in keyof MaterialPackage & keyof MaterialPackageAttributes as `prop:${K}`]?: MaterialPackage[K] };
         "mermaid-diagram": Omit<MermaidDiagram, keyof MermaidDiagramAttributes> & { [K in keyof MermaidDiagram & keyof MermaidDiagramAttributes]?: MermaidDiagram[K] } & { [K in keyof MermaidDiagram & keyof MermaidDiagramAttributes as `attr:${K}`]?: MermaidDiagramAttributes[K] } & { [K in keyof MermaidDiagram & keyof MermaidDiagramAttributes as `prop:${K}`]?: MermaidDiagram[K] };
         "metadata-split": Omit<MetadataSplit, keyof MetadataSplitAttributes> & { [K in keyof MetadataSplit & keyof MetadataSplitAttributes]?: MetadataSplit[K] } & { [K in keyof MetadataSplit & keyof MetadataSplitAttributes as `attr:${K}`]?: MetadataSplitAttributes[K] } & { [K in keyof MetadataSplit & keyof MetadataSplitAttributes as `prop:${K}`]?: MetadataSplit[K] };
         "model-connection": ModelConnection;
@@ -1102,6 +1186,7 @@ declare namespace LocalJSX {
         "projection-lab": ProjectionLab;
         "reading-agent": ReadingAgent;
         "requirements-lab": Omit<RequirementsLab, keyof RequirementsLabAttributes> & { [K in keyof RequirementsLab & keyof RequirementsLabAttributes]?: RequirementsLab[K] } & { [K in keyof RequirementsLab & keyof RequirementsLabAttributes as `attr:${K}`]?: RequirementsLabAttributes[K] } & { [K in keyof RequirementsLab & keyof RequirementsLabAttributes as `prop:${K}`]?: RequirementsLab[K] };
+        "research-ledger": Omit<ResearchLedger, keyof ResearchLedgerAttributes> & { [K in keyof ResearchLedger & keyof ResearchLedgerAttributes]?: ResearchLedger[K] } & { [K in keyof ResearchLedger & keyof ResearchLedgerAttributes as `attr:${K}`]?: ResearchLedgerAttributes[K] } & { [K in keyof ResearchLedger & keyof ResearchLedgerAttributes as `prop:${K}`]?: ResearchLedger[K] };
         "skos-lab": Omit<SkosLab, keyof SkosLabAttributes> & { [K in keyof SkosLab & keyof SkosLabAttributes]?: SkosLab[K] } & { [K in keyof SkosLab & keyof SkosLabAttributes as `attr:${K}`]?: SkosLabAttributes[K] } & { [K in keyof SkosLab & keyof SkosLabAttributes as `prop:${K}`]?: SkosLab[K] };
         "standalone-lab": Omit<StandaloneLab, keyof StandaloneLabAttributes> & { [K in keyof StandaloneLab & keyof StandaloneLabAttributes]?: StandaloneLab[K] } & { [K in keyof StandaloneLab & keyof StandaloneLabAttributes as `attr:${K}`]?: StandaloneLabAttributes[K] } & { [K in keyof StandaloneLab & keyof StandaloneLabAttributes as `prop:${K}`]?: StandaloneLab[K] };
         "tag-lab": TagLab;
@@ -1120,6 +1205,7 @@ declare module "@stencil/core" {
             "deck-container": LocalJSX.IntrinsicElements["deck-container"] & JSXBase.HTMLAttributes<HTMLDeckContainerElement>;
             "deck-presenter": LocalJSX.IntrinsicElements["deck-presenter"] & JSXBase.HTMLAttributes<HTMLDeckPresenterElement>;
             "deck-slide": LocalJSX.IntrinsicElements["deck-slide"] & JSXBase.HTMLAttributes<HTMLDeckSlideElement>;
+            "dejiao-workbench": LocalJSX.IntrinsicElements["dejiao-workbench"] & JSXBase.HTMLAttributes<HTMLDejiaoWorkbenchElement>;
             "document-identity": LocalJSX.IntrinsicElements["document-identity"] & JSXBase.HTMLAttributes<HTMLDocumentIdentityElement>;
             "frbr-lab": LocalJSX.IntrinsicElements["frbr-lab"] & JSXBase.HTMLAttributes<HTMLFrbrLabElement>;
             "frbr-split": LocalJSX.IntrinsicElements["frbr-split"] & JSXBase.HTMLAttributes<HTMLFrbrSplitElement>;
@@ -1130,6 +1216,7 @@ declare module "@stencil/core" {
             "library-treegrid": LocalJSX.IntrinsicElements["library-treegrid"] & JSXBase.HTMLAttributes<HTMLLibraryTreegridElement>;
             "library-workbench": LocalJSX.IntrinsicElements["library-workbench"] & JSXBase.HTMLAttributes<HTMLLibraryWorkbenchElement>;
             "markdown-lab": LocalJSX.IntrinsicElements["markdown-lab"] & JSXBase.HTMLAttributes<HTMLMarkdownLabElement>;
+            "material-package": LocalJSX.IntrinsicElements["material-package"] & JSXBase.HTMLAttributes<HTMLMaterialPackageElement>;
             "mermaid-diagram": LocalJSX.IntrinsicElements["mermaid-diagram"] & JSXBase.HTMLAttributes<HTMLMermaidDiagramElement>;
             "metadata-split": LocalJSX.IntrinsicElements["metadata-split"] & JSXBase.HTMLAttributes<HTMLMetadataSplitElement>;
             "model-connection": LocalJSX.IntrinsicElements["model-connection"] & JSXBase.HTMLAttributes<HTMLModelConnectionElement>;
@@ -1142,6 +1229,7 @@ declare module "@stencil/core" {
             "projection-lab": LocalJSX.IntrinsicElements["projection-lab"] & JSXBase.HTMLAttributes<HTMLProjectionLabElement>;
             "reading-agent": LocalJSX.IntrinsicElements["reading-agent"] & JSXBase.HTMLAttributes<HTMLReadingAgentElement>;
             "requirements-lab": LocalJSX.IntrinsicElements["requirements-lab"] & JSXBase.HTMLAttributes<HTMLRequirementsLabElement>;
+            "research-ledger": LocalJSX.IntrinsicElements["research-ledger"] & JSXBase.HTMLAttributes<HTMLResearchLedgerElement>;
             "skos-lab": LocalJSX.IntrinsicElements["skos-lab"] & JSXBase.HTMLAttributes<HTMLSkosLabElement>;
             "standalone-lab": LocalJSX.IntrinsicElements["standalone-lab"] & JSXBase.HTMLAttributes<HTMLStandaloneLabElement>;
             "tag-lab": LocalJSX.IntrinsicElements["tag-lab"] & JSXBase.HTMLAttributes<HTMLTagLabElement>;

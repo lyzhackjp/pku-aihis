@@ -203,3 +203,5 @@ deck-container {
 
 .deck-top{gap:12px;padding:0 24px;white-space:nowrap}.deck-top .lib-status{min-width:0;text-overflow:ellipsis;overflow:hidden;flex:1}.deck-top>a{margin-right:0;flex-shrink:0}.deck-top button,.deck-top .sqlite-open{flex-shrink:0}
 @media(max-width:1450px){.deck-top>span:first-of-type{display:none}.deck-top{gap:10px}.deck-top>a{font-size:11px;letter-spacing:.04em}}
+
+.deck-top{gap:7px;padding:0 16px}.deck-top button,.deck-top .sqlite-open{padding:5px 8px}.deck-top .lib-status{font-size:11px}@media(max-width:1200px){.deck-top>a{display:none}.deck-top .presenter-button{display:none}}

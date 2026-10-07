@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "start": "node scripts/prepare-runtime.mjs && node scripts/copy-vendor.mjs && node scripts/gen-migrations.mjs && stencil build --dev --watch --serve",
-    "build": "node scripts/prepare-runtime.mjs && node scripts/assemble-deck.mjs && node scripts/copy-vendor.mjs && node scripts/gen-migrations.mjs && stencil build && node scripts/prepare-source.mjs",
+    "build": "node scripts/prepare-runtime.mjs && node scripts/prepare-concepts.mjs && node scripts/assemble-deck.mjs && node scripts/copy-vendor.mjs && node scripts/gen-migrations.mjs && stencil build && node scripts/prepare-source.mjs",
     "check": "node scripts/gen-migrations.mjs && tsc --noEmit",
     "test": "node scripts/gen-migrations.mjs && node --test tests/*.test.mjs",
     "prepare:patchouli": "node scripts/import-patchouli.mjs",

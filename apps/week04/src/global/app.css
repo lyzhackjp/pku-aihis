@@ -1097,3 +1097,5 @@ quality-lab{display:block;flex:none;min-height:0}.glossary{height:100%;min-heigh
 deck-slide[slide-id='D29'] .hero-lab {flex:1;min-height:0;height:auto;}
 deck-slide[slide-id='D29'] .hero-three {color:var(--color-dark-ink);}
 deck-slide[style*="display: block"] .structure-block{animation:diagram-structure-shine .7s ease-out both}@keyframes diagram-structure-shine{from{filter:brightness(1.15)}to{filter:brightness(1)}}deck-slide[style*="display: block"] :is(.object-perspectives article,.skos-schema-chip,.skos-concept-chip,.skos-labels,.skos-semantic-map span){animation:diagram-reveal .7s ease-out both}
+
+.concept-import{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;font-size:12px;line-height:1.6}.concept-import input[type=file]{width:100%;font-size:11px}.concept-import button{padding:5px}.concept-regex{display:flex;align-items:center;gap:7px;font-size:12px;margin:8px 0}.concept-regex input{width:auto!important}

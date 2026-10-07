@@ -115,3 +115,5 @@ deck-slide {
 
 .slide-transition {font-size:14px;line-height:1.55;color:var(--color-ink-muted);font-weight:400;margin:7px 0 0;}
 .theme-dark .slide-transition {color:#c6d0df;}
+
+.slide-scroll{height:100%;overflow:hidden}.slide-scroll.has-reading-extension{overflow-y:auto;scroll-behavior:smooth}.slide-scroll>.slide-page{height:100%;min-height:100%}.slide-header{position:relative}.reading-extension-entry{position:absolute;top:0;right:0;font-size:12px;padding:5px 9px}.has-reading-extension .slide-header{padding-right:160px}

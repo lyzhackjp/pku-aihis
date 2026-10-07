@@ -1,11 +1,11 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-test('31 approved pages have aligned IDs, titles, notes and actual components',async()=>{
+test('32 approved pages have aligned IDs, titles, notes and actual components',async()=>{
  const map=JSON.parse(await fs.readFile('../../docs/week04/page-map.json'));
  const html=await fs.readFile('src/index.html','utf8');
  const ids=[...html.matchAll(/<deck-slide slide-id="([^"]+)"/g)].map(m=>m[1]);
- assert.deepEqual(ids,map.map(p=>p.id));assert.equal(new Set(ids).size,31);
+ assert.deepEqual(ids,map.map(p=>p.id));assert.equal(new Set(ids).size,32);
  assert(!/占位|mock|TODO/.test(html));
  for(const p of map){const block=html.split(`slide-id="${p.id}"`)[1].split('</deck-slide>')[0];assert(block.includes('notes="目的：'));assert(block.includes('机制背景：'));}
  const tags=[...html.matchAll(/<([a-z]+-[a-z-]+)[\s>]/g)].map(m=>m[1]);

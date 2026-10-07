@@ -18,6 +18,7 @@ async function copy(relative){
 for(const dir of ['vendor/patchouli','core-probe','native-probe','src/lib','src/components','src/global','scripts','infrastructure-sources'])await copy(dir);
 await fs.mkdir(path.join(dest,'src/assets/skos'),{recursive:true});for(const name of ['tools.entry.mjs','history.ttl','manifest.json','LICENSES.txt'])await fs.copyFile(path.join('src/assets/skos',name),path.join(dest,'src/assets/skos',name));
 await fs.mkdir(path.join(dest,'src/assets/data'),{recursive:true});await fs.copyFile('src/assets/data/classroom-tags.json',path.join(dest,'src/assets/data/classroom-tags.json'));
+await fs.copyFile('src/assets/data/concept-appendix.md',path.join(dest,'src/assets/data/concept-appendix.md'));
 for(const f of ['package.json','pnpm-lock.yaml','stencil.config.ts','tsconfig.json','README.md'])await fs.copyFile(f,path.join(dest,f));
 await fs.writeFile(path.resolve('www/pku-aihis/week04/assets/licenses/SOURCE.txt'),
  'Patchouli GPL-3.0: see patchouli-LICENSE.txt and patchouli-manifest.json.\nCorresponding source and browser adaptations: ./corresponding-source/\nBuild instructions: corresponding-source/README.md\nUpstream: https://github.com/kwadraten/patchouli\n');

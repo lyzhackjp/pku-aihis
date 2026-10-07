@@ -26,6 +26,8 @@ export class DeckContainer {
   @State() libDetail = "";
   @State() importing = false;
   @State() importRunning = false;
+  @State() packageOpen=false;
+  private conceptReturn="D04";
   private slides: HTMLElement[] = [];
   private channel: BroadcastChannel;
   componentDidLoad() {
@@ -77,6 +79,7 @@ export class DeckContainer {
       s.style.display = i === j ? "block" : "none";
       const workspace=s.querySelector('metadata-split, library-workbench, patchouli-app, pdf-flow-split, frbr-split, requirements-lab, skos-lab, markdown-lab, standalone-lab') as any;
       if(workspace)workspace.active=i===j;
+      const dejiao=s.querySelector("dejiao-workbench") as HTMLElement & {active:boolean};if(dejiao)dejiao.active=i===j;
     });
     history.replaceState(null, "", "#" + this.titles[i].id);
     this.overview = false;
@@ -87,6 +90,7 @@ export class DeckContainer {
   }
   @Listen("keydown", { target: "window" }) key(e: KeyboardEvent) {
     if (e.isComposing) return;
+    if(this.packageOpen){if(e.key==='Escape')this.packageOpen=false;return;}
     if(this.importing){if(e.key==='Escape'){e.preventDefault();this.importing=false;}return;}
     if (
       e
@@ -163,11 +167,15 @@ export class DeckContainer {
             导出 SQLite
           </button>
           <label class="sqlite-open">打开 SQLite<input aria-label="打开 SQLite" type="file" accept=".sqlite,.db" disabled={this.libState !== 'ready'} onChange={async e=>{const input=e.target as HTMLInputElement;try{if(input.files?.[0])await liveLibrary.openSqlite(input.files[0]);}catch(error){alert('数据库读取失败：'+error.message);}finally{input.value='';}}}/></label>
-          <button onClick={() => this.presenter()}>演讲者视图 ↗</button>
+          <button disabled={this.libState!=="ready"} onClick={()=>this.packageOpen=true}>材料包／备份</button>
+          <button onClick={()=>this.go("D31")}>德教贯穿</button>
+          <button title="随时进入概念解释；再次点击返回原页" onClick={()=>{if(this.titles[this.current]?.id==="D30")this.go(this.conceptReturn);else{this.conceptReturn=this.titles[this.current]?.id||"D04";this.go("D30");}}}>{this.titles[this.current]?.id==="D30"?"返回原页":"概念附录"}</button>
+          <button class="presenter-button" onClick={() => this.presenter()}>备注 ↗</button>
         </div>
         <main>
           <slot />
         </main>
+        <material-package opened={this.packageOpen} onPackageClosed={()=>this.packageOpen=false}/>
         <pdf-import-wizard hidden={!this.importing} onImportRunningChanged={event=>this.importRunning=event.detail} onImportClosed={()=>this.importing=false} onImportOpenDocument={event=>void this.openImported(event.detail)}/>
         <nav class="deck-nav">
           <button

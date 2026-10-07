@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element } from "@stencil/core";
+import { Component, h, Prop, Element, Listen } from "@stencil/core";
 
 @Component({
   tag: "deck-slide",
@@ -23,8 +23,14 @@ export class DeckSlide {
   @Prop() notes: string = "";
   @Prop() duration: number = 2; // suggested minutes
 
+  @Listen('workbench-open-document',{target:'window'}) returnToOriginal(){
+    if(this.el.style.display==='none')return;
+    requestAnimationFrame(()=>(this.el.querySelector('.slide-scroll') as HTMLElement)?.scrollTo({top:0,behavior:'smooth'}));
+  }
   render() {
+    const supplemented=["D18","D19","D20","D23","D26","D31"].includes(this.slideId);
     return (
+      <div class={{"slide-scroll":true,"has-reading-extension":supplemented}}>
       <section
         class={{
           "slide-page": true,
@@ -46,6 +52,7 @@ export class DeckSlide {
               {this.transition && <p class="slide-transition">{this.transition}</p>}
               <div class="slide-header-actions">
                 <slot name="header-actions"></slot>
+                {supplemented&&<button class="reading-extension-entry" onClick={()=>this.el.querySelector("research-ledger")?.scrollIntoView({block:"start",behavior:"smooth"})}>阅读判断记录 ↓</button>}
               </div>
             </header>
           )}
@@ -61,6 +68,8 @@ export class DeckSlide {
           </div>
         </div>
       </section>
+      {supplemented&&<research-ledger page-id={this.slideId}/>}
+      </div>
     );
   }
 }

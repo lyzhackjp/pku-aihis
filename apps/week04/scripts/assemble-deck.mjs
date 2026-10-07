@@ -42,7 +42,7 @@ const body={
  D24:live('refine-lab'),D25:live('vocabulary-lab'),D26:live('revision-ocr-lab'),D27:live('backup-lab'),
  D28:live('quality-lab')+live('library-explorer'),
  D29:`<div class="hero-lab"><div><h2 class="hero-title">组织是为了<br>未来的使用</h2><p class="hero-lead">使过去的阅读能够进入新的问题。</p></div><div class="hero-path"><span>我能再次找到吗？</span><span>我能说明依据吗？</span><span>我能回到原文吗？</span></div></div><p>课后使用教案附录：最小记录约定、八原则检查表。</p>`,
- D30:live('glossary-view'),
+ D30:live('glossary-view'),D31:live('dejiao-workbench'),
 };
 const enrichment=JSON.parse(await fs.readFile('../../docs/week04/page-enrichment.json','utf8'));
 for(const extra of enrichment){const p=pages.find(p=>p.id===extra.id);Object.assign(extra,{section:p.section,original:p.original_action||p.action});if(extra.tool)body[extra.id]=`<library-workbench page-id="${extra.id}"></library-workbench>`;}
@@ -85,7 +85,7 @@ const first={
 };
 for(const c of glossary.categories)for(const t of c.terms){
  const matched=Object.keys(body).find(id=>body[id].includes(t.term));
- t.first_slide=first[t.term]||matched||null;
+ t.first_slide=t.first_slide||first[t.term]||matched||null;
 }
 await fs.writeFile('src/assets/data/page-enrichment.json',JSON.stringify(enrichment.map(record=>retainedIds.has(record.id)&&!revisedNotes[record.id]?existingEnrichment.find(previous=>previous.id===record.id)||record:record),null,2)+'\n');
 await fs.writeFile('src/assets/data/glossary.json',JSON.stringify(glossary,null,1)+'\n');

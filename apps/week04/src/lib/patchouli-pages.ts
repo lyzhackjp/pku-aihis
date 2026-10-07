@@ -5,9 +5,10 @@ export const PATCHOULI_PAGES: Record<PatchouliPage, string> = {
 };
 const SLIDE_PAGES: Record<string, PatchouliPage> = { D04:'library', D05:'editor', D06:'search', D08:'history', D11:'editor', D12:'csl', D13:'uri', D14:'tags', D26:'ocr' };
 export const pageFromSlide = (id: string): PatchouliPage => SLIDE_PAGES[id] || 'library';
-export const PATCHOULI_ITEM_TYPES: Record<string,string> = {book:'图书','article-journal':'期刊论文','paper-conference':'会议论文',thesis:'学位论文',chapter:'书中章节',manuscript:'手稿'};
+export const PATCHOULI_ITEM_TYPES: Record<string,string> = {book:'图书','article-journal':'期刊论文','paper-conference':'会议论文',thesis:'学位论文',chapter:'书中章节',manuscript:'手稿',report:'报告'};
 export interface PatchouliRequest {
   page: PatchouliPage;
+  collectionId?:string;
   field?: string;
   focusKind?: 'item' | 'field' | 'metadata' | 'attachment';
   selector?: string;
