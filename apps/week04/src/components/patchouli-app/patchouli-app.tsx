@@ -27,6 +27,7 @@ export class PatchouliApp {
   @StencilEvent() patchouliReturn: EventEmitter<void>;
   @StencilEvent() patchouliEditChange: EventEmitter<boolean>;
   @State() pdfEditing = false;@State() ocrConfirmToken=0;
+  @State() temporary = false;
   @State() view: View = 'library';
   @State() item: any = null;
   @State() items: any[] = [];
@@ -83,7 +84,7 @@ export class PatchouliApp {
   }
   disconnectedCallback() { this.cacheDraft();this.cacheTools();this.off?.();this.workflowOff?.();window.removeEventListener('research-selection',this.selection);window.removeEventListener('workbench-evidence',this.evidence);window.removeEventListener('workbench-open-document',this.openEvidence);window.removeEventListener('keydown',this.readerKey,true); }
   @Watch('active') activate() {
-    if(!this.active){this.cacheDraft();this.cacheTools();return;}
+    if(!this.active){this.temporary=false;this.cacheDraft();this.cacheTools();return;}
     this.refresh(false,true,true);
     if(this.pendingRequest&&liveLibrary.getLibrary()){const request=this.pendingRequest;this.pendingRequest=null;void this.navigate(request);}
     if(this.view==='reader'&&!this.docs.some(doc=>doc.document_instance_id===this.readerDocument)){this.view=this.previousView;this.readerDocument='';this.pdfEditing=false;}
@@ -134,10 +135,11 @@ export class PatchouliApp {
   private openEvidence = (event:CustomEvent) => { if(!this.active)return;try{const uri=new URL(event.detail),match=uri.pathname.match(/^\/([^/]+)\/page-(\d+)\.md$/);if(uri.protocol!=='patchouli:'||uri.hostname!=='texts'||!match)return;void this.navigate({page:'reader',documentId:match[1],pageNumber:Number(match[2]),revisionId:uri.searchParams.get('rev')||'',evidenceUri:event.detail});}catch{/* Unrelated events are ignored. */} };
   private evidence = (event:CustomEvent) => { this.openEvidence(event); };
   private readerKey = (event:KeyboardEvent) => {
+    if(this.active&&this.temporary&&event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();this.temporary=false;return;}
     if(!this.active||this.view!=='reader'||event.isComposing||event.ctrlKey||event.altKey||event.metaKey)return;
     if(event.composedPath().some((target:any)=>target?.matches?.('input,textarea,select,[contenteditable=true]')))return;
     if(this.pdfEditing){if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();void (this.el.querySelector('pdf-reader') as any)?.cancelEditing();}return;}
-    const step={ArrowLeft:-1,ArrowRight:1,PageUp:-1,PageDown:1}[event.key];if(!step&&event.key!=='Escape')return;
+    const step={ArrowUp:-1,ArrowDown:1,PageUp:-1,PageDown:1}[event.key];if(!step&&event.key!=='Escape')return;
     event.preventDefault();event.stopImmediatePropagation();if(event.key==='Escape')this.returnFromReader();else this.movePage(this.readerPage+step);
   };
   @Method() async navigate(request:PatchouliRequest) {
@@ -156,6 +158,8 @@ export class PatchouliApp {
   }
   @Method() async getState():Promise<PatchouliState> { return {page:this.view,item:this.item,items:this.items,docs:this.docs,fields:this.fields,creators:this.creators,issued:this.issued,focusField:this.focusField,focusKind:this.entity,editing:this.pdfEditing,boundDocuments:this.docs.filter(doc=>!!liveLibrary.getLibrary()?.files[doc.file_asset_id]).length,totals:this.totals}; }
   componentDidRender() {
+    const surface=this.el.querySelector('.patchouli-app') as HTMLElement;
+    if(this.temporary&&surface&&!surface.matches(':popover-open'))surface.showPopover?.();
     if(this.active)void this.getState().then(state=>this.patchouliStateChange.emit(state));
     if(!this.pendingFocus||!this.active)return;
     const request=this.pendingFocus;this.pendingFocus=null;
@@ -296,7 +300,7 @@ export class PatchouliApp {
     const lib=liveLibrary.getLibrary();if(!lib)return <p class="mds-loading">书库启动中…</p>;
     const bound=this.docs.some(doc=>!!lib.files[doc.file_asset_id]);
     const status=this.log||(this.error?this.message:this.pdfEditing?'边界框编辑中':this.dirty?'有未保存的更改':this.message)||(this.processing?'PDF处理进行中':'');
-    return <div class="mds-app-pane patchouli-app" data-page={this.view}>
+    return <div class={{'mds-app-pane':true,'patchouli-app':true,'pa-temporary':this.temporary}} popover={this.temporary?'manual':undefined} data-page={this.view}>
       <header class="mds-editor-header pa-titlebar">
         <nav class="mds-app-bar" aria-label="Patchouli应用导航"><img class="pa-brand-icon" src="assets/branding/patchouli-icon.png" alt="Patchouli" title="Patchouli" width="24" height="24"/>{[['library','书库'],['editor','编辑题录'],['attachments','文件关联'],['search','检索'],['reader','PDF工作台']].map(([page,label])=><button aria-label={label} title={label} class={this.view===page?'is-current':''} disabled={this.pdfEditing||(page==='reader'&&!bound)} onClick={()=>void this.navigate({page:page as PatchouliPage})}>{this.pageIcon(page)}</button>)}</nav>
         <h2 class="pa-page-heading">{PATCHOULI_PAGES[this.view]}</h2>
@@ -306,6 +310,7 @@ export class PatchouliApp {
         {this.view==='reader'&&this.evidenceUri&&<details class="pa-evidence"><summary title="引用的段落">引文</summary><div><p>{lib.fetch(this.evidenceUri).text}</p><code>{this.evidenceUri}</code></div></details>}
         <span class={{'mds-app-status':true,'mds-feedback':true,'is-error':this.error}} role="status" aria-live="polite" title={status}>{status}</span>
         <div class="mds-actions">{(this.view==='reader'||this.externalReturn)&&<button class="pa-return" disabled={this.pdfEditing} aria-label={this.returnLabel} title={this.returnLabel} onClick={()=>this.returnFromReader()}>{this.pageIcon('back')}</button>}{this.view==='editor'&&<span class="pa-editor-actions"><button disabled={!this.dirty||this.busy} onClick={()=>this.discard()}>放弃更改</button><button class="mds-save" disabled={!this.dirty||this.busy} onClick={()=>void this.save()}>{this.busy?'保存中…':'保存题录'}</button></span>}{this.view==='library'&&<button aria-label="编辑所选题录" disabled={!this.item} onClick={()=>this.pick('metadata')}>编辑</button>}</div>
+        <button class="pa-temporary-toggle" aria-label={this.temporary?'返回课件中的工作台':'在临时页面打开工作台'} title={this.temporary?'返回课件；保留当前编辑':'临时放大当前工作台；使用同一书库和编辑状态'} onClick={()=>this.temporary=!this.temporary}>{this.temporary?'返回课件':'⤢'}</button>
       </header>
       <div class="mds-app-view">{this.content()}</div>
     </div>;

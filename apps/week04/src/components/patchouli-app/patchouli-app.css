@@ -176,3 +176,6 @@ patchouli-app {display:block;height:100%;min-height:0;min-width:0;}
 .pa-ocr-main{padding:0!important;height:100%;overflow:hidden!important}.pa-ocr-main>ocr-queue{height:100%}
 .pa-full-main{padding:0!important;height:100%;overflow:hidden!important}.pa-full-main>ocr-queue,.pa-full-main>library-browser{height:100%}
 .patchouli-app{position:relative}
+.patchouli-app.pa-temporary {position:fixed;inset:20px;width:calc(100vw - 40px);height:calc(100vh - 40px);margin:0;padding:0;max-width:none;max-height:none;border:1px solid #9c83c9;box-shadow:0 12px 45px #271c4a40;z-index:9990}
+.patchouli-app.pa-temporary::backdrop {background:#28243c55}
+.patchouli-app .pa-temporary-toggle {flex:0 0 auto;height:29px;min-width:29px;padding:3px 7px;font-size:13px}
