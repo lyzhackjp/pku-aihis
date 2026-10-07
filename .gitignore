@@ -52,3 +52,6 @@ __pycache__/
 
 # Private teacher material packs stay local, including copied preview assets.
 /apps/week04/src/assets/local-only/
+
+# Shared importer paths retained from main.
+/apps/material-importer/public/vendor/
