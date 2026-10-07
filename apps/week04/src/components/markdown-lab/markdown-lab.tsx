@@ -1,5 +1,5 @@
 import {MARKDOWN_DIAGRAMS} from '../../lib/markdown-diagrams';
-import {Component,h,Prop,State,Element,Watch,Method} from '@stencil/core';
+import {Component,h,Prop,State,Element,Watch,Method,Listen} from '@stencil/core';
 import {MARKDOWN_TEMPLATES} from '../../lib/markdown-templates';
 import {liveLibrary} from '../../lib/live-library';
 import {selectedItem} from '../../lib/research-context';
@@ -9,14 +9,18 @@ import {PatchouliRequest} from '../../lib/patchouli-pages';
 export class MarkdownLab {
  @Element() el:HTMLElement;@Prop() pageId='D20';@Prop() showDiagram=true;@Prop() active=false;
  @State() mode='edit';@State() selectedIndex=0;@State() selectedSection='';@State() editing=false;@State() text='';@State() ready=false;@State() message='';@State() reader:PatchouliRequest;
- private tools:any;private editor:any;private template='';private started=false;private off:()=>void;
+ private tools:any;private editor:any;private template='';private started=false;private off:()=>void;private syncing=false;
  private get key(){return 'week04-markdown-'+this.pageId;}
  private get config(){return MARKDOWN_TEMPLATES[this.pageId]||MARKDOWN_TEMPLATES.D20;}
  componentDidLoad(){this.off=liveLibrary.subscribe(state=>{if(state==='ready'&&this.active)void this.init();});if(this.active)void this.init();}
  disconnectedCallback(){this.off?.();this.editor?.destroy();}
- @Watch('active') activate(){if(this.active)void this.init();}
- private async init(){if(this.started){requestAnimationFrame(()=>this.mount());return;}if(!liveLibrary.getLibrary())return;this.started=true;try{const url=new URL('assets/skos/tools.mjs',document.baseURI).href;this.tools=await import(/* webpackIgnore: true */url);const lib=liveLibrary.getLibrary(),item=lib.items().find(i=>i.item_id===selectedItem())||lib.items()[0];const source=lib.rows("select s.*,p.page_index from search_units s join pages p on p.page_id=s.page_id join document_instances d on d.document_instance_id=s.document_instance_id where d.item_id=? and s.status='current' and trim(s.resolved_text)<>'' order by p.page_index,s.ordinal limit 1",[item?.item_id])[0];const hit=source?{uri:'patchouli://texts/'+source.document_instance_id+'/page-'+(source.page_index+1)+'.md?rev='+source.tree_revision_id+'&box='+source.box_id}:null;this.template=this.config.text.replaceAll('{{title}}',item?.title||'填写所用文献').replaceAll('{{uri}}',hit?.uri||'patchouli://texts/文档ID/page-1.md?rev=修订ID&box=文本块ID');this.text=localStorage.getItem(this.key)??this.template;this.ready=true;requestAnimationFrame(()=>this.mount());}catch(e){this.message=e.message;this.started=false;}}
- private change=(text:string)=>{this.text=text;localStorage.setItem(this.key,text);this.message='草稿已保存在本机';};
+ @Watch('pageId') pageChanged(){this.editor?.destroy();this.editor=null;this.reader=null;this.template='';this.started=false;this.ready=false;this.text='';this.selectedIndex=0;this.selectedSection='';if(this.active)void this.init();}
+ @Watch('active') activate(){if(this.active){const saved=localStorage.getItem(this.key);if(this.started&&saved!==null)this.receive(saved);void this.init();}}
+ @Listen('week04-markdown-change',{target:'window'}) peer(e:CustomEvent){if(e.detail?.key===this.key&&e.detail.source!==this.el)this.receive(e.detail.text);}
+ @Listen('storage',{target:'window'}) storage(e:StorageEvent){if(e.key===this.key)this.receive(e.newValue??this.template);}
+ private receive(text:string){if(typeof text!=='string'||text===this.text)return;this.text=text;this.syncing=true;try{this.editor?.setText(text);}finally{this.syncing=false;}this.message='已同步同一笔记的最新草稿';}
+ private async init(){if(this.started){requestAnimationFrame(()=>this.mount());return;}if(!liveLibrary.getLibrary())return;this.started=true;const page=this.pageId;try{const url=new URL('assets/skos/tools.mjs',document.baseURI).href;this.tools=await import(/* webpackIgnore: true */url);if(page!==this.pageId)return;const lib=liveLibrary.getLibrary(),item=lib.items().find(i=>i.item_id===selectedItem())||lib.items()[0];const source=lib.rows("select s.*,p.page_index from search_units s join pages p on p.page_id=s.page_id join document_instances d on d.document_instance_id=s.document_instance_id where d.item_id=? and s.status='current' and trim(s.resolved_text)<>'' order by p.page_index,s.ordinal limit 1",[item?.item_id])[0];const hit=source?{uri:'patchouli://texts/'+source.document_instance_id+'/page-'+(source.page_index+1)+'.md?rev='+source.tree_revision_id+'&box='+source.box_id}:null;this.template=this.config.text.replaceAll('{{title}}',item?.title||'填写所用文献').replaceAll('{{uri}}',hit?.uri||'patchouli://texts/文档ID/page-1.md?rev=修订ID&box=文本块ID');this.text=localStorage.getItem(this.key)??this.template;this.ready=true;requestAnimationFrame(()=>this.mount());}catch(e){this.message=e.message;this.started=false;}}
+ private change=(text:string)=>{if(this.syncing)return;this.text=text;localStorage.setItem(this.key,text);window.dispatchEvent(new CustomEvent('week04-markdown-change',{detail:{key:this.key,text,source:this.el}}));this.message='草稿已保存在本机';};
  componentDidRender(){if(this.active){this.mount();this.highlightPreview();}}
  private mount(){if(!this.tools||!this.ready)return;const host=this.el.querySelector('.markdown-code');if(host&&!host.querySelector('.cm-editor')){this.editor?.destroy();this.editor=this.tools.createEditor(host,this.text,this.change,'markdown');if(this.selectedSection)this.editor.highlightSection(this.selectedSection);}}
  @Method() async getText(){return this.text;}
