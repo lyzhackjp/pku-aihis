@@ -1,10 +1,10 @@
 # pku-aihis
 
-《人工智能赋能历史研究与写作》的网页演示源码与协作仓库。第三周包含29页“检索与证据”演示，教案、完整OCR与私人原件保留在课程文件夹。
+《人工智能赋能历史研究与写作》的网页演示源码与协作仓库。第三周包含29页“检索与证据”演示；第四周采用助教知识组织原则版与方案B补充，共32页。第四周默认书库仅包含助教原有四份公开课堂材料，教师德教包、未刊稿与填写记录仅在本地导入。
 
 教师已确认将原D14—D20合为“知识库产品、搜索引擎、向量数据库”三页。页面对应及核验见[简化版说明](docs/week03/tool-families-preview.md)；无需修改源码的本地／线上语料操作见[导入说明](apps/week03/src/assets/guides/corpus-import.md)。
 
-主线课堂入口部署到 **[第三周](https://lyzhackjp.github.io/pku-aihis/week03/)**；实际发布提交和检查范围见 [交接与运行状态](docs/week03/handoff.md)。
+主线课堂入口部署到 **[第三周](https://lyzhackjp.github.io/pku-aihis/week03/)**；另有 **[第四周](https://lyzhackjp.github.io/pku-aihis/week04/)** 与 **[通用导入页](https://lyzhackjp.github.io/pku-aihis/material-importer/)**。实际发布提交和检查范围见 [交接与运行状态](docs/week03/handoff.md)。
 
 ## 本地使用
 
@@ -46,8 +46,19 @@ Leymore另经[课堂内容复核](docs/week03/leymore-content-review.md)，仅23
 
 ## 助教接续
 
+第四讲为[31页Stencil课件](apps/week04/README.md)，23个案例页通过示意图切换同一套Patchouli工作台，D21以实体卡片盒演示Markdown笔记，所有交互UI复用patchouli-app组件及原图标，PDF与书库共用应用区域，PDF可编辑原生边界框树；征引提供MLA、APA、Chicago和《世界历史》的真实CSL样式，讲解标注按钮和弹出内容已移除，课后可导入自己的PDF持续使用；逐页改进见[工作台复核](docs/week04/workbench-review.md)。包含直接从桌面数据库抽取的唯一原生子集（4题录、353页、4PDF）、RapidOCR修订链、API模型接入与SQLite双向回读；见[原生子集验收](docs/week04/native-subset.md)。本轮只进行本地构建与全站预演，不部署；检查范围见[接续验收](docs/week04/completion.md)。
+实现与受测边界见 [第四讲技术验收](docs/week04/browser-port.md)；PPT skill 已原样复制到项目 `.agents/skills/guizang-ppt-skill`。
+
 [逐页设计](docs/week03/page-map.json) · [开发方案](docs/week03/design.md) · [课程制作skill](.agents/skills/history-demo-courseware/SKILL.md) · [贡献流程](CONTRIBUTING.md) · [发布流程](docs/ci-and-release.md) · [来源许可](docs/third-party-notices.md)
 
 短期分支 → PR → `build-week03`检查 → Squash合并 → 主线手动发布。发布周次由published-weeks.json维护，组装全站，不能覆盖掉旧周次。助教加入后再根据实际账号配置审阅职责，不预填虚构CODEOWNERS。
 
 本次直观化改造与验收见[2026-09-23更新](docs/week03/visual-update.md)，独立检查见[助教复核](docs/week03/ta-visual-review.md)。
+
+第四讲现随仓库提供四份预置PDF、原生SQLite子集及所需原核心源码；普通克隆不再依赖教师的桌面文献库。安装Node24、pnpm和.NET SDK10后，按[第四讲运行说明](apps/week04/README.md)执行安装、构建与预览，构建会自动准备OCR。
+
+## 第四周与分支职责
+
+正式第四周见 [方案B教案](docs/week04/lesson-ta-option-b.md) 与 [发布说明](docs/week04/formal-release.md)。`feat/week04-ta-slides-pending-revision`保留助教版的修改历史；`第四周教案教师原稿`冻结教师原演示，供日后复用；`feat/week04-agent-sidebar`仅承载Agent填写试验，不进入正式课件。第三周、通用导入器及共享模块继续由main维护。
+
+第四周需要.NET 10与浏览器WASM工具链，首次构建自动编译原核心、下载三份固定哈希的OCR模型。默认四份PDF和原生SQLite经明确白名单发布；其他PDF、ZIP和私有输入不进入站点。正式课件的D31仅提供研究链和本机文件导入入口，不预装德教内容。

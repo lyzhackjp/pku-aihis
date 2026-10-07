@@ -5,8 +5,49 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { PatchouliPage, PatchouliRequest, PatchouliState } from "./lib/patchouli-pages";
+import { TreeBox } from "./lib/box-tree";
+export { PatchouliPage, PatchouliRequest, PatchouliState } from "./lib/patchouli-pages";
+export { TreeBox } from "./lib/box-tree";
 export namespace Components {
-    interface CourseApp {
+    interface BackupLab {
+    }
+    interface ConceptMap {
+        "config": any;
+        /**
+          * @default ''
+         */
+        "currentTitle": string;
+        /**
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * @default '点击图中节点，切换对应操作'
+         */
+        "hint": string;
+        /**
+          * @default ''
+         */
+        "pageId": string;
+        /**
+          * @default 0
+         */
+        "selectedIndex": number;
+    }
+    interface ConfigHint {
+        /**
+          * @default ""
+         */
+        "label": string;
+        /**
+          * @default "library"
+         */
+        "needs": string;
+    }
+    interface CslRenderer {
+    }
+    interface DeckContainer {
     }
     interface DeckPresenter {
     }
@@ -44,56 +85,330 @@ export namespace Components {
           * @default "light"
          */
         "theme": "light" | "dark" | "accent";
-    }
-    interface MaterialFlow {
-        /**
-          * @default "P03"
-         */
-        "pageId": string;
-    }
-    interface NoteFlow {
-        /**
-          * @default "P20"
-         */
-        "pageId": string;
-    }
-    interface ProcessWorkspace {
-        /**
-          * @default "P01"
-         */
-        "topicId": string;
-    }
-    interface ProjectStart {
-    }
-    interface ReadingFlow {
-        /**
-          * @default "P14"
-         */
-        "pageId": string;
-    }
-    interface SourceReader {
         /**
           * @default ""
          */
-        "attachmentId": string;
+        "transition": string;
+    }
+    interface DejiaoWorkbench {
+        /**
+          * @default false
+         */
+        "active": boolean;
+    }
+    interface DocumentIdentity {
+    }
+    interface FrbrLab {
+    }
+    interface FrbrSplit {
+        /**
+          * @default true
+         */
+        "active": boolean;
+    }
+    interface GlossaryView {
+    }
+    interface HistoryTimeline {
+    }
+    interface LayoutSplit {
+        /**
+          * @default "1-1"
+         */
+        "ratio": "1-1" | "1-2" | "2-1" | "1-3" | "3-1";
+    }
+    interface LibraryBrowser {
+        /**
+          * @default 'tags'
+         */
+        "kind": 'tags'|'collections';
+        /**
+          * @default ''
+         */
+        "query": string;
+        /**
+          * @default ''
+         */
+        "selectedId": string;
+    }
+    interface LibraryTreegrid {
+        /**
+          * @default []
+         */
+        "items": any[];
+        /**
+          * @default ''
+         */
+        "selectedId": string;
+    }
+    interface LibraryWorkbench {
+        /**
+          * @default false
+         */
+        "active": boolean;
+        /**
+          * @default false
+         */
+        "contentOnly": boolean;
+        /**
+          * @default false
+         */
+        "embedded": boolean;
+        /**
+          * @default 'D04'
+         */
+        "pageId": string;
+        /**
+          * @default false
+         */
+        "searchPage": boolean;
+        "session": Record<string,any>;
+    }
+    interface MarkdownLab {
+        /**
+          * @default false
+         */
+        "active": boolean;
+        "getText": () => Promise<string>;
+        /**
+          * @default 'D20'
+         */
+        "pageId": string;
+        "setText": (text: string) => Promise<void>;
+        /**
+          * @default true
+         */
+        "showDiagram": boolean;
+    }
+    interface MaterialPackage {
+        /**
+          * @default false
+         */
+        "opened": boolean;
+    }
+    interface MermaidDiagram {
+        /**
+          * @default 'needs'
+         */
+        "diagram": 'needs'|'capital';
+        /**
+          * @default ''
+         */
+        "selectedField": string;
+    }
+    interface MetadataSplit {
+        /**
+          * @default false
+         */
+        "active": boolean;
+        /**
+          * @default ''
+         */
+        "conceptPage": string;
+        /**
+          * @default 'entities'
+         */
+        "navigation": 'entities'|'layers'|'concepts';
+    }
+    interface ModelConnection {
+    }
+    interface OcrQueue {
+        /**
+          * @default 0
+         */
+        "confirmToken": number;
+        /**
+          * @default ''
+         */
+        "documentId": string;
+        "openConfirmation": () => Promise<void>;
+    }
+    interface PatchouliApp {
+        /**
+          * @default false
+         */
+        "active": boolean;
+        /**
+          * @default false
+         */
+        "externalReturn": boolean;
+        "getState": () => Promise<PatchouliState>;
+        /**
+          * @default 'library'
+         */
+        "initialPage": PatchouliPage;
+        "navigate": (request: PatchouliRequest) => Promise<void>;
+        "request"?: PatchouliRequest;
+        /**
+          * @default '返回上一界面'
+         */
+        "returnLabel": string;
+    }
+    interface PdfFlowSplit {
+        /**
+          * @default true
+         */
+        "active": boolean;
+    }
+    interface PdfImportWizard {
+    }
+    interface PdfImporter {
+        /**
+          * @default ''
+         */
+        "documentId": string;
+        /**
+          * @default ''
+         */
+        "itemId": string;
+        /**
+          * @default 'text'
+         */
+        "preferredMode": 'text'|'auto'|'ocr';
+    }
+    interface PdfReader {
+        "beginEditing": () => Promise<void>;
+        "cancelEditing": () => Promise<void>;
+        /**
+          * @default ''
+         */
+        "documentId": string;
+        "editState": () => Promise<{ editing: boolean; pageId: string; baseline: string; boxes: TreeBox[]; selected: string[]; }>;
+        /**
+          * @default ''
+         */
+        "evidenceUri": string;
         /**
           * @default 1
          */
-        "page": number;
-    }
-    interface SystemFlow {
+        "pageNumber": number;
         /**
-          * @default "P29"
+          * @default ''
+         */
+        "revisionId": string;
+        "showSection": (section: "content" | "tree" | "history", editing?: boolean) => Promise<void>;
+        "suspendEditing": () => Promise<boolean>;
+        /**
+          * @default false
+         */
+        "workspace": boolean;
+    }
+    interface ProjectionLab {
+        "getSnapshots": () => Promise<any>;
+    }
+    interface ReadingAgent {
+        "getSession": () => Promise<any>;
+    }
+    interface RequirementsLab {
+        /**
+          * @default false
+         */
+        "active": boolean;
+    }
+    interface ResearchLedger {
+        /**
+          * @default 'D18'
          */
         "pageId": string;
     }
+    interface SkosLab {
+        /**
+          * @default false
+         */
+        "active": boolean;
+        "getGraph": () => Promise<any>;
+        "getModel": () => Promise<any>;
+    }
+    interface StandaloneLab {
+        /**
+          * @default false
+         */
+        "active": boolean;
+        /**
+          * @default 'D16'
+         */
+        "pageId": string;
+    }
+    interface TagLab {
+    }
+    interface UriResolver {
+        "session"?: Record<string,string>;
+    }
+    interface ZettelLab {
+        /**
+          * @default true
+         */
+        "active": boolean;
+    }
+}
+export interface ConceptMapCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLConceptMapElement;
+}
+export interface LibraryBrowserCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLLibraryBrowserElement;
+}
+export interface MaterialPackageCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMaterialPackageElement;
+}
+export interface MermaidDiagramCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMermaidDiagramElement;
+}
+export interface PatchouliAppCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPatchouliAppElement;
+}
+export interface PdfImportWizardCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPdfImportWizardElement;
+}
+export interface PdfReaderCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPdfReaderElement;
 }
 declare global {
-    interface HTMLCourseAppElement extends Components.CourseApp, HTMLStencilElement {
+    interface HTMLBackupLabElement extends Components.BackupLab, HTMLStencilElement {
     }
-    var HTMLCourseAppElement: {
-        prototype: HTMLCourseAppElement;
-        new (): HTMLCourseAppElement;
+    var HTMLBackupLabElement: {
+        prototype: HTMLBackupLabElement;
+        new (): HTMLBackupLabElement;
+    };
+    interface HTMLConceptMapElementEventMap {
+        "diagramPick": number;
+    }
+    interface HTMLConceptMapElement extends Components.ConceptMap, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLConceptMapElementEventMap>(type: K, listener: (this: HTMLConceptMapElement, ev: ConceptMapCustomEvent<HTMLConceptMapElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLConceptMapElementEventMap>(type: K, listener: (this: HTMLConceptMapElement, ev: ConceptMapCustomEvent<HTMLConceptMapElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLConceptMapElement: {
+        prototype: HTMLConceptMapElement;
+        new (): HTMLConceptMapElement;
+    };
+    interface HTMLConfigHintElement extends Components.ConfigHint, HTMLStencilElement {
+    }
+    var HTMLConfigHintElement: {
+        prototype: HTMLConfigHintElement;
+        new (): HTMLConfigHintElement;
+    };
+    interface HTMLCslRendererElement extends Components.CslRenderer, HTMLStencilElement {
+    }
+    var HTMLCslRendererElement: {
+        prototype: HTMLCslRendererElement;
+        new (): HTMLCslRendererElement;
+    };
+    interface HTMLDeckContainerElement extends Components.DeckContainer, HTMLStencilElement {
+    }
+    var HTMLDeckContainerElement: {
+        prototype: HTMLDeckContainerElement;
+        new (): HTMLDeckContainerElement;
     };
     interface HTMLDeckPresenterElement extends Components.DeckPresenter, HTMLStencilElement {
     }
@@ -107,63 +422,338 @@ declare global {
         prototype: HTMLDeckSlideElement;
         new (): HTMLDeckSlideElement;
     };
-    interface HTMLMaterialFlowElement extends Components.MaterialFlow, HTMLStencilElement {
+    interface HTMLDejiaoWorkbenchElement extends Components.DejiaoWorkbench, HTMLStencilElement {
     }
-    var HTMLMaterialFlowElement: {
-        prototype: HTMLMaterialFlowElement;
-        new (): HTMLMaterialFlowElement;
+    var HTMLDejiaoWorkbenchElement: {
+        prototype: HTMLDejiaoWorkbenchElement;
+        new (): HTMLDejiaoWorkbenchElement;
     };
-    interface HTMLNoteFlowElement extends Components.NoteFlow, HTMLStencilElement {
+    interface HTMLDocumentIdentityElement extends Components.DocumentIdentity, HTMLStencilElement {
     }
-    var HTMLNoteFlowElement: {
-        prototype: HTMLNoteFlowElement;
-        new (): HTMLNoteFlowElement;
+    var HTMLDocumentIdentityElement: {
+        prototype: HTMLDocumentIdentityElement;
+        new (): HTMLDocumentIdentityElement;
     };
-    interface HTMLProcessWorkspaceElement extends Components.ProcessWorkspace, HTMLStencilElement {
+    interface HTMLFrbrLabElement extends Components.FrbrLab, HTMLStencilElement {
     }
-    var HTMLProcessWorkspaceElement: {
-        prototype: HTMLProcessWorkspaceElement;
-        new (): HTMLProcessWorkspaceElement;
+    var HTMLFrbrLabElement: {
+        prototype: HTMLFrbrLabElement;
+        new (): HTMLFrbrLabElement;
     };
-    interface HTMLProjectStartElement extends Components.ProjectStart, HTMLStencilElement {
+    interface HTMLFrbrSplitElement extends Components.FrbrSplit, HTMLStencilElement {
     }
-    var HTMLProjectStartElement: {
-        prototype: HTMLProjectStartElement;
-        new (): HTMLProjectStartElement;
+    var HTMLFrbrSplitElement: {
+        prototype: HTMLFrbrSplitElement;
+        new (): HTMLFrbrSplitElement;
     };
-    interface HTMLReadingFlowElement extends Components.ReadingFlow, HTMLStencilElement {
+    interface HTMLGlossaryViewElement extends Components.GlossaryView, HTMLStencilElement {
     }
-    var HTMLReadingFlowElement: {
-        prototype: HTMLReadingFlowElement;
-        new (): HTMLReadingFlowElement;
+    var HTMLGlossaryViewElement: {
+        prototype: HTMLGlossaryViewElement;
+        new (): HTMLGlossaryViewElement;
     };
-    interface HTMLSourceReaderElement extends Components.SourceReader, HTMLStencilElement {
+    interface HTMLHistoryTimelineElement extends Components.HistoryTimeline, HTMLStencilElement {
     }
-    var HTMLSourceReaderElement: {
-        prototype: HTMLSourceReaderElement;
-        new (): HTMLSourceReaderElement;
+    var HTMLHistoryTimelineElement: {
+        prototype: HTMLHistoryTimelineElement;
+        new (): HTMLHistoryTimelineElement;
     };
-    interface HTMLSystemFlowElement extends Components.SystemFlow, HTMLStencilElement {
+    interface HTMLLayoutSplitElement extends Components.LayoutSplit, HTMLStencilElement {
     }
-    var HTMLSystemFlowElement: {
-        prototype: HTMLSystemFlowElement;
-        new (): HTMLSystemFlowElement;
+    var HTMLLayoutSplitElement: {
+        prototype: HTMLLayoutSplitElement;
+        new (): HTMLLayoutSplitElement;
+    };
+    interface HTMLLibraryBrowserElementEventMap {
+        "organizeFeedback": string;
+    }
+    interface HTMLLibraryBrowserElement extends Components.LibraryBrowser, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLLibraryBrowserElementEventMap>(type: K, listener: (this: HTMLLibraryBrowserElement, ev: LibraryBrowserCustomEvent<HTMLLibraryBrowserElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLLibraryBrowserElementEventMap>(type: K, listener: (this: HTMLLibraryBrowserElement, ev: LibraryBrowserCustomEvent<HTMLLibraryBrowserElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLLibraryBrowserElement: {
+        prototype: HTMLLibraryBrowserElement;
+        new (): HTMLLibraryBrowserElement;
+    };
+    interface HTMLLibraryTreegridElement extends Components.LibraryTreegrid, HTMLStencilElement {
+    }
+    var HTMLLibraryTreegridElement: {
+        prototype: HTMLLibraryTreegridElement;
+        new (): HTMLLibraryTreegridElement;
+    };
+    interface HTMLLibraryWorkbenchElement extends Components.LibraryWorkbench, HTMLStencilElement {
+    }
+    var HTMLLibraryWorkbenchElement: {
+        prototype: HTMLLibraryWorkbenchElement;
+        new (): HTMLLibraryWorkbenchElement;
+    };
+    interface HTMLMarkdownLabElement extends Components.MarkdownLab, HTMLStencilElement {
+    }
+    var HTMLMarkdownLabElement: {
+        prototype: HTMLMarkdownLabElement;
+        new (): HTMLMarkdownLabElement;
+    };
+    interface HTMLMaterialPackageElementEventMap {
+        "packageClosed": void;
+    }
+    interface HTMLMaterialPackageElement extends Components.MaterialPackage, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMaterialPackageElementEventMap>(type: K, listener: (this: HTMLMaterialPackageElement, ev: MaterialPackageCustomEvent<HTMLMaterialPackageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMaterialPackageElementEventMap>(type: K, listener: (this: HTMLMaterialPackageElement, ev: MaterialPackageCustomEvent<HTMLMaterialPackageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLMaterialPackageElement: {
+        prototype: HTMLMaterialPackageElement;
+        new (): HTMLMaterialPackageElement;
+    };
+    interface HTMLMermaidDiagramElementEventMap {
+        "diagramReady": void;
+        "fieldPick": string;
+    }
+    interface HTMLMermaidDiagramElement extends Components.MermaidDiagram, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMermaidDiagramElementEventMap>(type: K, listener: (this: HTMLMermaidDiagramElement, ev: MermaidDiagramCustomEvent<HTMLMermaidDiagramElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMermaidDiagramElementEventMap>(type: K, listener: (this: HTMLMermaidDiagramElement, ev: MermaidDiagramCustomEvent<HTMLMermaidDiagramElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLMermaidDiagramElement: {
+        prototype: HTMLMermaidDiagramElement;
+        new (): HTMLMermaidDiagramElement;
+    };
+    interface HTMLMetadataSplitElement extends Components.MetadataSplit, HTMLStencilElement {
+    }
+    var HTMLMetadataSplitElement: {
+        prototype: HTMLMetadataSplitElement;
+        new (): HTMLMetadataSplitElement;
+    };
+    interface HTMLModelConnectionElement extends Components.ModelConnection, HTMLStencilElement {
+    }
+    var HTMLModelConnectionElement: {
+        prototype: HTMLModelConnectionElement;
+        new (): HTMLModelConnectionElement;
+    };
+    interface HTMLOcrQueueElement extends Components.OcrQueue, HTMLStencilElement {
+    }
+    var HTMLOcrQueueElement: {
+        prototype: HTMLOcrQueueElement;
+        new (): HTMLOcrQueueElement;
+    };
+    interface HTMLPatchouliAppElementEventMap {
+        "patchouliStateChange": PatchouliState;
+        "patchouliReturn": void;
+        "patchouliEditChange": boolean;
+    }
+    interface HTMLPatchouliAppElement extends Components.PatchouliApp, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPatchouliAppElementEventMap>(type: K, listener: (this: HTMLPatchouliAppElement, ev: PatchouliAppCustomEvent<HTMLPatchouliAppElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPatchouliAppElementEventMap>(type: K, listener: (this: HTMLPatchouliAppElement, ev: PatchouliAppCustomEvent<HTMLPatchouliAppElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPatchouliAppElement: {
+        prototype: HTMLPatchouliAppElement;
+        new (): HTMLPatchouliAppElement;
+    };
+    interface HTMLPdfFlowSplitElement extends Components.PdfFlowSplit, HTMLStencilElement {
+    }
+    var HTMLPdfFlowSplitElement: {
+        prototype: HTMLPdfFlowSplitElement;
+        new (): HTMLPdfFlowSplitElement;
+    };
+    interface HTMLPdfImportWizardElementEventMap {
+        "importClosed": void;
+        "importOpenDocument": string;
+        "importRunningChanged": boolean;
+    }
+    interface HTMLPdfImportWizardElement extends Components.PdfImportWizard, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPdfImportWizardElementEventMap>(type: K, listener: (this: HTMLPdfImportWizardElement, ev: PdfImportWizardCustomEvent<HTMLPdfImportWizardElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPdfImportWizardElementEventMap>(type: K, listener: (this: HTMLPdfImportWizardElement, ev: PdfImportWizardCustomEvent<HTMLPdfImportWizardElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPdfImportWizardElement: {
+        prototype: HTMLPdfImportWizardElement;
+        new (): HTMLPdfImportWizardElement;
+    };
+    interface HTMLPdfImporterElement extends Components.PdfImporter, HTMLStencilElement {
+    }
+    var HTMLPdfImporterElement: {
+        prototype: HTMLPdfImporterElement;
+        new (): HTMLPdfImporterElement;
+    };
+    interface HTMLPdfReaderElementEventMap {
+        "pdfEditChange": boolean;
+        "pdfTreeCommitted": string;
+    }
+    interface HTMLPdfReaderElement extends Components.PdfReader, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPdfReaderElementEventMap>(type: K, listener: (this: HTMLPdfReaderElement, ev: PdfReaderCustomEvent<HTMLPdfReaderElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPdfReaderElementEventMap>(type: K, listener: (this: HTMLPdfReaderElement, ev: PdfReaderCustomEvent<HTMLPdfReaderElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPdfReaderElement: {
+        prototype: HTMLPdfReaderElement;
+        new (): HTMLPdfReaderElement;
+    };
+    interface HTMLProjectionLabElement extends Components.ProjectionLab, HTMLStencilElement {
+    }
+    var HTMLProjectionLabElement: {
+        prototype: HTMLProjectionLabElement;
+        new (): HTMLProjectionLabElement;
+    };
+    interface HTMLReadingAgentElement extends Components.ReadingAgent, HTMLStencilElement {
+    }
+    var HTMLReadingAgentElement: {
+        prototype: HTMLReadingAgentElement;
+        new (): HTMLReadingAgentElement;
+    };
+    interface HTMLRequirementsLabElement extends Components.RequirementsLab, HTMLStencilElement {
+    }
+    var HTMLRequirementsLabElement: {
+        prototype: HTMLRequirementsLabElement;
+        new (): HTMLRequirementsLabElement;
+    };
+    interface HTMLResearchLedgerElement extends Components.ResearchLedger, HTMLStencilElement {
+    }
+    var HTMLResearchLedgerElement: {
+        prototype: HTMLResearchLedgerElement;
+        new (): HTMLResearchLedgerElement;
+    };
+    interface HTMLSkosLabElement extends Components.SkosLab, HTMLStencilElement {
+    }
+    var HTMLSkosLabElement: {
+        prototype: HTMLSkosLabElement;
+        new (): HTMLSkosLabElement;
+    };
+    interface HTMLStandaloneLabElement extends Components.StandaloneLab, HTMLStencilElement {
+    }
+    var HTMLStandaloneLabElement: {
+        prototype: HTMLStandaloneLabElement;
+        new (): HTMLStandaloneLabElement;
+    };
+    interface HTMLTagLabElement extends Components.TagLab, HTMLStencilElement {
+    }
+    var HTMLTagLabElement: {
+        prototype: HTMLTagLabElement;
+        new (): HTMLTagLabElement;
+    };
+    interface HTMLUriResolverElement extends Components.UriResolver, HTMLStencilElement {
+    }
+    var HTMLUriResolverElement: {
+        prototype: HTMLUriResolverElement;
+        new (): HTMLUriResolverElement;
+    };
+    interface HTMLZettelLabElement extends Components.ZettelLab, HTMLStencilElement {
+    }
+    var HTMLZettelLabElement: {
+        prototype: HTMLZettelLabElement;
+        new (): HTMLZettelLabElement;
     };
     interface HTMLElementTagNameMap {
-        "course-app": HTMLCourseAppElement;
+        "backup-lab": HTMLBackupLabElement;
+        "concept-map": HTMLConceptMapElement;
+        "config-hint": HTMLConfigHintElement;
+        "csl-renderer": HTMLCslRendererElement;
+        "deck-container": HTMLDeckContainerElement;
         "deck-presenter": HTMLDeckPresenterElement;
         "deck-slide": HTMLDeckSlideElement;
-        "material-flow": HTMLMaterialFlowElement;
-        "note-flow": HTMLNoteFlowElement;
-        "process-workspace": HTMLProcessWorkspaceElement;
-        "project-start": HTMLProjectStartElement;
-        "reading-flow": HTMLReadingFlowElement;
-        "source-reader": HTMLSourceReaderElement;
-        "system-flow": HTMLSystemFlowElement;
+        "dejiao-workbench": HTMLDejiaoWorkbenchElement;
+        "document-identity": HTMLDocumentIdentityElement;
+        "frbr-lab": HTMLFrbrLabElement;
+        "frbr-split": HTMLFrbrSplitElement;
+        "glossary-view": HTMLGlossaryViewElement;
+        "history-timeline": HTMLHistoryTimelineElement;
+        "layout-split": HTMLLayoutSplitElement;
+        "library-browser": HTMLLibraryBrowserElement;
+        "library-treegrid": HTMLLibraryTreegridElement;
+        "library-workbench": HTMLLibraryWorkbenchElement;
+        "markdown-lab": HTMLMarkdownLabElement;
+        "material-package": HTMLMaterialPackageElement;
+        "mermaid-diagram": HTMLMermaidDiagramElement;
+        "metadata-split": HTMLMetadataSplitElement;
+        "model-connection": HTMLModelConnectionElement;
+        "ocr-queue": HTMLOcrQueueElement;
+        "patchouli-app": HTMLPatchouliAppElement;
+        "pdf-flow-split": HTMLPdfFlowSplitElement;
+        "pdf-import-wizard": HTMLPdfImportWizardElement;
+        "pdf-importer": HTMLPdfImporterElement;
+        "pdf-reader": HTMLPdfReaderElement;
+        "projection-lab": HTMLProjectionLabElement;
+        "reading-agent": HTMLReadingAgentElement;
+        "requirements-lab": HTMLRequirementsLabElement;
+        "research-ledger": HTMLResearchLedgerElement;
+        "skos-lab": HTMLSkosLabElement;
+        "standalone-lab": HTMLStandaloneLabElement;
+        "tag-lab": HTMLTagLabElement;
+        "uri-resolver": HTMLUriResolverElement;
+        "zettel-lab": HTMLZettelLabElement;
     }
 }
 declare namespace LocalJSX {
-    interface CourseApp {
+    interface BackupLab {
+    }
+    interface ConceptMap {
+        "config"?: any;
+        /**
+          * @default ''
+         */
+        "currentTitle"?: string;
+        /**
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * @default '点击图中节点，切换对应操作'
+         */
+        "hint"?: string;
+        "onDiagramPick"?: (event: ConceptMapCustomEvent<number>) => void;
+        /**
+          * @default ''
+         */
+        "pageId"?: string;
+        /**
+          * @default 0
+         */
+        "selectedIndex"?: number;
+    }
+    interface ConfigHint {
+        /**
+          * @default ""
+         */
+        "label"?: string;
+        /**
+          * @default "library"
+         */
+        "needs"?: string;
+    }
+    interface CslRenderer {
+    }
+    interface DeckContainer {
     }
     interface DeckPresenter {
     }
@@ -201,50 +791,271 @@ declare namespace LocalJSX {
           * @default "light"
          */
         "theme"?: "light" | "dark" | "accent";
-    }
-    interface MaterialFlow {
-        /**
-          * @default "P03"
-         */
-        "pageId"?: string;
-    }
-    interface NoteFlow {
-        /**
-          * @default "P20"
-         */
-        "pageId"?: string;
-    }
-    interface ProcessWorkspace {
-        /**
-          * @default "P01"
-         */
-        "topicId"?: string;
-    }
-    interface ProjectStart {
-    }
-    interface ReadingFlow {
-        /**
-          * @default "P14"
-         */
-        "pageId"?: string;
-    }
-    interface SourceReader {
         /**
           * @default ""
          */
-        "attachmentId"?: string;
+        "transition"?: string;
+    }
+    interface DejiaoWorkbench {
+        /**
+          * @default false
+         */
+        "active"?: boolean;
+    }
+    interface DocumentIdentity {
+    }
+    interface FrbrLab {
+    }
+    interface FrbrSplit {
+        /**
+          * @default true
+         */
+        "active"?: boolean;
+    }
+    interface GlossaryView {
+    }
+    interface HistoryTimeline {
+    }
+    interface LayoutSplit {
+        /**
+          * @default "1-1"
+         */
+        "ratio"?: "1-1" | "1-2" | "2-1" | "1-3" | "3-1";
+    }
+    interface LibraryBrowser {
+        /**
+          * @default 'tags'
+         */
+        "kind"?: 'tags'|'collections';
+        "onOrganizeFeedback"?: (event: LibraryBrowserCustomEvent<string>) => void;
+        /**
+          * @default ''
+         */
+        "query"?: string;
+        /**
+          * @default ''
+         */
+        "selectedId"?: string;
+    }
+    interface LibraryTreegrid {
+        /**
+          * @default []
+         */
+        "items"?: any[];
+        /**
+          * @default ''
+         */
+        "selectedId"?: string;
+    }
+    interface LibraryWorkbench {
+        /**
+          * @default false
+         */
+        "active"?: boolean;
+        /**
+          * @default false
+         */
+        "contentOnly"?: boolean;
+        /**
+          * @default false
+         */
+        "embedded"?: boolean;
+        /**
+          * @default 'D04'
+         */
+        "pageId"?: string;
+        /**
+          * @default false
+         */
+        "searchPage"?: boolean;
+        "session"?: Record<string,any>;
+    }
+    interface MarkdownLab {
+        /**
+          * @default false
+         */
+        "active"?: boolean;
+        /**
+          * @default 'D20'
+         */
+        "pageId"?: string;
+        /**
+          * @default true
+         */
+        "showDiagram"?: boolean;
+    }
+    interface MaterialPackage {
+        "onPackageClosed"?: (event: MaterialPackageCustomEvent<void>) => void;
+        /**
+          * @default false
+         */
+        "opened"?: boolean;
+    }
+    interface MermaidDiagram {
+        /**
+          * @default 'needs'
+         */
+        "diagram"?: 'needs'|'capital';
+        "onDiagramReady"?: (event: MermaidDiagramCustomEvent<void>) => void;
+        "onFieldPick"?: (event: MermaidDiagramCustomEvent<string>) => void;
+        /**
+          * @default ''
+         */
+        "selectedField"?: string;
+    }
+    interface MetadataSplit {
+        /**
+          * @default false
+         */
+        "active"?: boolean;
+        /**
+          * @default ''
+         */
+        "conceptPage"?: string;
+        /**
+          * @default 'entities'
+         */
+        "navigation"?: 'entities'|'layers'|'concepts';
+    }
+    interface ModelConnection {
+    }
+    interface OcrQueue {
+        /**
+          * @default 0
+         */
+        "confirmToken"?: number;
+        /**
+          * @default ''
+         */
+        "documentId"?: string;
+    }
+    interface PatchouliApp {
+        /**
+          * @default false
+         */
+        "active"?: boolean;
+        /**
+          * @default false
+         */
+        "externalReturn"?: boolean;
+        /**
+          * @default 'library'
+         */
+        "initialPage"?: PatchouliPage;
+        "onPatchouliEditChange"?: (event: PatchouliAppCustomEvent<boolean>) => void;
+        "onPatchouliReturn"?: (event: PatchouliAppCustomEvent<void>) => void;
+        "onPatchouliStateChange"?: (event: PatchouliAppCustomEvent<PatchouliState>) => void;
+        "request"?: PatchouliRequest;
+        /**
+          * @default '返回上一界面'
+         */
+        "returnLabel"?: string;
+    }
+    interface PdfFlowSplit {
+        /**
+          * @default true
+         */
+        "active"?: boolean;
+    }
+    interface PdfImportWizard {
+        "onImportClosed"?: (event: PdfImportWizardCustomEvent<void>) => void;
+        "onImportOpenDocument"?: (event: PdfImportWizardCustomEvent<string>) => void;
+        "onImportRunningChanged"?: (event: PdfImportWizardCustomEvent<boolean>) => void;
+    }
+    interface PdfImporter {
+        /**
+          * @default ''
+         */
+        "documentId"?: string;
+        /**
+          * @default ''
+         */
+        "itemId"?: string;
+        /**
+          * @default 'text'
+         */
+        "preferredMode"?: 'text'|'auto'|'ocr';
+    }
+    interface PdfReader {
+        /**
+          * @default ''
+         */
+        "documentId"?: string;
+        /**
+          * @default ''
+         */
+        "evidenceUri"?: string;
+        "onPdfEditChange"?: (event: PdfReaderCustomEvent<boolean>) => void;
+        "onPdfTreeCommitted"?: (event: PdfReaderCustomEvent<string>) => void;
         /**
           * @default 1
          */
-        "page"?: number;
-    }
-    interface SystemFlow {
+        "pageNumber"?: number;
         /**
-          * @default "P29"
+          * @default ''
+         */
+        "revisionId"?: string;
+        /**
+          * @default false
+         */
+        "workspace"?: boolean;
+    }
+    interface ProjectionLab {
+    }
+    interface ReadingAgent {
+    }
+    interface RequirementsLab {
+        /**
+          * @default false
+         */
+        "active"?: boolean;
+    }
+    interface ResearchLedger {
+        /**
+          * @default 'D18'
          */
         "pageId"?: string;
     }
+    interface SkosLab {
+        /**
+          * @default false
+         */
+        "active"?: boolean;
+    }
+    interface StandaloneLab {
+        /**
+          * @default false
+         */
+        "active"?: boolean;
+        /**
+          * @default 'D16'
+         */
+        "pageId"?: string;
+    }
+    interface TagLab {
+    }
+    interface UriResolver {
+        "session"?: Record<string,string>;
+    }
+    interface ZettelLab {
+        /**
+          * @default true
+         */
+        "active"?: boolean;
+    }
 
+    interface ConceptMapAttributes {
+        "config": string;
+        "pageId": string;
+        "selectedIndex": number;
+        "disabled": boolean;
+        "hint": string;
+        "currentTitle": string;
+    }
+    interface ConfigHintAttributes {
+        "needs": string;
+        "label": string;
+    }
     interface DeckSlideAttributes {
         "slideId": string;
         "layout": | "hero"
@@ -255,57 +1066,175 @@ declare namespace LocalJSX {
     | "normal";
         "theme": "light" | "dark" | "accent";
         "headerTitle": string;
+        "transition": string;
         "kicker": string;
         "notes": string;
         "duration": number;
     }
-    interface MaterialFlowAttributes {
+    interface DejiaoWorkbenchAttributes {
+        "active": boolean;
+    }
+    interface FrbrSplitAttributes {
+        "active": boolean;
+    }
+    interface LayoutSplitAttributes {
+        "ratio": "1-1" | "1-2" | "2-1" | "1-3" | "3-1";
+    }
+    interface LibraryBrowserAttributes {
+        "kind": 'tags'|'collections';
+        "query": string;
+        "selectedId": string;
+    }
+    interface LibraryTreegridAttributes {
+        "selectedId": string;
+    }
+    interface LibraryWorkbenchAttributes {
+        "pageId": string;
+        "active": boolean;
+        "embedded": boolean;
+        "contentOnly": boolean;
+        "searchPage": boolean;
+    }
+    interface MarkdownLabAttributes {
+        "pageId": string;
+        "showDiagram": boolean;
+        "active": boolean;
+    }
+    interface MaterialPackageAttributes {
+        "opened": boolean;
+    }
+    interface MermaidDiagramAttributes {
+        "diagram": 'needs'|'capital';
+        "selectedField": string;
+    }
+    interface MetadataSplitAttributes {
+        "navigation": 'entities'|'layers'|'concepts';
+        "conceptPage": string;
+        "active": boolean;
+    }
+    interface OcrQueueAttributes {
+        "documentId": string;
+        "confirmToken": number;
+    }
+    interface PatchouliAppAttributes {
+        "active": boolean;
+        "initialPage": PatchouliPage;
+        "externalReturn": boolean;
+        "returnLabel": string;
+    }
+    interface PdfFlowSplitAttributes {
+        "active": boolean;
+    }
+    interface PdfImporterAttributes {
+        "itemId": string;
+        "documentId": string;
+        "preferredMode": 'text'|'auto'|'ocr';
+    }
+    interface PdfReaderAttributes {
+        "documentId": string;
+        "pageNumber": number;
+        "revisionId": string;
+        "workspace": boolean;
+        "evidenceUri": string;
+    }
+    interface RequirementsLabAttributes {
+        "active": boolean;
+    }
+    interface ResearchLedgerAttributes {
         "pageId": string;
     }
-    interface NoteFlowAttributes {
+    interface SkosLabAttributes {
+        "active": boolean;
+    }
+    interface StandaloneLabAttributes {
         "pageId": string;
+        "active": boolean;
     }
-    interface ProcessWorkspaceAttributes {
-        "topicId": string;
-    }
-    interface ReadingFlowAttributes {
-        "pageId": string;
-    }
-    interface SourceReaderAttributes {
-        "attachmentId": string;
-        "page": number;
-    }
-    interface SystemFlowAttributes {
-        "pageId": string;
+    interface ZettelLabAttributes {
+        "active": boolean;
     }
 
     interface IntrinsicElements {
-        "course-app": CourseApp;
+        "backup-lab": BackupLab;
+        "concept-map": Omit<ConceptMap, keyof ConceptMapAttributes> & { [K in keyof ConceptMap & keyof ConceptMapAttributes]?: ConceptMap[K] } & { [K in keyof ConceptMap & keyof ConceptMapAttributes as `attr:${K}`]?: ConceptMapAttributes[K] } & { [K in keyof ConceptMap & keyof ConceptMapAttributes as `prop:${K}`]?: ConceptMap[K] };
+        "config-hint": Omit<ConfigHint, keyof ConfigHintAttributes> & { [K in keyof ConfigHint & keyof ConfigHintAttributes]?: ConfigHint[K] } & { [K in keyof ConfigHint & keyof ConfigHintAttributes as `attr:${K}`]?: ConfigHintAttributes[K] } & { [K in keyof ConfigHint & keyof ConfigHintAttributes as `prop:${K}`]?: ConfigHint[K] };
+        "csl-renderer": CslRenderer;
+        "deck-container": DeckContainer;
         "deck-presenter": DeckPresenter;
         "deck-slide": Omit<DeckSlide, keyof DeckSlideAttributes> & { [K in keyof DeckSlide & keyof DeckSlideAttributes]?: DeckSlide[K] } & { [K in keyof DeckSlide & keyof DeckSlideAttributes as `attr:${K}`]?: DeckSlideAttributes[K] } & { [K in keyof DeckSlide & keyof DeckSlideAttributes as `prop:${K}`]?: DeckSlide[K] };
-        "material-flow": Omit<MaterialFlow, keyof MaterialFlowAttributes> & { [K in keyof MaterialFlow & keyof MaterialFlowAttributes]?: MaterialFlow[K] } & { [K in keyof MaterialFlow & keyof MaterialFlowAttributes as `attr:${K}`]?: MaterialFlowAttributes[K] } & { [K in keyof MaterialFlow & keyof MaterialFlowAttributes as `prop:${K}`]?: MaterialFlow[K] };
-        "note-flow": Omit<NoteFlow, keyof NoteFlowAttributes> & { [K in keyof NoteFlow & keyof NoteFlowAttributes]?: NoteFlow[K] } & { [K in keyof NoteFlow & keyof NoteFlowAttributes as `attr:${K}`]?: NoteFlowAttributes[K] } & { [K in keyof NoteFlow & keyof NoteFlowAttributes as `prop:${K}`]?: NoteFlow[K] };
-        "process-workspace": Omit<ProcessWorkspace, keyof ProcessWorkspaceAttributes> & { [K in keyof ProcessWorkspace & keyof ProcessWorkspaceAttributes]?: ProcessWorkspace[K] } & { [K in keyof ProcessWorkspace & keyof ProcessWorkspaceAttributes as `attr:${K}`]?: ProcessWorkspaceAttributes[K] } & { [K in keyof ProcessWorkspace & keyof ProcessWorkspaceAttributes as `prop:${K}`]?: ProcessWorkspace[K] };
-        "project-start": ProjectStart;
-        "reading-flow": Omit<ReadingFlow, keyof ReadingFlowAttributes> & { [K in keyof ReadingFlow & keyof ReadingFlowAttributes]?: ReadingFlow[K] } & { [K in keyof ReadingFlow & keyof ReadingFlowAttributes as `attr:${K}`]?: ReadingFlowAttributes[K] } & { [K in keyof ReadingFlow & keyof ReadingFlowAttributes as `prop:${K}`]?: ReadingFlow[K] };
-        "source-reader": Omit<SourceReader, keyof SourceReaderAttributes> & { [K in keyof SourceReader & keyof SourceReaderAttributes]?: SourceReader[K] } & { [K in keyof SourceReader & keyof SourceReaderAttributes as `attr:${K}`]?: SourceReaderAttributes[K] } & { [K in keyof SourceReader & keyof SourceReaderAttributes as `prop:${K}`]?: SourceReader[K] };
-        "system-flow": Omit<SystemFlow, keyof SystemFlowAttributes> & { [K in keyof SystemFlow & keyof SystemFlowAttributes]?: SystemFlow[K] } & { [K in keyof SystemFlow & keyof SystemFlowAttributes as `attr:${K}`]?: SystemFlowAttributes[K] } & { [K in keyof SystemFlow & keyof SystemFlowAttributes as `prop:${K}`]?: SystemFlow[K] };
+        "dejiao-workbench": Omit<DejiaoWorkbench, keyof DejiaoWorkbenchAttributes> & { [K in keyof DejiaoWorkbench & keyof DejiaoWorkbenchAttributes]?: DejiaoWorkbench[K] } & { [K in keyof DejiaoWorkbench & keyof DejiaoWorkbenchAttributes as `attr:${K}`]?: DejiaoWorkbenchAttributes[K] } & { [K in keyof DejiaoWorkbench & keyof DejiaoWorkbenchAttributes as `prop:${K}`]?: DejiaoWorkbench[K] };
+        "document-identity": DocumentIdentity;
+        "frbr-lab": FrbrLab;
+        "frbr-split": Omit<FrbrSplit, keyof FrbrSplitAttributes> & { [K in keyof FrbrSplit & keyof FrbrSplitAttributes]?: FrbrSplit[K] } & { [K in keyof FrbrSplit & keyof FrbrSplitAttributes as `attr:${K}`]?: FrbrSplitAttributes[K] } & { [K in keyof FrbrSplit & keyof FrbrSplitAttributes as `prop:${K}`]?: FrbrSplit[K] };
+        "glossary-view": GlossaryView;
+        "history-timeline": HistoryTimeline;
+        "layout-split": Omit<LayoutSplit, keyof LayoutSplitAttributes> & { [K in keyof LayoutSplit & keyof LayoutSplitAttributes]?: LayoutSplit[K] } & { [K in keyof LayoutSplit & keyof LayoutSplitAttributes as `attr:${K}`]?: LayoutSplitAttributes[K] } & { [K in keyof LayoutSplit & keyof LayoutSplitAttributes as `prop:${K}`]?: LayoutSplit[K] };
+        "library-browser": Omit<LibraryBrowser, keyof LibraryBrowserAttributes> & { [K in keyof LibraryBrowser & keyof LibraryBrowserAttributes]?: LibraryBrowser[K] } & { [K in keyof LibraryBrowser & keyof LibraryBrowserAttributes as `attr:${K}`]?: LibraryBrowserAttributes[K] } & { [K in keyof LibraryBrowser & keyof LibraryBrowserAttributes as `prop:${K}`]?: LibraryBrowser[K] };
+        "library-treegrid": Omit<LibraryTreegrid, keyof LibraryTreegridAttributes> & { [K in keyof LibraryTreegrid & keyof LibraryTreegridAttributes]?: LibraryTreegrid[K] } & { [K in keyof LibraryTreegrid & keyof LibraryTreegridAttributes as `attr:${K}`]?: LibraryTreegridAttributes[K] } & { [K in keyof LibraryTreegrid & keyof LibraryTreegridAttributes as `prop:${K}`]?: LibraryTreegrid[K] };
+        "library-workbench": Omit<LibraryWorkbench, keyof LibraryWorkbenchAttributes> & { [K in keyof LibraryWorkbench & keyof LibraryWorkbenchAttributes]?: LibraryWorkbench[K] } & { [K in keyof LibraryWorkbench & keyof LibraryWorkbenchAttributes as `attr:${K}`]?: LibraryWorkbenchAttributes[K] } & { [K in keyof LibraryWorkbench & keyof LibraryWorkbenchAttributes as `prop:${K}`]?: LibraryWorkbench[K] };
+        "markdown-lab": Omit<MarkdownLab, keyof MarkdownLabAttributes> & { [K in keyof MarkdownLab & keyof MarkdownLabAttributes]?: MarkdownLab[K] } & { [K in keyof MarkdownLab & keyof MarkdownLabAttributes as `attr:${K}`]?: MarkdownLabAttributes[K] } & { [K in keyof MarkdownLab & keyof MarkdownLabAttributes as `prop:${K}`]?: MarkdownLab[K] };
+        "material-package": Omit<MaterialPackage, keyof MaterialPackageAttributes> & { [K in keyof MaterialPackage & keyof MaterialPackageAttributes]?: MaterialPackage[K] } & { [K in keyof MaterialPackage & keyof MaterialPackageAttributes as `attr:${K}`]?: MaterialPackageAttributes[K] } & { [K in keyof MaterialPackage & keyof MaterialPackageAttributes as `prop:${K}`]?: MaterialPackage[K] };
+        "mermaid-diagram": Omit<MermaidDiagram, keyof MermaidDiagramAttributes> & { [K in keyof MermaidDiagram & keyof MermaidDiagramAttributes]?: MermaidDiagram[K] } & { [K in keyof MermaidDiagram & keyof MermaidDiagramAttributes as `attr:${K}`]?: MermaidDiagramAttributes[K] } & { [K in keyof MermaidDiagram & keyof MermaidDiagramAttributes as `prop:${K}`]?: MermaidDiagram[K] };
+        "metadata-split": Omit<MetadataSplit, keyof MetadataSplitAttributes> & { [K in keyof MetadataSplit & keyof MetadataSplitAttributes]?: MetadataSplit[K] } & { [K in keyof MetadataSplit & keyof MetadataSplitAttributes as `attr:${K}`]?: MetadataSplitAttributes[K] } & { [K in keyof MetadataSplit & keyof MetadataSplitAttributes as `prop:${K}`]?: MetadataSplit[K] };
+        "model-connection": ModelConnection;
+        "ocr-queue": Omit<OcrQueue, keyof OcrQueueAttributes> & { [K in keyof OcrQueue & keyof OcrQueueAttributes]?: OcrQueue[K] } & { [K in keyof OcrQueue & keyof OcrQueueAttributes as `attr:${K}`]?: OcrQueueAttributes[K] } & { [K in keyof OcrQueue & keyof OcrQueueAttributes as `prop:${K}`]?: OcrQueue[K] };
+        "patchouli-app": Omit<PatchouliApp, keyof PatchouliAppAttributes> & { [K in keyof PatchouliApp & keyof PatchouliAppAttributes]?: PatchouliApp[K] } & { [K in keyof PatchouliApp & keyof PatchouliAppAttributes as `attr:${K}`]?: PatchouliAppAttributes[K] } & { [K in keyof PatchouliApp & keyof PatchouliAppAttributes as `prop:${K}`]?: PatchouliApp[K] };
+        "pdf-flow-split": Omit<PdfFlowSplit, keyof PdfFlowSplitAttributes> & { [K in keyof PdfFlowSplit & keyof PdfFlowSplitAttributes]?: PdfFlowSplit[K] } & { [K in keyof PdfFlowSplit & keyof PdfFlowSplitAttributes as `attr:${K}`]?: PdfFlowSplitAttributes[K] } & { [K in keyof PdfFlowSplit & keyof PdfFlowSplitAttributes as `prop:${K}`]?: PdfFlowSplit[K] };
+        "pdf-import-wizard": PdfImportWizard;
+        "pdf-importer": Omit<PdfImporter, keyof PdfImporterAttributes> & { [K in keyof PdfImporter & keyof PdfImporterAttributes]?: PdfImporter[K] } & { [K in keyof PdfImporter & keyof PdfImporterAttributes as `attr:${K}`]?: PdfImporterAttributes[K] } & { [K in keyof PdfImporter & keyof PdfImporterAttributes as `prop:${K}`]?: PdfImporter[K] };
+        "pdf-reader": Omit<PdfReader, keyof PdfReaderAttributes> & { [K in keyof PdfReader & keyof PdfReaderAttributes]?: PdfReader[K] } & { [K in keyof PdfReader & keyof PdfReaderAttributes as `attr:${K}`]?: PdfReaderAttributes[K] } & { [K in keyof PdfReader & keyof PdfReaderAttributes as `prop:${K}`]?: PdfReader[K] };
+        "projection-lab": ProjectionLab;
+        "reading-agent": ReadingAgent;
+        "requirements-lab": Omit<RequirementsLab, keyof RequirementsLabAttributes> & { [K in keyof RequirementsLab & keyof RequirementsLabAttributes]?: RequirementsLab[K] } & { [K in keyof RequirementsLab & keyof RequirementsLabAttributes as `attr:${K}`]?: RequirementsLabAttributes[K] } & { [K in keyof RequirementsLab & keyof RequirementsLabAttributes as `prop:${K}`]?: RequirementsLab[K] };
+        "research-ledger": Omit<ResearchLedger, keyof ResearchLedgerAttributes> & { [K in keyof ResearchLedger & keyof ResearchLedgerAttributes]?: ResearchLedger[K] } & { [K in keyof ResearchLedger & keyof ResearchLedgerAttributes as `attr:${K}`]?: ResearchLedgerAttributes[K] } & { [K in keyof ResearchLedger & keyof ResearchLedgerAttributes as `prop:${K}`]?: ResearchLedger[K] };
+        "skos-lab": Omit<SkosLab, keyof SkosLabAttributes> & { [K in keyof SkosLab & keyof SkosLabAttributes]?: SkosLab[K] } & { [K in keyof SkosLab & keyof SkosLabAttributes as `attr:${K}`]?: SkosLabAttributes[K] } & { [K in keyof SkosLab & keyof SkosLabAttributes as `prop:${K}`]?: SkosLab[K] };
+        "standalone-lab": Omit<StandaloneLab, keyof StandaloneLabAttributes> & { [K in keyof StandaloneLab & keyof StandaloneLabAttributes]?: StandaloneLab[K] } & { [K in keyof StandaloneLab & keyof StandaloneLabAttributes as `attr:${K}`]?: StandaloneLabAttributes[K] } & { [K in keyof StandaloneLab & keyof StandaloneLabAttributes as `prop:${K}`]?: StandaloneLab[K] };
+        "tag-lab": TagLab;
+        "uri-resolver": UriResolver;
+        "zettel-lab": Omit<ZettelLab, keyof ZettelLabAttributes> & { [K in keyof ZettelLab & keyof ZettelLabAttributes]?: ZettelLab[K] } & { [K in keyof ZettelLab & keyof ZettelLabAttributes as `attr:${K}`]?: ZettelLabAttributes[K] } & { [K in keyof ZettelLab & keyof ZettelLabAttributes as `prop:${K}`]?: ZettelLab[K] };
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "course-app": LocalJSX.IntrinsicElements["course-app"] & JSXBase.HTMLAttributes<HTMLCourseAppElement>;
+            "backup-lab": LocalJSX.IntrinsicElements["backup-lab"] & JSXBase.HTMLAttributes<HTMLBackupLabElement>;
+            "concept-map": LocalJSX.IntrinsicElements["concept-map"] & JSXBase.HTMLAttributes<HTMLConceptMapElement>;
+            "config-hint": LocalJSX.IntrinsicElements["config-hint"] & JSXBase.HTMLAttributes<HTMLConfigHintElement>;
+            "csl-renderer": LocalJSX.IntrinsicElements["csl-renderer"] & JSXBase.HTMLAttributes<HTMLCslRendererElement>;
+            "deck-container": LocalJSX.IntrinsicElements["deck-container"] & JSXBase.HTMLAttributes<HTMLDeckContainerElement>;
             "deck-presenter": LocalJSX.IntrinsicElements["deck-presenter"] & JSXBase.HTMLAttributes<HTMLDeckPresenterElement>;
             "deck-slide": LocalJSX.IntrinsicElements["deck-slide"] & JSXBase.HTMLAttributes<HTMLDeckSlideElement>;
-            "material-flow": LocalJSX.IntrinsicElements["material-flow"] & JSXBase.HTMLAttributes<HTMLMaterialFlowElement>;
-            "note-flow": LocalJSX.IntrinsicElements["note-flow"] & JSXBase.HTMLAttributes<HTMLNoteFlowElement>;
-            "process-workspace": LocalJSX.IntrinsicElements["process-workspace"] & JSXBase.HTMLAttributes<HTMLProcessWorkspaceElement>;
-            "project-start": LocalJSX.IntrinsicElements["project-start"] & JSXBase.HTMLAttributes<HTMLProjectStartElement>;
-            "reading-flow": LocalJSX.IntrinsicElements["reading-flow"] & JSXBase.HTMLAttributes<HTMLReadingFlowElement>;
-            "source-reader": LocalJSX.IntrinsicElements["source-reader"] & JSXBase.HTMLAttributes<HTMLSourceReaderElement>;
-            "system-flow": LocalJSX.IntrinsicElements["system-flow"] & JSXBase.HTMLAttributes<HTMLSystemFlowElement>;
+            "dejiao-workbench": LocalJSX.IntrinsicElements["dejiao-workbench"] & JSXBase.HTMLAttributes<HTMLDejiaoWorkbenchElement>;
+            "document-identity": LocalJSX.IntrinsicElements["document-identity"] & JSXBase.HTMLAttributes<HTMLDocumentIdentityElement>;
+            "frbr-lab": LocalJSX.IntrinsicElements["frbr-lab"] & JSXBase.HTMLAttributes<HTMLFrbrLabElement>;
+            "frbr-split": LocalJSX.IntrinsicElements["frbr-split"] & JSXBase.HTMLAttributes<HTMLFrbrSplitElement>;
+            "glossary-view": LocalJSX.IntrinsicElements["glossary-view"] & JSXBase.HTMLAttributes<HTMLGlossaryViewElement>;
+            "history-timeline": LocalJSX.IntrinsicElements["history-timeline"] & JSXBase.HTMLAttributes<HTMLHistoryTimelineElement>;
+            "layout-split": LocalJSX.IntrinsicElements["layout-split"] & JSXBase.HTMLAttributes<HTMLLayoutSplitElement>;
+            "library-browser": LocalJSX.IntrinsicElements["library-browser"] & JSXBase.HTMLAttributes<HTMLLibraryBrowserElement>;
+            "library-treegrid": LocalJSX.IntrinsicElements["library-treegrid"] & JSXBase.HTMLAttributes<HTMLLibraryTreegridElement>;
+            "library-workbench": LocalJSX.IntrinsicElements["library-workbench"] & JSXBase.HTMLAttributes<HTMLLibraryWorkbenchElement>;
+            "markdown-lab": LocalJSX.IntrinsicElements["markdown-lab"] & JSXBase.HTMLAttributes<HTMLMarkdownLabElement>;
+            "material-package": LocalJSX.IntrinsicElements["material-package"] & JSXBase.HTMLAttributes<HTMLMaterialPackageElement>;
+            "mermaid-diagram": LocalJSX.IntrinsicElements["mermaid-diagram"] & JSXBase.HTMLAttributes<HTMLMermaidDiagramElement>;
+            "metadata-split": LocalJSX.IntrinsicElements["metadata-split"] & JSXBase.HTMLAttributes<HTMLMetadataSplitElement>;
+            "model-connection": LocalJSX.IntrinsicElements["model-connection"] & JSXBase.HTMLAttributes<HTMLModelConnectionElement>;
+            "ocr-queue": LocalJSX.IntrinsicElements["ocr-queue"] & JSXBase.HTMLAttributes<HTMLOcrQueueElement>;
+            "patchouli-app": LocalJSX.IntrinsicElements["patchouli-app"] & JSXBase.HTMLAttributes<HTMLPatchouliAppElement>;
+            "pdf-flow-split": LocalJSX.IntrinsicElements["pdf-flow-split"] & JSXBase.HTMLAttributes<HTMLPdfFlowSplitElement>;
+            "pdf-import-wizard": LocalJSX.IntrinsicElements["pdf-import-wizard"] & JSXBase.HTMLAttributes<HTMLPdfImportWizardElement>;
+            "pdf-importer": LocalJSX.IntrinsicElements["pdf-importer"] & JSXBase.HTMLAttributes<HTMLPdfImporterElement>;
+            "pdf-reader": LocalJSX.IntrinsicElements["pdf-reader"] & JSXBase.HTMLAttributes<HTMLPdfReaderElement>;
+            "projection-lab": LocalJSX.IntrinsicElements["projection-lab"] & JSXBase.HTMLAttributes<HTMLProjectionLabElement>;
+            "reading-agent": LocalJSX.IntrinsicElements["reading-agent"] & JSXBase.HTMLAttributes<HTMLReadingAgentElement>;
+            "requirements-lab": LocalJSX.IntrinsicElements["requirements-lab"] & JSXBase.HTMLAttributes<HTMLRequirementsLabElement>;
+            "research-ledger": LocalJSX.IntrinsicElements["research-ledger"] & JSXBase.HTMLAttributes<HTMLResearchLedgerElement>;
+            "skos-lab": LocalJSX.IntrinsicElements["skos-lab"] & JSXBase.HTMLAttributes<HTMLSkosLabElement>;
+            "standalone-lab": LocalJSX.IntrinsicElements["standalone-lab"] & JSXBase.HTMLAttributes<HTMLStandaloneLabElement>;
+            "tag-lab": LocalJSX.IntrinsicElements["tag-lab"] & JSXBase.HTMLAttributes<HTMLTagLabElement>;
+            "uri-resolver": LocalJSX.IntrinsicElements["uri-resolver"] & JSXBase.HTMLAttributes<HTMLUriResolverElement>;
+            "zettel-lab": LocalJSX.IntrinsicElements["zettel-lab"] & JSXBase.HTMLAttributes<HTMLZettelLabElement>;
         }
     }
 }

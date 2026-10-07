@@ -17,7 +17,7 @@ gh workflow run pages.yml --ref main
 gh run list --workflow pages.yml --limit 3
 ```
 
-`published-weeks.json`列出全体已发布周次。Stencil本身按`/pku-aihis/week03/`生成子目录，组装脚本把每周的入口、构建资源与assets放到`site/weekXX/`。仅上传这个白名单站点，不上传源码仓库、私人原件、完整OCR、模型权重、教案或密钥。每次生成release-manifest.json，记录逐文件SHA-256。
+`published-weeks.json`列出全体已发布周次。Stencil本身按`/pku-aihis/week03/`生成子目录，组装脚本把每周的入口、构建资源与assets放到`site/weekXX/`。仅上传这个白名单站点，不上传源码仓库、私人原件、全量OCR、未列入白名单的模型、私人教案或密钥。每次生成release-manifest.json，记录逐文件SHA-256。
 
 GitHub Pages不能设置自定义隔离头；第三周使用限定本周作用域的service worker添加COOP/COEP，首次控制后刷新。它不提供离线缓存。Lucivy需要crossOriginIsolated=true。完整离线备用请使用本地HTTP服务，或本次打包的静态产物；模型权重与外部服务不在压缩包；本机启动器会连接已另行下载的模型目录。教师本机可离线重新编码文字和运行生成模型。
 
@@ -28,3 +28,9 @@ GitHub Pages不能设置自定义隔离头；第三周使用限定本周作用�
 故障时先用本地已验证课堂包。在修复分支做最小修复或`git revert`，经过PR检查合入main，再手动发布全站；保留旧标签和历史，不移动主线标签或强推。发布记录注明提交、Actions运行、地址及不能离线使用的功能。
 
 设计依据：[GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow)、[Pages自定义工作流](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)、[部署环境](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments)。
+
+第四讲追加检查：CI与手动发布的构建阶段安装.NET SDK10，并安装、测试、检查和构建week04，再组装全部周次。预置资源按用户最新要求入库，构建不读取教师的本机数据库；OCR权重仍按固定URL和SHA准备。此变更只补齐构建流程，未触发发布。
+
+## 2026-10-07 第四周正式化
+
+全站构建保留第三周，同时加入助教版第四周与通用导入器。第四周只白名单发布四份原有PDF、对应原生SQLite及三份固定哈希的RapidOCR权重；`local-only`在复制前排除，ZIP一律不发布。Pages与PR检查均构建三套应用；第四周锁定.NET SDK 10.0.300，与NuGet锁文件的WebAssembly Pack 10.0.8相符。私人德教包由浏览器文件选择器在本机导入，不能复制到assets后发布。Agent仅在独立分支。
