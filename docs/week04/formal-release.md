@@ -21,4 +21,4 @@ Node与pnpm按仓库版本锁定；第四周首次构建需要固定的.NET SDK 
 
 发布结果以GitHub Pages部署作业和实际网页复核为准，提交本说明不等于部署完成。恢复时在修复分支撤销本次主线提交，重跑整站检查并手动发布，保留第三周与原稿分支。
 
-远端预演修复：浮动10.0.x曾取到更高SDK，使隐式WebAssembly Pack从10.0.8变为10.0.12，locked-mode拒绝。global.json与三个工作流统一锁定10.0.300，不放松NuGet锁定检查。
+远端预演修复：浮动10.0.x曾取到更高SDK，使隐式WebAssembly Pack从10.0.8变为10.0.12，locked-mode拒绝。global.json与三个工作流统一锁定10.0.300，同时在核心项目显式固定WebAssembly Pack与浏览器RuntimeFrameworkVersion为10.0.8，防止运行器已有组件影响隐式包选择；不放松NuGet锁定检查。
