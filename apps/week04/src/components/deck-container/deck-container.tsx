@@ -167,6 +167,7 @@ export class DeckContainer {
             导出 SQLite
           </button>
           <label class="sqlite-open">打开 SQLite<input aria-label="打开 SQLite" type="file" accept=".sqlite,.db" disabled={this.libState !== 'ready'} onChange={async e=>{const input=e.target as HTMLInputElement;try{if(input.files?.[0])await liveLibrary.openSqlite(input.files[0]);}catch(error){alert('数据库读取失败：'+error.message);}finally{input.value='';}}}/></label>
+          <a class="importer-link" href="../material-importer/" target="_blank" rel="noopener">通用导入页 ↗</a>
           <button disabled={this.libState!=="ready"} onClick={()=>this.packageOpen=true}>材料包／备份</button>
           <button onClick={()=>this.go("D31")}>德教贯穿</button>
           <button title="随时进入概念解释；再次点击返回原页" onClick={()=>{if(this.titles[this.current]?.id==="D30")this.go(this.conceptReturn);else{this.conceptReturn=this.titles[this.current]?.id||"D04";this.go("D30");}}}>{this.titles[this.current]?.id==="D30"?"返回原页":"概念附录"}</button>

@@ -67,6 +67,7 @@ function localModels() {
   };
 }
 export default defineConfig({
+  base: "/pku-aihis/material-importer/",
   plugins: [localModels()],
   worker: { format: "es" },
   build: { target: "es2022" },

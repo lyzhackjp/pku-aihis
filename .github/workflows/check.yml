@@ -25,6 +25,10 @@ jobs:
         working-directory: apps/week04
       - run: pnpm test && pnpm run check && pnpm build
         working-directory: apps/week04
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+        working-directory: apps/material-importer
+      - run: pnpm test && pnpm run check && pnpm build
+        working-directory: apps/material-importer
       - run: python3 -m unittest discover -s local/tests
       - run: python3 scripts/test-forum-content-review.py
       - run: python3 scripts/package-week03-corpus.py && node scripts/check-week03-corpus.mjs

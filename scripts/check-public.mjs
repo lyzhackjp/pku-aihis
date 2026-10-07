@@ -105,7 +105,7 @@ if (manifest4.weeks?.includes('week04')) {
   const map4=JSON.parse(await fs.readFile(path.join(root,'docs/week04/page-map.json'),'utf8'));
   const ids4=[...html4.matchAll(/slide-id="([^"]+)"/g)].map(m=>m[1]);
   assert.deepEqual(ids4,map4.map(p=>p.id));
-  assert.equal(ids4.length,31);
+  assert.equal(ids4.length,32);
   for(const name of ['patchouli-LICENSE.txt','patchouli-manifest.json','SOURCE.txt','corresponding-source/core-probe/Program.cs'])
     assert((await fs.readFile(path.join(site,'week04/assets/licenses',name))).length>0);
   const seed4=JSON.parse(await fs.readFile(path.join(site,'week04/assets/seed/native-seed.json')));
@@ -122,4 +122,13 @@ if (manifest4.weeks?.includes('week04')) {
   assert.deepEqual(manifest4.files.map(f=>f.path.replaceAll('\\','/')).filter(p=>p.startsWith('week04/assets/seed/')).sort(),seedPaths);
   assert.deepEqual(manifest4.files.map(f=>f.path.replaceAll('\\','/')).filter(p=>/\.pdf$/i.test(p)).sort(),seed4.pdfs.map(p=>'week04/assets/seed/'+p.path).sort());
   console.log('Week04: native SQLite, 353 pages and four verified PDFs');
+}
+
+assert(manifest4.files.every(f=>!/(^|\/)(local-only|private|inputs)(\/|$)/.test(f.path)));
+assert(!manifest4.files.some(f=>/field-agent|native-field-agent|field-agent-contract/.test(f.path)));
+if(manifest4.tools?.includes('material-importer')){
+ const importer=await fs.readFile(path.join(site,'material-importer/index.html'),'utf8');
+ assert(importer.includes('/pku-aihis/material-importer/assets/'));
+ assert(!/src=["']\/assets\//.test(importer));
+ console.log('Universal importer subpath and private/Agent exclusions checked');
 }

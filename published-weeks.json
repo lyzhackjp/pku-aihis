@@ -1,1 +1,9 @@
-{"weeks":["week03","week04"]}
+{
+  "weeks": [
+    "week03",
+    "week04"
+  ],
+  "tools": [
+    "material-importer"
+  ]
+}
