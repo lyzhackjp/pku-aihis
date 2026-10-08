@@ -78,6 +78,38 @@ p {
   min-height: 48px;
   color: #34495e;
 }
+.model-settings {
+  margin: 12px 30px;
+  padding: 12px;
+  border: 1px solid #b9c5cd;
+  background: #fffdf8;
+}
+.model-settings summary {
+  color: #17335d;
+  font-weight: 600;
+  cursor: pointer;
+}
+.model-settings a {
+  display: inline-block;
+  color: #164ec7;
+  margin: 8px 0;
+}
+.model-rows {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 24px;
+}
+.model-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.model-row code {
+  min-width: 0;
+}
 .flow-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -157,6 +189,9 @@ textarea {
   }
 }
 @media (max-width: 650px) {
+  .model-rows {
+    grid-template-columns: 1fr;
+  }
   .flow-grid {
     grid-template-columns: minmax(0, 1fr);
     padding: 18px;

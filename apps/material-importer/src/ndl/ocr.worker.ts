@@ -1,42 +1,17 @@
 import { LayoutDetector } from "./layout-detector";
 import { TextRecognizer } from "./text-recognizer";
 import { ReadingOrderProcessor } from "./reading-order";
-import models from "./models.json";
+import { NDLModelStore } from "./model-loader";
 const recognizers = new Map<number, TextRecognizer>();
 let layout: LayoutDetector;
 const progress = (message: string) =>
   self.postMessage({ type: "progress", message });
-async function model(name: string) {
-  const hash = models[name]?.sha256;
-  if (!hash) throw Error("模型未登记。");
-  const cache = await caches.open("pku-ndl-models-v1");
-  const url = new URL(`models/${name}`, self.location.origin).href;
-  const key = `${url}?sha256=${hash}`,
-    cached = await cache.match(key);
-  if (cached) return cached.arrayBuffer();
-  progress(
-    `首次载入 ${name}；约 ${Math.round(models[name].bytes / 1024 / 1024)} MB`,
-  );
-  const r = await fetch(url);
-  if (!r.ok) throw Error(`模型尚未配置：${name}。使用本机启动脚本准备模型。`);
-  const bytes = await r.arrayBuffer();
-  const actual = [
-    ...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
-  ]
-    .map((x) => x.toString(16).padStart(2, "0"))
-    .join("");
-  if (actual !== hash) throw Error(`模型指纹不符：${name}`);
-  try {
-    await cache.put(key, new Response(bytes));
-  } catch {
-    progress("模型已载入，但浏览器空间不足，未缓存。");
-  }
-  return bytes;
-}
 self.onmessage = async (e: MessageEvent) => {
   if (e.data.type !== "ocr") return;
   const start = performance.now();
   try {
+    const store = new NDLModelStore({ baseURL: e.data.baseURL });
+    const model = async (name: string) => (await store.load(name, progress)).bytes;
     if (!layout) {
       layout = new LayoutDetector();
       await layout.initialize(await model("deim-s-1024x1024.onnx"));

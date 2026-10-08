@@ -18,6 +18,7 @@ export async function ndlOCR(
   onProgress: (s: string) => void,
   signal: AbortSignal,
 ): Promise<OCRResult> {
+  signal.throwIfAborted();
   return new Promise((resolve, reject) => {
     running = new Worker(new URL("./ndl/ocr.worker.ts", import.meta.url), {
       type: "module",
@@ -51,7 +52,10 @@ export async function ndlOCR(
     const imageData = canvas
       .getContext("2d")
       .getImageData(0, 0, canvas.width, canvas.height);
-    current.postMessage({ type: "ocr", id: crypto.randomUUID(), imageData });
+    current.postMessage({
+      type: "ocr", id: crypto.randomUUID(), imageData,
+      baseURL: new URL(import.meta.env.BASE_URL, document.baseURI).href,
+    });
   });
 }
 export async function tesseractOCR(

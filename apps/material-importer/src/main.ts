@@ -30,6 +30,11 @@ import {
   pagesFrom,
 } from "./parsers";
 import { ndlOCR, tesseractOCR, visionOCR, cancelOCR } from "./ocr";
+import { NDLModelStore, type ModelStatus } from "./ndl/model-loader";
+const ndlModels = new NDLModelStore({
+  baseURL: new URL(import.meta.env.BASE_URL, document.baseURI).href,
+});
+let ndlModelStatus: ModelStatus[] = [], preparingNDL = false;
 let project: any = emptyProject("材料预处理项目"),
   db: any,
   current = "",
@@ -125,6 +130,68 @@ function col(number: string, title: string) {
   const c = node("section", "", "flow-col");
   c.append(node("h2", `${number} · ${title}`));
   return c;
+}
+function showProgress(text: string) {
+  status = text;
+  const label = document.getElementById("status");
+  if (label) label.textContent = text;
+}
+async function prepareNDLModels() {
+  if (busy) return;
+  busy = true;
+  preparingNDL = true;
+  controller = new AbortController();
+  status = "正在配置浏览器OCR模型…";
+  render();
+  try {
+    await ndlModels.prepare(showProgress, controller.signal);
+    status = "四个NDLOCR-Lite模型已下载、校验并缓存；现在可以处理所选页，无需本机启动脚本。";
+  } catch (error) {
+    status = controller.signal.aborted
+      ? "模型配置已取消；已完成的模型仍保留，重试可接续。"
+      : `模型配置未完成：${error.message}`;
+  } finally {
+    ndlModelStatus = await ndlModels.status();
+    busy = false;
+    preparingNDL = false;
+    render();
+  }
+}
+async function clearNDLModels() {
+  if (busy || !confirm("只清除NDLOCR-Lite模型缓存，保留材料、原件和校订。确定清除？")) return;
+  await ndlModels.clear();
+  ndlModelStatus = await ndlModels.status();
+  status = "已清除NDLOCR-Lite模型缓存；材料与校订保留。下次可在本页重新配置。";
+  render();
+}
+function modelPanel() {
+  const panel = node("details", "", "model-settings") as HTMLDetailsElement;
+  const ready = ndlModelStatus.filter((row) => row.cached).length;
+  panel.open = preparingNDL || mode.startsWith("NDLOCR");
+  panel.append(node("summary", `NDLOCR-Lite 模型配置 · ${ready} / 4 已缓存`));
+  panel.append(node("p", "可在本页下载和配置模型，无需本机启动。首次全部约147 MiB；配置后在当前浏览器复用。直接识读也会按需下载。只下载模型，不向模型来源发送史料。"));
+  const rows = node("div", "", "model-rows");
+  for (const model of ndlModelStatus) {
+    const row = node("div", "", "model-row");
+    row.append(node("code", model.name), node("span", `${(model.bytes / 1024 / 1024).toFixed(1)} MiB · ${model.cached ? "已校验缓存" : "尚未缓存"}`));
+    rows.append(row);
+  }
+  panel.append(rows);
+  panel.append(
+    button("下载并配置NDLOCR-Lite模型", prepareNDLModels, busy),
+    button("检查模型缓存", async () => {
+      ndlModelStatus = await ndlModels.status();
+      render();
+    }, busy),
+    button("取消模型配置", () => controller?.abort(), !preparingNDL),
+    button("清除模型缓存", clearNDLModels, busy || !ready),
+  );
+  const link = node("a", "模型来源与许可 ↗") as HTMLAnchorElement;
+  link.href = "https://github.com/yuta1984/ndlocrlite-web/tree/50216ccc3e600f6d0d152862c5a201fdade78112/public/models";
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  panel.append(link);
+  return panel;
 }
 async function persist(files: any[] = []) {
   await saveProject(db, project, files);
@@ -242,11 +309,7 @@ async function canvasFor(s: any, pageNumber: number) {
   return renderImage(file);
 }
 async function ocr(canvas: HTMLCanvasElement, engine = mode) {
-  const progress = (text: string) => {
-    status = text;
-    const label = document.getElementById("status");
-    if (label) label.textContent = text;
-  };
+  const progress = showProgress;
   if (engine === "NDLOCR-Lite（本机浏览器）")
     return ndlOCR(canvas, progress, controller.signal);
   if (engine === "Tesseract（本机浏览器）")
@@ -386,6 +449,7 @@ async function process() {
         ? "已取消；已完成页保留，可选择剩余范围继续。"
         : `处理失败：${e.message}；已完成部分保留。`;
   } finally {
+    ndlModelStatus = await ndlModels.status();
     busy = false;
     render();
   }
@@ -415,6 +479,7 @@ async function compare(engine: string) {
   } catch (e) {
     status = `比较失败：${e.message}`;
   } finally {
+    ndlModelStatus = await ndlModels.status();
     busy = false;
     render();
   }
@@ -475,6 +540,7 @@ function render() {
   msg.id = "status";
   msg.setAttribute("role", "status");
   shell.append(msg);
+  shell.append(modelPanel());
   const grid = node("div", "", "flow-grid"),
     one = col("01", "文件与任务"),
     two = col("02", "选择处理范围"),
@@ -775,6 +841,7 @@ function render() {
       el.disabled = true;
   }
 }
+ndlModelStatus = await ndlModels.status();
 try {
   db = await openDB("pku-history-material-importer");
   project = (await loadProject(db)) || project;
