@@ -14,13 +14,13 @@ pnpm preview
 
 文件、片段与已完成页保存到 IndexedDB；处理失败或取消保留完成部分。同一指纹重复上传保留校订与阅读记录。DOCX 段落和纯文本再处理按定位避开重复。原始识读与校订文字、引擎、时耗、核验状态分别留存。教师研究草稿不纳入普通原文检索。
 
-NDLOCR-Lite 核心使用 ONNX Runtime Web 单线程 WASM/Worker。先将固定权重放入指定目录，再执行：
+NDLOCR-Lite 核心使用 ONNX Runtime Web 单线程 WASM/Worker。网页顶部展开“NDLOCR-Lite 模型配置”，点击“下载并配置NDLOCR-Lite模型”，即可在浏览器取得、校验和缓存四个固定版本权重，无需安装OCR或运行本机启动脚本。首次全部约147MiB，显示每个文件的下载进度；可以取消，已完成模型保留，重试接续。也可直接选择NDLOCR-Lite处理材料，按需下载缺少的模型。
 
-```sh
-PKU_OCR_MODELS=/path/to/models pnpm preview
-```
+模型文件、字节数、固定提交URL及SHA-256见 `src/ndl/models.json`。页面配置和OCR Worker共用 `src/ndl/model-loader.ts`：先核已缓存字节，再尝试部署子路径及兼容的本机 `/models/`，最后从固定上游提交下载；返回HTML、下载不完整及指纹不符的内容均不缓存。缓存不能使用时仍可当次识读，但不会声称已完成持久配置。
 
-模型文件及预期 SHA-256 见 src/ndl/models.json；权重不在 Git 和正常构建中。首次按需加载约 147MiB 的本机模型，浏览器缓存后再用。NDL 核心、字符表及许可见 NOTICE.md 和 licenses/。未配置模型则明确报错；没有把 WebGPU 写成已测试能力。
+首次联网只取得公开模型，不发送待识读图像；材料在浏览器运行。缓存属于当前浏览器与站点地址，清除网站数据或换浏览器后需重配；请在授课所用浏览器与正式入口提前准备。清除模型缓存须确认，保留全部材料、原件和校订。缓存仍在时，不需再次连接模型来源；ONNX运行时和页面本身仍须可访问。
+
+已有本机模型目录仍可作为可选来源：`PKU_OCR_MODELS=/path/to/models pnpm preview`。模型权重不加入Git或正常构建；NDL核心、字符表及许可见NOTICE.md和licenses/。使用固定PARSeq16模型，没有切换到上游新24px模型，也没有把WebGPU写成已测试能力。
 
 Tesseract.js 使用本机 worker/core，语言数据首次来自其默认 CDN；因此它首次识读可能需要互联网。API 视觉识读独立配置，点击后只发送所选页图像，key 仅在窗口内存，不因支持聊天就假定模型支持图像。
 

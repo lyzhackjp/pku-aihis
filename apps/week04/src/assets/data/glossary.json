@@ -445,7 +445,7 @@
     {
      "term": "patchouli",
      "en": "patchouli",
-     "definition": "本课程团队制作的实验性文献管理器，以不可变修订保存OCR文本树，以证据URI回查页与版本。检索索引可由文本树重建；题录、笔记与标签作为持久用户知识保留。通过MCP向AI提供受约束的文献读写操作。",
+     "definition": "本课程团队制作的实验性文献管理器，以不可变修订保存OCR文本树，以证据URI回查页与版本。检索索引可由文本树重建；题录、笔记与标签作为持久用户知识保留。原生通过MCP向AI提供受约束的文献读写；本课浏览器阅读工具开放find、fetch、cite，未开放put。",
      "first_slide": "D04"
     },
     {
@@ -849,7 +849,7 @@
     {
      "term": "同步、导出、备份与恢复",
      "en": "sync / export / backup / restore",
-     "definition": "同步传播变化，导出按格式取出数据，备份保存可恢复副本，恢复检验副本能否重建使用。SQLite 单文件不包含 PDF；课程独立阅读记录也必须另外纳入。",
+     "definition": "同步传播变化，导出按格式取出数据，备份保存可恢复副本，恢复检验副本能否重建使用。当前SQLite包含数据库内已存阅读轮次和人工版本，但不含PDF及独立Markdown、卡片、词表，完整备份须分别纳入。",
      "first_slide": "D27"
     },
     {
@@ -1023,6 +1023,329 @@
      "en": "draft and reading version",
      "definition": "Markdown按页面保存为可覆盖草稿，同一Dxx在主线与综合页共用；换材料不自动重置成材料专属笔记。阅读轮次另存冻结输入、实际候选、历次人工版本及来源；两种保存不能互相替代。",
      "first_slide": "D19"
+    }
+   ]
+  },
+  {
+   "label": "记录外观与Patchouli机制补释（2026年10月8日）",
+   "terms": [
+    {
+     "term": "字段名、字段值与类型",
+     "en": "field name / value / type",
+     "definition": "字段名约定存什么，字段值是该对象的数据，类型约定文字、数字、列表等写法。题名“Milk Is Gold”是title的值；tags是列表。格式可读还须核字段语义。",
+     "first_slide": "D05"
+    },
+    {
+     "term": "状态与就绪条件",
+     "en": "state / readiness",
+     "definition": "文件可得、文字已提交、当前已索引、人工已读及引句已核分别是不同状态。网页citable过滤只说明题录可关联，不能认证史学引句。",
+     "first_slide": "D06"
+    },
+    {
+     "term": "浏览器保存器与识别规则",
+     "en": "Connector / translator",
+     "definition": "Zotero Connector是浏览器扩展；translator识别网页或记录格式，把数据映射到题录字段，不是翻译正文。自动保存后仍核题名、责任者及附件。",
+     "first_slide": "D05"
+    },
+    {
+     "term": "对象标识与UUID",
+     "en": "identifier / UUID",
+     "definition": "ID指认某对象，UUID是一种标识格式，不编码作者和页码。PDF81的page_index为80，页面ID另存；字符串有效还要有库范围与记录可查。",
+     "first_slide": "D08"
+    },
+    {
+     "term": "源记录与程序源码",
+     "en": "record source / program source",
+     "definition": "JabRef的BibTeX source显示题录的保存文本；程序源码说明怎样执行处理。看懂记录字段与能读软件程序是不同任务。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "BibTeX与biblatex的差别",
+     "en": "BibTeX / biblatex",
+     "definition": "两者都常用.bib，类型、字段及处理流程有差别。传统year/address与biblatex的date/location不能不核语义就交换；引用命令取决于已配置的写作环境。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "条目类型与责任角色",
+     "en": "itemType / creatorType",
+     "definition": "itemType区分图书、论文、附件、笔记等对象类型；creatorType区分作者、编者等职责。改角色可能改变引文含义，不是仅换一项界面标签。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "链接与纳管附件",
+     "en": "linked_file / imported_file",
+     "definition": "链接附件保存到已有文件的指向，纳管附件由工具保存文件副本；二者同步和备份范围不同。父条目关系不靠文件名相似维持。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "JSON",
+     "en": "JavaScript Object Notation",
+     "definition": "结构化数据语法：{}为对象，[]为列表，字段名与字符串有引号，值可为数字、布尔或null。语法不能规定title的书目含义。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "JSON-LD",
+     "en": "JSON for Linked Data",
+     "definition": "在JSON基础上用@context连接字段与语义词汇，@id给对象标识；Tropy等交换元数据时可使用它。记录有语义不代表内容真实，导出记录也不包含照片字节的保证。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "XML与MARCXML",
+     "en": "XML / MARCXML",
+     "definition": "XML用标签、属性和嵌套表达结构；MARCXML用这种语法承载MARC记录。tag、ind1/ind2、subfield code说明字段、指示符、子字段；片段不是完整交换文件。",
+     "first_slide": "D12"
+    },
+    {
+     "term": "CSL引用事件与定位",
+     "en": "citation event / locator",
+     "definition": "题录描述整篇，citationItems把本次引文接到题录id并给locator、label等。总页数不是本次所引页；网页书目渲染不等于已自动生成带locator的脚注事件。",
+     "first_slide": "D12"
+    },
+    {
+     "term": "引文语言规则",
+     "en": "locale",
+     "definition": "选择引文术语、日期等本地化规则，不翻译题名或核定作者全名。数据、样式、语言规则和引文事件各自提供不同输入。",
+     "first_slide": "D12"
+    },
+    {
+     "term": "YAML文件头",
+     "en": "YAML frontmatter",
+     "definition": "Markdown开头两条---之间可保存属性，以字段:值及缩进列表写结构。source_item等自定义值须另有链接或解析约定，才实际打开文献。",
+     "first_slide": "D20"
+    },
+    {
+     "term": "SQL与数据库表",
+     "en": "Structured Query Language",
+     "definition": "SQL是查询、定义和修改数据库的语言。SELECT看列，FROM选表，JOIN ON按关系连接，WHERE限定条件；表的一行含义由应用定义。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "主键、外键与关联",
+     "en": "primary key / foreign key",
+     "definition": "主键在某表识别一行，外键约束检查指向对象是否存在；有相同ID列并不表示已声明外键。当前FTS映射关联由写入流程维护，不应宣称所有列受外键保证。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "FTS行与正文逻辑行",
+     "en": "FTS row / text line",
+     "definition": "fts_row_map映射FTS整数行到检索单元；参考v2.0的line_map映射展开文本逻辑行及字符偏移到块，是另一职责。二者都不同于原件印刷行或PDF页。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "未索引列与词项查询",
+     "en": "UNINDEXED / MATCH",
+     "definition": "UNINDEXED列保存值却不参与全文分词；MATCH按FTS词项查询。ID列仍可取回关联，不应在原句字符偏移处使用词项offset。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "分词器与字符片段",
+     "en": "tokenizer / character n-grams",
+     "definition": "分词器产生检索词项；当前课件另将中日韩连续文字生成为1至3字片段并去重。它不是语义理解，不同于参考教学程序单用trigram。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "应用重建与FTS重建",
+     "en": "application reindex / FTS rebuild",
+     "definition": "课件reindex重算当前修订的单元、行映射和FTS文字；SQL REINDEX及FTS rebuild各有自己的职责。都不恢复未保存原件或替人核验判断。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "文本框与有效负载",
+     "en": "box / payload",
+     "definition": "某页某次修订中的框有box_id、类型、位置和payload；正文payload可含Markdown，表格等类型可有不同内容。所引框还须指定rev，不能只按第三块认同一文字。",
+     "first_slide": "D17"
+    },
+    {
+     "term": "边界框与坐标基准",
+     "en": "BBox / coordinate basis",
+     "definition": "BBox记录x、y、宽、高；Patchouli使用页内0到1的归一坐标，按显示尺寸转换。页旋转或裁切须保坐标基准，不能与教学像素例混用。",
+     "first_slide": "D17"
+    },
+    {
+     "term": "父子框与同层接续",
+     "en": "parent_box_id / next_sibling_box_id",
+     "definition": "父框保存层级，同层接续保存阅读顺序；框的随机ID与屏幕位置不是读序。正常展开遵循已存树结构，抑制框可从当前展开或检索排除。",
+     "first_slide": "D17"
+    },
+    {
+     "term": "逻辑页与物理扫描页",
+     "en": "logical_page / PDF page",
+     "definition": "一张扫描页可容左右两印刷页或多个版面区域；logical_page表示逻辑区域，PDF页序表示实际扫描顺序，印刷页码是原件标记。",
+     "first_slide": "D08"
+    },
+    {
+     "term": "抑制与识读置信度",
+     "en": "suppressed / confidence",
+     "definition": "suppressed指定框是否从正常展开和检索排除，不等于删除历史；confidence为识读过程的分数，可为空，不认证历史内容真实性。",
+     "first_slide": "D17"
+    },
+    {
+     "term": "文件依据与正文依据状态",
+     "en": "source_full_blake3 / source_basis_status",
+     "definition": "正文修订可记所依据文件的哈希及其状态，帮助确认字与页影相配。旧种子可能哈希为空，current不表示已完成全页哈希回核。",
+     "first_slide": "D26"
+    },
+    {
+     "term": "修订与文档提交",
+     "en": "revision / commit",
+     "definition": "修订保存某页的一版文字结构；提交可登记同一文档的一组页面修订。已提交内容保护与当前选用标志分工，不把页面校正当出版换版。",
+     "first_slide": "D26"
+    },
+    {
+     "term": "工作副本与已提交内容",
+     "en": "working / committed / is_current",
+     "definition": "working允许继续编辑，committed保存某次提交内容，is_current表示当前选用。当前指针可变化，旧内容保留给固定rev的引用回查。",
+     "first_slide": "D26"
+    },
+    {
+     "term": "数据库触发器",
+     "en": "database trigger",
+     "definition": "在指定数据库操作发生时执行规则；Patchouli用规则拒绝覆写已提交的正文结构。触发器保护保存机制，不替人判断新校字是否正确。",
+     "first_slide": "D26"
+    },
+    {
+     "term": "数据库事务",
+     "en": "transaction",
+     "definition": "一组数据库修改在当前连接中一起提交或回滚；维护索引时让单元、映射、FTS相配。事务不是备份，也不撤回已发送到外部服务的请求。",
+     "first_slide": "D10"
+    },
+    {
+     "term": "回收站、墓碑与合并",
+     "en": "trash / tombstone / merge",
+     "definition": "回收站保可恢复对象，合并记录旧身份及去向，墓碑不保证保存所有旧内容。当前网页保文档ID和证据地址，但不是原生彻底销毁全部流程。",
+     "first_slide": "D26"
+    },
+    {
+     "term": "快照与内容寻址",
+     "en": "snapshot / content addressing",
+     "definition": "快照保存某时刻状态；内容寻址按文件哈希识别字节。原生多设备快照同步与网页ZIP备份是不同能力，后者不处理所有设备分支。",
+     "first_slide": "D27"
+    },
+    {
+     "term": "包清单与包分类",
+     "en": "manifest / package type",
+     "definition": "清单描述特定包里的对象、路径和校验。材料包根manifest用于追加；课程完整包可由外层patchouli.zip及阅读／草稿结构识别，不要求同一外层材料清单。",
+     "first_slide": "D27"
+    },
+    {
+     "term": "替换、追加与幂等",
+     "en": "replacement / append / idempotence",
+     "definition": "材料包追加新对象，备份恢复替换当前库；相同材料包重复导入不再增加同一对象称幂等，不表示它更新旧OCR与人工判断。",
+     "first_slide": "D31"
+    },
+    {
+     "term": "浏览器存储与来源范围",
+     "en": "IndexedDB / LocalStorage / origin",
+     "definition": "浏览器按网站来源管理本地持久内容；SQLite映像、PDF及独立草稿有不同保存位。清除站点数据或更换设备可能丢入口，须独立导出可恢复包。",
+     "first_slide": "D27"
+    },
+    {
+     "term": "单写入协调",
+     "en": "Web Lock",
+     "definition": "当前课件协调同库的并发写入，避免多个页面同时改库。它不是跨设备同步，也不替代独立备份和研究判断的复核。",
+     "first_slide": "D27"
+    },
+    {
+     "term": "轮次结构与冻结内容",
+     "en": "ReadingRun",
+     "definition": "课程扩展保存任务、实际输入和人工先读，再追加候选、人工版本和依据复核。输入范围或任务变了须新轮，不把旧回复附成新轮输出。",
+     "first_slide": "D19"
+    },
+    {
+     "term": "候选来源与人工父版本",
+     "en": "candidateIds / parentId",
+     "definition": "candidateIds指本轮参考的模型候选；人工版本parentId指上一人工版本。它们保存加工谱系，记录中的文字仍须核支持与范围。",
+     "first_slide": "D20"
+    },
+    {
+     "term": "分页与截断接续",
+     "en": "cursor / complete / truncated / next_range",
+     "definition": "cursor接下一批发现结果；fetch的complete、truncated和next_range说明所取内容是否完整及怎样继续。分页指针不是证据引用，少量返回不能冒称全文。",
+     "first_slide": "D27"
+    },
+    {
+     "term": "原生写回边界",
+     "en": "put",
+     "definition": "原生允许整体替换授权题录、样式、译文页等，texts正文VFS只读；网页当前未开放put。原生接口无base-revision前置条件，原子写入不保证不覆盖先前修改。",
+     "first_slide": "D27"
+    },
+    {
+     "term": "分面、聚类与记录粒度",
+     "en": "facet / clustering / record grain",
+     "definition": "分面按字段看分布和筛选，聚类提出相似字符串候选，粒度规定一行是一份材料还是一项关系。同名是否同人、合并是否损失异称由研究者核定。",
+     "first_slide": "D24"
+    },
+    {
+     "term": "字符规范化与偏移单位",
+     "en": "Unicode / NFKC / offset unit",
+     "definition": "规范化帮助检索但不能改写原件；词项位置、Unicode码点、UTF-16单元、UTF-8字节和图像坐标不是同一单位。当前FTS offset不是原句字符位置。",
+     "first_slide": "D24"
+    },
+    {
+     "term": "Turtle语法与语言标签",
+     "en": "Turtle syntax / language tag",
+     "definition": "@prefix缩写地址，a给类型，分号续同主语，逗号续同属性，点结束陈述，@zh给文字语言。语法有效与概念归组有史学依据是两项检查。",
+     "first_slide": "D25"
+    },
+    {
+     "term": "力导向图与语义关系",
+     "en": "force-directed layout",
+     "definition": "图算法摆节点以便观察；上下位和相关来自词表，不来自屏幕距离。位置、连线密度和大小不证明历史影响、意义等同或发展次序。",
+     "first_slide": "D25"
+    },
+    {
+     "term": "词表范围与映射",
+     "en": "ConceptScheme / inScheme / exactMatch",
+     "definition": "scheme给词表范围，inScheme说明概念归属；跨表exactMatch等映射有较强语义条件。保留德／徳字形入口不自动证明不同历史用法完全等同。",
+     "first_slide": "D25"
+    },
+    {
+     "term": "文本集及篇章单位",
+     "en": "corpus / document unit",
+     "definition": "为研究按纳入规则组织的文字集合；一记录可为篇、段或摘录，须保来源、边界和原页映射。PDF转文字完成预处理，不自动成为完整历史数据库。",
+     "first_slide": "D24"
+    },
+    {
+     "term": "改写表达式与实体候选",
+     "en": "GREL / named entity recognition",
+     "definition": "GREL是OpenRefine变换表达式语言；实体识别找人名、地名等候选。本讲关注原值、规范值及依据，不把自动候选当已核人物同一性。",
+     "first_slide": "D24"
+    },
+    {
+     "term": "集合与五种覆盖",
+     "en": "collection / coverage",
+     "definition": "收录、数字化、识读、检索、人工阅读覆盖不同。353页是助教当前PDF页数，不是全部已精读；无命中先检查具体哪层缺口。",
+     "first_slide": "D17"
+    },
+    {
+     "term": "保存搜索与动态队列",
+     "en": "saved search / dynamic queue",
+     "definition": "保存条件形成可重用视图，数据变动后结果可变化。队列还须人写阻碍、优先级与下一动作，视图不判断阅读完成程度。",
+     "first_slide": "D17"
+    },
+    {
+     "term": "元认知与加工检查",
+     "en": "metacognition",
+     "definition": "观察自己理解了什么、为何这么理解及哪里不懂。自主重述和回原文的具体下一步，比对话次数、流畅感或人与机器答案相似更能留下可检查加工。",
+     "first_slide": "D19"
+    },
+    {
+     "term": "Agent与建议性填写",
+     "en": "agent",
+     "definition": "能按任务调用工具并选择下一步的模型应用。本课要求限定材料、保候选及人工理由；Agent提出阅读任务不表示用户已经亲自完成阅读。",
+     "first_slide": "D18"
+    },
+    {
+     "term": "运行平台与网页适配",
+     "en": "C# / .NET / Blazor WebAssembly",
+     "definition": "C#是语言，.NET提供运行及基础库，Blazor WebAssembly支持相应托管代码在浏览器运行。原生文件、PDF、OCR依赖须单独适配，源码存在不证明网页全功能等价。",
+     "first_slide": "D04"
+    },
+    {
+     "term": "标识登记与书目获取",
+     "en": "Crossref",
+     "definition": "通过DOI等登记标识提供对应元数据服务的机构；取得书目信息不等于取得正文。各获取器适用标识和权限不同，按实际来源核对。",
+     "first_slide": "D13"
     }
    ]
   }
