@@ -1,0 +1,798 @@
+[
+  {
+    "id": "D00",
+    "section": "导入",
+    "anchor": "导入：论有所据",
+    "title": "知识库检索与有依据的生成",
+    "layout": "hero",
+    "theme": "dark",
+    "minutes": 2,
+    "transition": "本讲沿一个问题展开：回答里的每一句话，能否回到一段确实支持它的原文？",
+    "question": "从一批电子文本到一句回答，机器做了哪些选择？",
+    "student_operation": "读出错例回答，先不查原文，想一想它成立需要哪些条件。",
+    "observable_output": "一句流畅、看似有据的回答，以及进入贯穿检查的入口。",
+    "lesson_evidence": "讲义导入第一、四段。",
+    "mode": "静态内容",
+    "notes": {
+      "purpose": "立起本讲的问题：AI 辅助的流程中，每句论证皆有其出处。",
+      "guide": "请大家先读这句回答，想想它要成立需要满足哪些条件；我们会带着它走完全讲。",
+      "mechanism": "封面只立问题；四个检查点在 D02 展开，在 D24 贯穿页逐项完成。"
+    },
+    "footer": "D00 · 封面；错例回答为教学构造，材料版本见 D03。",
+    "concepts": [],
+    "through": "intro",
+    "status": "implemented",
+    "component": "hero-cover"
+  },
+  {
+    "id": "D01",
+    "section": "导入",
+    "anchor": "fig-rag-evolution",
+    "title": "RAG 的四个阶段与本讲位置",
+    "layout": "diagram",
+    "theme": "light",
+    "minutes": 5,
+    "transition": "先把本讲放进 RAG 的发展脉络：每个阶段在上一阶段之上多了一道工序。",
+    "question": "朴素、高级、模块化 RAG 与智能体基础设施，各多出了什么？",
+    "steps": [
+      "朴素 RAG",
+      "高级 RAG",
+      "模块化 RAG",
+      "智能体的基础设施"
+    ],
+    "student_operation": "点击各阶段，查看它新增的工序及本讲对应的节。",
+    "observable_output": "四阶段与本讲第一至五节的对应。",
+    "lesson_evidence": "讲义 @fig-rag-evolution；Gao 等 2023、2024 摘要。",
+    "mode": "静态内容",
+    "notes": {
+      "purpose": "把本讲各节放回一条可以记住的脉络。",
+      "guide": "沿四格从左到右，每格问一句：比前一格多了什么工序？",
+      "mechanism": "前三阶段名称据 Gao 等综述；第四阶段为助教概括，页面如实标注。"
+    },
+    "footer": "D01 · 阶段名据 Gao et al. arXiv:2312.10997；第四阶段据助教批注。",
+    "concepts": [],
+    "options": {
+      "A": "四格横向阶段图，点击展开",
+      "B": "时间线",
+      "recommend": "A"
+    },
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D02",
+    "section": "导入",
+    "anchor": "导入第四段",
+    "title": "一句回答要过的四道检查",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 5,
+    "transition": "回到封面那句回答：要使它成立，至少要分开检查四件事。",
+    "question": "“三位作者都认为叙述必须完全服从史料”，需要哪些条件才能成立？",
+    "steps": [
+      "材料入库",
+      "取回片段",
+      "进入上下文",
+      "概括有据"
+    ],
+    "student_operation": "逐格写出每一道检查要看什么，再打开贯穿页对照。",
+    "observable_output": "四道检查对应第一至四节；贯穿页记录同一句回答的检查进度。",
+    "lesson_evidence": "讲义导入第四段。",
+    "mode": "静态内容",
+    "notes": {
+      "purpose": "把一个“对不对”的笼统问题拆成四个可以分别检查的环节。",
+      "guide": "每一格先请学生说：如果这里出错，回答会变成什么样？",
+      "mechanism": "四格分别对应第一节切分、第二节相似度、第三节出处追溯、第四节图结构之前的概括问题；第五节把它们放回一次完整问答。"
+    },
+    "footer": "D02 · 四道检查据讲义导入；逐项操作见 D24 贯穿页。",
+    "concepts": [],
+    "through": "intro",
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D03",
+    "section": "1.1",
+    "anchor": "库里有什么：材料身份与范围",
+    "title": "库里有什么：材料身份与范围",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 8,
+    "transition": "第一道检查从入库开始：AI 看到的是哪一个文本？",
+    "question": "“库里有这篇”，有的是哪一个版本？",
+    "steps": [
+      "作品",
+      "所用版本",
+      "电子文本来源",
+      "引用位置"
+    ],
+    "student_operation": "任选一份材料，按第四周条目字段填写作者、题名、版本、电子文本来源与引用位置；查不到写“待查”。",
+    "observable_output": "三份材料的初刊与所收电子文本分列；引用位置只能是所收版本中的位置。",
+    "lesson_evidence": "讲义 1.1 第三段（维基文库、青空文库、Gutenberg 底本说明）。",
+    "mode": "浏览器实时（表单）＋静态内容",
+    "notes": {
+      "purpose": "明确知识库与第四周文献库的关系：材料身份仍是第一位的问题。",
+      "guide": "请对照三张卡：初刊年代、所据底本、电子文本平台分别写在哪一栏？",
+      "mechanism": "本库未收只能推出“查不到”；集合说明写明收录范围，后面判断漏检才有依据。"
+    },
+    "footer": "D03 · 版本信息据讲义 1.1；表单只存当前浏览器。",
+    "concepts": [
+      "知识库"
+    ],
+    "through": "identity",
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D04",
+    "section": "1.2",
+    "anchor": "从按长度切到按意义切",
+    "title": "为什么要切：定位与上下文的取舍",
+    "layout": "diagram",
+    "theme": "light",
+    "minutes": 2,
+    "transition": "材料入库以后，系统检索的单位是事先切好的片段。",
+    "question": "片段越小定位越准，为什么还要保留上下文？",
+    "student_operation": "拖动片段大小，观察同一判断被分到几块。",
+    "observable_output": "块数、单块字数与一个判断跨块的情况。",
+    "lesson_evidence": "讲义 1.2 第一、二段。",
+    "mode": "浏览器实时（教学文本）",
+    "notes": {
+      "purpose": "建立切分的两端：定位精度与上下文完整。",
+      "guide": "先拉到最小，再拉到最大，问学生两端各丢了什么。",
+      "mechanism": "固定长度切块配重叠是许多系统的默认；切点与文意无关。"
+    },
+    "footer": "D04 · 示例文本见页内来源说明。",
+    "concepts": [],
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D05",
+    "section": "1.2",
+    "anchor": "fig-recursive",
+    "title": "四种切法与递归切分的退让",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 6,
+    "transition": "让切点落在意义边界上，形成了几种具体做法。",
+    "question": "同一工具处理英文与中日文时，切点为什么落在不同地方？",
+    "steps": [
+      "按句",
+      "按段",
+      "递归退让",
+      "切点落点"
+    ],
+    "student_operation": "切换中文与英文样例，调整块大小，观察递归切分在哪一级停下。",
+    "observable_output": "英文多停在空格级；中日文越过空格级落到逐字级。",
+    "lesson_evidence": "讲义 @fig-recursive；AnythingLLM TextSplitter 源码与 LangChain 默认分隔符（2026-10-09 读，未运行）。",
+    "mode": "浏览器实时（按 LangChain 默认分隔符的教学实现）",
+    "notes": {
+      "purpose": "看清“同一个工具、不同语言、不同结果”。",
+      "guide": "先跑英文段，再跑中文段，请学生指出切点停在哪一级分隔符。",
+      "mechanism": "分隔符顺序为空行、换行、空格、逐字；页面实现按此规则重算，标为教学实现。"
+    },
+    "footer": "D05 · 规则据 AnythingLLM 与 LangChain 源码阅读；页面为教学实现，非运行 AnythingLLM。",
+    "concepts": [
+      "按语义单元切分",
+      "断句",
+      "递归切分"
+    ],
+    "options": {
+      "A": "参数滑块＋切点实时重算",
+      "B": "四级分隔符逐步点亮",
+      "recommend": "A"
+    },
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D06",
+    "section": "1.2",
+    "anchor": "fig-breakpoint",
+    "title": "断点式语义切分",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 3,
+    "transition": "不依赖格式标记时，可以按相邻两句的距离找话题转换处。",
+    "question": "阈值决定在哪里切开，它找到的就是话题边界吗？",
+    "steps": [
+      "句子",
+      "相邻距离",
+      "阈值",
+      "切块"
+    ],
+    "student_operation": "拖动阈值 θ，看切点数量与块的变化。",
+    "observable_output": "d_i > θ 处切开；距离为教学示意。",
+    "lesson_evidence": "讲义 @fig-breakpoint 与公式 d_i = 1 − cos(e_i, e_{i+1})。",
+    "mode": "教学构造（距离为示意数值）",
+    "notes": {
+      "purpose": "理解断点法的机制与阈值的作用。",
+      "guide": "把 θ 从 0.2 拉到 0.6，问：切点减少时，哪两句被放在了一起？",
+      "mechanism": "阈值可以是固定值或全部距离的百分位；页面数值沿用讲义示意。"
+    },
+    "footer": "D06 · 距离为讲义教学示意，非对任何材料的实际计算。",
+    "concepts": [
+      "语义切分"
+    ],
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D07",
+    "section": "1.2",
+    "anchor": "Qu 等 2024；Kreileder 等 2026",
+    "title": "按意思切，一定更好吗",
+    "layout": "diagram",
+    "theme": "light",
+    "minutes": 2,
+    "transition": "直觉上按意思切更好；看看研究实际比较出了什么。",
+    "question": "语义切分在什么材料上占优？",
+    "student_operation": "对照拼接数据与原始长文档两组结果。",
+    "observable_output": "Miracl 69.45→81.89；HotpotQA 90.59 对 87.37；英文数据、英文模型。",
+    "lesson_evidence": "Qu, Tu, Bao arXiv:2410.13070 实验部分；Kreileder 等 arXiv:2607.01852 结论。",
+    "mode": "静态内容（论文报告数值）",
+    "notes": {
+      "purpose": "把“依赖情境”说具体。",
+      "guide": "请学生先猜哪组占优，再看两组数字。",
+      "mechanism": "拼接处话题突变，正是断点法最容易捕捉的地方；后一项研究规模小，只作旁证。"
+    },
+    "footer": "D07 · 数值照论文报告；未复现。",
+    "concepts": [],
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D08",
+    "section": "1.2",
+    "anchor": "fig-context",
+    "title": "片段怎样带上上下文",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 2,
+    "transition": "问题常常不在切点，而在片段离开全文就看不懂。",
+    "question": "上下文化检索与后期切分，分别在哪一步补上下文？",
+    "steps": [
+      "普通切分",
+      "上下文化检索",
+      "后期切分",
+      "引用回原文"
+    ],
+    "student_operation": "对同一片段切换三种处理，比较进入索引的内容。",
+    "observable_output": "补写说明是模型文字；后期切分改变的是向量，片段文字不变。",
+    "lesson_evidence": "讲义 @fig-context；Anthropic 2024-09-19；Günther 等 arXiv:2409.04701。",
+    "mode": "教学构造",
+    "notes": {
+      "purpose": "分清两种补上下文的位置。",
+      "guide": "指着“德者何？”一句问：没有前文，模型知道“德”指什么吗？",
+      "mechanism": "49%、67% 为厂商在其选定条件下的自报数字。"
+    },
+    "footer": "D08 · 补写说明为教学示例；引用回到原文。",
+    "concepts": [
+      "上下文化检索",
+      "后期切分"
+    ],
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D09",
+    "section": "1.3",
+    "anchor": "fig-shide",
+    "title": "一句回答需要几个片段",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 10,
+    "transition": "切法的差别，要落到一个具体问题所需的证据上检验。",
+    "question": "“作者对叙述者提出了什么要求？针对什么对象？”需要几个片段？",
+    "steps": [
+      "问题",
+      "最少必要片段",
+      "两种切分",
+      "能否单独支持"
+    ],
+    "student_operation": "在《史德》第一段标出最少必要片段，再对照固定长度与按段两种切分。",
+    "observable_output": "只取回②时说不出对象与要求；①②③分布在不同块。",
+    "lesson_evidence": "讲义 @fig-shide；HiChunk arXiv:2509.11552 评测集定义。",
+    "mode": "浏览器实时（预切文本）",
+    "notes": {
+      "purpose": "带走“证据分布”这个检验办法。",
+      "guide": "请学生先只看②，说出能下的判断；再加入①③，看判断怎样变化。",
+      "mechanism": "证据稀疏时各种切法拉不开差距；本讲推论与论文结论分开表述。"
+    },
+    "footer": "D09 · 片段据讲义所引维基文库本《史德》第一段。",
+    "concepts": [],
+    "through": "chunk",
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D10",
+    "section": "2.1",
+    "anchor": "fig-lineage",
+    "title": "表示与度量",
+    "layout": "diagram",
+    "theme": "light",
+    "minutes": 6,
+    "transition": "候选单元有了，系统凭什么判断哪一个与问题相似？",
+    "question": "换一种算法时，换的是表示还是度量？",
+    "student_operation": "把第三周的表示放回谱系，再标出本讲新增的 BGE-M3。",
+    "observable_output": "稀疏认字面、稠密认意思；多语模型决定跨语言能否检索。",
+    "lesson_evidence": "讲义 @fig-lineage；Chen 等 arXiv:2402.03216。",
+    "mode": "静态内容",
+    "notes": {
+      "purpose": "分清表示与度量两件事。",
+      "guide": "问：余弦能用在词频向量上吗？BM25 是表示还是打分函数？",
+      "mechanism": "本讲库含中日英三语；嵌入模型是否多语，与切分和排序无关地决定漏检。"
+    },
+    "footer": "D10 · 第三周回顾；BGE-M3 据论文摘要。",
+    "concepts": [],
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D11",
+    "section": "2.2",
+    "anchor": "fig-jaccard; fig-bigram",
+    "title": "集合度量：杰卡德、Dice 与重叠系数",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 9,
+    "transition": "余弦之外，有一批不需要模型、结果完全可解释的度量。",
+    "question": "“集合里放什么”与“比较前是否统一字形”，哪一个对结果影响更大？",
+    "steps": [
+      "拆成集合",
+      "统一字形",
+      "交集与并集",
+      "三项系数"
+    ],
+    "student_operation": "改写查询，切换单字／字二元组，打开或关闭字形统一，观察三项系数。",
+    "observable_output": "简体“术”与繁体“術”不相交；统一后 J 由 0.17 升到 0.24；二元组更严格。",
+    "lesson_evidence": "讲义 @fig-jaccard、@fig-bigram 的逐步计算。",
+    "mode": "浏览器实时（OpenCC-js 1.0.5 t2s；日文异称保留人工对照）",
+    "notes": {
+      "purpose": "会算三种系数，并看到预处理比公式选择更能改变结果。",
+      "guide": "先用简体查询算一次，再勾选“统一字形”；然后换成字二元组，请学生解释数字为何变小。",
+      "mechanism": "D = 2J/(1+J)，排序与 J 一致；重叠系数不受长文本撑大并集的影响。统一字形只改规范值，原值保留。"
+    },
+    "footer": "D11 / 讲义 fig-jaccard、fig-bigram；真实集合计算与 OpenCC-js 1.0.5。",
+    "concepts": [
+      "杰卡德系数",
+      "Dice系数",
+      "重叠系数"
+    ],
+    "through": "retrieve",
+    "options": {
+      "A": "四栏流程＋输入实时重算",
+      "B": "两个查询并排对照",
+      "recommend": "A"
+    },
+    "status": "implemented",
+    "component": "set-measure-lab"
+  },
+  {
+    "id": "D12",
+    "section": "2.2",
+    "anchor": "fig-edit; fig-measures",
+    "title": "编辑距离",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 6,
+    "transition": "集合只看有没有；编辑距离看把一个写法改成另一个要几步。",
+    "question": "人名异写、简繁差异与识别错字，怎样用同一个数衡量？",
+    "steps": [
+      "两个字符串",
+      "填表规则",
+      "最短路径",
+      "距离"
+    ],
+    "student_operation": "输入两种写法，逐格查看动态规划表与最短路径。",
+    "observable_output": "森鴎外→森鷗外为 1；Acton→Lord Acton 为 5。",
+    "lesson_evidence": "讲义 @fig-edit 与递推式。",
+    "mode": "浏览器实时",
+    "notes": {
+      "purpose": "理解编辑距离的递推与用途。",
+      "guide": "先看对角线，再请学生改一个字，预测右下角的数。",
+      "mechanism": "起点 d(i,0)=i，d(0,j)=j；改写相同字符不计。"
+    },
+    "footer": "D12 · 浏览器实时计算。",
+    "concepts": [
+      "编辑距离"
+    ],
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D13",
+    "section": "2.3",
+    "anchor": "fig-hyde",
+    "title": "查询重写与 HyDE",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 5,
+    "transition": "检索之前，先处理问法与材料写法对不上的问题。",
+    "question": "假想答案可能有错，为什么还能帮助检索？",
+    "steps": [
+      "原查询",
+      "假想答案",
+      "用它检索",
+      "取回真实片段"
+    ],
+    "student_operation": "比较原查询与假想答案各自取回的片段。",
+    "observable_output": "假想文本只作线索；引用位置始终是库里的真实片段。",
+    "lesson_evidence": "讲义 @fig-hyde；Gao, Ma, Lin, Callan arXiv:2212.10496。",
+    "mode": "教学构造（假想答案为预写示例）",
+    "notes": {
+      "purpose": "知道查询重写在检索之前，并守住“假想文本不进引文”。",
+      "guide": "问：假想答案里出现了“心术”，它从哪里来？",
+      "mechanism": "保留原查询作对照，每次改写都可能改变问题。"
+    },
+    "footer": "D13 · 假想答案为预写示例，非模型实跑。",
+    "concepts": [
+      "查询重写"
+    ],
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D14",
+    "section": "2.3",
+    "anchor": "fig-rerank; 最小哈希",
+    "title": "重排与去重",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 9,
+    "transition": "检索之后，再用不同成本的方法重新排序、去除重复。",
+    "question": "两段文字近似重复时，可能是冗余，也可能是两个版本？",
+    "steps": [
+      "候选",
+      "字面重排",
+      "最小哈希估计",
+      "版本判断"
+    ],
+    "student_operation": "调整哈希个数，比较估计值与精确杰卡德；打开版本信息再决定是否去重。",
+    "observable_output": "Pr[min h(A)=min h(B)] = J(A,B)；版本差异由条目信息判断。",
+    "lesson_evidence": "讲义 2.3；Manning 等《信息检索导论》§19.6；Sun 等 EMNLP 2023。",
+    "mode": "浏览器实时（最小哈希）＋静态内容",
+    "notes": {
+      "purpose": "理解去重的计算与史学上的风险。",
+      "guide": "把哈希个数从 20 拉到 200，看估计值怎样收敛；然后问：初刊与修订本该去掉一个吗？",
+      "mechanism": "简单度量、交叉编码器与大模型重排是成本与精度不同的几层工具。"
+    },
+    "footer": "D14 · 最小哈希浏览器实时；文本为页内示例。",
+    "concepts": [
+      "近似重复",
+      "最小哈希"
+    ],
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D15",
+    "section": "3.1",
+    "anchor": "fig-funnel",
+    "title": "取回、进入、使用",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 7,
+    "transition": "取回之后，还要看它是否进入了模型这一次的输入。",
+    "question": "漏检出在哪一步？",
+    "steps": [
+      "库中全部片段",
+      "取回",
+      "进入",
+      "使用"
+    ],
+    "student_operation": "改变取回数、保留数与上下文预算，看一段关键文字停在哪一层。",
+    "observable_output": "三种状态分别计数；检索、上下文与引用单位可以不同。",
+    "lesson_evidence": "讲义 @fig-funnel（数字沿用第三周设置）。",
+    "mode": "教学构造",
+    "notes": {
+      "purpose": "把“没找到”拆成三种不同的失败。",
+      "guide": "让“盡其天而不益以人”一句先被取回、再被挤出上下文，问补救办法有何不同。",
+      "mechanism": "top-k 在每一步可以不同。"
+    },
+    "footer": "D15 · 数字为第三周示例设置。",
+    "concepts": [],
+    "through": "context",
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D16",
+    "section": "3.2",
+    "anchor": "fig-support",
+    "title": "每一句回到哪里：三级支持判定",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 15,
+    "transition": "出现引用标记，只说明它指向了某处；那一处是否支持这句话，要回去读。",
+    "question": "标了引用的句子平均得到多少支持？全部句子呢？",
+    "steps": [
+      "拆成句子",
+      "对照所引片段",
+      "三级判定",
+      "两个比例"
+    ],
+    "student_operation": "为每句选择完全／部分／不支持，删去或补上引文，观察 P_w 与 R_w。",
+    "observable_output": "默认示例 P_w=0.75、R_w=0.50；无引文的句子拉低 R_w。",
+    "lesson_evidence": "讲义 @fig-support；Upadhyay 等 TREC 2025 RAG Track 总结。",
+    "mode": "浏览器实时（句子与判断为教学构造）",
+    "notes": {
+      "purpose": "会定级、会算两个比例，评判最终靠人对照原文。",
+      "guide": "先按讲义的判断算一遍，再请学生把第二句改成完全支持需要怎样改写。",
+      "mechanism": "P_w = Σw/N_引，R_w = Σw/N_句；模型评委存在位置偏差。"
+    },
+    "footer": "D16 · 浏览器实时计算；示例句与判断为教学构造，计算方法据 TREC 2025 总结。",
+    "concepts": [
+      "出处追溯"
+    ],
+    "through": "support",
+    "options": {
+      "A": "四栏流程＋逐句定级",
+      "B": "两人互评对照表",
+      "recommend": "A"
+    },
+    "status": "implemented",
+    "component": "support-lab"
+  },
+  {
+    "id": "D17",
+    "section": "3.2",
+    "anchor": "导入错例核对",
+    "title": "回到错例：流畅而无据的概括",
+    "layout": "diagram",
+    "theme": "light",
+    "minutes": 3,
+    "transition": "现在可以集体核对导入那句话。",
+    "question": "“都认为”“完全服从”，各需要什么支持？",
+    "student_operation": "三段材料各自说了什么，逐一放到“都认为”之下核对。",
+    "observable_output": "每处引文至多部分支持；“完全服从”无据。",
+    "lesson_evidence": "讲义 3.2 末段。",
+    "mode": "静态内容",
+    "notes": {
+      "purpose": "把一句有引用的概括还原成三段各有限定的原话。",
+      "guide": "请三组各认领一位作者，只说原文支持到哪里。",
+      "mechanism": "三段材料谈的不是同一件事。"
+    },
+    "footer": "D17 · 据讲义 3.2；逐项记录见 D24。",
+    "concepts": [],
+    "through": "support",
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D18",
+    "section": "4.1",
+    "anchor": "fig-graphrag",
+    "title": "GraphRAG：从块到社区摘要",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 8,
+    "transition": "有些问题的答案不在任何一个片段里。",
+    "question": "面向整批材料的问题，图结构补上了什么、代价在哪里？",
+    "steps": [
+      "抽取实体关系",
+      "知识图谱",
+      "社区发现",
+      "社区摘要与查询"
+    ],
+    "student_operation": "逐步展开建索引五步，再比较全局、局部、基本三种查询。",
+    "observable_output": "反复调用大模型的步骤以米色标出；281 分钟建图为论文报告。",
+    "lesson_evidence": "讲义 @fig-graphrag；Edge 等 arXiv:2404.16130；GraphRAG Query Overview。",
+    "mode": "静态内容＋分步展开",
+    "notes": {
+      "purpose": "知道 GraphRAG 的流程与代价。",
+      "guide": "问：哪几步需要调用大模型？",
+      "mechanism": "论文“更好”为大模型成对评判。"
+    },
+    "footer": "D18 · 据论文与官方文档；未运行 GraphRAG。",
+    "concepts": [
+      "知识图谱",
+      "社区摘要"
+    ],
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D19",
+    "section": "4.2",
+    "anchor": "fig-entity",
+    "title": "实体消解：精确匹配与异称归并",
+    "layout": "flow4",
+    "theme": "light",
+    "minutes": 7,
+    "transition": "图上每个节点从名字合并而来；合并规则决定了节点是谁。",
+    "question": "写法不同的名字，什么时候算同一个人？",
+    "steps": [
+      "抽出的称呼",
+      "精确匹配",
+      "异称表归并",
+      "人工判断"
+    ],
+    "student_operation": "切换匹配方式，增删异称，观察节点与边的变化；对“劉氏”单独决定是否归并。",
+    "observable_output": "精确匹配得到互不相干的节点；归并后首选名保留异称，边汇集到一处。",
+    "lesson_evidence": "讲义 @fig-entity 与 4.2 正文。",
+    "mode": "浏览器实时（称呼与关系为讲义示例）",
+    "notes": {
+      "purpose": "看清 GraphRAG 把辨认称呼变成了一个自动步骤。",
+      "guide": "先用精确匹配，问“三长”这条边落在谁身上；再归并，问“劉氏”单独出现时是否一定指刘知幾。",
+      "mechanism": "首选名与异称归并而不替换，承接第四周受控词汇。"
+    },
+    "footer": "D19 · 浏览器实时；称呼与关系据讲义 4.2 示例。",
+    "concepts": [
+      "实体消解"
+    ],
+    "options": {
+      "A": "四栏流程＋节点实时合并",
+      "B": "前后两张图并排",
+      "recommend": "A"
+    },
+    "status": "implemented",
+    "component": "entity-lab"
+  },
+  {
+    "id": "D20",
+    "section": "4.3",
+    "anchor": "何时值得用",
+    "title": "何时值得用图",
+    "layout": "diagram",
+    "theme": "light",
+    "minutes": 5,
+    "transition": "图结构并不在所有问题上都更好。",
+    "question": "答案在一处原文，还是要串联整批材料？",
+    "student_operation": "把几个研究问题拖到“向量检索”或“图结构”一侧。",
+    "observable_output": "单跳细节问题用向量检索；串联人物事件再考虑图。",
+    "lesson_evidence": "讲义 4.3；Han 等 arXiv:2502.11371。",
+    "mode": "静态内容",
+    "notes": {
+      "purpose": "带走一条选择规则。",
+      "guide": "每个问题先问：答案在几处原文里？",
+      "mechanism": "变体（LightRAG、HippoRAG 2）的评测条件由开发者选定。"
+    },
+    "footer": "D20 · 据 Han 等论文结论。",
+    "concepts": [],
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D21",
+    "section": "5.1",
+    "anchor": "fig-blackboard",
+    "title": "智能体检索：新进展与三类问题",
+    "layout": "diagram",
+    "theme": "light",
+    "minutes": 10,
+    "transition": "把检索当作工具交给智能体，能补检，也会带进模型自己的框架。",
+    "question": "每一句都有出处，整体框架是否来自材料？",
+    "student_operation": "对照黑板架构与蚁群算法的协作方式；读三类问题的定义。",
+    "observable_output": "共享明确结论与共享数量化痕迹的区别；三类问题名称与含义。",
+    "lesson_evidence": "讲义 5.1 的公开概念；Singh 等 arXiv:2501.09136；黑板架构公开论文 arXiv:2510.01285。",
+    "mode": "静态内容",
+    "notes": {
+      "purpose": "知道发展方向，也知道检索与引用标记查不出的错误。",
+      "guide": "请学生为三类问题各举一个自己领域的例子。",
+      "mechanism": "共享可阅读的中间结论，与共享数量化痕迹分开；页面只是教学图示，不声称实际多智能体或蚁群算法运行。"
+    },
+    "footer": "D21 / 讲义5.1公开概念；黑板与数量化痕迹的教学图示。",
+    "concepts": [
+      "黑板架构",
+      "蚁群算法"
+    ],
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D22",
+    "section": "5.2",
+    "anchor": "对照实践",
+    "title": "对照实践：固定检索与智能体检索",
+    "layout": "workbench",
+    "theme": "light",
+    "minutes": 20,
+    "transition": "把前四节放回一次完整问答：同一个库、同一个模型、同一份预算。",
+    "question": "两条路径在哪一步产生了差别？",
+    "steps": [
+      "设置",
+      "运行记录",
+      "判读表",
+      "小组报告"
+    ],
+    "student_operation": "读两份运行记录，填写漏检、误检、回答依据、框架、成本五项。",
+    "observable_output": "每一项差别归到切分、检索、上下文或生成。",
+    "lesson_evidence": "讲义 5.2 判读表。",
+    "mode": "浏览器实时（检索）＋教学构造（回答示例）；模型接入后实际运行",
+    "notes": {
+      "purpose": "看清差别发生在哪一步，而不是评出哪条路径更好。",
+      "guide": "先找智能体改写查询的那一步，再看取回而未使用的片段。",
+      "mechanism": "运行记录需冻结模型、预算与库版本；未运行时页面显示“待课前运行”。"
+    },
+    "footer": "D22 / 讲义 5.2；冻结同库、同模型、同预算；构造示例与现场模型运行分别标识。",
+    "concepts": [],
+    "through": "compare",
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D23",
+    "section": "结语",
+    "anchor": "结语：论从史出",
+    "title": "论从史出",
+    "layout": "hero",
+    "theme": "dark",
+    "minutes": 5,
+    "transition": "“有引用”与“论从史出”之间，隔着今天讨论的每一步。",
+    "question": "一句回答的问题，出在哪几个环节的叠加？",
+    "student_operation": "回看贯穿页的记录，写出自己的一句有限论断。",
+    "observable_output": "切分、相似度、上下文与生成四处选择叠加。",
+    "lesson_evidence": "讲义结语。",
+    "mode": "静态内容",
+    "notes": {
+      "purpose": "收束全讲，并预告下一讲的识读与版面问题。",
+      "guide": "请一位同学读出贯穿页最后一栏写下的论断。",
+      "mechanism": "本讲从现成电子文本开始；下一讲追到原页识读。"
+    },
+    "footer": "D23 · 结语。",
+    "concepts": [],
+    "through": "conclude",
+    "status": "implemented",
+    "component": "week05-lab"
+  },
+  {
+    "id": "D24",
+    "section": "贯穿",
+    "anchor": "导入错例→3.2 核对→5.2 对照",
+    "title": "贯穿：一句回答的四道检查",
+    "layout": "through",
+    "theme": "light",
+    "minutes": 0,
+    "transition": "同一句回答、同一组材料，沿四道检查逐项记录；各讲解页可随时进出。",
+    "question": "这句回答，最后能说到哪里？",
+    "steps": [
+      "材料身份",
+      "切分与证据",
+      "取回与相似度",
+      "进入上下文",
+      "逐句判定",
+      "有限论断"
+    ],
+    "student_operation": "沿左侧六步填写同一份记录，每步可跳到对应讲解页再返回。",
+    "observable_output": "一份可导出的检查记录：版本、片段、系数、上下文、定级与改写后的论断。",
+    "lesson_evidence": "讲义导入、1.1、1.3、2.2、3.1、3.2、5.2。",
+    "mode": "浏览器实时（记录存当前浏览器，可导出 Markdown）",
+    "notes": {
+      "purpose": "让一条材料链承接整讲，每节回答它的一道检查。",
+      "guide": "每讲完一节，回到这里填一格；最后一格请学生写出自己的有限论断。",
+      "mechanism": "三份材料已接入原文；字面检索没有跨语言语义能力，支持判定由学生核读完成。"
+    },
+    "footer": "D24 / 三份已核公开电子文本；切分、字面检索、上下文选择及人工支持判定；记录可导出。",
+    "concepts": [],
+    "through": "all",
+    "status": "implemented",
+    "component": "through-workbench"
+  },
+  {
+    "id": "D25",
+    "section": "附录",
+    "anchor": "概念讲解表",
+    "title": "概念讲解表",
+    "layout": "concepts",
+    "theme": "light",
+    "minutes": 0,
+    "transition": "遇到不熟悉的概念，从这里查用法、易混处与对历史研究的意义，再回到原页。",
+    "question": "这个概念解决什么问题，容易和什么混淆？",
+    "student_operation": "搜索或按组浏览；点击页面回链进入首次出现页；右上角返回原页。",
+    "observable_output": "每条显示原文与别称、出现位置、解决的问题、讲解、课堂所见、易混处与史学意义。",
+    "lesson_evidence": "概念讲解表.typ（2026-10-11 修订版）。",
+    "mode": "静态内容＋客户端搜索",
+    "notes": {
+      "purpose": "给学生一个随时可回的概念入口。",
+      "guide": "示范查一次“语义切分”，再点回 D06。",
+      "mechanism": "原稿可改后导入；公式为纯文本近似，带 ⚠ 的条目对照原表。"
+    },
+    "footer": "D25 · 概念讲解表转换；以讲义用法为准。",
+    "concepts": [],
+    "status": "implemented",
+    "component": "concept-table"
+  }
+]

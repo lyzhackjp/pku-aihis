@@ -1,0 +1,24 @@
+{
+  "name": "pku-aihis-week05",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/assemble.mjs && stencil build",
+    "check": "tsc --noEmit && node scripts/check-delivery.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check:browser": "node scripts/check-browser.mjs",
+    "preview": "python3 -m http.server 8775 --bind 127.0.0.1 --directory www"
+  },
+  "devDependencies": {
+    "@stencil/core": "4.45.0",
+    "typescript": "5.9.3",
+    "playwright": "1.63.0"
+  },
+  "dependencies": {
+    "opencc-js": "1.0.5"
+  },
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,305 @@
+{
+  "date": "2026-10-11",
+  "browser": "154.0.8037.98",
+  "base": "http://127.0.0.1:8775/pku-aihis/week05/",
+  "checks": [
+    {
+      "name": "26 implemented pages without placeholders",
+      "passed": true
+    },
+    {
+      "name": "D00 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D01 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D02 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D03 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D04 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D05 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D06 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D07 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D08 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D09 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D10 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D11 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D12 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D13 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D14 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D15 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D16 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D17 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D18 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D19 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D20 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D21 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D22 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D23 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D24 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D25 at 1440px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D00 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D01 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D02 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D03 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D04 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D05 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D06 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D07 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D08 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D09 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D10 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D11 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D12 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D13 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D14 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D15 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D16 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D17 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D18 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D19 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D20 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D21 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D22 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D23 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D24 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D25 at 390px fits horizontally",
+      "passed": true
+    },
+    {
+      "name": "D03 source identity and exact local Acton original",
+      "passed": true
+    },
+    {
+      "name": "D05 Japanese recursive boundaries and source offsets",
+      "passed": true
+    },
+    {
+      "name": "D06 threshold is strictly greater",
+      "passed": true
+    },
+    {
+      "name": "D11 exact Jaccard and real OpenCC values",
+      "passed": true
+    },
+    {
+      "name": "D12 dynamic edit table",
+      "passed": true
+    },
+    {
+      "name": "D14 real MinHash recomputes with editable input",
+      "passed": true
+    },
+    {
+      "name": "D15 no-match and separated state counts",
+      "passed": true
+    },
+    {
+      "name": "D16 default classroom support numbers",
+      "passed": true
+    },
+    {
+      "name": "D22 actual local retrieval with explicitly constructed answers",
+      "passed": true
+    },
+    {
+      "name": "D22 compatible API and search loop using test substitute",
+      "passed": true
+    },
+    {
+      "name": "keyboard and IME keep input navigation local",
+      "passed": true
+    },
+    {
+      "name": "through entry and return",
+      "passed": true
+    },
+    {
+      "name": "D24 backup, reset, restore and reject malformed input",
+      "passed": true
+    },
+    {
+      "name": "D25 concept search and source page back-links",
+      "passed": true
+    },
+    {
+      "name": "presenter initially syncs and changes audience page",
+      "passed": true
+    },
+    {
+      "name": "D25 malformed glossary does not replace the current table",
+      "passed": true
+    },
+    {
+      "name": "D24 mobile content uses page scrolling",
+      "passed": true
+    },
+    {
+      "name": "no runtime errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "passed": 71,
+    "failed": 0
+  },
+  "scope": {
+    "model_generation": "测试替身验收接口和工具循环；真实模型生成未运行",
+    "screenshots": "全部26页×2宽度仅保存在本机apps/week05/artifacts/",
+    "unit_tests": 7,
+    "stencil": "4.45.0",
+    "node": "24.19.0",
+    "pnpm_actual": "11.25.0（仓库声明11.19.0）",
+    "independent_review": "本轮AI自检，未经教师确认"
+  }
+}
