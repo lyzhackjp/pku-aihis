@@ -18,7 +18,7 @@
       "guide": "请大家先读这句回答，想想它要成立需要满足哪些条件；我们会带着它走完全讲。",
       "mechanism": "封面只立问题；四个检查点在 D02 展开，在 D24 贯穿页逐项完成。"
     },
-    "footer": "D00 · 封面；错例回答为教学构造，材料版本见 D03。",
+    "footer": "D00 / 讲义 导入；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "through": "intro",
     "status": "implemented",
@@ -49,7 +49,7 @@
       "guide": "沿四格从左到右，每格问一句：比前一格多了什么工序？",
       "mechanism": "前三阶段名称据 Gao 等综述；第四阶段为助教概括，页面如实标注。"
     },
-    "footer": "D01 · 阶段名据 Gao et al. arXiv:2312.10997；第四阶段据助教批注。",
+    "footer": "D01 / 讲义 导入；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "options": {
       "A": "四格横向阶段图，点击展开",
@@ -57,7 +57,7 @@
       "recommend": "A"
     },
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D02",
@@ -84,11 +84,11 @@
       "guide": "每一格先请学生说：如果这里出错，回答会变成什么样？",
       "mechanism": "四格分别对应第一节切分、第二节相似度、第三节出处追溯、第四节图结构之前的概括问题；第五节把它们放回一次完整问答。"
     },
-    "footer": "D02 · 四道检查据讲义导入；逐项操作见 D24 贯穿页。",
+    "footer": "D02 / 讲义 导入；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "through": "intro",
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D03",
@@ -115,22 +115,22 @@
       "guide": "请对照三张卡：初刊年代、所据底本、电子文本平台分别写在哪一栏？",
       "mechanism": "本库未收只能推出“查不到”；集合说明写明收录范围，后面判断漏检才有依据。"
     },
-    "footer": "D03 · 版本信息据讲义 1.1；表单只存当前浏览器。",
+    "footer": "D03 / 讲义 1.1；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [
       "知识库"
     ],
     "through": "identity",
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D04",
     "section": "1.2",
-    "anchor": "从按长度切到按意义切",
-    "title": "为什么要切：定位与上下文的取舍",
+    "anchor": "fig-recursive fig-breakpoint",
+    "title": "切分实验：长度、句段与递归",
     "layout": "diagram",
     "theme": "light",
-    "minutes": 2,
+    "minutes": 8,
     "transition": "材料入库以后，系统检索的单位是事先切好的片段。",
     "question": "片段越小定位越准，为什么还要保留上下文？",
     "student_operation": "拖动片段大小，观察同一判断被分到几块。",
@@ -142,49 +142,23 @@
       "guide": "先拉到最小，再拉到最大，问学生两端各丢了什么。",
       "mechanism": "固定长度切块配重叠是许多系统的默认；切点与文意无关。"
     },
-    "footer": "D04 · 示例文本见页内来源说明。",
-    "concepts": [],
-    "status": "implemented",
-    "component": "week05-lab"
-  },
-  {
-    "id": "D05",
-    "section": "1.2",
-    "anchor": "fig-recursive",
-    "title": "四种切法与递归切分的退让",
-    "layout": "flow4",
-    "theme": "light",
-    "minutes": 6,
-    "transition": "让切点落在意义边界上，形成了几种具体做法。",
-    "question": "同一工具处理英文与中日文时，切点为什么落在不同地方？",
-    "steps": [
-      "按句",
-      "按段",
-      "递归退让",
-      "切点落点"
-    ],
-    "student_operation": "切换中文与英文样例，调整块大小，观察递归切分在哪一级停下。",
-    "observable_output": "英文多停在空格级；中日文越过空格级落到逐字级。",
-    "lesson_evidence": "讲义 @fig-recursive；AnythingLLM TextSplitter 源码与 LangChain 默认分隔符（2026-10-09 读，未运行）。",
-    "mode": "浏览器实时（按 LangChain 默认分隔符的教学实现）",
-    "notes": {
-      "purpose": "看清“同一个工具、不同语言、不同结果”。",
-      "guide": "先跑英文段，再跑中文段，请学生指出切点停在哪一级分隔符。",
-      "mechanism": "分隔符顺序为空行、换行、空格、逐字；页面实现按此规则重算，标为教学实现。"
-    },
-    "footer": "D05 · 规则据 AnythingLLM 与 LangChain 源码阅读；页面为教学实现，非运行 AnythingLLM。",
+    "footer": "D04 / 讲义 1.2；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [
       "按语义单元切分",
       "断句",
       "递归切分"
     ],
-    "options": {
-      "A": "参数滑块＋切点实时重算",
-      "B": "四级分隔符逐步点亮",
-      "recommend": "A"
-    },
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab",
+    "steps": [
+      "选择材料",
+      "选择切法",
+      "查看片段表",
+      "核对原页"
+    ],
+    "aliases": [
+      "D05"
+    ]
   },
   {
     "id": "D06",
@@ -205,18 +179,18 @@
     "student_operation": "拖动阈值 θ，看切点数量与块的变化。",
     "observable_output": "d_i > θ 处切开；距离为教学示意。",
     "lesson_evidence": "讲义 @fig-breakpoint 与公式 d_i = 1 − cos(e_i, e_{i+1})。",
-    "mode": "教学构造（距离为示意数值）",
+    "mode": "本机实际预计算／浏览器实时；生成环节按共用API配置实际调用",
     "notes": {
       "purpose": "理解断点法的机制与阈值的作用。",
       "guide": "把 θ 从 0.2 拉到 0.6，问：切点减少时，哪两句被放在了一起？",
       "mechanism": "阈值可以是固定值或全部距离的百分位；页面数值沿用讲义示意。"
     },
-    "footer": "D06 · 距离为讲义教学示意，非对任何材料的实际计算。",
+    "footer": "D06 / 讲义 1.2；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [
       "语义切分"
     ],
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D07",
@@ -231,16 +205,16 @@
     "student_operation": "对照拼接数据与原始长文档两组结果。",
     "observable_output": "Miracl 69.45→81.89；HotpotQA 90.59 对 87.37；英文数据、英文模型。",
     "lesson_evidence": "Qu, Tu, Bao arXiv:2410.13070 实验部分；Kreileder 等 arXiv:2607.01852 结论。",
-    "mode": "静态内容（论文报告数值）",
+    "mode": "本机实际预计算／浏览器实时；生成环节按共用API配置实际调用",
     "notes": {
       "purpose": "把“依赖情境”说具体。",
       "guide": "请学生先猜哪组占优，再看两组数字。",
       "mechanism": "拼接处话题突变，正是断点法最容易捕捉的地方；后一项研究规模小，只作旁证。"
     },
-    "footer": "D07 · 数值照论文报告；未复现。",
+    "footer": "D07 / 讲义 1.2；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D08",
@@ -261,19 +235,19 @@
     "student_operation": "对同一片段切换三种处理，比较进入索引的内容。",
     "observable_output": "补写说明是模型文字；后期切分改变的是向量，片段文字不变。",
     "lesson_evidence": "讲义 @fig-context；Anthropic 2024-09-19；Günther 等 arXiv:2409.04701。",
-    "mode": "教学构造",
+    "mode": "本机实际预计算／浏览器实时；生成环节按共用API配置实际调用",
     "notes": {
       "purpose": "分清两种补上下文的位置。",
       "guide": "指着“德者何？”一句问：没有前文，模型知道“德”指什么吗？",
       "mechanism": "49%、67% 为厂商在其选定条件下的自报数字。"
     },
-    "footer": "D08 · 补写说明为教学示例；引用回到原文。",
+    "footer": "D08 / 讲义 1.2；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [
       "上下文化检索",
       "后期切分"
     ],
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D09",
@@ -300,11 +274,11 @@
       "guide": "请学生先只看②，说出能下的判断；再加入①③，看判断怎样变化。",
       "mechanism": "证据稀疏时各种切法拉不开差距；本讲推论与论文结论分开表述。"
     },
-    "footer": "D09 · 片段据讲义所引维基文库本《史德》第一段。",
+    "footer": "D09 / 讲义 1.3；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "through": "chunk",
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D10",
@@ -319,16 +293,16 @@
     "student_operation": "把第三周的表示放回谱系，再标出本讲新增的 BGE-M3。",
     "observable_output": "稀疏认字面、稠密认意思；多语模型决定跨语言能否检索。",
     "lesson_evidence": "讲义 @fig-lineage；Chen 等 arXiv:2402.03216。",
-    "mode": "静态内容",
+    "mode": "本机实际预计算／浏览器实时；生成环节按共用API配置实际调用",
     "notes": {
       "purpose": "分清表示与度量两件事。",
       "guide": "问：余弦能用在词频向量上吗？BM25 是表示还是打分函数？",
       "mechanism": "本讲库含中日英三语；嵌入模型是否多语，与切分和排序无关地决定漏检。"
     },
-    "footer": "D10 · 第三周回顾；BGE-M3 据论文摘要。",
+    "footer": "D10 / 讲义 2.1；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D11",
@@ -355,7 +329,7 @@
       "guide": "先用简体查询算一次，再勾选“统一字形”；然后换成字二元组，请学生解释数字为何变小。",
       "mechanism": "D = 2J/(1+J)，排序与 J 一致；重叠系数不受长文本撑大并集的影响。统一字形只改规范值，原值保留。"
     },
-    "footer": "D11 / 讲义 fig-jaccard、fig-bigram；真实集合计算与 OpenCC-js 1.0.5。",
+    "footer": "D11 / 讲义 2.2；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [
       "杰卡德系数",
       "Dice系数",
@@ -368,7 +342,7 @@
       "recommend": "A"
     },
     "status": "implemented",
-    "component": "set-measure-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D12",
@@ -386,7 +360,7 @@
       "最短路径",
       "距离"
     ],
-    "student_operation": "输入两种写法，逐格查看动态规划表与最短路径。",
+    "student_operation": "逐格计算动态规划，切换最短编辑路径，观察实际字符串改变和公式代入。",
     "observable_output": "森鴎外→森鷗外为 1；Acton→Lord Acton 为 5。",
     "lesson_evidence": "讲义 @fig-edit 与递推式。",
     "mode": "浏览器实时",
@@ -395,12 +369,12 @@
       "guide": "先看对角线，再请学生改一个字，预测右下角的数。",
       "mechanism": "起点 d(i,0)=i，d(0,j)=j；改写相同字符不计。"
     },
-    "footer": "D12 · 浏览器实时计算。",
+    "footer": "D12 / 讲义 2.2；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [
       "编辑距离"
     ],
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D13",
@@ -421,18 +395,18 @@
     "student_operation": "比较原查询与假想答案各自取回的片段。",
     "observable_output": "假想文本只作线索；引用位置始终是库里的真实片段。",
     "lesson_evidence": "讲义 @fig-hyde；Gao, Ma, Lin, Callan arXiv:2212.10496。",
-    "mode": "教学构造（假想答案为预写示例）",
+    "mode": "本机实际预计算／浏览器实时；生成环节按共用API配置实际调用",
     "notes": {
       "purpose": "知道查询重写在检索之前，并守住“假想文本不进引文”。",
       "guide": "问：假想答案里出现了“心术”，它从哪里来？",
       "mechanism": "保留原查询作对照，每次改写都可能改变问题。"
     },
-    "footer": "D13 · 假想答案为预写示例，非模型实跑。",
+    "footer": "D13 / 讲义 2.3；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [
       "查询重写"
     ],
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D14",
@@ -459,13 +433,13 @@
       "guide": "把哈希个数从 20 拉到 200，看估计值怎样收敛；然后问：初刊与修订本该去掉一个吗？",
       "mechanism": "简单度量、交叉编码器与大模型重排是成本与精度不同的几层工具。"
     },
-    "footer": "D14 · 最小哈希浏览器实时；文本为页内示例。",
+    "footer": "D14 / 讲义 2.3；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [
       "近似重复",
       "最小哈希"
     ],
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D15",
@@ -492,11 +466,11 @@
       "guide": "让“盡其天而不益以人”一句先被取回、再被挤出上下文，问补救办法有何不同。",
       "mechanism": "top-k 在每一步可以不同。"
     },
-    "footer": "D15 · 数字为第三周示例设置。",
+    "footer": "D15 / 讲义 3.1；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "through": "context",
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D16",
@@ -515,7 +489,7 @@
       "两个比例"
     ],
     "student_operation": "为每句选择完全／部分／不支持，删去或补上引文，观察 P_w 与 R_w。",
-    "observable_output": "默认示例 P_w=0.75、R_w=0.50；无引文的句子拉低 R_w。",
+    "observable_output": "人工为实际史料回答逐句定级，分别计算P_w与R_w；数值随引文和支持等级变化。",
     "lesson_evidence": "讲义 @fig-support；Upadhyay 等 TREC 2025 RAG Track 总结。",
     "mode": "浏览器实时（句子与判断为教学构造）",
     "notes": {
@@ -523,7 +497,7 @@
       "guide": "先按讲义的判断算一遍，再请学生把第二句改成完全支持需要怎样改写。",
       "mechanism": "P_w = Σw/N_引，R_w = Σw/N_句；模型评委存在位置偏差。"
     },
-    "footer": "D16 · 浏览器实时计算；示例句与判断为教学构造，计算方法据 TREC 2025 总结。",
+    "footer": "D16 / 讲义 3.2；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [
       "出处追溯"
     ],
@@ -534,7 +508,7 @@
       "recommend": "A"
     },
     "status": "implemented",
-    "component": "support-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D17",
@@ -555,11 +529,11 @@
       "guide": "请三组各认领一位作者，只说原文支持到哪里。",
       "mechanism": "三段材料谈的不是同一件事。"
     },
-    "footer": "D17 · 据讲义 3.2；逐项记录见 D24。",
+    "footer": "D17 / 讲义 3.2；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "through": "support",
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D18",
@@ -580,19 +554,19 @@
     "student_operation": "逐步展开建索引五步，再比较全局、局部、基本三种查询。",
     "observable_output": "反复调用大模型的步骤以米色标出；281 分钟建图为论文报告。",
     "lesson_evidence": "讲义 @fig-graphrag；Edge 等 arXiv:2404.16130；GraphRAG Query Overview。",
-    "mode": "静态内容＋分步展开",
+    "mode": "本机实际预计算／浏览器实时；生成环节按共用API配置实际调用",
     "notes": {
       "purpose": "知道 GraphRAG 的流程与代价。",
       "guide": "问：哪几步需要调用大模型？",
       "mechanism": "论文“更好”为大模型成对评判。"
     },
-    "footer": "D18 · 据论文与官方文档；未运行 GraphRAG。",
+    "footer": "D18 / 讲义 4.1；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [
       "知识图谱",
       "社区摘要"
     ],
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D19",
@@ -619,7 +593,7 @@
       "guide": "先用精确匹配，问“三长”这条边落在谁身上；再归并，问“劉氏”单独出现时是否一定指刘知幾。",
       "mechanism": "首选名与异称归并而不替换，承接第四周受控词汇。"
     },
-    "footer": "D19 · 浏览器实时；称呼与关系据讲义 4.2 示例。",
+    "footer": "D19 / 讲义 4.2；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [
       "实体消解"
     ],
@@ -629,7 +603,7 @@
       "recommend": "A"
     },
     "status": "implemented",
-    "component": "entity-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D20",
@@ -644,16 +618,16 @@
     "student_operation": "把几个研究问题拖到“向量检索”或“图结构”一侧。",
     "observable_output": "单跳细节问题用向量检索；串联人物事件再考虑图。",
     "lesson_evidence": "讲义 4.3；Han 等 arXiv:2502.11371。",
-    "mode": "静态内容",
+    "mode": "本机实际预计算／浏览器实时；生成环节按共用API配置实际调用",
     "notes": {
       "purpose": "带走一条选择规则。",
       "guide": "每个问题先问：答案在几处原文里？",
       "mechanism": "变体（LightRAG、HippoRAG 2）的评测条件由开发者选定。"
     },
-    "footer": "D20 · 据 Han 等论文结论。",
+    "footer": "D20 / 讲义 4.3；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D21",
@@ -668,19 +642,19 @@
     "student_operation": "对照黑板架构与蚁群算法的协作方式；读三类问题的定义。",
     "observable_output": "共享明确结论与共享数量化痕迹的区别；三类问题名称与含义。",
     "lesson_evidence": "讲义 5.1 的公开概念；Singh 等 arXiv:2501.09136；黑板架构公开论文 arXiv:2510.01285。",
-    "mode": "静态内容",
+    "mode": "本机实际预计算／浏览器实时；生成环节按共用API配置实际调用",
     "notes": {
       "purpose": "知道发展方向，也知道检索与引用标记查不出的错误。",
       "guide": "请学生为三类问题各举一个自己领域的例子。",
       "mechanism": "共享可阅读的中间结论，与共享数量化痕迹分开；页面只是教学图示，不声称实际多智能体或蚁群算法运行。"
     },
-    "footer": "D21 / 讲义5.1公开概念；黑板与数量化痕迹的教学图示。",
+    "footer": "D21 / 讲义 5.1；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [
       "黑板架构",
       "蚁群算法"
     ],
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D22",
@@ -701,29 +675,29 @@
     "student_operation": "读两份运行记录，填写漏检、误检、回答依据、框架、成本五项。",
     "observable_output": "每一项差别归到切分、检索、上下文或生成。",
     "lesson_evidence": "讲义 5.2 判读表。",
-    "mode": "浏览器实时（检索）＋教学构造（回答示例）；模型接入后实际运行",
+    "mode": "本机实际预计算／浏览器实时；生成环节按共用API配置实际调用",
     "notes": {
       "purpose": "看清差别发生在哪一步，而不是评出哪条路径更好。",
-      "guide": "先找智能体改写查询的那一步，再看取回而未使用的片段。",
+      "guide": "先独立阅读，再运行所选六类任务，记录采用、收窄或纠错；配置在共用模型接入页。",
       "mechanism": "运行记录需冻结模型、预算与库版本；未运行时页面显示“待课前运行”。"
     },
-    "footer": "D22 / 讲义 5.2；冻结同库、同模型、同预算；构造示例与现场模型运行分别标识。",
+    "footer": "D22 / 讲义 5.2；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "through": "compare",
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D23",
     "section": "结语",
     "anchor": "结语：论从史出",
-    "title": "论从史出",
+    "title": "结语：论从史出",
     "layout": "hero",
     "theme": "dark",
     "minutes": 5,
     "transition": "“有引用”与“论从史出”之间，隔着今天讨论的每一步。",
     "question": "一句回答的问题，出在哪几个环节的叠加？",
-    "student_operation": "回看贯穿页的记录，写出自己的一句有限论断。",
+    "student_operation": "回顾本讲方法链条，后续问题指向史料识读",
     "observable_output": "切分、相似度、上下文与生成四处选择叠加。",
     "lesson_evidence": "讲义结语。",
     "mode": "静态内容",
@@ -732,11 +706,11 @@
       "guide": "请一位同学读出贯穿页最后一栏写下的论断。",
       "mechanism": "本讲从现成电子文本开始；下一讲追到原页识读。"
     },
-    "footer": "D23 · 结语。",
+    "footer": "D23 / 讲义 结语；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "through": "conclude",
     "status": "implemented",
-    "component": "week05-lab"
+    "component": "revision-lab"
   },
   {
     "id": "D24",
@@ -747,7 +721,7 @@
     "theme": "light",
     "minutes": 0,
     "transition": "同一句回答、同一组材料，沿四道检查逐项记录；各讲解页可随时进出。",
-    "question": "这句回答，最后能说到哪里？",
+    "question": "用自行导入的德教全量，走完材料、切分、检索、图与逐句核对。",
     "steps": [
       "材料身份",
       "切分与证据",
@@ -756,20 +730,20 @@
       "逐句判定",
       "有限论断"
     ],
-    "student_operation": "沿左侧六步填写同一份记录，每步可跳到对应讲解页再返回。",
-    "observable_output": "一份可导出的检查记录：版本、片段、系数、上下文、定级与改写后的论断。",
+    "student_operation": "自行从本机选择上周的通用项目包；按侧栏步骤选择范围并操作",
+    "observable_output": "同一材料库的范围、检索结果、出处、人工判断与备份记录",
     "lesson_evidence": "讲义导入、1.1、1.3、2.2、3.1、3.2、5.2。",
-    "mode": "浏览器实时（记录存当前浏览器，可导出 Markdown）",
+    "mode": "本机导入与浏览器实时；默认不预装德教",
     "notes": {
-      "purpose": "让一条材料链承接整讲，每节回答它的一道检查。",
-      "guide": "每讲完一节，回到这里填一格；最后一格请学生写出自己的有限论断。",
-      "mechanism": "三份材料已接入原文；字面检索没有跨语言语义能力，支持判定由学生核读完成。"
+      "purpose": "使用教师自行导入的德教全量贯穿本周；不预装私有材料。",
+      "guide": "从材料身份进入范围和切分；检索顺序决定随后模型阅读和核读的候选；备份包含原件、正文、运行和页面状态。",
+      "mechanism": "共用pku-history-project/v1、IndexedDB原件库及处理链，模型发送范围须明确选择。"
     },
-    "footer": "D24 / 三份已核公开电子文本；切分、字面检索、上下文选择及人工支持判定；记录可导出。",
+    "footer": "D24 / 讲义 贯穿；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "through": "all",
     "status": "implemented",
-    "component": "through-workbench"
+    "component": "revision-lab"
   },
   {
     "id": "D25",
@@ -790,9 +764,9 @@
       "guide": "示范查一次“语义切分”，再点回 D06。",
       "mechanism": "原稿可改后导入；公式为纯文本近似，带 ⚠ 的条目对照原表。"
     },
-    "footer": "D25 · 概念讲解表转换；以讲义用法为准。",
+    "footer": "D25 / 讲义 附录；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
     "concepts": [],
     "status": "implemented",
-    "component": "concept-table"
+    "component": "revision-lab"
   }
 ]

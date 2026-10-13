@@ -91,7 +91,7 @@
           <span class="deck-name">${esc(DECK.name)}</span>
           <button data-act="map">课程地图</button>
           ${Object.entries(DECK.entries).map(([k, e]) => `<button class="entry" data-act="entry" data-entry="${esc(k)}" title="随时进入；再次点击返回原页">${esc(e.label)}</button>`).join('')}
-          <button data-act="presenter">备注 ↗</button>
+          <button data-act="importer">材料导入</button><button data-act="model">模型接入</button><button data-act="live">课前试跑 ↗</button><button data-act="presenter">备注 ↗</button>
         </div>`;
       shell.append(main);
       const nav = document.createElement('nav'); nav.className = 'deck-nav';
@@ -105,6 +105,9 @@
         if (act === 'next') this.go(this.cur + 1);
         if (act === 'map') this.toggleMap();
         if (act === 'presenter') this.presenter();
+        if(act==='live')window.open(new URL('assets/revision/live-check.html',document.baseURI).href,'week05-live-check');
+        if(act==='importer')window.W5ServicesReady?.then(x=>x.openImporter());
+        if(act==='model')window.dispatchEvent(new CustomEvent('open-model-settings'));
         if (act === 'entry') { const k = e.target.closest('[data-entry]').dataset.entry; this.toggleEntry(k, DECK.entries[k].page); }
         if (act === 'go') { this.go(e.target.closest('[data-id]').getAttribute('data-id')); this.toggleMap(false); }
       });
@@ -120,6 +123,7 @@
       this.returnTo[kind] = here; this.go(target);
     }
     go(id, fromHash) {
+      if (id === "D05") id = "D04";
       let i = typeof id === 'number' ? id : this.ids.indexOf(id);
       if (i < 0) i = 0;
       if (i >= this.slides.length) return;
@@ -142,7 +146,7 @@
       this.append(div);
     }
     key(e) {
-      if (e.isComposing || document.querySelector('dialog[open]')) return;
+      if (e.isComposing || document.querySelector('dialog[open],.model-overlay')) return;
       if (e.composedPath().some((x) => x?.matches?.('input,textarea,select,[contenteditable=true]'))) return;
       const m = { ArrowRight: 1, PageDown: 1, ArrowLeft: -1, PageUp: -1 };
       if (m[e.key]) { e.preventDefault(); this.go(this.cur + m[e.key]); }

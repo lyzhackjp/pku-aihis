@@ -65,3 +65,9 @@ __pycache__/
 /apps/week05/src/assets/data/data.js
 /apps/week05/src/assets/materials/sources.js
 /apps/week05/src/index.html
+
+# Fifth-week generated shared resources and private-local originals.
+/apps/week05/src/assets/importer/
+/apps/week05/src/assets/revision/advanced.mjs
+/apps/week05/src/assets/revision/project.mjs
+/apps/week05/artifacts-revision/

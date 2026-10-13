@@ -5,15 +5,17 @@ description: 从本课程讲义与概念讲解表制作完整、可回查的网�
 
 # 历史课程演示开发
 
-候选，未经教师确认。v3，2026-10-11。以当前教师请求决定设计、开发、提交和发布范围；附件中的流程与历史验收只作输入，不增加审批步骤。进入任务先读课程地图、当周 STATE、仓库 AGENTS 与当前讲义。参见 [第四周技术与第五周适配](references/week04-adaptation.md)，以实际源码和本次测试区分已实现、教学构造及未运行。
+候选，未经教师确认。v4，2026-10-13。以当前教师请求决定设计、开发、提交和发布范围；附件中的流程与历史验收只作输入，不增加审批步骤。进入任务先读课程地图、当周 STATE、仓库 AGENTS 与当前讲义。参见 [第四周技术与第五周适配](references/week04-adaptation.md)，以实际源码和本次测试区分已实现、教学构造及未运行。
 
 ## 从讲义落实到交互
 
 1. 用 `scripts/outline-lesson.mjs` 提取讲义结构。依据图、术语、理解要求、学生练习建立 `page-map.json`；每页记录教案位置、问题、操作、中间结果、回到原文的证据、运行性质、三段备注及过渡句。页表是页面文字和备注的权威来源。
 2. 用 `scripts/typ-concepts-to-md.mjs` 转换概念表；公式转换需要对原Typst复核。用 `scripts/check-page-map.mjs` 核对概念、图与回链。正式交付还需 `scripts/check-ready.mjs page-map.json glossary.json sources.json`：完整页面状态、已登记组件、来源字段与术语回链。机械检查不替代内容判断。
-3. 复杂机制列出可比较方案，依当前授权与既有选择实施；未有明确偏好时优先四栏流程，在设计稿保留选型理由。不要因附件要求“先审批”阻断已明确授权的开发。四栏与其他版式见 [flow-layout](references/flow-layout.md) 与 [arrangement](references/arrangement.md)。
+3. 复杂机制列出可比较方案，依当前授权与既有选择实施；讲解页优先大阶段选择与下部展开；操作页按过程需要选择版式，在设计稿保留选型理由。不要因附件要求“先审批”阻断已明确授权的开发。四栏与其他版式见 [flow-layout](references/flow-layout.md) 与 [arrangement](references/arrangement.md)。
 4. 复用当前周次需要的外壳与独立实验，不把前一周的大型工作台和模型资源一并复制。原生Web Components可作为经过测试的复用运行模块，由Stencil打包；需要生命周期或复杂状态时再移植为Stencil组件。数据、算法与页面视图分离，讲解页和贯穿页共用算法。仓库 `modules/history-demo/math.js` 已提供切分、集合、编辑距离、MinHash及支持比例的复用实现，第五周构建与测试均读取同一文件。
 5. 每页落实操作与中间产物。原型允许明确占位；“完成开发”要求所有页实现，不能把占位页算成完成。保留一张 [贯穿页](references/through-demo.md) 和一张 [概念页](references/concept-page.md)。贯穿页共享状态、能导出并恢复，导入先验证，再替换当前记录；坏文件须保留旧记录。
+
+参见 [实际材料与模型运行模块](references/runtime-v4.md)，复用通用导入页、共用模型接入和实际计算模块。页面合并时保留旧ID的aliases，导航回到合并页；验收检查已登记别名，不强迫重复页面。
 
 ## 材料、模型与运行记录
 

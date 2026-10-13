@@ -8,6 +8,8 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface CoursewareStatus {
     }
+    interface ModelConnection {
+    }
 }
 declare global {
     interface HTMLCoursewareStatusElement extends Components.CoursewareStatus, HTMLStencilElement {
@@ -16,15 +18,25 @@ declare global {
         prototype: HTMLCoursewareStatusElement;
         new (): HTMLCoursewareStatusElement;
     };
+    interface HTMLModelConnectionElement extends Components.ModelConnection, HTMLStencilElement {
+    }
+    var HTMLModelConnectionElement: {
+        prototype: HTMLModelConnectionElement;
+        new (): HTMLModelConnectionElement;
+    };
     interface HTMLElementTagNameMap {
         "courseware-status": HTMLCoursewareStatusElement;
+        "model-connection": HTMLModelConnectionElement;
     }
 }
 declare namespace LocalJSX {
     interface CoursewareStatus {
     }
+    interface ModelConnection {
+    }
     interface IntrinsicElements {
         "courseware-status": CoursewareStatus;
+        "model-connection": ModelConnection;
     }
 }
 export { LocalJSX as JSX };
@@ -32,6 +44,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "courseware-status": LocalJSX.IntrinsicElements["courseware-status"] & JSXBase.HTMLAttributes<HTMLCoursewareStatusElement>;
+            "model-connection": LocalJSX.IntrinsicElements["model-connection"] & JSXBase.HTMLAttributes<HTMLModelConnectionElement>;
         }
     }
 }

@@ -17,9 +17,9 @@ const REQUIRED = ['id', 'section', 'title', 'layout', 'transition', 'question', 
 const LAYOUTS = ['hero', 'flow4', 'diagram', 'workbench', 'through', 'concepts'];
 const MODES = ['浏览器实时', '预计算', '保存结果回放', '教学构造', '静态内容', '本地方案'];
 
+const declared=pages.flatMap(p=>[p.id,...(p.aliases||[])]).sort();if(declared.some((id,i)=>id!=='D'+String(i).padStart(2,'0')))errors.push('页号或合并别名缺失／重复');
 pages.forEach((p, i) => {
   for (const k of REQUIRED) if (p[k] === undefined || p[k] === '') errors.push(`${p.id || '#' + i}：缺少 ${k}`);
-  if (p.id !== 'D' + String(i).padStart(2, '0')) errors.push(`${p.id}：编号应为 D${String(i).padStart(2, '0')}（按顺序连续）`);
   if (!LAYOUTS.includes(p.layout)) errors.push(`${p.id}：layout 应为 ${LAYOUTS.join('/')}`);
   if (p.layout === 'flow4' && !(p.steps?.length >= 3 && p.steps.length <= 6)) errors.push(`${p.id}：flow4 需要 3—6 个 steps`);
   if (!MODES.some((m) => String(p.mode).includes(m))) errors.push(`${p.id}：mode 需写明实际运行档（${MODES.join('／')}）`);

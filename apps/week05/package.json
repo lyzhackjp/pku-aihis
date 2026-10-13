@@ -6,8 +6,9 @@
     "build": "node scripts/assemble.mjs && stencil build",
     "check": "tsc --noEmit && node scripts/check-delivery.mjs",
     "test": "node --test tests/*.test.mjs",
-    "check:browser": "node scripts/check-browser.mjs",
-    "preview": "python3 -m http.server 8775 --bind 127.0.0.1 --directory www"
+    "check:browser": "node scripts/check-revision-browser.mjs",
+    "preview": "python3 scripts/serve-preview.py",
+    "check:integration": "node scripts/check-integration.mjs"
   },
   "devDependencies": {
     "@stencil/core": "4.45.0",
@@ -15,7 +16,10 @@
     "playwright": "1.63.0"
   },
   "dependencies": {
-    "opencc-js": "1.0.5"
+    "opencc-js": "1.0.5",
+    "@huggingface/transformers": "3.8.1",
+    "fflate": "0.8.3",
+    "pdfjs-dist": "5.6.205"
   },
   "packageManager": "pnpm@11.19.0",
   "engines": {

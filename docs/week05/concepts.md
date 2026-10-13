@@ -26,7 +26,7 @@
 
 ### 按语义单元切分 | semantic-unit chunking
 
-页面：D05
+页面：D04
 
 原文与别称：semantic-unit chunking；也称按结构切分、按意义边界切分
 
@@ -44,7 +44,7 @@
 
 ### 断句 | sentence segmentation
 
-页面：D05
+页面：D04
 
 原文与别称：句读、标点；英文常作 sentence segmentation 或 punctuation restoration
 
@@ -60,7 +60,7 @@
 
 ### 递归切分 | recursive chunking
 
-页面：D05
+页面：D04
 
 原文与别称：recursive chunking；许多工具中的默认切分方式，如 LangChain 的 RecursiveCharacterTextSplitter
 

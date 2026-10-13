@@ -5,21 +5,77 @@
     "title": "文史通義·史德",
     "language": "zh-Hant",
     "first_publication": "刊年待查；作品首页题记道光壬辰冬開雕，癸巳春畢",
-    "edition": "维基文库线上电子文本，卷第三內篇三；非刻本原页",
-    "provider": "维基文库",
+    "edition": "上海書店影印出版，1988年3月第一版、第一次印刷；据商务印书馆旧版本影印（PDF第3页版权页）",
+    "provider": "教师提供PDF",
     "url": "https://zh.wikisource.org/zh-hant/文史通義/卷3#史德",
-    "acquisition": "2026-10-11 浏览工具读取，手工节录并逐字对照；未下载刻本",
-    "scope": "仅史德首段；其余篇章未入库",
-    "rights": "章學誠原作公有领域；电子整理页面标示CC BY-SA，保留来源及派生说明",
+    "acquisition": "2026-10-13教师提供扫描PDF；NDL古典籍OCR试跑，并对课堂选段人工核读；显示分段为加工单位",
+    "scope": "史德开篇，印刷页63—64；另保留本机完整393页PDF供回读",
+    "rights": "作者原作公有领域；教师提供的PDF与页影只在本机提供，不复制进Git或公共构建",
     "paragraphs": [
       {
-        "id": "S0",
-        "text": "才、學、識三者，得一不易，而兼三尤難，千古多文人而少良史，職是故也。昔者劉氏子元玄，蓋以是說謂足盡其理矣。雖然，史所貴者義也，而所具者事也，所憑者文也。孟子曰︰「其事則齊桓、晉文，其文則史，義則夫子自謂竊取之矣。」非識無以斷其義，非才無以善其文，非學無以練其事，三者固各有所近也，其中固有似之而非者也。記誦以為學也，辭采以為才也，擊斷以為識也，非良史之才、學、識也。雖劉氏之所謂才、學、識，猶未足以盡其理也。夫劉氏以謂有學無識，如愚估操金，不解貿化。推此說以證劉氏之指，不過欲於記誦之閒，知所決擇，以成文理耳。故曰︰古人史取成家，退處士而進奸雄，排死節而飾主闕，亦曰一家之道然也。此猶文士之識，非史識也。能具史識者，必知史德。德者何？謂著書者之心術也。夫穢史者所以自穢，謗書者所以自謗，素行為人所羞，文辭何足取重？魏收之矯誣，沈約之陰惡，讀其書者，先不信其人，其患未至於甚也。所患夫心術者，謂其有君子之心，而所養未底於粹也。夫有君子之心，而所養未粹，大賢以下，所不能免也。此而猶患於心術，自非夫子之《春秋》，不足當也。以此責人，不亦難乎？是亦不然也。蓋欲為良史者，當愼辨於天人之際，盡其天而不益以人也。盡其天而不益以人，雖未能至，茍允知之，亦足以稱著述者之心術矣。而文史之儒，競言才、學、識，而不知辨心術以議史德，烏乎可哉？",
-        "locator": "史德标题下首个自然段（电子文本段落，非印刷页）",
-        "url": "https://zh.wikisource.org/zh-hant/文史通義/卷3#史德"
+        "id": "S1",
+        "text": "才學識三者。得一不易而兼三尤難。千古多文人而少良史。職是故也。昔者劉氏子元。蓋以是說謂足盡其理矣。",
+        "locator": "印刷页63；PDF页序78",
+        "pdfPage": 78,
+        "printedPage": "63",
+        "url": "/local-materials/shide.pdf#page=78",
+        "verification": "课堂局部对照扫描；句读以句号显示，显示分段是加工单元，未作全篇校勘",
+        "method": "扫描页局部工作转写"
+      },
+      {
+        "id": "S2",
+        "text": "雖然。史所貴者義也。而所具者事也。所憑者文也。孟子曰。其事則齊桓晉文。其文則史。義則夫子自謂竊取之矣。",
+        "locator": "印刷页63；PDF页序78",
+        "pdfPage": 78,
+        "printedPage": "63",
+        "url": "/local-materials/shide.pdf#page=78",
+        "verification": "课堂局部对照扫描；句读以句号显示，显示分段是加工单元，未作全篇校勘",
+        "method": "扫描页局部工作转写"
+      },
+      {
+        "id": "S3",
+        "text": "非識無以斷其義。非才無以善其文。非學無以練其事。三者固各有所近也。",
+        "locator": "印刷页63；PDF页序78",
+        "pdfPage": 78,
+        "printedPage": "63",
+        "url": "/local-materials/shide.pdf#page=78",
+        "verification": "课堂局部对照扫描；句读以句号显示，显示分段是加工单元，未作全篇校勘",
+        "method": "扫描页局部工作转写"
+      },
+      {
+        "id": "S4",
+        "text": "此猶文士之識。非史識也。能具史識者。必知史德。德者何。謂著書者之心術也。",
+        "locator": "印刷页63；PDF页序78",
+        "pdfPage": 78,
+        "printedPage": "63",
+        "url": "/local-materials/shide.pdf#page=78",
+        "verification": "课堂局部对照扫描；句读以句号显示，显示分段是加工单元，未作全篇校勘",
+        "method": "扫描页局部工作转写"
+      },
+      {
+        "id": "S5",
+        "text": "夫有君子之心。而所養未粹。大賢以下所不能免也。此而猶患於心術。自非夫子之春秋不足當也。",
+        "locator": "印刷页63；PDF页序78",
+        "pdfPage": 78,
+        "printedPage": "63",
+        "url": "/local-materials/shide.pdf#page=78",
+        "verification": "课堂局部对照扫描；句读以句号显示，显示分段是加工单元，未作全篇校勘",
+        "method": "扫描页局部工作转写"
+      },
+      {
+        "id": "S6",
+        "text": "蓋欲為良史者。當愼辨於天人之際。盡其天而不益以人也。盡其天而不益以人。雖未能至。苟允知之。亦足以稱著述者之心術矣。",
+        "locator": "印刷页63—64；PDF页序78—79",
+        "pdfPage": 78,
+        "printedPage": "63",
+        "url": "/local-materials/shide.pdf#page=78",
+        "verification": "课堂局部对照扫描；句读以句号显示，显示分段是加工单元，未作全篇校勘",
+        "method": "扫描页局部工作转写"
       }
     ],
-    "text_sha256": "847fd50d3a4aa799c76d7c82f0e06c26651a4ce1342b22e0ba695784766330dd"
+    "text_sha256": "a37d5f0bd371c468f880c4f915c511dc35feed7d7cd5a13dde5efe7f53c79a23",
+    "local_pdf": "/local-materials/shide.pdf",
+    "pdf_sha256": "183c69263395c91b609480678a9160afcfcbd6ce85268035f9525a3a7ebf3118"
   },
   {
     "id": "acton",
@@ -28,29 +84,69 @@
     "language": "en",
     "first_publication": "1895-06-11 演讲；1895-10 首版",
     "edition": "Macmillan and Co., Limited, London, 1911 重印本",
-    "provider": "Project Gutenberg, eBook #25720",
+    "provider": "教师提供1911重印本扫描PDF（带识别文字层）",
     "url": "https://www.gutenberg.org/ebooks/25720",
-    "acquisition": "2026-10-11 下载官方HTML；去侧注与脚注标号、合并排版换行，保留正文页码；同一自然段按批判操作起点分成两个显示片段",
-    "scope": "仅印刷页40—42的一段正文；为教学显示分成两片段",
-    "rights": "原作公有领域；保留Project Gutenberg来源及其使用条款链接 https://www.gutenberg.org/policy/license.html",
+    "acquisition": "2026-10-13按扫描页与同版Gutenberg电子文本对校所选两片段；其他页直接读取PDF文字层，保留待校标记",
+    "scope": "课堂片段以印刷页40—42为主，扩展候选页43—45；完整165页PDF只在本机回读",
+    "rights": "Acton原作公有领域；教师PDF原件留本机",
     "download_sha256": "578cc592ad2bf88a9f009106d1519591fcb6d93c60579b0dadf96348ade554b7",
     "paragraphs": [
       {
         "id": "A1",
         "text": "These matters do not now concern us.[40] For our purpose, the main thing to learn is not the art of accumulating material, but the sublimer art of investigating it, of discerning truth from falsehood, and certainty from doubt. It is by solidity of criticism more than by the plenitude of erudition, that the study of history strengthens, and straightens, and extends the mind. And the accession of the critic in the place of the indefatigable compiler, of the artist in coloured narrative, the skilled limner of character, the persuasive advocate of good, or other, causes, amounts to a transfer of government, to a change of dynasty, in the historic realm.",
-        "locator": "1911 年重印本印刷页 [40]",
-        "url": "https://www.gutenberg.org/files/25720/25720-h/25720-h.htm#Page_40",
-        "translation": "学习调查材料、辨别真伪和确定性。（教学转述，非已出版译文）"
+        "locator": "1911 年重印本印刷页 [40]；PDF页序48",
+        "url": "/local-materials/acton.pdf#page=48",
+        "translation": "学习调查材料、辨别真伪和确定性。（教学转述，非已出版译文）",
+        "pdfPage": 48,
+        "printedPage": "40",
+        "verification": "选段对照扫描与同版公开电子文本；原文、教学释义分列",
+        "method": "PDF文字层＋同版对校"
       },
       {
         "id": "A2",
         "text": "For the critic is one who, when he lights on an interesting statement, begins by suspecting it. He remains in suspense until he has subjected his authority to three operations. First, he asks whether[41] he has read the passage as the author wrote it. For the transcriber, and the editor, and the official or officious censor on the top of the editor, have played strange tricks, and have much to answer for. And if they are not to blame, it may turn out that the author wrote his book twice over, that you can discover the first jet, the progressive variations, things added, and things struck out. Next is the question where the writer got his information. If from a previous writer, it can be ascertained, and the inquiry has to be repeated. If from unpublished papers, they must be traced, and when the fountain head is reached, or the track disappears, the question of veracity arises. The responsible writer's character, his position, antecedents, and probable motives have to be examined into; and this is what,[42] in a different and adapted sense of the word, may be called the higher criticism, in comparison with the servile and often mechanical work of pursuing statements to their root. For a historian has to be treated as a witness, and not believed unless his sincerity is established. The maxim that a man must be presumed to be innocent until his guilt is proved, was not made for him.",
-        "locator": "1911 年重印本印刷页 [40]—[42]",
-        "url": "https://www.gutenberg.org/files/25720/25720-h/25720-h.htm#Page_40",
-        "translation": "批判者先检查文字是否保持作者原样，再追问信息来源，并考察作者的位置和可能动机。（教学转述，非已出版译文）"
+        "locator": "1911 年重印本印刷页 [40]—[42]；PDF页序48—50",
+        "url": "/local-materials/acton.pdf#page=48",
+        "translation": "批判者先检查文字是否保持作者原样，再追问信息来源，并考察作者的位置和可能动机。（教学转述，非已出版译文）",
+        "pdfPage": 48,
+        "printedPage": "40—42",
+        "verification": "选段对照扫描与同版公开电子文本；原文、教学释义分列",
+        "method": "PDF文字层＋同版对校"
+      },
+      {
+        "id": "A3",
+        "text": "OF EARLIER TIMES 43 tions that are compact and circumscribed, such as the sources of Plutarch's Pericles, the two tracts on Athenian government, the origin of the epistle to Diognetus, the date of the life of St. Antony; and to learn from Schwegler how this analytical work began. More satisfying because more decisive has been the critical treat- ment of the mediaeval writers, parallel with the new editions, on which incredible labour has been lavished, and of which we have no better examples than the prefaces of Bishop Stubbs. An important event in this series was the attack on Dino Com- pagni, which, for the sake of Dante, roused the best Italian scholars to a not unequal contest. When we are told that England is behind the Continent in critical faculty, we must admit that this is t true as to quantity, not as to quality of",
+        "locator": "印刷页43；PDF页序51",
+        "pdfPage": 51,
+        "printedPage": "43",
+        "url": "/local-materials/acton.pdf#page=51",
+        "verification": "PDF识别文字层，待逐字校读；未经清洗的页眉与脚注仍可能混入",
+        "method": "PDF文字层"
+      },
+      {
+        "id": "A4",
+        "text": "44 DEGREES work. As they are no longer living, I will say of two Cambridge professors, Lightfoot and Hort, that they were critical scholars whom neither Frenchman nor German has surpassed. f The third distinctive note of the genera- tion of writers who dug so deep a trench between history as known to our grand- fathers and as it appears to us, is their dogma of impartiality. To an ordinary i man the word means no more than justice. He considers that he may pro- claim the merits of his own religion, of his prosperous and enlightened country, of his political persuasion, whether democracy, or liberal monarchy, or historic conser- vatism, without transgression or offence, so long as he is fair to the relative, though inferior merits of others, and never treats men as saints or as rogues for the side they",
+        "locator": "印刷页44；PDF页序52",
+        "pdfPage": 52,
+        "printedPage": "44",
+        "url": "/local-materials/acton.pdf#page=52",
+        "verification": "PDF识别文字层，待逐字校读；未经清洗的页眉与脚注仍可能混入",
+        "method": "PDF文字层"
+      },
+      {
+        "id": "A5",
+        "text": "OF IMPARTIALITY 45 take. There is no impartiality, he would say, like that of a hanging judge. The men who, with the compass of criticism in their hands, sailed the uncharted sea of original research, proposed a different view. History, A to be above evasion or dispute, must stand on documents, not on opinions. They had their own notion of truthfulness, based on the exceeding difficulty of finding truth, and the still greater difficulty of impressing * it when found. They thought it possible to write, with so much scruple, and simplicity, and insight, as to carry along ' with them every man of good will, and, whatever his feelings, to compel his assent. Ideas which, in religion and in politics, *\" are truths, in history are forces. They must be respected; they must not be - affirmed. By dint of a supreme reserve, by mu ch self-control, by a timely and",
+        "locator": "印刷页45；PDF页序53",
+        "pdfPage": 53,
+        "printedPage": "45",
+        "url": "/local-materials/acton.pdf#page=53",
+        "verification": "PDF识别文字层，待逐字校读；未经清洗的页眉与脚注仍可能混入",
+        "method": "PDF文字层"
       }
     ],
-    "text_sha256": "9b180e1cb412e21703833227054cf3425c1c4820d4cec4f19eeb037369c95016"
+    "text_sha256": "9b180e1cb412e21703833227054cf3425c1c4820d4cec4f19eeb037369c95016",
+    "local_pdf": "/local-materials/acton.pdf",
+    "pdf_sha256": "41c7032eddf2bb935816df6a9f7361c3df1e796982bde9cf7a36fc3cacc24786"
   },
   {
     "id": "ogai",
@@ -58,56 +154,92 @@
     "title": "歴史其儘と歴史離れ",
     "language": "ja",
     "first_publication": "心の花，1915（大正4）年1月",
-    "edition": "ザ・鴎外 ―森鴎外全小説全一冊―，第三書館，1985-05-01 初版；输入所用1992-08-20第2刷；新字旧仮名",
-    "provider": "青空文库，作品ID 684；输入村上聡，校正野口英司",
-    "url": "https://www.aozora.gr.jp/cards/000129/card684.html",
-    "acquisition": "2026-10-11 浏览工具读取官网正文，手工节录前6自然段，逐字核对；去除行首全角缩进，保留旧假名。直连下载未成功，非下载原件",
-    "scope": "正文第1—6自然段（不计分隔横线），其余未入库",
-    "rights": "原作著作权保护期已届满；保留青空文库原文、录入与校正署名、底本和加工说明",
+    "edition": "現代文学大系 第4（森鴎外集），筑摩書房，1964；印刷页480—482；两张对开扫描",
+    "provider": "教师提供NDL下载PDF；国立国会图书馆数字馆藏pid/1668610",
+    "url": "https://dl.ndl.go.jp/pid/1668610",
+    "acquisition": "2026-10-13教师提供两页扫描PDF；NDLOCR-Lite实际识读；课堂六段以扫描局部核对，和青空文库不同底本分开登记",
+    "scope": "作品开篇六个显示段及扫描续页的原始OCR候选；完整2页PDF只在本机提供",
+    "rights": "森鴎外原作公有领域；此1964扫描版和下载页影只在本机，不加入Git或公共构建",
     "paragraphs": [
       {
         "id": "M1",
-        "text": "わたくしの近頃書いた、歴史上の人物を取り扱つた作品は、小説だとか、小説でないとか云つて、友人間にも議論がある。しかし所謂 normativ な美学を奉じて、小説はかうなくてはならぬと云ふ学者の少くなつた時代には、此判断はなか／＼むづかしい。わたくし自身も、これまで書いた中で、材料を観照的に看た程度に、大分の相違のあるのを知つてゐる。中にも「栗山大膳」は、わたくしのすぐれなかつた健康と忙しかつた境界とのために、殆ど単に筋書をしたのみの物になつてゐる。そこでそれを太陽の某記者にわたす時、小説欄に入れずに、雑録様のものに交ぜて出して貰ひたいと云つた。某はそれを承諾した。さてそれが例になくわたくしの校正を経ずに、太陽に出たのを見れば、総ルビを振つて、小説欄に入れてある。殊に其ルビは数人で手分をして振つたものと見えて、二三ペエジ毎に変つてゐる。鉄砲頭が鉄砲のかみになつたり、左右良（まてら）の城がさうらの城になつたりした処のあるのも、是非がない。",
-        "locator": "青空文库正文自然段 1（不计分隔横线）",
-        "url": "https://www.aozora.gr.jp/cards/000129/files/684_18395.html",
-        "translation": "作者讨论自己处理历史人物的作品被归入小说的问题。（教学转述，非已出版译文）"
+        "text": "わたくしの近頃書いた、歴史上の人物を取り扱つた作品は、小説だとか、小説でないとか云つて、友人間にも議論がある。しかし所謂 normativ な美学を奉じて、小説はかうなくてはならぬと云ふ学者の少くなつた時代には、この判断はなか／＼むづかしい。わたくし自身も、これまで書いた中で、材料を観照的に看た程度に、大分の相違のあるのを知つてゐる。中にも「栗山大膳」は、わたくしのすぐれなかつた健康と忙しかつた境界とのために、殆ど単に筋書をしたのみの物になつてゐる。そこでそれを太陽の某記者にわたす時、小説欄に入れずに、雑録様のものに交ぜて出して貰ひたいと云つた。某はそれを承諾した。さてそれが例になくわたくしの校正を経ずに、太陽に出たのを見れば、総ルビを振つて、小説欄に入れてある。殊に其ルビは数人で手分をして振つたものと見えて、二三ペエジ毎に変つてゐる。鉄砲頭が鉄砲のかみになつたり、左右良の城がさうらの城になつたりした処のあるのも、是非がない。",
+        "locator": "印刷页480；PDF页序1；课堂显示段1",
+        "url": "/local-materials/ogai.pdf#page=1",
+        "translation": "作者讨论自己处理历史人物的作品被归入小说的问题。（教学转述，非已出版译文）",
+        "pdfPage": 1,
+        "printedPage": "480",
+        "verification": "课堂局部工作转写；扫描本与青空底本的异文已分开；尚未全篇校勘",
+        "method": "NDLOCR试跑＋课堂选段局部对照"
       },
       {
         "id": "M2",
-        "text": "さうした行違のある栗山大膳は除くとしても、わたくしの前に言つた類の作品は、誰の小説とも違ふ。これは小説には、事実を自由に取捨して、纏まりを附けた迹がある習であるに、あの類の作品にはそれがないからである。わたくしだつて、これは脚本ではあるが「日蓮上人辻説法」を書く時なぞは、ずつと後の立正安国論を、前の鎌倉の辻説法に畳み込んだ。かう云ふ手段を、わたくしは近頃小説を書く時全く斥けてゐたのである。",
-        "locator": "青空文库正文自然段 2（不计分隔横线）",
-        "url": "https://www.aozora.gr.jp/cards/000129/files/684_18395.html",
-        "translation": "请结合原文与词注阅读。（教学转述，非已出版译文）"
+        "text": "さうした行違のある栗山大膳は除くとしても、わたくしの前に言つた類の作品は、誰の小説とも違ふ。これは小説には、事実を自由に取捨して、纏まりを附けた迹がある習であるに、あの類の作品にはそれがないからである。わたくしだつて、これは脚本ではあるが「日蓮上人辻説法」を書く時なぞは、ずつと後の立正安国論を、前の鎌倉の辻説法に畳み込んだ。かう云ふ手段を、わたくしは近頃小説を書く時全く斥けてゐるのである。",
+        "locator": "印刷页480；PDF页序1；课堂显示段2",
+        "url": "/local-materials/ogai.pdf#page=1",
+        "translation": "请结合原文与词注阅读。（教学转述，非已出版译文）",
+        "pdfPage": 1,
+        "printedPage": "480",
+        "verification": "课堂局部工作转写；扫描本与青空底本的异文已分开；尚未全篇校勘",
+        "method": "NDLOCR试跑＋课堂选段局部对照"
       },
       {
         "id": "M3",
-        "text": "なぜさうしたかと云ふと、其動機は簡単である。わたくしは史料を調べて見て、其中に窺はれる「自然」を尊重する念を発した。そしてそれを猥に変更するのが厭になつた。これが一つである。わたくしは又現存の人が自家の生活をありの儘に書くのを見て、現在がありの儘に書いて好いなら、過去も書いて好い筈だと思つた。これが二つである。",
-        "locator": "青空文库正文自然段 3（不计分隔横线）",
-        "url": "https://www.aozora.gr.jp/cards/000129/files/684_18395.html",
-        "translation": "作者尊重史料中显出的自然，不愿任意改变；还说明如实写过去的动机。（教学转述，非已出版译文）"
+        "text": "なぜさうしたかと云ふと、わたくしは史料を調べて見て、其中に窺はれる「自然」を尊重する念を発した。そしてそれを猥に変更するのが厭になつた。これが一つである。わたくしは又現存の人が自家の生活をありの儘に書くのを見て、現在がありの儘に書いて好いなら、過去も書いて好い筈だと思つた。これが二つである。",
+        "locator": "印刷页480；PDF页序1；课堂显示段3",
+        "url": "/local-materials/ogai.pdf#page=1",
+        "translation": "作者尊重史料中显出的自然，不愿任意改变；还说明如实写过去的动机。（教学转述，非已出版译文）",
+        "pdfPage": 1,
+        "printedPage": "480",
+        "verification": "课堂局部工作转写；扫描本与青空底本的异文已分开；尚未全篇校勘",
+        "method": "NDLOCR试跑＋课堂选段局部对照"
       },
       {
         "id": "M4",
-        "text": "わたくしのあの類の作品が、他の物と違ふ点は、巧拙は別として種々あらうが、其中核は右に陳べた点にあると、わたくしは思ふ。",
-        "locator": "青空文库正文自然段 4（不计分隔横线）",
-        "url": "https://www.aozora.gr.jp/cards/000129/files/684_18395.html",
-        "translation": "请结合原文与词注阅读。（教学转述，非已出版译文）"
+        "text": "わたくしのあの類の作品が、他の物と違ふ点は、巧拙は別として種々あらうが、その中核は右に陳べた点にあると、わたくしは思ふ。",
+        "locator": "印刷页480；PDF页序1；课堂显示段4",
+        "url": "/local-materials/ogai.pdf#page=1",
+        "translation": "请结合原文与词注阅读。（教学转述，非已出版译文）",
+        "pdfPage": 1,
+        "printedPage": "480",
+        "verification": "课堂局部工作转写；扫描本与青空底本的异文已分开；尚未全篇校勘",
+        "method": "NDLOCR试跑＋课堂选段局部对照"
       },
       {
         "id": "M5",
-        "text": "友人中には、他人は「情」を以て物を取り扱ふのに、わたくしは「智」を以て取り扱ふと云つた人もある。しかしこれはわたくしの作品全体に渡つた事で、歴史上人物を取り扱つた作品に限つてはゐない。わたくしの作品は概して dionysisch でなくつて、apollinisch なのだ。わたくしはまだ作品を dionysisch にしようとして努力したことはない。わたくしが多少努力したことがあるとすれば、それは只観照的ならしめようとする努力のみである。",
-        "locator": "青空文库正文自然段 5（不计分隔横线）",
-        "url": "https://www.aozora.gr.jp/cards/000129/files/684_18395.html",
-        "translation": "请结合原文与词注阅读。（教学转述，非已出版译文）"
+        "text": "友人中には、他人は「情」を以て物を取り扱ふのに、わたくしは「智」を以て取り扱ふと云つた人もある。しかしこれはわたくしの作品全体に渡つた事で、歴史上の人物を取り扱つた作品に限つてはゐない。わたくしの作品は概して dionysisch でなくつて、apollonisch なのだ。わたくしはまだ作品を dionysisch にしようとして努力したことはない。わたくしが多少努力したことがあるとすれば、それは只観照的ならしめようとする努力のみである。",
+        "locator": "印刷页480；PDF页序1；课堂显示段5",
+        "url": "/local-materials/ogai.pdf#page=1",
+        "translation": "请结合原文与词注阅读。（教学转述，非已出版译文）",
+        "pdfPage": 1,
+        "printedPage": "480",
+        "verification": "课堂局部工作转写；扫描本与青空底本的异文已分开；尚未全篇校勘",
+        "method": "NDLOCR试跑＋课堂选段局部对照"
       },
       {
         "id": "M6",
         "text": "わたくしは歴史の「自然」を変更することを嫌つて、知らず識らず歴史に縛られた。わたくしは此縛の下に喘ぎ苦んだ。そしてこれを脱せようと思つた。",
-        "locator": "青空文库正文自然段 6（不计分隔横线）",
-        "url": "https://www.aozora.gr.jp/cards/000129/files/684_18395.html",
-        "translation": "作者也感到受历史束缚，希望摆脱这种束缚。（教学转述，非已出版译文）"
+        "locator": "印刷页481；PDF页序1；课堂显示段6",
+        "url": "/local-materials/ogai.pdf#page=1",
+        "translation": "作者也感到受历史束缚，希望摆脱这种束缚。（教学转述，非已出版译文）",
+        "pdfPage": 1,
+        "printedPage": "481",
+        "verification": "课堂局部工作转写；扫描本与青空底本的异文已分开；尚未全篇校勘",
+        "method": "NDLOCR试跑＋课堂选段局部对照"
+      },
+      {
+        "id": "M7",
+        "text": "わたくしはおほよそ此筋を辿つて、勝手に想像して書い\nた。地の文はこれまで書き慣れた口語体、対話は現代の東\n京語で、只山岡大夫や山椒大夫の口吻に、少し古びを附け\nただけである。しかし歴史上の人物を扱ふ癖の附いたわた\nくしは、まるで時代と云ふものを顧みずに書くことが出来\nない。そこで調度やなんぞは手近にある和名抄にある名を\n使つた。官名なんぞも古いのを使つた。現代の口語体文に\n所々古代の名詞が挿まることになるのである。 同じく時代\nを蔑にしたくない所から、わたくしは物語の年立をした。\n即ち、永保元年に謫せられた正氏が、三歳のあんじゆ、当\n歳のつし王を残して置いたとして、全篇の出来事を、あん\nじゆが十四、十五になり、つし王が、十二、十三になる寛\n治六七年の間に経過させた。\nさてつし王を拾ひ上げる梅津院と云ふ人の身分が、わた\nくしには想像が附かない、藤原基実が梅津大臣と云はれた\n外には、似寄の称のある人を知らない。基実は永万二年に\n二十四で薨じたのだから、時代も後になつてをり、年齢も\nふさはしくない。そこで、わたくしは寛治六七年の頃、二\n度目に関白になつてゐた藤原師実を出した。\n其外、 つし王の父正氏と云ふ人の家世は、 伝説に 平将\n門の裔だと云つてあるのを見た。わたくしはそれを面白く\nなく思つたので、只高見王から筋を引いた桓武平氏の族と\nした。又山椒大夫には五人の男子があつたと云つてあるの\nを見た。就中太郎、二郎はあん寿、つし王をいたはり、三\n郎は二人を虐げるのである。わたくしはいたはる側の人物\nを二人にする必要がないので、太郎を失踪させた。\nこんなにして書き上げた所を見ると、 稍妥当でなく感ぜ\nられる事が出来た。それは山椒大夫一家に虐げられるには、\n十三と云ふつし王が年齢もふさはしからうが、国守になる\nのはいかがはしいと云ふ事である。 しかしつし王に京都で\n身を立てさせて、何年も父母を顧みずにゐさせるわけには\nいかない。それをさせる動機を求めるのは、余り困難であ\nる。 そこでわたくしは十三歳の国守を作ることをも、 藤原\n氏の無制限な権力に委ねてしまつた。十三歳の元服は勿論\n早過ぎはしない。\nわたくしが山椒大夫を書いた楽屋は、無遠慮にぶちまけ\nて見れば、ざつとこんな物である。伝説が人買の事に関し\nてゐるので、書いてゐるうちに奴隷解放問題なんぞに触れ\nたのは、已むことを得ない。\n兎に角わたくしは歴史離れがしたさに山椒大夫を書いた\nのだが、さて書き上げた所を見れば、なんだが歴史離れがし\n足りないやうである。 これはわたくしの正直な告白である。\n(大正四年一月)",
+        "locator": "印刷页482；PDF页序2（对开左页为空白下一篇）",
+        "pdfPage": 2,
+        "printedPage": "482",
+        "url": "/local-materials/ogai.pdf#page=2",
+        "verification": "NDLOCR-Lite实际输出，待校；含页眉或下一篇题名的可能性须回页检查",
+        "method": "NDLOCR-Lite未校输出"
       }
     ],
-    "text_sha256": "3e04d40f4e8708a87317d9a865fcbee1502fb0372c0e1a487a6e2d958585ee89"
+    "text_sha256": "3e04d40f4e8708a87317d9a865fcbee1502fb0372c0e1a487a6e2d958585ee89",
+    "local_pdf": "/local-materials/ogai.pdf",
+    "pdf_sha256": "d7180429c6c36856251b28f93686b0f359204273f4e1afcbd9b0ce107506396f"
   }
 ]

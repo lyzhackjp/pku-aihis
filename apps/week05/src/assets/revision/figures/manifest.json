@@ -1,0 +1,80 @@
+[
+  {
+    "file": "chunking-fig1.png",
+    "author": "Qu、Bao、Tu",
+    "title": "Is Semantic Chunking Worth the Computational Cost?",
+    "version": "2410.13070v1",
+    "pdfPage": 2,
+    "figure": "图1",
+    "url": "https://arxiv.org/pdf/2410.13070v1",
+    "rights": "CC BY-NC-ND 4.0",
+    "acquired": "2026-10-13",
+    "method": "PDF原图区域渲染，未重绘",
+    "sha256": "556f4ae44a90921f3d52d86dde79f308b0fce6a43dd6a2392f63597a91bb3b84"
+  },
+  {
+    "file": "chunking-table1.png",
+    "author": "Qu、Bao、Tu",
+    "title": "同上",
+    "version": "2410.13070v1",
+    "pdfPage": 4,
+    "figure": "表1",
+    "url": "https://arxiv.org/pdf/2410.13070v1",
+    "rights": "CC BY-NC-ND 4.0",
+    "acquired": "2026-10-13",
+    "method": "PDF原图区域渲染，未重绘",
+    "sha256": "2d371b091e833d6db60678b27798b7bb875a4b791ef17ca4c109a5aeddbd82fd"
+  },
+  {
+    "file": "graphrag-fig1.png",
+    "author": "Edge等",
+    "title": "From Local to Global: A GraphRAG Approach to Query-Focused Summarization",
+    "version": "2404.16130v2",
+    "pdfPage": 4,
+    "figure": "图1",
+    "url": "https://arxiv.org/pdf/2404.16130v2",
+    "rights": "CC BY 4.0",
+    "acquired": "2026-10-13",
+    "method": "PDF原图区域渲染，未重绘",
+    "sha256": "540267cb1511210b3d76eb537b8ef1cab46abf4d18f52db38f83e17fdfc1b533"
+  },
+  {
+    "file": "lightrag-fig1.png",
+    "author": "Guo等",
+    "title": "LightRAG: Simple and Fast Retrieval-Augmented Generation",
+    "version": "2410.05779v3",
+    "pdfPage": 3,
+    "figure": "图1",
+    "url": "https://arxiv.org/pdf/2410.05779v3",
+    "rights": "CC BY-NC-SA 4.0；原图未重绘，保留作者与出处",
+    "acquired": "2026-10-13",
+    "method": "PDF原图区域渲染，未重绘",
+    "sha256": "1d1e73765df196b052a808774ef1600b5a17b0ded7a0ec93db086ae7e7bca11e"
+  },
+  {
+    "file": "blackboard-fig1.png",
+    "author": "Salemi等",
+    "title": "LLM-based Multi-Agent Blackboard System for Information Discovery in Data Science",
+    "version": "2510.01285v2",
+    "pdfPage": 2,
+    "figure": "图1",
+    "url": "https://arxiv.org/pdf/2510.01285v2",
+    "rights": "arXiv perpetual non-exclusive license；课堂引用原图，保留作者和原文链接",
+    "acquired": "2026-10-13",
+    "method": "PDF原图区域渲染，未重绘",
+    "sha256": "a60859fb4eb45e845208f6996e29e87ba79c4bd8c6cbae20f5ccad8ee301539a"
+  },
+  {
+    "file": "lazy-official-fig1.png",
+    "author": "Microsoft Research",
+    "title": "LazyGraphRAG: Setting a new standard for quality and cost",
+    "version": "2024-11-25",
+    "pdfPage": null,
+    "figure": "官方图1",
+    "url": "https://www.microsoft.com/en-us/research/blog/lazygraphrag-setting-a-new-standard-for-quality-and-cost/",
+    "rights": "官方公开图，课堂介绍，来源保留",
+    "acquired": "2026-10-13",
+    "method": "原图直接下载",
+    "sha256": "5d1891d650dc24c130a38f825a023c6d9b63d29d22b70cad64941989d4113082"
+  }
+]

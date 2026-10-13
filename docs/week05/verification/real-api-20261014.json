@@ -1,0 +1,90 @@
+{
+  "saved": "2026-10-14",
+  "requestedModel": "deepseek-chat",
+  "returnedModel": "deepseek-flash",
+  "scope": "三份公开史料库中《史德》课堂小范围转写；所有引用仍须人工核读",
+  "checks": [
+    {
+      "name": "HyDE三语候选",
+      "mode": "实际API运行",
+      "calls": 1,
+      "models": [
+        "deepseek-flash"
+      ],
+      "error": null
+    },
+    {
+      "name": "GraphRAG",
+      "mode": "实际API运行",
+      "calls": 5,
+      "models": [
+        "deepseek-flash"
+      ],
+      "error": null
+    },
+    {
+      "name": "LightRAG",
+      "mode": "实际API运行",
+      "calls": 2,
+      "models": [
+        "deepseek-flash"
+      ],
+      "error": null
+    },
+    {
+      "name": "LazyGraphRAG",
+      "mode": "实际API运行",
+      "calls": 4,
+      "models": [
+        "deepseek-flash"
+      ],
+      "error": null
+    },
+    {
+      "name": "Blackboard System",
+      "mode": "实际API运行",
+      "calls": 8,
+      "models": [
+        "deepseek-flash"
+      ],
+      "error": null
+    },
+    {
+      "name": "六项阅读任务",
+      "mode": "实际API运行",
+      "calls": 6,
+      "models": [
+        "deepseek-flash"
+      ],
+      "error": null
+    },
+    {
+      "name": "上下文补写",
+      "mode": "实际API运行",
+      "calls": 1,
+      "models": [
+        "deepseek-flash"
+      ],
+      "error": null
+    },
+    {
+      "name": "实体关系抽取",
+      "mode": "实际API运行",
+      "calls": 1,
+      "models": [
+        "deepseek-flash"
+      ],
+      "error": null
+    },
+    {
+      "name": "固定与工具检索对照",
+      "mode": "实际API运行",
+      "calls": 0,
+      "models": [],
+      "error": null
+    }
+  ],
+  "rawRecords": "apps/week05/src/assets/revision/api-examples.json",
+  "keysExported": false,
+  "privateCorpusPreloaded": false
+}
