@@ -1,108 +1,648 @@
 (() => {
-'use strict';
-const D=window.Deck,E=D.esc,M=window.LabMath;
-window.W5ServicesReady=import('./services.mjs');
-let S;
-const input=(k,v,l)=>`<label class="field">${E(l)}<input data-k="${k}" value="${E(v??'')}" ${['a','b'].includes(k)?'maxlength="30"':''}></label>`;
-const area=(k,v,l,n=4)=>`<label class="field">${E(l)}<textarea data-k="${k}" rows="${n}">${E(v??'')}</textarea></label>`;
-const slider=(k,v,l,min,max,step=1)=>`<label class="field">${E(l)}：${E(v)}<input data-k="${k}" type="range" min="${min}" max="${max}" step="${step}" value="${v}"></label>`;
-const tabs=(k,v,items)=>`<nav class="revision-tabs" role="tablist">${items.map(([id,label])=>`<button data-set="${k}" data-v="${E(id)}" role="tab" aria-selected="${String(String(id)===String(v))}" class="${String(id)===String(v)?'on':''}">${E(label)}</button>`).join('')}</nav>`;
-const number=x=>Number(x).toFixed(3);
-const table=(heads,rows)=>`<div class="table-scroll"><table class="kv"><thead><tr>${heads.map(h=>`<th>${E(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(v=>`<td>${v??''}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
-const quote=r=>`<article class="source-excerpt"><small>${E(r.id)} · ${E(r.author)} · ${E(r.locator)}</small><p>${E(r.text)}</p><p class="caption">${E(r.verification||'待核')} ${r.translation?E(r.translation):''}</p><button data-reader="${E(r.id)}">原页／版本／正文</button></article>`;
-const JSONblock=x=>`<pre class="trace">${E(JSON.stringify(x,null,2))}</pre>`;
-const STAGES={
- D01:[['朴素RAG',[['索引','清理、切分、表示并建立索引；本讲第一节。'],['检索','按问题取回片段；第三周已走过。'],['生成','把取回片段放入上下文，标出处；本讲第三节。']]],['高级RAG',[['检索前','查询重写与HyDE，扩充检索线索；D13。'],['检索后','重排、去重与上下文预算；D14、D15。']]],['模块化RAG',[['拆分部件','各步骤成为可以替换的模块。'],['更换索引','图结构、关系与社区摘要；D18—D20。']]],['智能体的基础设施',[['调用检索工具','模型选择何时检索、怎样改写问题。'],['循环与停止','记录工具结果、调用预算和实际输入；D22。']]]],
- D02:[['材料入库',[['版本','作者、题名、底本、PDF页与印刷页分别登记。'],['范围','已识读和未覆盖页分别记录；D03。']]],['取回片段',[['切点','句、段、递归与语义切分决定检索单位；D04—D08。'],['片段分布','所需依据可能散在多个片段；D09。']]],['进入上下文',[['排序与预算','取回之后，还要决定哪些进入实际模型输入。'],['实际输入','记录片段ID及原文；D15、D22。']]],['概括有据',[['逐句核读','流畅、附引文与受原文支持分别检查；D16。'],['有限判断','把“都认为”“完全”之类的词交回各自原文核对。']]]],
- D10:[['稀疏表示',[['词袋与TF-IDF','按出现次数与逆文档频率给词项权重。'],['BM25','词频饱和和长度校正；本页可实际算贡献词。']]],['稠密表示',[['句向量','本页实际运行MiniLM多语嵌入，384维。'],['余弦','向量之间的角度用于排序；不是史实置信度。']]],['多语表示',[['跨语种','把中文、英文、日文放入同一模型空间后比较。'],['原语回查','命中仍须回到原语、版本和位置。']]],['M3及多向量',[['BGE-M3','稠密、稀疏与多向量三类检索功能；据讲义。'],['浏览器范围','这里实际嵌入使用锁定MiniLM；BGE-M3原模型不冒称已经载入。']]]],
- D18:[['实体与关系',[['实体候选','可先读预跑的词项图，或通过API从选中原文抽取。'],['出处','关系保留片段ID与原话，回到PDF。']]],['图与消解',[['名称','按精确匹配或人工异称表核对。'],['关系','共现、作者字段、模型关系分别登记。']]],['社区与摘要',[['社区','课堂图使用实际标签传播划分；原实现采用层级社区。'],['摘要','API对每个选中社区生成有出处的概括。']]],['查询与核对',[['局部／全局','围绕实体的局部资料，或跨社区概括。'],['证据','社区摘要始终回到最初所用片段。']]]],
- D21:[['Blackboard System',[['Shared blackboard','共享可阅读的中间结果；各知识源写回。'],['Planning and knowledge sources','本页让材料核对、检索、判断角色通过同一黑板接续。']]],['The Ant System',[['概率选择','依据τᵅ·ηᵝ选择下一节点，η为距离倒数。'],['沉积与挥发','按完整路线长度沉积信息素，再按ρ挥发。'],['实际任务','用当前史料片段的余弦距离构成阅读顺序优化小例。']]]]
-};
-class RevisionLab extends HTMLElement {
- connectedCallback(){if(this.started){window.addEventListener('week05-corpus-change',this.refresh);if(this.ready)this.render();return;}this.started=true;this.id=this.getAttribute('page-id');this.page=D.pageById(this.id);this.s=Object.assign({source:'shide',record:'',step:0,tab:'0',method:'fixed',size:160,overlap:20,theta:.4,threshold:'absolute',semantic:'breakpoint',k:3,lambda:.2,eps:.4,minPoints:2,scope:8,query:'史德與心術',a:'森鴎外',b:'森鷗外',edit:0,editMode:'fill',permutations:128,budget:3,representation:'bm25',terms:'史德\n史識\n心術\n劉氏\n劉氏子元\n史料\n自然\n栗山大膳\n日蓮上人\n山椒大夫\nauthor\ncriticism\nhistory',aliases:'森鷗外=>森鴎外\nActon=>Lord Acton\n劉氏子元=>劉知幾',entityRule:'exact',zoom:1,strategy:'GraphRAG',view:'run',context:'metadata',hypothesis:'',claim:'章學誠、阿克顿與森鴎外都認為歷史敘述必須完全服從史料。',answer:'',task:'比较',report:'',through:0,antIter:10,ants:8,rho:.3,cloud:false,grades:{},used:[]},D.store.get('revision/'+this.id,{}));this.busy=false;this.result=null;this.vectors=null;this.selectedNode='';this.message='';
- this.addEventListener('input',e=>{if(e.target.closest('revision-lab')!==this)return;let k=e.target.dataset.k;if(!k)return;this.s[k]=e.target.type==='range'?Number(e.target.value):e.target.type==='checkbox'?e.target.checked:e.target.value;this.save();});
- this.addEventListener('change',e=>{if(e.target.closest('revision-lab')!==this)return;let k=e.target.dataset.k;if(k&&e.target.tagName==='SELECT'){this.s[k]=e.target.value;if(k==='source'){this.s.record='';this.s.passage='';this.vectors=null;}this.save();}if(e.target.dataset.import)this.import(e.target.files?.[0]);if(e.target.dataset.restore)this.restore(e.target.files?.[0]);});
- this.addEventListener('click',e=>{if(e.target.closest('revision-lab')!==this)return;let b=e.target.closest('[data-set],[data-do],[data-rail],[data-reader],[data-node]');if(!b)return;if(b.dataset.set){if(b.dataset.set.startsWith('grade')){let i=b.dataset.set.slice(5);this.s.grades[i]={...(this.s.grades[i]||{}),weight:Number(b.dataset.v)};}else{this.s[b.dataset.set]=b.dataset.v;if(b.dataset.set==='editMode')this.s.edit=0;if(b.dataset.set==='hypIndex'&&this.hypotheses)this.s.hypothesis=this.hypotheses[+b.dataset.v].text;}this.save();}if(b.dataset.rail){this.s.step=+b.dataset.rail;this.save();}if(b.dataset.reader)this.read(b.dataset.reader);if(b.dataset.node){this.selectedNode=b.dataset.node;this.render();}if(b.dataset.do)this.action(b.dataset.do);});
- this.addEventListener('focusin',e=>{if(e.target.closest('revision-lab')!==this)return;const c=e.target.closest('.flow-col');if(c){let i=[...this.querySelectorAll('.flow-col')].indexOf(c);if(i>=0&&i!==+this.s.step){this.s.step=i;this.querySelectorAll('.flow-rail [data-rail]').forEach((x,z)=>x.classList.toggle('active',z===i));}}});
- this.addEventListener('week05-through-update',e=>{if(this.id!=='D24')return;e.stopPropagation();this.s.chain??={};this.s.chain[e.detail.id]={state:e.detail.state,result:e.detail.result};D.store.set('revision/'+this.id,this.s);});this.refresh=()=>this.render();window.addEventListener('week05-corpus-change',this.refresh);window.W5ServicesReady.then(x=>{S=x;this.ready=true;this.render();}).catch(e=>{this.innerHTML='<p>'+E(e.message)+'</p>';});}
- disconnectedCallback(){clearInterval(this.timer);window.removeEventListener('week05-corpus-change',this.refresh);}
- save(){D.store.set('revision/'+this.id,this.s);if(this.fromThrough)this.dispatchEvent(new CustomEvent('week05-through-update',{bubbles:true,detail:{id:this.id,state:structuredClone(this.s),result:this.result}}));this.render();}
- sources(){let ss=S.corpus.sources();return (this.id==='D24'||this.fromThrough)?ss.filter(s=>s.private):ss;}
- records(){let rs=this.throughScope?.length&&['D22','D16'].includes(this.id)?S.corpus.records().filter(r=>this.throughScope.includes(r.id)):S.corpus.records();if(this.id==='D24'||this.fromThrough)rs=rs.filter(r=>r.private);return this.s.source==='all'?rs:rs.filter(r=>r.source===this.s.source);}
- selected(){let rs=this.records();return rs.find(r=>r.id===this.s.record)||rs[0];}
- selection(){const ss=this.sources();return `<div class="selection-bar"><label>材料<select data-k="source"><option value="all" ${this.s.source==='all'?'selected':''}>本页可用全部材料</option>${ss.map(m=>`<option value="${E(m.id)}" ${m.id===this.s.source?'selected':''}>${E(m.author||'待查')} · ${E(m.title)}</option>`).join('')}</select></label><label>片段<select data-k="record">${this.records().map(r=>`<option value="${E(r.id)}" ${r.id===this.s.record?'selected':''}>${E(r.id+' '+r.locator)}</option>`).join('')}</select></label><button data-do="importer">通用导入页 ↗</button><label class="file-chip">导入本机项目<input data-import="1" type="file" accept=".json,.zip"></label><small>共${this.records().length}个片段</small></div>`;}
- flow(cols){let html=D.flowShell({...this.page,steps:cols.map(c=>c[0])},cols.map(([title,body,why])=>({title,body,why})),{active:+this.s.step});return html.replace(/<span class="([^"]*)">(\d+) · ([\s\S]*?)<\/span>/g,(m,c,n,t)=>`<button data-rail="${+n-1}" class="${c}" aria-pressed="${+n-1===+this.s.step}">${n} · ${t}</button>`);}
- chapter(){let list=STAGES[this.id],chosen=list[+this.s.tab]||list[0];return `<div class="stage-history">${tabs('tab',this.s.tab,list.map((x,i)=>[i,x[0]]))}<section class="stage-panel"><h2>${E(chosen[0])}</h2><div class="stage-examples">${chosen[1].map(([h,t],i)=>`<article><small>0${i+1}</small><h3>${E(h)}</h3><p>${E(t)}</p></article>`).join('')}</div><p class="caption">内容依据当前第五周讲义；每一阶段只展开所选部分。</p></section></div>`;}
- sentenceRows(){let text=this.s.passage||this.records().filter(r=>!r.verification?.includes('待逐字')).map(r=>r.text).join('\n');return S.A.sentences(text).slice(0,this.s.scope);}
- knownVectors(sentences){if(this.vectors&&JSON.stringify(this.vectors.texts)===JSON.stringify(sentences.map(s=>s.text)))return this.vectors.vectors;let known=new Map(S.prepared.results.flatMap(r=>r.sentences.map((s,i)=>[s.text,r.vectors[i]])));return sentences.every(s=>known.has(s.text))?sentences.map(s=>known.get(s.text)):null;}
- graphSVG(g){const W=900,H=510,n=g.nodes.length,pos=new Map(g.nodes.map((x,i)=>[x.id,[W/2+Math.cos(2*Math.PI*i/Math.max(1,n))*320,H/2+Math.sin(2*Math.PI*i/Math.max(1,n))*195]]));return `<div class="graph-surface"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="可放大、节点可回查的当前关系图"><g transform="translate(${W/2*(1-this.s.zoom)},${H/2*(1-this.s.zoom)}) scale(${this.s.zoom})">${g.edges.map(e=>{let a=pos.get(e.source),b=pos.get(e.target);return a&&b?`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#9aadc0" stroke-width="${Math.min(4,e.weight||1)}"/>`:'';}).join('')}${g.nodes.map(n=>{let [x,y]=pos.get(n.id);return `<g data-node="${E(n.id)}" tabindex="0" role="button" aria-label="${E(n.id)}"><circle cx="${x}" cy="${y}" r="29" fill="${this.selectedNode===n.id?'#ecce83':'#eef5fc'}" stroke="#1a5ca9"/><text x="${x}" y="${y+46}" text-anchor="middle" font-size="13">${E(n.id)}</text></g>`;}).join('')}</g></svg></div>`;}
- currentGraph(){let records=this.records(),terms=this.s.terms.split(/[\n,，]/).map(t=>t.trim()).filter(Boolean),g=S.A.graphFrom(records,terms);const authors=[...new Set(records.map(r=>r.author).filter(Boolean))];for(let a of authors)if(!g.nodes.some(n=>n.id===a))g.nodes.push({id:a,sources:records.filter(r=>r.author===a).map(r=>r.id),kind:'题录责任者'});let aliases=Object.fromEntries(this.s.aliases.split('\n').filter(l=>l.includes('=>')).map(l=>l.split('=>').map(x=>x.trim())));const canon=n=>this.s.entityRule==='alias'?(aliases[n]||n):this.s.entityRule==='edit'?(g.nodes.map(x=>x.id).find(x=>x<n&&M.editTable(x,n).at(-1).at(-1)<=1)||n):n;let nodes=new Map();for(let n of g.nodes){let id=canon(n.id);if(!nodes.has(id))nodes.set(id,{...n,id,aliases:[],sources:[]});let x=nodes.get(id);x.sources=[...new Set([...x.sources,...n.sources])];if(id!==n.id)x.aliases.push(n.id);}g.nodes=[...nodes.values()];g.edges=g.edges.map(e=>({...e,source:canon(e.source),target:canon(e.target)})).filter(e=>e.source!==e.target);return g;}
- render(){if(!this.ready)return;let s=this.s,r=this.selected(),rs=this.records(),html='',sel=this.selection();
- if(this.id==='D24'&&!rs.length){if(this.sources().length&&s.source==='shide'){this.s.source='all';rs=this.records();}if(!rs.length){this.innerHTML=`<div class="empty-project"><h2>德教全量：由您自行在本机导入</h2><p>默认不预装任何德教原文、教师稿或预填研究结果。请选择上周导出包中的project.json或通用项目ZIP。</p><button data-do="importer">打开共用导入页</button><label class="file-chip">选择德教项目<input data-import="1" type="file" accept=".json,.zip"></label><label class="file-chip">恢复第五周完整备份<input data-restore="1" type="file" accept=".zip"></label><p role="status">${E(this.message)}</p></div>`;return;}}
- if(STAGES[this.id])html=this.chapter();
- switch(this.id){
- case'D01':case'D02':break;
- case'D03':html=sel+`<div class="identity-workspace"><aside><h3>题录</h3>${input('identityAuthor',s.identityAuthor??r?.author,'责任者')}${input('identityTitle',s.identityTitle??r?.title,'题名')}${area('identityVersion',s.identityVersion??this.sources().find(m=>m.id===r?.source)?.edition,'所用版本',3)}<button data-do="export">保存本次字段练习</button></aside><main><nav>题录 → 附件 → 正文</nav>${r?quote(r):''}<p>印刷页与PDF物理页分别保存；加工、识读和人工核读各有状态。</p></main></div>`;break;
- case'D04':{let text=s.passage||r?.text||'',chunks=M.chunks(text,s.method,s.size,s.overlap),cs=chunks.map((c,i)=>[String(i+1),E(c.level.replaceAll('\n','↵')),`[${c.start},${c.end})`,String([...c.text].length),E(c.text)]);html=sel+this.flow([['切分设置',tabs('method',s.method,[['fixed','固定长度'],['sentence','按句'],['paragraph','按段'],['recursive','递归']])+slider('size',s.size,'块大小（字符）',30,600,10)+slider('overlap',s.overlap,'固定切分重叠',0,100,5)+area('passage',text,'实际材料，可修改',7)],['结构化片段表',table(['块','边界','原文字符范围','字数','实际文本'],cs)],['切法比较',table(['做法','单位','当前片段数'],[['固定长度','字符',M.chunks(text,'fixed',s.size,s.overlap).length],['按句','现代句读或工作转写句读',M.chunks(text,'sentence',s.size).length],['按段','已有换行',M.chunks(text,'paragraph',s.size).length],['递归','空行→换行→空格→字符',M.chunks(text,'recursive',s.size).length]])],['依据与边界',r?quote({...r,text:r.text.slice(0,160)})+'<p>所有偏移按Unicode字符计。句读来自所用文本或工作转写，不把自动断句当原刊固有结构。</p>':'']]);break;}
- case'D06':case'D07':{let sent=this.sentenceRows(),vec=this.knownVectors(sent),dist=vec?S.A.boundaries(vec,s.theta):null,theta=s.theta;if(dist&&s.threshold!=='absolute'){let ds=dist.map(x=>x.distance).sort((a,b)=>a-b);if(s.threshold==='percentile')theta=ds[Math.min(ds.length-1,Math.floor(.8*ds.length))]||0;if(s.threshold==='std'){let mu=ds.reduce((a,b)=>a+b,0)/ds.length;theta=mu+Math.sqrt(ds.reduce((a,b)=>a+(b-mu)**2,0)/ds.length);}if(s.threshold==='iqr')theta=(ds[Math.floor(.75*ds.length)]||0)+1.5*((ds[Math.floor(.75*ds.length)]||0)-(ds[Math.floor(.25*ds.length)]||0));dist=S.A.boundaries(vec,theta);}let groups=[];if(dist){groups=[[0]];dist.forEach((d,i)=>{if(d.cut)groups.push([]);groups.at(-1).push(i+1);});if(s.semantic==='single')groups=S.A.clusters(vec,s.k,s.lambda);if(s.semantic==='dbscan')groups=S.A.dbscan(vec,s.eps,s.minPoints,s.lambda).groups;if(s.semantic==='fixed')groups=sent.reduce((a,_,i)=>{let n=Math.floor(i/s.k);(a[n]??=[]).push(i);return a;},[]);}
- const controls=(this.id==='D07'?'<p>按语义单元还包括按句、按段／篇章和递归切分；D04可运行三者。这里比较狭义嵌入断点、位置＋语义聚类与固定句数基线。古籍的句界依赖人工句读，扫描段落需核读。</p><a href="#D04">回到实际结构切分 →</a>':'')+sel+slider('scope',s.scope,'实际句数',3,12)+tabs('semantic',s.semantic,[['breakpoint','嵌入断点'],['single','位置＋语义单链接聚类'],['dbscan','DBSCAN'],['fixed','固定句数基线']])+tabs('threshold',s.threshold,[['absolute','绝对阈值'],['percentile','80%分位'],['std','均值＋标准差'],['iqr','IQR']])+slider('theta',s.theta,'绝对距离阈值',0,1,.01)+slider('k',s.k,'簇数／基线句数',1,6)+slider('lambda',s.lambda,'位置距离权重λ',0,1,.05)+slider('eps',s.eps,'DBSCAN邻域ε',.1,.9,.05)+slider('minPoints',s.minPoints,'DBSCAN最少邻居（含自身）',1,5)+`<button data-do="encode">浏览器实际重新编码</button>`;
- const body=this.flow([['输入与实现',controls],['每句的实际情况',table(['句','原文','字符范围','向量'],sent.map((t,i)=>[i+1,E(t.text),`[${t.start},${t.end})`,vec?vec[i].slice(0,4).map(number).join(',')+' … 384维':'待实际编码']))],['距离与分组',dist?table(['句界','余弦距离','切断（θ='+number(theta)+'）'],dist.map(d=>[`${d.i+1}→${d.i+2}`,number(d.distance),d.cut?'是':'否']))+`<p>d=1−cos；聚类另用λ|i−j|/n+(1−λ)(1−max(cos,0))。</p>`:'<p>当前文本不在预跑记录中，请实际编码。</p>'],['实际切分结果',groups.map((g,i)=>`<article class="chunk"><small>块${i+1}：句${g.map(x=>x+1).join('、')}</small>${E(g.map(x=>sent[x].text).join(''))}</article>`).join('')+`<p>当前${vec?'数值来自实际模型运行':'未编码'}；模型MiniLM，q8，384维。</p>`]]);
- html=this.id==='D07'?tabs('view',s.view,[['run','史料实际试跑'],['paper','论文原图与结果']])+(s.view==='paper'?`<figure><img src="assets/revision/figures/chunking-fig1.png" alt="Qu等论文PDF第2页的原始切分图"><figcaption>Qu、Bao、Tu，2024，arXiv:2410.13070，Figure 1；显示论文原页，不是课堂复现实验。</figcaption></figure><figure><img src="assets/revision/figures/chunking-table1.png" alt="原论文Table 1"><figcaption>PDF页序3，Table 1：英文检索任务及其模型条件。原文与本课日、中、英史料的测试分别看。</figcaption></figure>`:body):body;break;}
- case'D08':{let sent=this.sentenceRows().slice(0,6),prep=S.prepared.results.find(x=>x.source===s.source),late=this.result?.late||prep?.late,step=+s.step;html=sel+tabs('context',s.context,[['metadata','加材料与定位'],['neighbors','加相邻原文'],['api','API补写上下文'],['late','整窗口后期池化']])+this.flow([['选择范围',slider('scope',s.scope,'最多使用句数',3,12)+`<button data-do="context">执行当前方法</button><button data-do="load-context-example">载入实际上下文补写</button><button data-do="play-process">动态走处理过程</button>${r?quote({...r,text:r.text.slice(0,160)}):''}`],['处理记录导航',tabs('step',step,[[0,'输入原文'],[1,'补写／编码'],[2,'片段与表示'],[3,'查询与原页']])+`<section class="md-process"><h3>${['# 输入材料','## 处理工序','## 处理输出','## 回到依据'][step]}</h3><pre>${E([sent.map((x,i)=>`${i+1}. ${x.text}`).join('\n'),s.context==='late'?'整窗口先编码，每个词元带上下文，再按句范围池化。':s.context==='neighbors'?'以原文前后句补足语境；补入句子仍保留出处。':s.context==='metadata'?'把作者、题名、所用版本和定位加到检索表示前。':'API读取选定范围，另存其实际补写文本。',this.result?.output||late?.mode||'选择执行后查看实际输出。',r?.locator||'待选择'][step])}</pre></section>`],['当前中间产物',s.context==='late'&&late?table(['句','词元范围','后期池化向量'],late.ranges.map((x,i)=>[i+1,`[${x.start},${x.end})`,x.vector.slice(0,5).map(number).join(',')+' …'])):this.result?.output?`<p class="lab-quote">${E(this.result.output)}</p>`:table(['上下文原文','保留身份'],sent.slice(0,3).map(t=>[E(t.text),E(r?.locator)]))],['核读与比较','<p>原文、附加元数据、邻句和模型补写分别保存。后期池化使用实际MiniLM短窗口，512词元内；不称为论文Jina长模型的全量复现。</p>'+this.cloudChoice()+`<button data-do="export">保存本次处理记录</button>`]]);break;}
- case'D09':html=sel+this.flow([['具体问题',area('query',s.query,'提出需查依据的问题',3)+slider('budget',s.budget,'选入片段数',1,6)],['必要片段',rs.slice(0,8).map(r=>`<label class="evidence-choice"><input data-use="${E(r.id)}" type="checkbox" ${s.used.includes(r.id)?'checked':''}>${E(r.id+' '+r.text.slice(0,42))}</label>`).join('')],['切分与实际证据',rs.filter(r=>s.used.includes(r.id)).map(quote).join('')||'<p>选择所需片段后，在这里并列实际原文。</p>'],['能支持到哪里',area('report',s.report,'分别说明对象、定义、要求与尚缺语境',7)+'<p>支持程度由人工核读；相同出处不算多个独立支持。</p>']]);break;
- case'D10':html+=sel+tabs('representation',s.representation,[['bow','词袋'],['tfidf','TF-IDF'],['bm25','BM25'],['dense','多语句向量']])+input('query',s.query,'查询')+`<button data-do="representation">实际计算并排序</button>`+(this.result?table(['片段','实际得分','贡献词／向量'],this.result.rows.map(r=>[E(r.id),number(r.score),E(r.terms?r.terms.filter(x=>x.count).map(x=>`${x.term}:${number(x.value)}`).join('；'):r.vectorPreview||'384维')])):'<p class="note-box">选择表示后实际计算；模型下载与编码在浏览器进行。</p>');break;
- case'D11':{let text=s.passage||r?.text||'',q=s.query,normalize=window.OpenCC.Converter({from:'t',to:'cn'}),a=s.norm?normalize(q):q,b=s.norm?normalize(text):text,result=M.similarity(a,b,s.unit==='bigram'?2:1);html=sel+this.flow([['拆成集合',area('passage',text,'实际史料片段',5)+input('query',q,'查询')+tabs('unit',s.unit,[['char','单字'],['bigram','字二元组']])],['规范值与原值',tabs('norm',s.norm,[['','保留原值'],['1','OpenCC t2s']])+table(['原值','比较值'],[[E(q),E(a)],[E(text.slice(0,70)),E(b.slice(0,70))]])],['实际交并集',table(['集合','元素'],[['A',E(result.A.join(' '))],['B',E(result.B.join(' '))],['交集',E(result.inter.join(' '))],['并集',E(result.union.join(' '))]])],['公式与计算',table(['系数','代入','数值'],[['J',`${result.i}/${result.u}`,number(result.J)],['Dice',`${2*result.i}/${result.a+result.b}`,number(result.D)],['O',`${result.i}/${Math.min(result.a,result.b)}`,number(result.O)]])+`<p>所有片段可换成新导入史料。规范值用于比较，引用保留原值。</p>`]]);break;}
- case'D12':{let x=S.A.editSteps(s.a,s.b),limit=Math.min(+s.edit,x.steps.length),path=x.path.slice(0,Math.min(+s.edit,x.path.length)),current=s.editMode==='path'?path.at(-1):x.steps[limit-1],effect=S.A.applyEdits(s.a,path);html=`<div class="edit-toolbar">${input('a',s.a,'源字符串')}${input('b',s.b,'目标字符串')}${tabs('editMode',s.editMode,[['fill','动态填表'],['path','执行最短编辑路径']])}${slider('edit',s.edit,'进度',0,s.editMode==='fill'?x.steps.length:x.path.length)}<button data-do="edit-next">下一步</button><button data-do="edit-play">播放／暂停</button></div><div class="edit-workspace"><div>${table(['∅','∅',...x.B],x.d.map((row,i)=>[E(x.A[i-1]||'∅'),...row.map((v,j)=>i&&j&&(i-1)*x.B.length+j>limit&&s.editMode==='fill'?'<span class="uncomputed">·</span>':`<span class="${current&&current.i===i&&current.j===j?'edit-current':''}">${v}</span>`)]))}</div><aside><h3>当前编辑与公式</h3>${s.editMode==='fill'&&current?`<p>处理 a${current.i}=${E(current.a)}，b${current.j}=${E(current.b)}</p><p>删除=${current.options[0]}；插入=${current.options[1]}；${E(current.operation)}对角候选=${current.options[2]}。</p><p class="formula">d(${current.i},${current.j})=min(${current.options.join(',')})=${current.value}</p><p>对应当前前缀：${E(x.A.slice(0,current.i).join(''))} → ${E(x.B.slice(0,current.j).join(''))}</p>`:s.editMode==='path'?`<p class="edit-effect">${E(effect.text||'∅')}</p><p>已执行${path.filter(p=>p.operation!=='保持').length}次编辑；蓝色路径上的每格显示对应操作。</p>`+table(['步骤','操作','原字','目标字'],path.map((p,i)=>[i+1,p.operation,E(p.from||'∅'),E(p.to||'∅')])):'<p>从初始化边界开始，逐格计算到右下角。</p>'}<p>全程最小编辑次数=${x.d.at(-1).at(-1)}。</p></aside></div>`;break;}
- case'D13':html=sel+this.flow([['真实研究问题',area('query',s.query,'HyDE输入问题',3)+'<p>生成时只给问题，先产生假想相关文档；不先把库内答案交给生成模型。</p><button data-do="hyde-generate">用API生成三个候选</button><button data-do="load-hyde-example">载入已跑好的三语候选</button>'],['选择或自行输入',(this.hypotheses?tabs('hypIndex',s.hypIndex||0,this.hypotheses.map((h,i)=>[i,(h.language||'候选')+' · '+(i+1)])):'')+area('hypothesis',s.hypothesis,'假想相关文档，可自行打字',8)],['实际嵌入与检索','<button data-do="hyde-retrieve">编码假想文档并检索真实片段</button>'+(this.result?.rows?this.result.rows.map(quote).join(''):'<p>生成与编码结果分列保存；此处只列库内原文。</p>')],['依据与运行记录',this.result?.run?JSONblock({model:this.result.run.model,input:this.result.run.input,sourceIds:this.result.run.sourceIds}):'<p>假想文档只作检索线索，最后引用必须回库内真实史料。</p>']]);break;
- case'D14':{let a=rs.find(x=>x.id===s.docA)||rs[0],b=rs.find(x=>x.id===s.docB)||rs[1]||a,h=a&&b?M.minhash(a.text,b.text,s.permutations):null;html=sel+this.flow([['具体文本候选',`<label>候选A<select data-k="docA">${rs.map(r=>`<option value="${r.id}" ${a?.id===r.id?'selected':''}>${E(r.id+' '+r.text.slice(0,28))}</option>`).join('')}</select></label><label>候选B<select data-k="docB">${rs.map(r=>`<option value="${r.id}" ${b?.id===r.id?'selected':''}>${E(r.id+' '+r.text.slice(0,28))}</option>`).join('')}</select></label>${slider('permutations',s.permutations,'排列次数',16,256,16)}`],['内容重合',a?quote(a)+quote(b):''],['MinHash真实计算',h?table(['排列','A首项','B首项','相同'],h.pairs.slice(0,12).map((x,i)=>[i+1,E(x.a),E(x.b),x.hit?'是':'否']))+`<p>精确J=${number(h.exact)}；估计=${h.hits}/${h.count}=${number(h.estimate)}。</p>`:''],['保留与去重决定',table(['项目','A','B'],[['来源',E(a?.source),E(b?.source)],['定位',E(a?.locator),E(b?.locator)],['核读状态',E(a?.verification),E(b?.verification)]])+area('report',s.report,'决定：保留两版／仅合并重复副本；写明理由',5)]]);break;}
- case'D15':html=sel+this.flow([['材料与查询',input('query',s.query,'检索词')+`<button data-do="retrieve">实际BM25检索</button>`],['实际取回',this.result?.retrieved?table(['ID','得分','来源'],this.result.retrieved.map(r=>[E(r.id),number(r.score),E(r.locator)])):'<p>先执行检索。</p>'],['实际进入',slider('budget',s.budget,'上下文片段预算',1,8)+(this.result?.retrieved||[]).slice(0,s.budget).map(quote).join('')],['人工记录使用',(this.result?.retrieved||[]).slice(0,s.budget).map(r=>`<label><input type="checkbox" data-use="${r.id}" ${s.used.includes(r.id)?'checked':''}> ${E(r.id)}作为回答依据</label>`).join('')+area('answer',s.answer,'回答与所用引用ID',4)]]);break;
- case'D16':html=sel+this.flow([['拆成句子',area('answer',s.answer||s.claim,'回答，每行一句',6)],['并列原文',rs.slice(0,5).map(quote).join('')],['人工三级判定',(s.answer||s.claim).split('\n').filter(Boolean).map((t,i)=>`<article class="grade-line"><p>${E(t)}</p><label>引文<select data-cite="${i}"><option value="">无引文</option>${rs.map(r=>`<option value="${r.id}" ${s.grades[i]?.cite===r.id?'selected':''}>${E(r.id)}</option>`).join('')}</select></label>${tabs('grade'+i,s.grades[i]?.weight||0,[[1,'完全支持'],[.5,'部分支持'],[0,'不支持']])}</article>`).join('')],['计算两个比例',(()=>{let rows=(s.answer||s.claim).split('\n').filter(Boolean).map((_,i)=>s.grades[i]||{cite:'',weight:0}),x=M.support(rows);return table(['比例','代入','数值'],[['P_w',`${x.sum}/${x.cited}`,number(x.P)],['R_w',`${x.sum}/${x.sentences}`,number(x.R)]])+'<p>无引文句记0；分级是人工核读，不由相似度自动判断。</p>';})()]]);break;
- case'D17':html=sel+`<p class="lab-quote">${E(s.claim)}</p><div class="lab-grid-cards">${S.corpus.sources().filter(m=>!m.private).map(m=>`<article class="lab-card"><h3>${E(m.author)}</h3>${m.paragraphs.slice(0,2).map(p=>quote({...p,source:m.id,author:m.author})).join('')}</article>`).join('')}</div>`;break;
- case'D18':html+=this.graphBody(sel,false);break;
- case'D19':{let g=this.currentGraph();html=sel+`<div class="entity-workspace"><aside><h3>候选称呼与规则</h3>${area('terms',s.terms,'史料中查找的词项／称呼',8)}${tabs('entityRule',s.entityRule,[['exact','精确'],['edit','距离≤1'],['alias','人工异称']])}${area('aliases',s.aliases,'原称呼=>首选名；空白不归并',5)}${slider('zoom',s.zoom,'图放大',.7,2.5,.1)}<button data-do="graph-fullscreen">单独放大关系图</button></aside><main>${this.graphSVG(g)}${table(['节点','异称','出处片段'],g.nodes.map(n=>[E(n.id),E((n.aliases||[]).join('、')),E(n.sources.join('、'))]))}<p>当前${g.nodes.length}节点、${g.edges.length}共现边；题录责任者另作元数据节点。选择节点可核读实际片段。</p>${g.nodes.find(n=>n.id===this.selectedNode)?.sources.map(id=>S.corpus.records().find(r=>r.id===id)).filter(Boolean).slice(0,3).map(quote).join('')||''}</main></div>`;break;}
- case'D20':html=tabs('strategy',s.strategy,[['GraphRAG','GraphRAG'],['LightRAG','LightRAG'],['LazyGraphRAG','LazyGraphRAG']])+this.strategyIntro()+this.graphBody(sel,true);break;
- case'D21':html+=this.collaborationBody(sel);break;
- case'D22':html=this.readingBody(sel);break;
- case'D23':html='<div class="conclusion"><h2>论从史出</h2><p>切分决定机器取回哪一层原文，相似度决定哪些片段排在前面，上下文预算决定哪些进入回答；最后，每一句仍由我们回到依据核读。</p><p>有引用与论从史出之间，隔着本讲讨论的每一步。</p><p>下一讲往前追一步：这些电子文本怎样从原页被识读出来？</p></div>';break;
- case'D24':{let stages=[['材料身份','D03'],['范围与切分','D04'],['语义表示与检索','D10'],['图与关系','D19'],['机器与人工比较','D22'],['逐句核读','D16'],['备份与接续','']];if(!this.sources().some(m=>m.id===s.source)&&s.source!=='all'){this.s.source='all';}let stage=stages[+s.through]||stages[0];html=`<div class="dejiao-revision"><main>${sel}<p>同一德教项目：${this.sources().length}项材料，${this.records().length}正文片段；材料未经上传。</p>${stage[1]?`<revision-lab page-id="${stage[1]}" data-through-child="1"></revision-lab>`:`<h2>完整备份与恢复</h2><button data-do="backup">下载原件＋正文＋实际运行记录</button><label>恢复备份<input data-restore="1" type="file" accept=".zip"></label>`}</main><aside><h3>德教研究：本周处理链</h3><p>问题与范围由教师选择；前一步设置与结果保存在同一处理链。检索排序决定随后模型阅读和核读的候选范围；教师稿与史料分别识别。</p>${tabs('through',s.through,stages.map((x,i)=>[i,x[0]]))}${area('report',s.report,'本轮问题、已读范围、缺口与下一步',7)}<button data-do="export">导出本轮判断</button><button data-do="backup">完整备份</button></aside></div>`;break;}
- case'D25':html=this.glossary();break;
- }
- D.rerender(this,`${this.busy?'<div class="busy-banner">正在实际处理，请等待本轮完成。</div>':''}${html}<p class="revision-status" role="status">${E(this.message)}</p>`);
- this.querySelectorAll('[data-use]').forEach(el=>el.onchange=()=>{let id=el.dataset.use;this.s.used=el.checked?[...new Set([...this.s.used,id])]:this.s.used.filter(x=>x!==id);this.save();});this.querySelectorAll('[data-cite]').forEach(el=>el.onchange=()=>{let i=el.dataset.cite;this.s.grades[i]={...(this.s.grades[i]||{}),cite:el.value};this.save();});
- if(this.fromThrough)this.querySelectorAll('[data-do^="load-"]').forEach(x=>x.remove());
- if(this.busy)this.querySelectorAll('input,textarea,select,button').forEach(x=>x.disabled=true);
- if(this.id==='D24')this.querySelectorAll('[data-through-child]').forEach(child=>{child.s??={};child.s.source=this.s.source;child.fromThrough=true;child.throughChain=this.s.chain||{};child.throughChunks=this.s.chain?.D04?.state;child.throughScope=this.s.chain?.D10?.result?.rows?.slice(0,this.s.chain.D10.state.budget||3).map(x=>x.parentId||x.id)||[];});
- }
- cloudChoice(){return `<label class="cloud-permission"><input type="checkbox" data-k="cloud" ${this.s.cloud?'checked':''}>允许本次选中范围发送到所配云端（本机导入材料默认不发送）</label>`;}
- graphBody(sel,compare){let g=this.s.view==='prepared'?(this.result?.graph||S.prepared.graph):(this.result?.graph||this.currentGraph());return sel+tabs('view',this.s.view,[['run','实际建图／查询'],['prepared','已跑好的结果'],['paper','论文原图']])+(this.s.view==='paper'?`<figure><img src="assets/revision/figures/${this.s.strategy==='LightRAG'?'lightrag-fig1.png':this.s.strategy==='LazyGraphRAG'?'lazy-official-fig1.png':'graphrag-fig1.png'}" alt="原论文或官方原图"><figcaption>${E(this.s.strategy)}原图；${E(this.s.strategy==='LightRAG'?'Guo等，arXiv:2410.05779v3，PDF页序3，图1':this.s.strategy==='LazyGraphRAG'?'Microsoft Research，2024-11-25，官方图1':'Edge等，arXiv:2404.16130v2，PDF页序4，图1')}。<a href="${this.s.strategy==='LightRAG'?'https://arxiv.org/abs/2410.05779v3':this.s.strategy==='LazyGraphRAG'?'https://www.microsoft.com/en-us/research/blog/lazygraphrag-setting-a-new-standard-for-quality-and-cost/':'https://arxiv.org/abs/2404.16130v2'}" target="_blank" rel="noopener">原文出处 ↗</a></figcaption></figure>`:`<div class="graph-workspace"><aside>${input('query',this.s.query,'问题')}${slider('budget',this.s.budget,'社区／检索／相关性核读预算',1,5)}${area('terms',this.s.terms,'实际词项／名称',5)}<button data-do="load-graph-example">载入当前方法实际API结果</button><button data-do="load-relations-example">载入实际实体关系抽取</button><button data-do="graph-local">在选中原文建共现图</button><button data-do="graph-api">API抽取实体关系并处理当前方法</button><button data-do="graph-query">按当前方法实际查询</button>${this.cloudChoice()}<p>预跑：实际词项提取、共现建图与标签传播；未用构造关系。API可补实体关系和摘要；课堂适配与官方全量框架分开。</p></aside><main>${this.graphSVG(g)}${table(['节点／边','数量','实际性质'],[['节点',g.nodes.length,'实际文字命中或来源字段'],['边',g.edges.length,E(g.mode||'API关系，须人工核读')],['社区',(g.communities||S.A.labelPropagation(g)).length,'实际标签传播；非Leiden全量索引']])}${this.result?.output?`<p class="lab-quote">${E(this.result.output)}</p>`:''}${this.result?.trace?JSONblock(this.result.trace):''}</main></div>`);}
- strategyIntro(){let data={GraphRAG:['Local → Global','先抽实体与关系，按社区组织并生成摘要。','From Local to Global: A Graph RAG Approach to Query-Focused Summarization','https://arxiv.org/abs/2404.16130'],LightRAG:['双层检索与增量','具体实体层和主题层结合向量检索，材料可追加。','employs a dual-level retrieval system','https://arxiv.org/abs/2410.05779'],LazyGraphRAG:['延迟模型调用','先以名词短语和共现建索引，查询时再按需生成。','defers all LLM use until query time','https://www.microsoft.com/en-us/research/blog/lazygraphrag-setting-a-new-standard-for-quality-and-cost/']}[this.s.strategy];return `<section class="strategy-intro"><h3>${E(data[0])}</h3><p>${E(data[1])}</p><blockquote>${E(data[2])}</blockquote><p>学术中译（教学翻译）：${E(this.s.strategy==='GraphRAG'?'从局部到全局：面向查询聚焦摘要的图RAG方法':this.s.strategy==='LightRAG'?'采用双层检索系统':'将全部大语言模型调用推迟到查询阶段')}。</p><a href="${E(data[3])}" target="_blank" rel="noopener">原论文／官方说明 ↗</a></section>`;}
- collaborationBody(sel){return sel+(this.s.tab==='1'?`<div class="ant-workspace"><aside>${slider('antIter',this.s.antIter,'实际迭代次数',1,30)}${slider('ants',this.s.ants,'蚂蚁数量',2,16)}${slider('rho',this.s.rho,'挥发率ρ',.1,.9,.1)}<button data-do="ants">在当前史料句向量距离上运行Ant System</button><p>使用首六个实际片段；每次走完整闭环，按1/路线长度沉积。用于阅读顺序优化，不据此推断历史关系。</p></aside><main>${this.result?.ant?table(['迭代','最短路线','长度'],this.result.ant.history.map(h=>[h.iteration,h.best.path.map(i=>'句'+(i+1)).join('→'),number(h.best.length)])):table(['预跑迭代','最短长度'],S.prepared.ant.history.slice(0,8).map(h=>[h.iteration,number(h.best.length)]))}<p>τᵢⱼ←(1−ρ)τᵢⱼ+ΣΔτ；pᵢⱼ∝τᵢⱼᵅ(1/dᵢⱼ)ᵝ。</p>${this.result?.ant?JSONblock(this.result.ant.tau):''}</main></div>`:`<div class="blackboard-workspace"><aside>${area('query',this.s.query,'共同研究问题',3)}<button data-do="blackboard">API发布请求、按能力响应并汇总</button><button data-do="load-board-example">载入实际黑板协作</button>${this.cloudChoice()}<p>中心角色发布请求，各角色先判断自身能力再响应，共享黑板追加证据与缺口，最后由中心角色汇总。页面保留实际请求、响应与角色记录。</p><a href="https://arxiv.org/abs/2510.01285" target="_blank" rel="noopener">LLM-based Multi-Agent Blackboard System… ↗</a><p>The Ant System: Optimization by a colony of cooperating agents（Dorigo等，1996，DOI:10.1109/3477.484436）</p></aside><main>${this.result?.board?this.result.board.map(r=>`<article class="blackboard-entry"><h3>${E(r.role)}</h3><pre>${E(r.output)}</pre><small>实际${E(r.model)} · ${number(r.seconds)}秒</small></article>`).join(''):'<figure><img src="assets/revision/figures/blackboard-fig1.png" alt="原论文图1黑板架构"><figcaption>Salemi等，arXiv:2510.01285v2，PDF页序2，图1；材料核对、检索和批判性核读为本课适配角色。</figcaption></figure><p>配置共用API后开始，黑板初始为空。</p>'}</main></div>`);}
- readingBody(sel){let tasks=['筛选','抽取','释义','概括','比较','验证'];return `<div class="reading-layout"><main>${sel}${tabs('task',this.s.task,tasks.map(t=>[t,t]))}${input('query',this.s.query,'本轮研究问题')}${area('answer',this.s.answer,'先独立阅读：自主重述／最后的80—120字回答',5)}<div class="reading-actions"><button data-do="reading">冻结选中范围，实际模型阅读</button><button data-do="load-reading-example">载入所选任务实际结果</button><button data-do="load-contrast-example">载入实际检索对照</button><button data-do="contrast">固定检索与工具调用对照</button><button data-do="export">导出本轮输入输出与判断</button></div>${this.cloudChoice()}${this.result?.output?`<article class="reading-candidate"><h3>实际模型候选</h3><pre>${E(this.result.output)}</pre></article>`:''}${this.result?.trace?JSONblock(this.result.trace):''}${area('report',this.s.report,'采用／收窄／纠错／待核；逐句依据、理由与成本差别',6)}</main><aside><h3>阅读任务与来源范围</h3><p>沿用第四周六类任务与先读、机器、人工判断的顺序。模型接入统一使用顶栏。</p>${slider('budget',this.s.budget,'本次实际输入片段数',1,8)}${rsBrief(this.records().slice(0,this.s.budget))}<p>不把片段读取当通读。D23只作结语，最终回答在此保存。</p></aside></div>`;}
- glossary(){let g=D.DATA.glossary,terms=g.categories.flatMap(c=>c.terms),q=(this.s.termQuery||'').toLowerCase();terms=terms.filter(t=>[t.term,t.en,...Object.values(t.fields),...t.paragraphs].join(' ').toLowerCase().includes(q));let selected=terms.find(t=>t.term===this.s.selectedTerm)||terms[0];return `<div class="structured-glossary"><aside>${input('termQuery',this.s.termQuery,'搜索术语／释义')}${terms.map(t=>`<button data-set="selectedTerm" data-v="${E(t.term)}" class="${selected?.term===t.term?'on':''}">${E(t.term)}<small>${E(t.en)}</small></button>`).join('')}</aside><main>${selected?`<h2>${E(selected.term)} <small>${E(selected.en)}</small></h2><p><a href="#${selected.first_slide}">回到首次出现页 ${selected.first_slide} →</a> · ${E(selected.fields.where||'')}</p><div class="concept-section-grid"><section><h3>它解决什么问题</h3><p>${E(selected.fields.problem||'')}</p></section><section><h3>一句话与机制</h3>${selected.paragraphs.map(p=>p.startsWith('公式：')?`<h4>公式</h4><pre class="formula">${E(p.slice(3))}</pre>`:`<p>${E(p)}</p>`).join('')}</section><section><h3>课堂怎么观察</h3><p>${E(selected.fields.classroom||'')}</p></section><section><h3>容易混淆</h3><p>${E(selected.fields.confusion||'')}</p></section><section><h3>对历史研究的意义</h3><p>${E(selected.fields.history||'')}</p></section><section><h3>原文与别称</h3><p>${E(selected.fields.alias||'')}</p></section></div>`:'<p>未找到匹配概念。</p>'}</main></div>`;}
- async import(file){if(!file)return;try{let counts=await S.corpus.importFile(file);this.s.source='all';this.message=`已在本机导入${counts.sources}项材料、${counts.segments}片段；各演示共用。`;this.save();}catch(e){this.message='导入失败，当前库保留：'+e.message;this.render();}}
- async restore(file){if(!file)return;try{await S.corpus.restore(file);this.s.source='all';this.message='原件、正文与实际运行记录已在本机恢复。';this.save();}catch(e){this.message='恢复失败，当前记录保留：'+e.message;this.render();}}
- async read(id){const r=S.corpus.records().find(x=>x.id===id);if(!r)return;let source=S.corpus.sources().find(x=>x.id===r.source),blob=r.attachmentId?await S.corpus.file(r.attachmentId):null,url=blob?URL.createObjectURL(blob):source.local_pdf||r.url;if(url&&!/^(https?:|blob:|\/local-materials\/)/.test(url))url='';let dialog=document.createElement('dialog');dialog.className='material-reader';dialog.innerHTML=`<header><h2>${E(source.title)}</h2><button data-close>关闭 ×</button></header><div class="reader-split"><div>${url?`<iframe src="${E(url)}#page=${r.pdfPage||1}" title="所用PDF原页"></iframe>`:'<p>此包未携带原件，可通过通用导入页补入。</p>'}</div><aside>${table(['字段','所用值'],[['作者',E(source.author)],['版本',E(source.edition||source.date||'待查')],['位置',E(r.locator)],['加工',E(r.method||source.acquisition||'待查')],['核读',E(r.verification||'待核')]])}${quote(r)}</aside></div>`;dialog.querySelector('[data-close]').onclick=()=>dialog.close();dialog.addEventListener('close',()=>{if(blob)URL.revokeObjectURL(url);dialog.remove();});document.body.append(dialog);dialog.showModal();}
- async action(name){if(name.startsWith('load-')){if(this.fromThrough){this.message='保存示例使用公开《史德》；德教处理链请运行当前导入材料。';this.render();return;}const names={'load-hyde-example':'HyDE三语候选','load-context-example':'上下文补写','load-graph-example':this.s.strategy,'load-relations-example':'实体关系抽取','load-board-example':'Blackboard System','load-reading-example':'六项阅读任务','load-contrast-example':'固定与工具检索对照'},example=S.preparedAPI.results.find(x=>x.name===names[name]);if(!example){this.message='该项目暂无保存的真实记录';this.render();return;}let r=structuredClone(example.result);this.s.source='shide';this.s.query=example.question.split('\n\n')[0];if(name==='load-hyde-example'){this.hypotheses=parseJSON(r.output).documents;this.s.hypIndex=0;this.s.hypothesis=this.hypotheses[0].text;this.result={run:r};}else if(name==='load-context-example'){this.s.context='api';this.result={run:r,output:r.output};}else if(name==='load-board-example'){this.s.tab='0';this.result=r;}else if(name==='load-reading-example'){let run=r.runs.find(x=>x.task===this.s.task);this.result={trace:run,output:run.output};}else if(name==='load-relations-example'){let graph=parseJSON(r.output);let rs=this.records(),ids=new Set(graph.nodes.map(n=>n.id));graph.edges=graph.edges.filter(e=>ids.has(e.source)&&ids.has(e.target)&&e.quote&&e.sources?.some(id=>rs.some(s=>s.id===id&&s.text.includes(e.quote))));graph.communities=S.A.labelPropagation(graph);graph.mode='实际API候选关系；逐字证据过滤后仍须人工核读';this.result={graph,trace:{extraction:r}};this.s.view='prepared';}else{this.result=r;if(name==='load-graph-example')this.s.view='prepared';}this.message='载入2026-10-13真实API记录：《史德》原范围；请求deepseek-chat，接口返回deepseek-flash。当前材料和问题已恢复到该次范围。';this.save();return;}if(name==='importer'){S.openImporter();return;}if(name==='export'){D.download(this.id+'-研究记录.json',JSON.stringify({schema:'week05-revision/v1',page:this.id,state:this.s,result:this.result,date:new Date().toISOString()},null,2),'application/json');return;}if(name==='backup'){let blob=await S.corpus.backup(),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='第五周_完整本机研究备份.zip';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);return;}if(name==='edit-next'){this.s.edit=+this.s.edit+1;this.save();return;}if(name==='edit-play'||name==='play-process'){if(this.timer){clearInterval(this.timer);this.timer=null;}else this.timer=setInterval(()=>{if(name==='edit-play'){let x=S.A.editSteps(this.s.a,this.s.b),end=this.s.editMode==='fill'?x.steps.length:x.path.length;if(+this.s.edit>=end){clearInterval(this.timer);this.timer=null;}else this.s.edit=+this.s.edit+1;}else this.s.step=(+this.s.step+1)%4;this.save();},650);return;}if(name==='graph-fullscreen'){let dialog=document.createElement('dialog');dialog.className='graph-dialog';dialog.innerHTML='<button>关闭 ×</button>'+this.graphSVG(this.currentGraph());dialog.querySelector('button').onclick=()=>dialog.close();dialog.onclose=()=>dialog.remove();document.body.append(dialog);dialog.showModal();return;}
- if(this.busy)return;if(window.W5CloudBusy){this.message='另一页正在调用模型，请等待本轮完成。';this.render();return;}this.busy=true;window.W5CloudBusy=true;this.message='正在实际处理…';this.render();let records=structuredClone(this.records().slice(0,Math.max(1,this.s.budget))),s=structuredClone(this.s);
- try{
- if(name==='encode'){let sent=this.sentenceRows();let v=await S.embedding.encode(sent.map(x=>x.text),msg=>{this.message=msg;this.render();});this.vectors={texts:sent.map(x=>x.text),vectors:v,model:S.embedding.model,revision:S.embedding.revision};this.message='浏览器实际编码完成；每个句子与距离已更新。';}
- if(name==='context'){let sent=this.sentenceRows().slice(0,6);if(s.context==='late'){let late=await S.embedding.late(sent.map(x=>x.text));this.result={late,source:s.source,input:sent};}else if(s.context==='api'){let run=await S.generate('根据选定原文补写简短上下文，说明作者、篇章对象及该段承接的意思。补写文本与原文分开；每句标片段ID。',records,'为选定材料的检索块补上必要语境',{allowCloud:s.cloud});this.result={output:run.output,run};}else{let r=this.selected(),source=this.sources().find(m=>m.id===r?.source),text=s.context==='metadata'?`${source?.author}；${source?.title}；${source?.edition}；${r?.locator}\n${r?.text}`:sent.map(x=>x.text).join('\n');let v=await S.embedding.encode([text]);this.result={input:text,output:text,vectors:v,mode:'实际上下文组合与编码；没有生成模型补写'};}}
- if(name==='representation'){let all=this.records().slice(0,18);if(this.fromThrough&&this.throughChunks){let c=this.throughChunks;all=all.flatMap(r=>M.chunks(r.text,{method:c.method,size:+c.size,overlap:+c.overlap}).map((chunk,i)=>({...r,id:r.id+'-chunk'+(i+1),parentId:r.id,text:chunk.text,locator:r.locator+'；切分字符['+chunk.start+','+chunk.end+')'}))).slice(0,18);}if(s.representation==='dense'){let chunks=all.map(r=>({...r,text:S.A.sentences(r.text).slice(0,2).map(s=>s.text).join('')})),v=await S.embedding.encode([s.query,...chunks.map(r=>r.text)]);this.result={rows:S.rankDense(v[0],chunks,v.slice(1)),mode:'实际多语句向量余弦'};}else{let rows=S.sparse(s.query,all,{tfidf:s.representation==='tfidf'});if(s.representation==='bow')rows=rows.map(r=>({...r,score:r.terms.reduce((n,x)=>n+x.count,0),terms:r.terms.map(x=>({...x,value:x.count}))})).sort((a,b)=>b.score-a.score);this.result={rows,mode:'实际'+s.representation};}}
- if(name==='hyde-generate'){let run=await S.generate('你在执行HyDE的假想相关文档生成，只依据给定问题，不读取检索库。返回JSON {documents:[{language:"中文/English/日本語",text:"一段120字左右的假想相关学术文档"}]}。生成三个可用于检索的候选；不要添加引文ID；不冒充史料原文。',[],s.query);let parsed=parseJSON(run.output);if(!Array.isArray(parsed.documents)||parsed.documents.length<3||parsed.documents.some(x=>typeof x.text!=='string'))throw Error('API未返回三个文档候选，原始输出已保存到实际运行记录');this.hypotheses=parsed.documents;this.s.hypIndex=0;this.s.hypothesis=parsed.documents[0].text;this.result={run};}
- if(name==='hyde-retrieve'){if(!s.hypothesis.trim())throw Error('先生成或自己输入假想文档');let rs=this.records().slice(0,12).map(r=>({...r,text:S.A.sentences(r.text).slice(0,2).map(x=>x.text).join('')})),v=await S.embedding.encode([s.hypothesis,...rs.map(r=>r.text)]);this.result={...this.result,rows:S.rankDense(v[0],rs,v.slice(1)).slice(0,s.budget),inputHypothesis:s.hypothesis,mode:'实际假想文档嵌入→真实库余弦检索'};}
- if(name==='retrieve')this.result={retrieved:S.sparse(s.query,this.records()),query:s.query,mode:'实际BM25'};
- if(name==='graph-local'){let graph=this.currentGraph();graph.communities=S.A.labelPropagation(graph);this.result={graph,trace:{mode:'实际词项共现图和标签传播',sources:this.records().map(x=>x.id),calls:0}};}
- if(name==='graph-api'){let run=await S.generate('从原文抽取实体与关系。返回JSON {nodes:[{id:"原文中的名称",sources:["片段ID"]}],edges:[{source:"名称",target:"名称",relation:"明确关系",sources:["片段ID"],quote:"原文证据"}]}。每条边须有逐字原文和存在的来源，不推断思想影响。',records,'建立可回查的小图',{allowCloud:s.cloud});let graph=parseJSON(run.output);if(!Array.isArray(graph.nodes)||!Array.isArray(graph.edges))throw Error('模型关系格式错误，实际输出已保存');let map=new Map(records.map(r=>[r.id,r]));graph.edges=graph.edges.filter(e=>typeof e.quote==='string'&&e.quote.trim()&&e.sources?.some(id=>map.has(id)&&map.get(id).text.includes(e.quote)));graph.nodes=graph.nodes.filter(n=>typeof n.id==='string');let ids=new Set(graph.nodes.map(n=>n.id));graph.edges=graph.edges.filter(e=>ids.has(e.source)&&ids.has(e.target));graph.communities=S.A.labelPropagation(graph);graph.mode='实际API候选关系，逐字证据过滤后仍须人工核读';let summaries=[];if(s.strategy==='GraphRAG')for(let group of graph.communities.slice(0,3)){let relevant=records.filter(r=>group.some(n=>r.text.includes(n)));if(relevant.length){let summary=await S.generate('据所给原文概括该社区的主题，每句标片段ID，不跨范围概括。',relevant,group.join('、'),{allowCloud:s.cloud});summaries.push(summary);}}this.result={graph,trace:{extraction:run,summaries},output:summaries.map(x=>x.output).join('\n')};}
- if(name==='graph-query'){const {queryGraph}=await import('./graph-query.mjs');this.result=await queryGraph(S,{graph:this.result?.graph||this.currentGraph(),records:structuredClone(this.records()),question:s.query,strategy:s.strategy,budget:+s.budget,allowCloud:s.cloud});}
- if(name==='ants'){let sent=this.sentenceRows().slice(0,6),v=this.knownVectors(sent)||await S.embedding.encode(sent.map(x=>x.text)),dist=v.map((a,i)=>v.map((b,j)=>i===j?0:Math.max(.001,1-S.A.cosine(a,b)))),ant=S.A.antSystem(dist,{iterations:s.antIter,ants:s.ants,rho:s.rho});this.result={ant,dist,input:sent,mode:'实际Ant System随机路线、信息素沉积与挥发'};}
- if(name==='blackboard'){const {runBlackboard}=await import('./blackboard.mjs');this.result=await runBlackboard(S,records,s.query,{allowCloud:s.cloud});}
- if(name==='reading'){let task='执行'+s.task+'任务。仅用原文，逐句标[ID]，区分原话、释义与推断。自主重述仅作为待核判断。';let run=await S.generate(task,records,s.query+'\n自主重述：'+s.answer,{allowCloud:s.cloud});this.result={output:run.output,trace:run};}
- if(name==='contrast'){let frozen=this.records().slice(0,30),fixed=S.sparse(s.query,frozen).slice(0,s.budget),first=await S.generate('固定检索路径：据实际取回原文回答，逐句标ID。',fixed,s.query,{allowCloud:s.cloud});let collected=[],log=[];const settings=window.W5Chat.settings();if(frozen.some(r=>r.private)&&!/^http:\/\/(localhost|127\.0\.0\.1)/.test(settings.baseUrl)&&!s.cloud)throw Error('本机材料需允许当前范围发送');let messages=[{role:'system',content:'据库内工具返回片段回答，逐句标ID；最多3次模型调用。调用search以原语关键词检索。'},{role:'user',content:s.query}],tools=[{type:'function',function:{name:'search',description:'在冻结的所选史料库实际BM25检索',parameters:{type:'object',properties:{query:{type:'string'}},required:['query']}}}];for(let i=0;i<3;i++){let response=await window.W5Chat.chat(messages,{maxTokens:2048,tools:i<2?tools:undefined});log.push({input:structuredClone(messages),output:response});if(!response.toolCalls?.length){collected.push(response.text);break;}messages.push({role:'assistant',content:response.text||null,tool_calls:response.toolCalls});for(let t of response.toolCalls){let arg=parseJSON(t.function.arguments),rs=S.sparse(arg.query,frozen).slice(0,s.budget);messages.push({role:'tool',tool_call_id:t.id,content:rs.map(r=>`[${r.id}] ${r.locator}\n${r.text}`).join('\n')||'本库没有命中字词'});}}this.result={output:'固定路径：\n'+first.output+'\n\n工具路径：\n'+(collected.join('\n')||'预算用尽，尚无最终回答'),trace:{fixed:first,agent:log,model:settings.model,corpusSHA256:await S.sha256(frozen),limit:3,budget:s.budget}};await S.corpus.saveRun({id:'contrast-'+crypto.randomUUID(),...this.result.trace});}
- this.message='本轮实际处理完成，输入与输出可导出。';
- }catch(e){this.message='实际处理未完成：'+e.message;}finally{if(this.result)await S.corpus.saveRun({id:'operation-'+crypto.randomUUID(),time:new Date().toISOString(),operation:name,page:this.id,state:s,result:this.result});this.busy=false;window.W5CloudBusy=false;this.save();}
- }
-}
-function parseJSON(s){let clean=s.replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,'');let start=clean.indexOf('{'),end=clean.lastIndexOf('}');return JSON.parse(start>=0?clean.slice(start,end+1):clean);}
-function rsBrief(rs){return rs.map(r=>`<p><b>${E(r.id)}</b> ${E(r.title)}<br><small>${E(r.locator)}</small></p>`).join('');}
-D.register('revision-lab',RevisionLab);
+  "use strict";
+  const D = window.Deck, E = D.esc, M = window.LabMath;
+  window.W5ServicesReady = import("./services.mjs");
+  let S;
+  const input = (k, v, l) => `<label class="field">${E(l)}<input data-k="${k}" value="${E(v ?? "")}" ${["a", "b"].includes(k) ? 'maxlength="30"' : ""}></label>`;
+  const area = (k, v, l, n = 4) => `<label class="field">${E(l)}<textarea data-k="${k}" rows="${n}">${E(v ?? "")}</textarea></label>`;
+  const slider = (k, v, l, min, max, step = 1) => `<label class="field">${E(l)}：${E(v)}<input data-k="${k}" type="range" min="${min}" max="${max}" step="${step}" value="${v}"></label>`;
+  const tabs = (k, v, items) => `<nav class="revision-tabs" role="tablist">${items.map(([id, label]) => `<button data-set="${k}" data-v="${E(id)}" role="tab" aria-selected="${String(String(id) === String(v))}" class="${String(id) === String(v) ? "on" : ""}">${E(label)}</button>`).join("")}</nav>`;
+  const number = (x) => Number(x).toFixed(3);
+  const table = (heads, rows) => `<div class="table-scroll"><table class="kv"><thead><tr>${heads.map((h) => `<th>${E(h)}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((v) => `<td>${v ?? ""}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  const quote = (r) => `<article class="source-excerpt"><small>${E(r.id)} · ${E(r.author)} · ${E(r.locator)}</small><p>${E(r.text)}</p><p class="caption">${E(r.verification || "待核")} ${r.translation ? E(r.translation) : ""}</p><button data-reader="${E(r.id)}">原页／版本／正文</button></article>`;
+  const JSONblock = (x) => `<pre class="trace">${E(JSON.stringify(x, null, 2))}</pre>`;
+  const STAGES = {
+    D01: [["朴素RAG", [["索引", "清理、切分、表示并建立索引；本讲第一节。"], ["检索", "按问题取回片段；第三周已走过。"], ["生成", "把取回片段放入上下文，标出处；本讲第三节。"]]], ["高级RAG", [["检索前", "查询重写与HyDE，扩充检索线索；D13。"], ["检索后", "重排、去重与上下文预算；D14、D15。"]]], ["模块化RAG", [["拆分部件", "各步骤成为可以替换的模块。"], ["更换索引", "图结构、关系与社区摘要；D18—D20。"]]], ["智能体的基础设施", [["调用检索工具", "模型选择何时检索、怎样改写问题。"], ["循环与停止", "记录工具结果、调用预算和实际输入；D22。"]]]],
+    D02: [["材料入库", [["版本", "作者、题名、底本、PDF页与印刷页分别登记。"], ["范围", "已识读和未覆盖页分别记录；D03。"]]], ["取回片段", [["切点", "句、段、递归与语义切分决定检索单位；D04—D08。"], ["片段分布", "所需依据可能散在多个片段；D09。"]]], ["进入上下文", [["排序与预算", "取回之后，还要决定哪些进入实际模型输入。"], ["实际输入", "记录片段ID及原文；D15、D22。"]]], ["概括有据", [["逐句核读", "流畅、附引文与受原文支持分别检查；D16。"], ["有限判断", "把“都认为”“完全”之类的词交回各自原文核对。"]]]],
+    D10: [["稀疏表示", [["词袋与TF-IDF", "按出现次数与逆文档频率给词项权重。"], ["BM25", "词频饱和和长度校正；本页可实际算贡献词。"]]], ["稠密表示", [["句向量", "本页实际运行MiniLM多语嵌入，384维。"], ["余弦", "向量之间的角度用于排序；不是史实置信度。"]]], ["多语表示", [["跨语种", "把中文、英文、日文放入同一模型空间后比较。"], ["原语回查", "命中仍须回到原语、版本和位置。"]]], ["M3及多向量", [["BGE-M3", "稠密、稀疏与多向量三类检索功能；据讲义。"], ["浏览器范围", "这里实际嵌入使用锁定MiniLM；BGE-M3原模型不冒称已经载入。"]]]],
+    D18: [["实体与关系", [["实体候选", "可先读预跑的词项图，或通过API从选中原文抽取。"], ["出处", "关系保留片段ID与原话，回到PDF。"]]], ["图与消解", [["名称", "按精确匹配或人工异称表核对。"], ["关系", "共现、作者字段、模型关系分别登记。"]]], ["社区与摘要", [["社区", "课堂图使用实际标签传播划分；原实现采用层级社区。"], ["摘要", "API对每个选中社区生成有出处的概括。"]]], ["查询与核对", [["局部／全局", "围绕实体的局部资料，或跨社区概括。"], ["证据", "社区摘要始终回到最初所用片段。"]]]],
+    D21: [["Blackboard System", [["Shared blackboard", "共享可阅读的中间结果；各知识源写回。"], ["Planning and knowledge sources", "本页让材料核对、检索、判断角色通过同一黑板接续。"]]], ["The Ant System", [["概率选择", "依据τᵅ·ηᵝ选择下一节点，η为距离倒数。"], ["沉积与挥发", "按完整路线长度沉积信息素，再按ρ挥发。"], ["实际任务", "用当前史料片段的余弦距离构成阅读顺序优化小例。"]]]]
+  };
+  class RevisionLab extends HTMLElement {
+    connectedCallback() {
+      if (this.started) {
+        window.addEventListener("week05-corpus-change", this.refresh);
+        if (this.ready) this.render();
+        return;
+      }
+      this.started = true;
+      this.id = this.getAttribute("page-id");
+      this.page = D.pageById(this.id);
+      this.s = Object.assign({ source: "shide", record: "", step: 0, tab: "0", method: "fixed", size: 160, overlap: 20, theta: 0.4, threshold: "absolute", semantic: "breakpoint", k: 3, lambda: 0.2, eps: 0.4, minPoints: 2, scope: 8, query: "史德與心術", a: "森鴎外", b: "森鷗外", edit: 0, editMode: "fill", permutations: 128, budget: 3, representation: "bm25", terms: "史德\n史識\n心術\n劉氏\n劉氏子元\n史料\n自然\n栗山大膳\n日蓮上人\n山椒大夫\nauthor\ncriticism\nhistory", aliases: "森鷗外=>森鴎外\nActon=>Lord Acton\n劉氏子元=>劉知幾", entityRule: "exact", zoom: 1, strategy: "GraphRAG", view: "run", context: "metadata", hypothesis: "", claim: "章學誠、阿克顿與森鴎外都認為歷史敘述必須完全服從史料。", answer: "", task: "比较", report: "", through: 0, antIter: 10, ants: 8, rho: 0.3, cloud: false, grades: {}, used: [] }, D.store.get("revision/" + this.id, {}));
+      this.busy = false;
+      this.result = null;
+      this.vectors = null;
+      this.selectedNode = "";
+      this.message = "";
+      this.addEventListener("input", (e) => {
+        if (e.target.closest("revision-lab") !== this) return;
+        let k = e.target.dataset.k;
+        if (!k) return;
+        this.s[k] = e.target.type === "range" ? Number(e.target.value) : e.target.type === "checkbox" ? e.target.checked : e.target.value;
+        this.save();
+      });
+      this.addEventListener("change", (e) => {
+        if (e.target.closest("revision-lab") !== this) return;
+        let k = e.target.dataset.k;
+        if (k && e.target.tagName === "SELECT") {
+          this.s[k] = e.target.value;
+          if (k === "source") {
+            this.s.record = "";
+            this.s.passage = "";
+            this.vectors = null;
+          }
+          this.save();
+        }
+        if (e.target.dataset.import) this.import(e.target.files?.[0]);
+        if (e.target.dataset.restore) this.restore(e.target.files?.[0]);
+      });
+      this.addEventListener("click", (e) => {
+        if (e.target.closest("revision-lab") !== this) return;
+        let b = e.target.closest("[data-set],[data-do],[data-rail],[data-reader],[data-node]");
+        if (!b) return;
+        if (b.dataset.set) {
+          if (b.dataset.set.startsWith("grade")) {
+            let i = b.dataset.set.slice(5);
+            this.s.grades[i] = { ...this.s.grades[i] || {}, weight: Number(b.dataset.v) };
+          } else {
+            this.s[b.dataset.set] = b.dataset.v;
+            if (b.dataset.set === "editMode") this.s.edit = 0;
+            if (b.dataset.set === "hypIndex" && this.hypotheses) this.s.hypothesis = this.hypotheses[+b.dataset.v].text;
+          }
+          this.save();
+        }
+        if (b.dataset.rail) {
+          this.s.step = +b.dataset.rail;
+          this.save();
+        }
+        if (b.dataset.reader) this.read(b.dataset.reader);
+        if (b.dataset.node) {
+          this.selectedNode = b.dataset.node;
+          this.render();
+        }
+        if (b.dataset.do) this.action(b.dataset.do);
+      });
+      this.addEventListener("focusin", (e) => {
+        if (e.target.closest("revision-lab") !== this) return;
+        const c = e.target.closest(".flow-col");
+        if (c) {
+          let i = [...this.querySelectorAll(".flow-col")].indexOf(c);
+          if (i >= 0 && i !== +this.s.step) {
+            this.s.step = i;
+            this.querySelectorAll(".flow-rail [data-rail]").forEach((x, z) => x.classList.toggle("active", z === i));
+          }
+        }
+      });
+      this.addEventListener("week05-through-update", (e) => {
+        if (this.id !== "D24") return;
+        e.stopPropagation();
+        this.s.chain ??= {};
+        this.s.chain[e.detail.id] = { state: e.detail.state, result: e.detail.result };
+        D.store.set("revision/" + this.id, this.s);
+      });
+      this.refresh = () => this.render();
+      window.addEventListener("week05-corpus-change", this.refresh);
+      window.W5ServicesReady.then((x) => {
+        S = x;
+        this.ready = true;
+        this.render();
+      }).catch((e) => {
+        this.innerHTML = "<p>" + E(e.message) + "</p>";
+      });
+    }
+    disconnectedCallback() {
+      clearInterval(this.timer);
+      window.removeEventListener("week05-corpus-change", this.refresh);
+    }
+    save() {
+      D.store.set("revision/" + this.id, this.s);
+      if (this.fromThrough) this.dispatchEvent(new CustomEvent("week05-through-update", { bubbles: true, detail: { id: this.id, state: structuredClone(this.s), result: this.result } }));
+      this.render();
+    }
+    sources() {
+      let ss = S.corpus.sources();
+      return this.id === "D24" || this.fromThrough ? ss.filter((s) => s.private) : ss;
+    }
+    records() {
+      let rs = this.throughScope?.length && ["D22", "D16"].includes(this.id) ? S.corpus.records().filter((r) => this.throughScope.includes(r.id)) : S.corpus.records();
+      if (this.id === "D24" || this.fromThrough) rs = rs.filter((r) => r.private);
+      return this.s.source === "all" ? rs : rs.filter((r) => r.source === this.s.source);
+    }
+    selected() {
+      let rs = this.records();
+      return rs.find((r) => r.id === this.s.record) || rs[0];
+    }
+    selection() {
+      const ss = this.sources();
+      return `<div class="selection-bar"><label>材料<select data-k="source"><option value="all" ${this.s.source === "all" ? "selected" : ""}>本页可用全部材料</option>${ss.map((m) => `<option value="${E(m.id)}" ${m.id === this.s.source ? "selected" : ""}>${E(m.author || "待查")} · ${E(m.title)}</option>`).join("")}</select></label><label>片段<select data-k="record">${this.records().map((r) => `<option value="${E(r.id)}" ${r.id === this.s.record ? "selected" : ""}>${E(r.id + " " + r.locator)}</option>`).join("")}</select></label><button data-do="importer">通用导入页 ↗</button><label class="file-chip">导入本机项目<input data-import="1" type="file" accept=".json,.zip"></label><small>共${this.records().length}个片段</small></div>`;
+    }
+    flow(cols) {
+      let html = D.flowShell({ ...this.page, steps: cols.map((c) => c[0]) }, cols.map(([title, body, why]) => ({ title, body, why })), { active: +this.s.step });
+      return html.replace(/<span class="([^"]*)">(\d+) · ([\s\S]*?)<\/span>/g, (m, c, n, t) => `<button data-rail="${+n - 1}" class="${c}" aria-pressed="${+n - 1 === +this.s.step}">${n} · ${t}</button>`);
+    }
+    chapter() {
+      let list = STAGES[this.id], chosen = list[+this.s.tab] || list[0];
+      return `<div class="stage-history">${tabs("tab", this.s.tab, list.map((x, i) => [i, x[0]]))}<section class="stage-panel"><h2>${E(chosen[0])}</h2><div class="stage-examples">${chosen[1].map(([h, t], i) => `<article><small>0${i + 1}</small><h3>${E(h)}</h3><p>${E(t)}</p></article>`).join("")}</div><p class="caption">内容依据当前第五周讲义；每一阶段只展开所选部分。</p></section></div>`;
+    }
+    sentenceRows() {
+      let text = this.s.passage || this.records().filter((r) => !r.verification?.includes("待逐字")).map((r) => r.text).join("\n");
+      return S.A.sentences(text).slice(0, this.s.scope);
+    }
+    knownVectors(sentences) {
+      if (this.vectors && JSON.stringify(this.vectors.texts) === JSON.stringify(sentences.map((s) => s.text))) return this.vectors.vectors;
+      let known = new Map(S.prepared.results.flatMap((r) => r.sentences.map((s, i) => [s.text, r.vectors[i]])));
+      return sentences.every((s) => known.has(s.text)) ? sentences.map((s) => known.get(s.text)) : null;
+    }
+    graphSVG(g) {
+      const W = 900, H = 510, n = g.nodes.length, pos = new Map(g.nodes.map((x, i) => [x.id, [W / 2 + Math.cos(2 * Math.PI * i / Math.max(1, n)) * 320, H / 2 + Math.sin(2 * Math.PI * i / Math.max(1, n)) * 195]]));
+      return `<div class="graph-surface"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="可放大、节点可回查的当前关系图"><g transform="translate(${W / 2 * (1 - this.s.zoom)},${H / 2 * (1 - this.s.zoom)}) scale(${this.s.zoom})">${g.edges.map((e) => {
+        let a = pos.get(e.source), b = pos.get(e.target);
+        return a && b ? `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#9aadc0" stroke-width="${Math.min(4, e.weight || 1)}"/>` : "";
+      }).join("")}${g.nodes.map((n2) => {
+        let [x, y] = pos.get(n2.id);
+        return `<g data-node="${E(n2.id)}" tabindex="0" role="button" aria-label="${E(n2.id)}"><circle cx="${x}" cy="${y}" r="29" fill="${this.selectedNode === n2.id ? "#ecce83" : "#eef5fc"}" stroke="#1a5ca9"/><text x="${x}" y="${y + 46}" text-anchor="middle" font-size="13">${E(n2.id)}</text></g>`;
+      }).join("")}</g></svg></div>`;
+    }
+    currentGraph() {
+      let records = this.records(), terms = this.s.terms.split(/[\n,，]/).map((t) => t.trim()).filter(Boolean), g = S.A.graphFrom(records, terms);
+      const authors = [...new Set(records.map((r) => r.author).filter(Boolean))];
+      for (let a of authors) if (!g.nodes.some((n) => n.id === a)) g.nodes.push({ id: a, sources: records.filter((r) => r.author === a).map((r) => r.id), kind: "题录责任者" });
+      let aliases = Object.fromEntries(this.s.aliases.split("\n").filter((l) => l.includes("=>")).map((l) => l.split("=>").map((x) => x.trim())));
+      const canon = (n) => this.s.entityRule === "alias" ? aliases[n] || n : this.s.entityRule === "edit" ? g.nodes.map((x) => x.id).find((x) => x < n && M.editTable(x, n).at(-1).at(-1) <= 1) || n : n;
+      let nodes = new Map();
+      for (let n of g.nodes) {
+        let id = canon(n.id);
+        if (!nodes.has(id)) nodes.set(id, { ...n, id, aliases: [], sources: [] });
+        let x = nodes.get(id);
+        x.sources = [...new Set([...x.sources, ...n.sources])];
+        if (id !== n.id) x.aliases.push(n.id);
+      }
+      g.nodes = [...nodes.values()];
+      g.edges = g.edges.map((e) => ({ ...e, source: canon(e.source), target: canon(e.target) })).filter((e) => e.source !== e.target);
+      return g;
+    }
+    render() {
+      if (!this.ready) return;
+      let s = this.s, r = this.selected(), rs = this.records(), html = "", sel = this.selection();
+      if (this.id === "D24" && !rs.length) {
+        if (this.sources().length && s.source === "shide") {
+          this.s.source = "all";
+          rs = this.records();
+        }
+        if (!rs.length) {
+          this.innerHTML = `<div class="empty-project"><h2>德教全量：由您自行在本机导入</h2><p>默认不预装任何德教原文、教师稿或预填研究结果。请选择上周导出包中的project.json或通用项目ZIP。</p><button data-do="importer">打开共用导入页</button><label class="file-chip">选择德教项目<input data-import="1" type="file" accept=".json,.zip"></label><label class="file-chip">恢复第五周完整备份<input data-restore="1" type="file" accept=".zip"></label><p role="status">${E(this.message)}</p></div>`;
+          return;
+        }
+      }
+      if (STAGES[this.id]) html = this.chapter();
+      switch (this.id) {
+        case "D01":
+        case "D02":
+          break;
+        case "D03":
+          html = sel + `<div class="identity-workspace"><aside><h3>题录</h3>${input("identityAuthor", s.identityAuthor ?? r?.author, "责任者")}${input("identityTitle", s.identityTitle ?? r?.title, "题名")}${area("identityVersion", s.identityVersion ?? this.sources().find((m) => m.id === r?.source)?.edition, "所用版本", 3)}<button data-do="export">保存本次字段练习</button></aside><main><nav>题录 → 附件 → 正文</nav>${r ? quote(r) : ""}<p>印刷页与PDF物理页分别保存；加工、识读和人工核读各有状态。</p></main></div>`;
+          break;
+        case "D04": {
+          let text = s.passage || r?.text || "", chunks = M.chunks(text, s.method, s.size, s.overlap), cs = chunks.map((c, i) => [String(i + 1), E(c.level.replaceAll("\n", "↵")), `[${c.start},${c.end})`, String([...c.text].length), E(c.text)]);
+          html = sel + this.flow([["切分设置", tabs("method", s.method, [["fixed", "固定长度"], ["sentence", "按句"], ["paragraph", "按段"], ["recursive", "递归"]]) + slider("size", s.size, "块大小（字符）", 30, 600, 10) + slider("overlap", s.overlap, "固定切分重叠", 0, 100, 5) + area("passage", text, "实际材料，可修改", 7)], ["结构化片段表", table(["块", "边界", "原文字符范围", "字数", "实际文本"], cs)], ["切法比较", table(["做法", "单位", "当前片段数"], [["固定长度", "字符", M.chunks(text, "fixed", s.size, s.overlap).length], ["按句", "现代句读或工作转写句读", M.chunks(text, "sentence", s.size).length], ["按段", "已有换行", M.chunks(text, "paragraph", s.size).length], ["递归", "空行→换行→空格→字符", M.chunks(text, "recursive", s.size).length]])], ["依据与边界", r ? quote({ ...r, text: r.text.slice(0, 160) }) + "<p>所有偏移按Unicode字符计。句读来自所用文本或工作转写，不把自动断句当原刊固有结构。</p>" : ""]]);
+          break;
+        }
+        case "D06":
+        case "D07": {
+          let sent = this.sentenceRows(), vec = this.knownVectors(sent), dist = vec ? S.A.boundaries(vec, s.theta) : null, theta = s.theta;
+          if (dist && s.threshold !== "absolute") {
+            let ds = dist.map((x) => x.distance).sort((a, b) => a - b);
+            if (s.threshold === "percentile") theta = ds[Math.min(ds.length - 1, Math.floor(0.8 * ds.length))] || 0;
+            if (s.threshold === "std") {
+              let mu = ds.reduce((a, b) => a + b, 0) / ds.length;
+              theta = mu + Math.sqrt(ds.reduce((a, b) => a + (b - mu) ** 2, 0) / ds.length);
+            }
+            if (s.threshold === "iqr") theta = (ds[Math.floor(0.75 * ds.length)] || 0) + 1.5 * ((ds[Math.floor(0.75 * ds.length)] || 0) - (ds[Math.floor(0.25 * ds.length)] || 0));
+            dist = S.A.boundaries(vec, theta);
+          }
+          let groups = [];
+          if (dist) {
+            groups = [[0]];
+            dist.forEach((d, i) => {
+              if (d.cut) groups.push([]);
+              groups.at(-1).push(i + 1);
+            });
+            if (s.semantic === "single") groups = S.A.clusters(vec, s.k, s.lambda);
+            if (s.semantic === "dbscan") groups = S.A.dbscan(vec, s.eps, s.minPoints, s.lambda).groups;
+            if (s.semantic === "fixed") groups = sent.reduce((a, _, i) => {
+              let n = Math.floor(i / s.k);
+              (a[n] ??= []).push(i);
+              return a;
+            }, []);
+          }
+          const controls = (this.id === "D07" ? '<p>按语义单元还包括按句、按段／篇章和递归切分；D04可运行三者。这里比较狭义嵌入断点、位置＋语义聚类与固定句数基线。古籍的句界依赖人工句读，扫描段落需核读。</p><a href="#D04">回到实际结构切分 →</a>' : "") + sel + slider("scope", s.scope, "实际句数", 3, 12) + tabs("semantic", s.semantic, [["breakpoint", "嵌入断点"], ["single", "位置＋语义单链接聚类"], ["dbscan", "DBSCAN"], ["fixed", "固定句数基线"]]) + tabs("threshold", s.threshold, [["absolute", "绝对阈值"], ["percentile", "80%分位"], ["std", "均值＋标准差"], ["iqr", "IQR"]]) + slider("theta", s.theta, "绝对距离阈值", 0, 1, 0.01) + slider("k", s.k, "簇数／基线句数", 1, 6) + slider("lambda", s.lambda, "位置距离权重λ", 0, 1, 0.05) + slider("eps", s.eps, "DBSCAN邻域ε", 0.1, 0.9, 0.05) + slider("minPoints", s.minPoints, "DBSCAN最少邻居（含自身）", 1, 5) + `<button data-do="encode">浏览器实际重新编码</button>`;
+          const body = this.flow([["输入与实现", controls], ["每句的实际情况", table(["句", "原文", "字符范围", "向量"], sent.map((t, i) => [i + 1, E(t.text), `[${t.start},${t.end})`, vec ? vec[i].slice(0, 4).map(number).join(",") + " … 384维" : "待实际编码"]))], ["距离与分组", dist ? table(["句界", "余弦距离", "切断（θ=" + number(theta) + "）"], dist.map((d) => [`${d.i + 1}→${d.i + 2}`, number(d.distance), d.cut ? "是" : "否"])) + `<p>d=1−cos；聚类另用λ|i−j|/n+(1−λ)(1−max(cos,0))。</p>` : "<p>当前文本不在预跑记录中，请实际编码。</p>"], ["实际切分结果", groups.map((g, i) => `<article class="chunk"><small>块${i + 1}：句${g.map((x) => x + 1).join("、")}</small>${E(g.map((x) => sent[x].text).join(""))}</article>`).join("") + `<p>当前${vec ? "数值来自实际模型运行" : "未编码"}；模型MiniLM，q8，384维。</p>`]]);
+          html = this.id === "D07" ? tabs("view", s.view, [["run", "史料实际试跑"], ["paper", "论文原图与结果"]]) + (s.view === "paper" ? `<figure><img src="assets/revision/figures/chunking-fig1.png" alt="Qu等论文PDF第2页的原始切分图"><figcaption>Qu、Bao、Tu，2024，arXiv:2410.13070，Figure 1；显示论文原页，不是课堂复现实验。</figcaption></figure><figure><img src="assets/revision/figures/chunking-table1.png" alt="原论文Table 1"><figcaption>PDF页序3，Table 1：英文检索任务及其模型条件。原文与本课日、中、英史料的测试分别看。</figcaption></figure>` : body) : body;
+          break;
+        }
+        case "D08": {
+          let sent = this.sentenceRows().slice(0, 6), prep = S.prepared.results.find((x) => x.source === s.source), late = this.result?.late || prep?.late, step = +s.step;
+          html = sel + tabs("context", s.context, [["metadata", "加材料与定位"], ["neighbors", "加相邻原文"], ["api", "API补写上下文"], ["late", "整窗口后期池化"]]) + this.flow([["选择范围", slider("scope", s.scope, "最多使用句数", 3, 12) + `<button data-do="context">执行当前方法</button><button data-do="load-context-example">载入实际上下文补写</button><button data-do="play-process">动态走处理过程</button>${r ? quote({ ...r, text: r.text.slice(0, 160) }) : ""}`], ["处理记录导航", tabs("step", step, [[0, "输入原文"], [1, "补写／编码"], [2, "片段与表示"], [3, "查询与原页"]]) + `<section class="md-process"><h3>${["# 输入材料", "## 处理工序", "## 处理输出", "## 回到依据"][step]}</h3><pre>${E([sent.map((x, i) => `${i + 1}. ${x.text}`).join("\n"), s.context === "late" ? "整窗口先编码，每个词元带上下文，再按句范围池化。" : s.context === "neighbors" ? "以原文前后句补足语境；补入句子仍保留出处。" : s.context === "metadata" ? "把作者、题名、所用版本和定位加到检索表示前。" : "API读取选定范围，另存其实际补写文本。", this.result?.output || late?.mode || "选择执行后查看实际输出。", r?.locator || "待选择"][step])}</pre></section>`], ["当前中间产物", s.context === "late" && late ? table(["句", "词元范围", "后期池化向量"], late.ranges.map((x, i) => [i + 1, `[${x.start},${x.end})`, x.vector.slice(0, 5).map(number).join(",") + " …"])) : this.result?.output ? `<p class="lab-quote">${E(this.result.output)}</p>` : table(["上下文原文", "保留身份"], sent.slice(0, 3).map((t) => [E(t.text), E(r?.locator)]))], ["核读与比较", "<p>原文、附加元数据、邻句和模型补写分别保存。后期池化使用实际MiniLM短窗口，512词元内；不称为论文Jina长模型的全量复现。</p>" + this.cloudChoice() + `<button data-do="export">保存本次处理记录</button>`]]);
+          break;
+        }
+        case "D09":
+          html = sel + this.flow([["具体问题", area("query", s.query, "提出需查依据的问题", 3) + slider("budget", s.budget, "选入片段数", 1, 6)], ["必要片段", rs.slice(0, 8).map((r2) => `<label class="evidence-choice"><input data-use="${E(r2.id)}" type="checkbox" ${s.used.includes(r2.id) ? "checked" : ""}>${E(r2.id + " " + r2.text.slice(0, 42))}</label>`).join("")], ["切分与实际证据", rs.filter((r2) => s.used.includes(r2.id)).map(quote).join("") || "<p>选择所需片段后，在这里并列实际原文。</p>"], ["能支持到哪里", area("report", s.report, "分别说明对象、定义、要求与尚缺语境", 7) + "<p>支持程度由人工核读；相同出处不算多个独立支持。</p>"]]);
+          break;
+        case "D10":
+          html += sel + tabs("representation", s.representation, [["bow", "词袋"], ["tfidf", "TF-IDF"], ["bm25", "BM25"], ["dense", "多语句向量"]]) + input("query", s.query, "查询") + `<button data-do="representation">实际计算并排序</button>` + (this.result ? table(["片段", "实际得分", "贡献词／向量"], this.result.rows.map((r2) => [E(r2.id), number(r2.score), E(r2.terms ? r2.terms.filter((x) => x.count).map((x) => `${x.term}:${number(x.value)}`).join("；") : r2.vectorPreview || "384维")])) : '<p class="note-box">选择表示后实际计算；模型下载与编码在浏览器进行。</p>');
+          break;
+        case "D11": {
+          let text = s.passage || r?.text || "", q = s.query, normalize = window.OpenCC.Converter({ from: "t", to: "cn" }), a = s.norm ? normalize(q) : q, b = s.norm ? normalize(text) : text, result = M.similarity(a, b, s.unit === "bigram" ? 2 : 1);
+          html = sel + this.flow([["拆成集合", area("passage", text, "实际史料片段", 5) + input("query", q, "查询") + tabs("unit", s.unit, [["char", "单字"], ["bigram", "字二元组"]])], ["规范值与原值", tabs("norm", s.norm, [["", "保留原值"], ["1", "OpenCC t2s"]]) + table(["原值", "比较值"], [[E(q), E(a)], [E(text.slice(0, 70)), E(b.slice(0, 70))]])], ["实际交并集", table(["集合", "元素"], [["A", E(result.A.join(" "))], ["B", E(result.B.join(" "))], ["交集", E(result.inter.join(" "))], ["并集", E(result.union.join(" "))]])], ["公式与计算", table(["系数", "代入", "数值"], [["J", `${result.i}/${result.u}`, number(result.J)], ["Dice", `${2 * result.i}/${result.a + result.b}`, number(result.D)], ["O", `${result.i}/${Math.min(result.a, result.b)}`, number(result.O)]]) + `<p>所有片段可换成新导入史料。规范值用于比较，引用保留原值。</p>`]]);
+          break;
+        }
+        case "D12": {
+          let x = S.A.editSteps(s.a, s.b), limit = Math.min(+s.edit, x.steps.length), path = x.path.slice(0, Math.min(+s.edit, x.path.length)), current = s.editMode === "path" ? path.at(-1) : x.steps[limit - 1], effect = S.A.applyEdits(s.a, path);
+          html = `<div class="edit-toolbar">${input("a", s.a, "源字符串")}${input("b", s.b, "目标字符串")}${tabs("editMode", s.editMode, [["fill", "动态填表"], ["path", "执行最短编辑路径"]])}${slider("edit", s.edit, "进度", 0, s.editMode === "fill" ? x.steps.length : x.path.length)}<button data-do="edit-next">下一步</button><button data-do="edit-play">播放／暂停</button></div><div class="edit-workspace"><div>${table(["∅", "∅", ...x.B], x.d.map((row, i) => [E(x.A[i - 1] || "∅"), ...row.map((v, j) => i && j && (i - 1) * x.B.length + j > limit && s.editMode === "fill" ? '<span class="uncomputed">·</span>' : `<span class="${current && current.i === i && current.j === j ? "edit-current" : ""}">${v}</span>`)]))}</div><aside><h3>当前编辑与公式</h3>${s.editMode === "fill" && current ? `<p>处理 a${current.i}=${E(current.a)}，b${current.j}=${E(current.b)}</p><p>删除=${current.options[0]}；插入=${current.options[1]}；${E(current.operation)}对角候选=${current.options[2]}。</p><p class="formula">d(${current.i},${current.j})=min(${current.options.join(",")})=${current.value}</p><p>对应当前前缀：${E(x.A.slice(0, current.i).join(""))} → ${E(x.B.slice(0, current.j).join(""))}</p>` : s.editMode === "path" ? `<p class="edit-effect">${E(effect.text || "∅")}</p><p>已执行${path.filter((p) => p.operation !== "保持").length}次编辑；蓝色路径上的每格显示对应操作。</p>` + table(["步骤", "操作", "原字", "目标字"], path.map((p, i) => [i + 1, p.operation, E(p.from || "∅"), E(p.to || "∅")])) : "<p>从初始化边界开始，逐格计算到右下角。</p>"}<p>全程最小编辑次数=${x.d.at(-1).at(-1)}。</p></aside></div>`;
+          break;
+        }
+        case "D13":
+          html = sel + this.flow([["真实研究问题", area("query", s.query, "HyDE输入问题", 3) + '<p>生成时只给问题，先产生假想相关文档；不先把库内答案交给生成模型。</p><button data-do="hyde-generate">用API生成三个候选</button><button data-do="load-hyde-example">载入已跑好的三语候选</button>'], ["选择或自行输入", (this.hypotheses ? tabs("hypIndex", s.hypIndex || 0, this.hypotheses.map((h, i) => [i, (h.language || "候选") + " · " + (i + 1)])) : "") + area("hypothesis", s.hypothesis, "假想相关文档，可自行打字", 8)], ["实际嵌入与检索", '<button data-do="hyde-retrieve">编码假想文档并检索真实片段</button>' + (this.result?.rows ? this.result.rows.map(quote).join("") : "<p>生成与编码结果分列保存；此处只列库内原文。</p>")], ["依据与运行记录", this.result?.run ? JSONblock({ model: this.result.run.model, input: this.result.run.input, sourceIds: this.result.run.sourceIds }) : "<p>假想文档只作检索线索，最后引用必须回库内真实史料。</p>"]]);
+          break;
+        case "D14": {
+          let a = rs.find((x) => x.id === s.docA) || rs[0], b = rs.find((x) => x.id === s.docB) || rs[1] || a, h = a && b ? M.minhash(a.text, b.text, s.permutations) : null;
+          html = sel + this.flow([["具体文本候选", `<label>候选A<select data-k="docA">${rs.map((r2) => `<option value="${r2.id}" ${a?.id === r2.id ? "selected" : ""}>${E(r2.id + " " + r2.text.slice(0, 28))}</option>`).join("")}</select></label><label>候选B<select data-k="docB">${rs.map((r2) => `<option value="${r2.id}" ${b?.id === r2.id ? "selected" : ""}>${E(r2.id + " " + r2.text.slice(0, 28))}</option>`).join("")}</select></label>${slider("permutations", s.permutations, "排列次数", 16, 256, 16)}`], ["内容重合", a ? quote(a) + quote(b) : ""], ["MinHash真实计算", h ? table(["排列", "A首项", "B首项", "相同"], h.pairs.slice(0, 12).map((x, i) => [i + 1, E(x.a), E(x.b), x.hit ? "是" : "否"])) + `<p>精确J=${number(h.exact)}；估计=${h.hits}/${h.count}=${number(h.estimate)}。</p>` : ""], ["保留与去重决定", table(["项目", "A", "B"], [["来源", E(a?.source), E(b?.source)], ["定位", E(a?.locator), E(b?.locator)], ["核读状态", E(a?.verification), E(b?.verification)]]) + area("report", s.report, "决定：保留两版／仅合并重复副本；写明理由", 5)]]);
+          break;
+        }
+        case "D15":
+          html = sel + this.flow([["材料与查询", input("query", s.query, "检索词") + `<button data-do="retrieve">实际BM25检索</button>`], ["实际取回", this.result?.retrieved ? table(["ID", "得分", "来源"], this.result.retrieved.map((r2) => [E(r2.id), number(r2.score), E(r2.locator)])) : "<p>先执行检索。</p>"], ["实际进入", slider("budget", s.budget, "上下文片段预算", 1, 8) + (this.result?.retrieved || []).slice(0, s.budget).map(quote).join("")], ["人工记录使用", (this.result?.retrieved || []).slice(0, s.budget).map((r2) => `<label><input type="checkbox" data-use="${r2.id}" ${s.used.includes(r2.id) ? "checked" : ""}> ${E(r2.id)}作为回答依据</label>`).join("") + area("answer", s.answer, "回答与所用引用ID", 4)]]);
+          break;
+        case "D16":
+          html = sel + this.flow([["拆成句子", area("answer", s.answer || s.claim, "回答，每行一句", 6)], ["并列原文", rs.slice(0, 5).map(quote).join("")], ["人工三级判定", (s.answer || s.claim).split("\n").filter(Boolean).map((t, i) => `<article class="grade-line"><p>${E(t)}</p><label>引文<select data-cite="${i}"><option value="">无引文</option>${rs.map((r2) => `<option value="${r2.id}" ${s.grades[i]?.cite === r2.id ? "selected" : ""}>${E(r2.id)}</option>`).join("")}</select></label>${tabs("grade" + i, s.grades[i]?.weight || 0, [[1, "完全支持"], [0.5, "部分支持"], [0, "不支持"]])}</article>`).join("")], ["计算两个比例", (() => {
+            let rows = (s.answer || s.claim).split("\n").filter(Boolean).map((_, i) => s.grades[i] || { cite: "", weight: 0 }), x = M.support(rows);
+            return table(["比例", "代入", "数值"], [["P_w", `${x.sum}/${x.cited}`, number(x.P)], ["R_w", `${x.sum}/${x.sentences}`, number(x.R)]]) + "<p>无引文句记0；分级是人工核读，不由相似度自动判断。</p>";
+          })()]]);
+          break;
+        case "D17":
+          html = sel + `<p class="lab-quote">${E(s.claim)}</p><div class="lab-grid-cards">${S.corpus.sources().filter((m) => !m.private).map((m) => `<article class="lab-card"><h3>${E(m.author)}</h3>${m.paragraphs.slice(0, 2).map((p) => quote({ ...p, source: m.id, author: m.author })).join("")}</article>`).join("")}</div>`;
+          break;
+        case "D18":
+          html += this.graphBody(sel, false);
+          break;
+        case "D19": {
+          let g = this.currentGraph();
+          html = sel + `<div class="entity-workspace"><aside><h3>候选称呼与规则</h3>${area("terms", s.terms, "史料中查找的词项／称呼", 8)}${tabs("entityRule", s.entityRule, [["exact", "精确"], ["edit", "距离≤1"], ["alias", "人工异称"]])}${area("aliases", s.aliases, "原称呼=>首选名；空白不归并", 5)}${slider("zoom", s.zoom, "图放大", 0.7, 2.5, 0.1)}<button data-do="graph-fullscreen">单独放大关系图</button></aside><main>${this.graphSVG(g)}${table(["节点", "异称", "出处片段"], g.nodes.map((n) => [E(n.id), E((n.aliases || []).join("、")), E(n.sources.join("、"))]))}<p>当前${g.nodes.length}节点、${g.edges.length}共现边；题录责任者另作元数据节点。选择节点可核读实际片段。</p>${g.nodes.find((n) => n.id === this.selectedNode)?.sources.map((id) => S.corpus.records().find((r2) => r2.id === id)).filter(Boolean).slice(0, 3).map(quote).join("") || ""}</main></div>`;
+          break;
+        }
+        case "D20":
+          html = tabs("strategy", s.strategy, [["GraphRAG", "GraphRAG"], ["LightRAG", "LightRAG"], ["LazyGraphRAG", "LazyGraphRAG"]]) + this.strategyIntro() + this.graphBody(sel, true);
+          break;
+        case "D21":
+          html += this.collaborationBody(sel);
+          break;
+        case "D22":
+          html = this.readingBody(sel);
+          break;
+        case "D23":
+          html = '<div class="conclusion"><h2>论从史出</h2><p>切分决定机器取回哪一层原文，相似度决定哪些片段排在前面，上下文预算决定哪些进入回答；最后，每一句仍由我们回到依据核读。</p><p>有引用与论从史出之间，隔着本讲讨论的每一步。</p><p>下一讲往前追一步：这些电子文本怎样从原页被识读出来？</p></div>';
+          break;
+        case "D24": {
+          let stages = [["材料身份", "D03"], ["范围与切分", "D04"], ["语义表示与检索", "D10"], ["图与关系", "D19"], ["机器与人工比较", "D22"], ["逐句核读", "D16"], ["备份与接续", ""]];
+          if (!this.sources().some((m) => m.id === s.source) && s.source !== "all") {
+            this.s.source = "all";
+          }
+          let stage = stages[+s.through] || stages[0];
+          html = `<div class="dejiao-revision"><main>${sel}<p>同一德教项目：${this.sources().length}项材料，${this.records().length}正文片段；材料未经上传。</p>${stage[1] ? `<revision-lab page-id="${stage[1]}" data-through-child="1"></revision-lab>` : `<h2>完整备份与恢复</h2><button data-do="backup">下载原件＋正文＋实际运行记录</button><label>恢复备份<input data-restore="1" type="file" accept=".zip"></label>`}</main><aside><h3>德教研究：本周处理链</h3><p>问题与范围由教师选择；前一步设置与结果保存在同一处理链。检索排序决定随后模型阅读和核读的候选范围；教师稿与史料分别识别。</p>${tabs("through", s.through, stages.map((x, i) => [i, x[0]]))}${area("report", s.report, "本轮问题、已读范围、缺口与下一步", 7)}<button data-do="export">导出本轮判断</button><button data-do="backup">完整备份</button></aside></div>`;
+          break;
+        }
+        case "D25":
+          html = this.glossary();
+          break;
+      }
+      D.rerender(this, `${this.busy ? '<div class="busy-banner">正在实际处理，请等待本轮完成。</div>' : ""}${html}<p class="revision-status" role="status">${E(this.message)}</p>`);
+      this.querySelectorAll("[data-use]").forEach((el) => el.onchange = () => {
+        let id = el.dataset.use;
+        this.s.used = el.checked ? [...new Set([...this.s.used, id])] : this.s.used.filter((x) => x !== id);
+        this.save();
+      });
+      this.querySelectorAll("[data-cite]").forEach((el) => el.onchange = () => {
+        let i = el.dataset.cite;
+        this.s.grades[i] = { ...this.s.grades[i] || {}, cite: el.value };
+        this.save();
+      });
+      if (this.fromThrough) this.querySelectorAll('[data-do^="load-"]').forEach((x) => x.remove());
+      if (this.busy) this.querySelectorAll("input,textarea,select,button").forEach((x) => x.disabled = true);
+      if (this.id === "D24") this.querySelectorAll("[data-through-child]").forEach((child) => {
+        child.s ??= {};
+        child.s.source = this.s.source;
+        child.fromThrough = true;
+        child.throughChain = this.s.chain || {};
+        child.throughChunks = this.s.chain?.D04?.state;
+        child.throughScope = this.s.chain?.D10?.result?.rows?.slice(0, this.s.chain.D10.state.budget || 3).map((x) => x.parentId || x.id) || [];
+      });
+    }
+    cloudChoice() {
+      return `<label class="cloud-permission"><input type="checkbox" data-k="cloud" ${this.s.cloud ? "checked" : ""}>允许本次选中范围发送到所配云端（本机导入材料默认不发送）</label>`;
+    }
+    graphBody(sel, compare) {
+      let g = this.s.view === "prepared" ? this.result?.graph || S.prepared.graph : this.result?.graph || this.currentGraph();
+      return sel + tabs("view", this.s.view, [["run", "实际建图／查询"], ["prepared", "已跑好的结果"], ["paper", "论文原图"]]) + (this.s.view === "paper" ? `<figure><img src="assets/revision/figures/${this.s.strategy === "LightRAG" ? "lightrag-fig1.png" : this.s.strategy === "LazyGraphRAG" ? "lazy-official-fig1.png" : "graphrag-fig1.png"}" alt="原论文或官方原图"><figcaption>${E(this.s.strategy)}原图；${E(this.s.strategy === "LightRAG" ? "Guo等，arXiv:2410.05779v3，PDF页序3，图1" : this.s.strategy === "LazyGraphRAG" ? "Microsoft Research，2024-11-25，官方图1" : "Edge等，arXiv:2404.16130v2，PDF页序4，图1")}。<a href="${this.s.strategy === "LightRAG" ? "https://arxiv.org/abs/2410.05779v3" : this.s.strategy === "LazyGraphRAG" ? "https://www.microsoft.com/en-us/research/blog/lazygraphrag-setting-a-new-standard-for-quality-and-cost/" : "https://arxiv.org/abs/2404.16130v2"}" target="_blank" rel="noopener">原文出处 ↗</a></figcaption></figure>` : `<div class="graph-workspace"><aside>${input("query", this.s.query, "问题")}${slider("budget", this.s.budget, "社区／检索／相关性核读预算", 1, 5)}${area("terms", this.s.terms, "实际词项／名称", 5)}<button data-do="load-graph-example">载入当前方法实际API结果</button><button data-do="load-relations-example">载入实际实体关系抽取</button><button data-do="graph-local">在选中原文建共现图</button><button data-do="graph-api">API抽取实体关系并处理当前方法</button><button data-do="graph-query">按当前方法实际查询</button>${this.cloudChoice()}<p>预跑：实际词项提取、共现建图与标签传播；未用构造关系。API可补实体关系和摘要；课堂适配与官方全量框架分开。</p></aside><main>${this.graphSVG(g)}${table(["节点／边", "数量", "实际性质"], [["节点", g.nodes.length, "实际文字命中或来源字段"], ["边", g.edges.length, E(g.mode || "API关系，须人工核读")], ["社区", (g.communities || S.A.labelPropagation(g)).length, "实际标签传播；非Leiden全量索引"]])}${this.result?.output ? `<p class="lab-quote">${E(this.result.output)}</p>` : ""}${this.result?.trace ? JSONblock(this.result.trace) : ""}</main></div>`);
+    }
+    strategyIntro() {
+      let data = { GraphRAG: ["Local → Global", "先抽实体与关系，按社区组织并生成摘要。", "From Local to Global: A Graph RAG Approach to Query-Focused Summarization", "https://arxiv.org/abs/2404.16130"], LightRAG: ["双层检索与增量", "具体实体层和主题层结合向量检索，材料可追加。", "employs a dual-level retrieval system", "https://arxiv.org/abs/2410.05779"], LazyGraphRAG: ["延迟模型调用", "先以名词短语和共现建索引，查询时再按需生成。", "defers all LLM use until query time", "https://www.microsoft.com/en-us/research/blog/lazygraphrag-setting-a-new-standard-for-quality-and-cost/"] }[this.s.strategy];
+      return `<section class="strategy-intro"><h3>${E(data[0])}</h3><p>${E(data[1])}</p><blockquote>${E(data[2])}</blockquote><p>学术中译（教学翻译）：${E(this.s.strategy === "GraphRAG" ? "从局部到全局：面向查询聚焦摘要的图RAG方法" : this.s.strategy === "LightRAG" ? "采用双层检索系统" : "将全部大语言模型调用推迟到查询阶段")}。</p><a href="${E(data[3])}" target="_blank" rel="noopener">原论文／官方说明 ↗</a></section>`;
+    }
+    collaborationBody(sel) {
+      return sel + (this.s.tab === "1" ? `<div class="ant-workspace"><aside>${slider("antIter", this.s.antIter, "实际迭代次数", 1, 30)}${slider("ants", this.s.ants, "蚂蚁数量", 2, 16)}${slider("rho", this.s.rho, "挥发率ρ", 0.1, 0.9, 0.1)}<button data-do="ants">在当前史料句向量距离上运行Ant System</button><p>使用首六个实际片段；每次走完整闭环，按1/路线长度沉积。用于阅读顺序优化，不据此推断历史关系。</p></aside><main>${this.result?.ant ? table(["迭代", "最短路线", "长度"], this.result.ant.history.map((h) => [h.iteration, h.best.path.map((i) => "句" + (i + 1)).join("→"), number(h.best.length)])) : table(["预跑迭代", "最短长度"], S.prepared.ant.history.slice(0, 8).map((h) => [h.iteration, number(h.best.length)]))}<p>τᵢⱼ←(1−ρ)τᵢⱼ+ΣΔτ；pᵢⱼ∝τᵢⱼᵅ(1/dᵢⱼ)ᵝ。</p>${this.result?.ant ? JSONblock(this.result.ant.tau) : ""}</main></div>` : `<div class="blackboard-workspace"><aside>${area("query", this.s.query, "共同研究问题", 3)}<button data-do="blackboard">API发布请求、按能力响应并汇总</button><button data-do="load-board-example">载入实际黑板协作</button>${this.cloudChoice()}<p>中心角色发布请求，各角色先判断自身能力再响应，共享黑板追加证据与缺口，最后由中心角色汇总。页面保留实际请求、响应与角色记录。</p><a href="https://arxiv.org/abs/2510.01285" target="_blank" rel="noopener">LLM-based Multi-Agent Blackboard System… ↗</a><p>The Ant System: Optimization by a colony of cooperating agents（Dorigo等，1996，DOI:10.1109/3477.484436）</p></aside><main>${this.result?.board ? this.result.board.map((r) => `<article class="blackboard-entry"><h3>${E(r.role)}</h3><pre>${E(r.output)}</pre><small>实际${E(r.model)} · ${number(r.seconds)}秒</small></article>`).join("") : '<figure><img src="assets/revision/figures/blackboard-fig1.png" alt="原论文图1黑板架构"><figcaption>Salemi等，arXiv:2510.01285v2，PDF页序2，图1；材料核对、检索和批判性核读为本课适配角色。</figcaption></figure><p>配置共用API后开始，黑板初始为空。</p>'}</main></div>`);
+    }
+    readingBody(sel) {
+      let tasks = ["筛选", "抽取", "释义", "概括", "比较", "验证"];
+      return `<div class="reading-layout"><main>${sel}${tabs("task", this.s.task, tasks.map((t) => [t, t]))}${input("query", this.s.query, "本轮研究问题")}${area("answer", this.s.answer, "先独立阅读：自主重述／最后的80—120字回答", 5)}<div class="reading-actions"><button data-do="reading">冻结选中范围，实际模型阅读</button><button data-do="load-reading-example">载入所选任务实际结果</button><button data-do="load-contrast-example">载入实际检索对照</button><button data-do="contrast">固定检索与工具调用对照</button><button data-do="export">导出本轮输入输出与判断</button></div>${this.cloudChoice()}${this.result?.output ? `<article class="reading-candidate"><h3>实际模型候选</h3><pre>${E(this.result.output)}</pre></article>` : ""}${this.result?.trace ? JSONblock(this.result.trace) : ""}${area("report", this.s.report, "采用／收窄／纠错／待核；逐句依据、理由与成本差别", 6)}</main><aside><h3>阅读任务与来源范围</h3><p>沿用第四周六类任务与先读、机器、人工判断的顺序。模型接入统一使用顶栏。</p>${slider("budget", this.s.budget, "本次实际输入片段数", 1, 8)}${rsBrief(this.records().slice(0, this.s.budget))}<p>不把片段读取当通读。D23只作结语，最终回答在此保存。</p></aside></div>`;
+    }
+    glossary() {
+      let g = D.DATA.glossary, terms = g.categories.flatMap((c) => c.terms), q = (this.s.termQuery || "").toLowerCase();
+      terms = terms.filter((t) => [t.term, t.en, ...Object.values(t.fields), ...t.paragraphs].join(" ").toLowerCase().includes(q));
+      let selected = terms.find((t) => t.term === this.s.selectedTerm) || terms[0];
+      return `<div class="structured-glossary"><aside>${input("termQuery", this.s.termQuery, "搜索术语／释义")}${terms.map((t) => `<button data-set="selectedTerm" data-v="${E(t.term)}" class="${selected?.term === t.term ? "on" : ""}">${E(t.term)}<small>${E(t.en)}</small></button>`).join("")}</aside><main>${selected ? `<h2>${E(selected.term)} <small>${E(selected.en)}</small></h2><p><a href="#${selected.first_slide}">回到首次出现页 ${selected.first_slide} →</a> · ${E(selected.fields.where || "")}</p><div class="concept-section-grid"><section><h3>它解决什么问题</h3><p>${E(selected.fields.problem || "")}</p></section><section><h3>一句话与机制</h3>${selected.paragraphs.map((p) => p.startsWith("公式：") ? `<h4>公式</h4><pre class="formula">${E(p.slice(3))}</pre>` : `<p>${E(p)}</p>`).join("")}</section><section><h3>课堂怎么观察</h3><p>${E(selected.fields.classroom || "")}</p></section><section><h3>容易混淆</h3><p>${E(selected.fields.confusion || "")}</p></section><section><h3>对历史研究的意义</h3><p>${E(selected.fields.history || "")}</p></section><section><h3>原文与别称</h3><p>${E(selected.fields.alias || "")}</p></section></div>` : "<p>未找到匹配概念。</p>"}</main></div>`;
+    }
+    async import(file) {
+      if (!file) return;
+      try {
+        let counts = await S.corpus.importFile(file);
+        this.s.source = "all";
+        this.message = `已在本机导入${counts.sources}项材料、${counts.segments}片段；各演示共用。`;
+        this.save();
+      } catch (e) {
+        this.message = "导入失败，当前库保留：" + e.message;
+        this.render();
+      }
+    }
+    async restore(file) {
+      if (!file) return;
+      try {
+        await S.corpus.restore(file);
+        this.s.source = "all";
+        this.message = "原件、正文与实际运行记录已在本机恢复。";
+        this.save();
+      } catch (e) {
+        this.message = "恢复失败，当前记录保留：" + e.message;
+        this.render();
+      }
+    }
+    async read(id) {
+      const r = S.corpus.records().find((x) => x.id === id);
+      if (!r) return;
+      let source = S.corpus.sources().find((x) => x.id === r.source), blob = r.attachmentId ? await S.corpus.file(r.attachmentId) : null, url = blob ? URL.createObjectURL(blob) : source.local_pdf || r.url;
+      if (url && !/^(https?:|blob:|\/local-materials\/)/.test(url)) url = "";
+      let dialog = document.createElement("dialog");
+      dialog.className = "material-reader";
+      dialog.innerHTML = `<header><h2>${E(source.title)}</h2><button data-close>关闭 ×</button></header><div class="reader-split"><div>${url ? `<iframe src="${E(url)}#page=${r.pdfPage || 1}" title="所用PDF原页"></iframe>` : "<p>此包未携带原件，可通过通用导入页补入。</p>"}</div><aside>${table(["字段", "所用值"], [["作者", E(source.author)], ["版本", E(source.edition || source.date || "待查")], ["位置", E(r.locator)], ["加工", E(r.method || source.acquisition || "待查")], ["核读", E(r.verification || "待核")]])}${quote(r)}</aside></div>`;
+      dialog.querySelector("[data-close]").onclick = () => dialog.close();
+      dialog.addEventListener("close", () => {
+        if (blob) URL.revokeObjectURL(url);
+        dialog.remove();
+      });
+      document.body.append(dialog);
+      dialog.showModal();
+    }
+    async action(name) {
+      if (name.startsWith("load-")) {
+        if (this.fromThrough) {
+          this.message = "保存示例使用公开《史德》；德教处理链请运行当前导入材料。";
+          this.render();
+          return;
+        }
+        const names = { "load-hyde-example": "HyDE三语候选", "load-context-example": "上下文补写", "load-graph-example": this.s.strategy, "load-relations-example": "实体关系抽取", "load-board-example": "Blackboard System", "load-reading-example": "六项阅读任务", "load-contrast-example": "固定与工具检索对照" }, example = S.preparedAPI.results.find((x) => x.name === names[name]);
+        if (!example) {
+          this.message = "该项目暂无保存的真实记录";
+          this.render();
+          return;
+        }
+        let r = structuredClone(example.result);
+        this.s.source = "shide";
+        this.s.query = example.question.split("\n\n")[0];
+        if (name === "load-hyde-example") {
+          this.hypotheses = parseJSON(r.output).documents;
+          this.s.hypIndex = 0;
+          this.s.hypothesis = this.hypotheses[0].text;
+          this.result = { run: r };
+        } else if (name === "load-context-example") {
+          this.s.context = "api";
+          this.result = { run: r, output: r.output };
+        } else if (name === "load-board-example") {
+          this.s.tab = "0";
+          this.result = r;
+        } else if (name === "load-reading-example") {
+          let run = r.runs.find((x) => x.task === this.s.task);
+          this.result = { trace: run, output: run.output };
+        } else if (name === "load-relations-example") {
+          let graph = parseJSON(r.output);
+          let rs = this.records(), ids = new Set(graph.nodes.map((n) => n.id));
+          graph.edges = graph.edges.filter((e) => ids.has(e.source) && ids.has(e.target) && e.quote && e.sources?.some((id) => rs.some((s2) => s2.id === id && s2.text.includes(e.quote))));
+          graph.communities = S.A.labelPropagation(graph);
+          graph.mode = "实际API候选关系；逐字证据过滤后仍须人工核读";
+          this.result = { graph, trace: { extraction: r } };
+          this.s.view = "prepared";
+        } else {
+          this.result = r;
+          if (name === "load-graph-example") this.s.view = "prepared";
+        }
+        this.message = "载入2026-10-13真实API记录：《史德》原范围；请求deepseek-chat，接口返回deepseek-flash。当前材料和问题已恢复到该次范围。";
+        this.save();
+        return;
+      }
+      if (name === "importer") {
+        S.openImporter();
+        return;
+      }
+      if (name === "export") {
+        D.download(this.id + "-研究记录.json", JSON.stringify({ schema: "week05-revision/v1", page: this.id, state: this.s, result: this.result, date: (new Date()).toISOString() }, null, 2), "application/json");
+        return;
+      }
+      if (name === "backup") {
+        let blob = await S.corpus.backup(), a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "第五周_完整本机研究备份.zip";
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1e3);
+        return;
+      }
+      if (name === "edit-next") {
+        this.s.edit = +this.s.edit + 1;
+        this.save();
+        return;
+      }
+      if (name === "edit-play" || name === "play-process") {
+        if (this.timer) {
+          clearInterval(this.timer);
+          this.timer = null;
+        } else this.timer = setInterval(() => {
+          if (name === "edit-play") {
+            let x = S.A.editSteps(this.s.a, this.s.b), end = this.s.editMode === "fill" ? x.steps.length : x.path.length;
+            if (+this.s.edit >= end) {
+              clearInterval(this.timer);
+              this.timer = null;
+            } else this.s.edit = +this.s.edit + 1;
+          } else this.s.step = (+this.s.step + 1) % 4;
+          this.save();
+        }, 650);
+        return;
+      }
+      if (name === "graph-fullscreen") {
+        let dialog = document.createElement("dialog");
+        dialog.className = "graph-dialog";
+        dialog.innerHTML = "<button>关闭 ×</button>" + this.graphSVG(this.currentGraph());
+        dialog.querySelector("button").onclick = () => dialog.close();
+        dialog.onclose = () => dialog.remove();
+        document.body.append(dialog);
+        dialog.showModal();
+        return;
+      }
+      if (this.busy) return;
+      if (window.W5CloudBusy) {
+        this.message = "另一页正在调用模型，请等待本轮完成。";
+        this.render();
+        return;
+      }
+      this.busy = true;
+      window.W5CloudBusy = true;
+      this.message = "正在实际处理…";
+      this.render();
+      let records = structuredClone(this.records().slice(0, Math.max(1, this.s.budget))), s = structuredClone(this.s);
+      try {
+        if (name === "encode") {
+          let sent = this.sentenceRows();
+          let v = await S.embedding.encode(sent.map((x) => x.text), (msg) => {
+            this.message = msg;
+            this.render();
+          });
+          this.vectors = { texts: sent.map((x) => x.text), vectors: v, model: S.embedding.model, revision: S.embedding.revision };
+          this.message = "浏览器实际编码完成；每个句子与距离已更新。";
+        }
+        if (name === "context") {
+          let sent = this.sentenceRows().slice(0, 6);
+          if (s.context === "late") {
+            let late = await S.embedding.late(sent.map((x) => x.text));
+            this.result = { late, source: s.source, input: sent };
+          } else if (s.context === "api") {
+            let run = await S.generate("根据选定原文补写简短上下文，说明作者、篇章对象及该段承接的意思。补写文本与原文分开；每句标片段ID。", records, "为选定材料的检索块补上必要语境", { allowCloud: s.cloud });
+            this.result = { output: run.output, run };
+          } else {
+            let r = this.selected(), source = this.sources().find((m) => m.id === r?.source), text = s.context === "metadata" ? `${source?.author}；${source?.title}；${source?.edition}；${r?.locator}
+${r?.text}` : sent.map((x) => x.text).join("\n");
+            let v = await S.embedding.encode([text]);
+            this.result = { input: text, output: text, vectors: v, mode: "实际上下文组合与编码；没有生成模型补写" };
+          }
+        }
+        if (name === "representation") {
+          let all = this.records().slice(0, 18);
+          if (this.fromThrough && this.throughChunks) {
+            let c = this.throughChunks;
+            all = all.flatMap((r) => M.chunks(r.text, { method: c.method, size: +c.size, overlap: +c.overlap }).map((chunk, i) => ({ ...r, id: r.id + "-chunk" + (i + 1), parentId: r.id, text: chunk.text, locator: r.locator + "；切分字符[" + chunk.start + "," + chunk.end + ")" }))).slice(0, 18);
+          }
+          if (s.representation === "dense") {
+            let chunks = all.map((r) => ({ ...r, text: S.A.sentences(r.text).slice(0, 2).map((s2) => s2.text).join("") })), v = await S.embedding.encode([s.query, ...chunks.map((r) => r.text)]);
+            this.result = { rows: S.rankDense(v[0], chunks, v.slice(1)), mode: "实际多语句向量余弦" };
+          } else {
+            let rows = S.sparse(s.query, all, { tfidf: s.representation === "tfidf" });
+            if (s.representation === "bow") rows = rows.map((r) => ({ ...r, score: r.terms.reduce((n, x) => n + x.count, 0), terms: r.terms.map((x) => ({ ...x, value: x.count })) })).sort((a, b) => b.score - a.score);
+            this.result = { rows, mode: "实际" + s.representation };
+          }
+        }
+        if (name === "hyde-generate") {
+          let run = await S.generate('你在执行HyDE的假想相关文档生成，只依据给定问题，不读取检索库。返回JSON {documents:[{language:"中文/English/日本語",text:"一段120字左右的假想相关学术文档"}]}。生成三个可用于检索的候选；不要添加引文ID；不冒充史料原文。', [], s.query);
+          let parsed = parseJSON(run.output);
+          if (!Array.isArray(parsed.documents) || parsed.documents.length < 3 || parsed.documents.some((x) => typeof x.text !== "string")) throw Error("API未返回三个文档候选，原始输出已保存到实际运行记录");
+          this.hypotheses = parsed.documents;
+          this.s.hypIndex = 0;
+          this.s.hypothesis = parsed.documents[0].text;
+          this.result = { run };
+        }
+        if (name === "hyde-retrieve") {
+          if (!s.hypothesis.trim()) throw Error("先生成或自己输入假想文档");
+          let rs = this.records().slice(0, 12).map((r) => ({ ...r, text: S.A.sentences(r.text).slice(0, 2).map((x) => x.text).join("") })), v = await S.embedding.encode([s.hypothesis, ...rs.map((r) => r.text)]);
+          this.result = { ...this.result, rows: S.rankDense(v[0], rs, v.slice(1)).slice(0, s.budget), inputHypothesis: s.hypothesis, mode: "实际假想文档嵌入→真实库余弦检索" };
+        }
+        if (name === "retrieve") this.result = { retrieved: S.sparse(s.query, this.records()), query: s.query, mode: "实际BM25" };
+        if (name === "graph-local") {
+          let graph = this.currentGraph();
+          graph.communities = S.A.labelPropagation(graph);
+          this.result = { graph, trace: { mode: "实际词项共现图和标签传播", sources: this.records().map((x) => x.id), calls: 0 } };
+        }
+        if (name === "graph-api") {
+          let run = await S.generate('从原文抽取实体与关系。返回JSON {nodes:[{id:"原文中的名称",sources:["片段ID"]}],edges:[{source:"名称",target:"名称",relation:"明确关系",sources:["片段ID"],quote:"原文证据"}]}。每条边须有逐字原文和存在的来源，不推断思想影响。', records, "建立可回查的小图", { allowCloud: s.cloud });
+          let graph = parseJSON(run.output);
+          if (!Array.isArray(graph.nodes) || !Array.isArray(graph.edges)) throw Error("模型关系格式错误，实际输出已保存");
+          let map = new Map(records.map((r) => [r.id, r]));
+          graph.edges = graph.edges.filter((e) => typeof e.quote === "string" && e.quote.trim() && e.sources?.some((id) => map.has(id) && map.get(id).text.includes(e.quote)));
+          graph.nodes = graph.nodes.filter((n) => typeof n.id === "string");
+          let ids = new Set(graph.nodes.map((n) => n.id));
+          graph.edges = graph.edges.filter((e) => ids.has(e.source) && ids.has(e.target));
+          graph.communities = S.A.labelPropagation(graph);
+          graph.mode = "实际API候选关系，逐字证据过滤后仍须人工核读";
+          let summaries = [];
+          if (s.strategy === "GraphRAG") for (let group of graph.communities.slice(0, 3)) {
+            let relevant = records.filter((r) => group.some((n) => r.text.includes(n)));
+            if (relevant.length) {
+              let summary = await S.generate("据所给原文概括该社区的主题，每句标片段ID，不跨范围概括。", relevant, group.join("、"), { allowCloud: s.cloud });
+              summaries.push(summary);
+            }
+          }
+          this.result = { graph, trace: { extraction: run, summaries }, output: summaries.map((x) => x.output).join("\n") };
+        }
+        if (name === "graph-query") {
+          const { queryGraph } = await import("./graph-query.mjs");
+          this.result = await queryGraph(S, { graph: this.result?.graph || this.currentGraph(), records: structuredClone(this.records()), question: s.query, strategy: s.strategy, budget: +s.budget, allowCloud: s.cloud });
+        }
+        if (name === "ants") {
+          let sent = this.sentenceRows().slice(0, 6), v = this.knownVectors(sent) || await S.embedding.encode(sent.map((x) => x.text)), dist = v.map((a, i) => v.map((b, j) => i === j ? 0 : Math.max(1e-3, 1 - S.A.cosine(a, b)))), ant = S.A.antSystem(dist, { iterations: s.antIter, ants: s.ants, rho: s.rho });
+          this.result = { ant, dist, input: sent, mode: "实际Ant System随机路线、信息素沉积与挥发" };
+        }
+        if (name === "blackboard") {
+          const { runBlackboard } = await import("./blackboard.mjs");
+          this.result = await runBlackboard(S, records, s.query, { allowCloud: s.cloud });
+        }
+        if (name === "reading") {
+          let task = "执行" + s.task + "任务。仅用原文，逐句标[ID]，区分原话、释义与推断。自主重述仅作为待核判断。";
+          let run = await S.generate(task, records, s.query + "\n自主重述：" + s.answer, { allowCloud: s.cloud });
+          this.result = { output: run.output, trace: run };
+        }
+        if (name === "contrast") {
+          let frozen = this.records().slice(0, 30), fixed = S.sparse(s.query, frozen).slice(0, s.budget), first = await S.generate("固定检索路径：据实际取回原文回答，逐句标ID。", fixed, s.query, { allowCloud: s.cloud });
+          let collected = [], log = [];
+          const settings = window.W5Chat.settings();
+          if (frozen.some((r) => r.private) && !/^http:\/\/(localhost|127\.0\.0\.1)/.test(settings.baseUrl) && !s.cloud) throw Error("本机材料需允许当前范围发送");
+          let messages = [{ role: "system", content: "据库内工具返回片段回答，逐句标ID；最多3次模型调用。调用search以原语关键词检索。" }, { role: "user", content: s.query }], tools = [{ type: "function", function: { name: "search", description: "在冻结的所选史料库实际BM25检索", parameters: { type: "object", properties: { query: { type: "string" } }, required: ["query"] } } }];
+          for (let i = 0; i < 3; i++) {
+            let response = await window.W5Chat.chat(messages, { maxTokens: 2048, tools: i < 2 ? tools : void 0 });
+            log.push({ input: structuredClone(messages), output: response });
+            if (!response.toolCalls?.length) {
+              collected.push(response.text);
+              break;
+            }
+            messages.push({ role: "assistant", content: response.text || null, tool_calls: response.toolCalls });
+            for (let t of response.toolCalls) {
+              let arg = parseJSON(t.function.arguments), rs = S.sparse(arg.query, frozen).slice(0, s.budget);
+              messages.push({ role: "tool", tool_call_id: t.id, content: rs.map((r) => `[${r.id}] ${r.locator}
+${r.text}`).join("\n") || "本库没有命中字词" });
+            }
+          }
+          this.result = { output: "固定路径：\n" + first.output + "\n\n工具路径：\n" + (collected.join("\n") || "预算用尽，尚无最终回答"), trace: { fixed: first, agent: log, model: settings.model, corpusSHA256: await S.sha256(frozen), limit: 3, budget: s.budget } };
+          await S.corpus.saveRun({ id: "contrast-" + crypto.randomUUID(), ...this.result.trace });
+        }
+        this.message = "本轮实际处理完成，输入与输出可导出。";
+      } catch (e) {
+        this.message = "实际处理未完成：" + e.message;
+      } finally {
+        if (this.result) await S.corpus.saveRun({ id: "operation-" + crypto.randomUUID(), time: (new Date()).toISOString(), operation: name, page: this.id, state: s, result: this.result });
+        this.busy = false;
+        window.W5CloudBusy = false;
+        this.save();
+      }
+    }
+  }
+  function parseJSON(s) {
+    let clean = s.replace(/^```(?:json)?\s*/, "").replace(/\s*```$/, "");
+    let start = clean.indexOf("{"), end = clean.lastIndexOf("}");
+    return JSON.parse(start >= 0 ? clean.slice(start, end + 1) : clean);
+  }
+  function rsBrief(rs) {
+    return rs.map((r) => `<p><b>${E(r.id)}</b> ${E(r.title)}<br><small>${E(r.locator)}</small></p>`).join("");
+  }
+  D.register("revision-lab", RevisionLab);
 })();
