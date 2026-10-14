@@ -42,7 +42,7 @@
     D19: { source: "all" },
     D21: { query: "史德是什麼？", rhoPaper: 0.5 },
     D22: { source: "all", query: "这几位作者怎样看待史料对叙述者的约束？", budget: 6 },
-    D24: { source: "all", through: 0, topN: 40 },
+    D24: { source: "all", through: 0, topN: 40, budget: 10 },
   };
   class RevisionLab extends HTMLElement {
     connectedCallback() {
