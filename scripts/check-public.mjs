@@ -132,3 +132,25 @@ if(manifest4.tools?.includes('material-importer')){
  assert(!/src=["']\/assets\//.test(importer));
  console.log('Universal importer subpath and private/Agent exclusions checked');
 }
+
+if (manifest4.weeks?.includes('week05')) {
+  const html5 = await fs.readFile(path.join(site,'week05/index.html'),'utf8');
+  const map5 = JSON.parse(await fs.readFile(path.join(root,'docs/week05/page-map.json'),'utf8'));
+  assert.deepEqual([...html5.matchAll(/slide-id="([^"]+)"/g)].map(m=>m[1]), map5.map(p=>p.id));
+  assert.equal(map5.length,25);
+  const sources5 = JSON.parse(await fs.readFile(path.join(site,'week05/assets/materials/sources.json'),'utf8'));
+  assert.deepEqual(sources5.map(s=>s.id),['shide','acton','ogai']);
+  assert(sources5.every(s=>!s.private && s.paragraphs.every(p=>p.locator && p.text)));
+  const files5 = manifest4.files.filter(f=>f.path.startsWith('week05/'));
+  assert(!files5.some(f=>/\.(pdf|zip|sqlite|db|onnx|safetensors|typ)$/i.test(f.path)));
+  const importer5 = await fs.readFile(path.join(site,'week05/assets/importer/index.html'),'utf8');
+  assert(importer5.includes('./assets/'));
+  for (const required of ['assets/revision/services.mjs','assets/revision/graph-query.mjs','assets/revision/blackboard.mjs','assets/revision/precomputed.json','assets/revision/api-examples.json','assets/vendor/transformers/ort-wasm-simd-threaded.jsep.wasm'])
+    await fs.access(path.join(site,'week05',required));
+  const figures5 = JSON.parse(await fs.readFile(path.join(site,'week05/assets/revision/figures/manifest.json'),'utf8'));
+  const {createHash}=await import('node:crypto');
+  for (const fig of figures5) assert.equal(createHash('sha256').update(await fs.readFile(path.join(site,'week05/assets/revision/figures',fig.file))).digest('hex'),fig.sha256);
+  const home = await fs.readFile(path.join(site,'index.html'),'utf8');
+  assert(home.includes('href="week05/"') && home.includes('第五周 · 知识库检索与有依据的生成'));
+  console.log('Week05: 25 pages, public excerpt identities, embedded importer, WASM and figure hashes; no teacher originals or model weights');
+}

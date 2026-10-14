@@ -1,6 +1,6 @@
 # 第五周演示：知识库检索与有依据的生成
 
-候选，未经教师确认。2026-10-14修复。25页，旧D05合并入D04且保留跳转别名，净教学160分钟。页表、概念与来源分别见docs/week05/page-map.json、glossary.json和src/assets/materials/sources.json。逐页修订见docs/week05/revision-20261013.md与revision-20261014.md；十三项问题的最新修复与验收见docs/week05/fixes-20261014.md。
+教师2026-10-14预览确认课件并授权合并发布。模型输出及支持等级仍须人工核读。2026-10-14修复。25页，旧D05合并入D04且保留跳转别名，净教学160分钟。页表、概念与来源分别见docs/week05/page-map.json、glossary.json和src/assets/materials/sources.json。逐页修订见docs/week05/revision-20261013.md与revision-20261014.md；十三项问题的最新修复与验收见docs/week05/fixes-20261014.md。
 
 ## 打开
 
@@ -41,4 +41,4 @@
 
 从顶栏“课前试跑”可在另窗沿用原课件配置，针对公开史料跑HyDE、上下文、三种图查询、黑板和六类阅读。实际运行记录另见assets/revision/runs.html，可下载保存。两页只在同源本机接续配置，不保存或导出密钥。
 
-验证：pnpm build、pnpm check、pnpm test、pnpm check:browser、pnpm check:integration。最后两项需要预览服务8776与本机Chrome（可用WEEK05_PREVIEW_URL设置地址）。第五周15项、导入器12项、浏览器67项、集成41项通过；设置WEEK05_LEGACY_BACKUP为教师本机旧第五周备份ZIP时另验一次真实旧备份迁移，共42项。集成测试含导入回传、附件类型与原页回读、完整备份恢复、刷新、私有发送保护和接口流程；接口测试替身、实际响应回放与新真实API试跑分别标明。摘要见docs/week05/verification。分支week05，暂不合并main、不部署。
+验证：pnpm build、pnpm check、pnpm test、pnpm check:browser、pnpm check:integration。最后两项需要预览服务8776与本机Chrome（可用WEEK05_PREVIEW_URL设置地址）。第五周15项、导入器12项、浏览器67项、集成41项通过；设置WEEK05_LEGACY_BACKUP为教师本机旧第五周备份ZIP时另验一次真实旧备份迁移，共42项。集成测试含导入回传、附件类型与原页回读、完整备份恢复、刷新、私有发送保护和接口流程；接口测试替身、实际响应回放与新真实API试跑分别标明。摘要见docs/week05/verification。教师已授权将week05合入main并发布；正式入口为 https://lyzhackjp.github.io/pku-aihis/week05/ ，发布流程及线上边界见docs/week05/formal-release.md。

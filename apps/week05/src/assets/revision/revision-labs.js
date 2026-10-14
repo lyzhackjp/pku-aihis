@@ -839,9 +839,16 @@
       if (!r) return;
       let source = S.corpus.sources().find((x) => x.id === r.source), blob = r.attachmentId ? await S.corpus.file(r.attachmentId) : null, url = blob ? URL.createObjectURL(blob) : source.local_pdf || r.url;
       if (url && !/^(https?:|blob:|\/local-materials\/)/.test(url)) url = "";
+      if (source.local_pdf && !blob) {
+        const local = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
+        if (!local) url = "";
+        else try { if (!(await fetch(url, { method: "HEAD" })).ok) url = ""; } catch { url = ""; }
+      }
+      const reference = /^https?:\/\//.test(source.url || "") ? `<p><a href="${E(source.url)}" target="_blank" rel="noopener">公开参照文本 ↗</a>（版本与课堂PDF可能不同）</p>` : "";
+      const missing = `<p>所用PDF原件未随公开课件发布。本机预览可回读；也可通过通用导入页导入自己的原件。</p>${reference}`;
       let dialog = document.createElement("dialog");
       dialog.className = "material-reader";
-      dialog.innerHTML = `<header><h2>${E(source.title)}</h2><button data-close>关闭 ×</button></header><div class="reader-split"><div>${url ? `<iframe src="${E(url)}#page=${r.pdfPage || 1}" title="所用PDF原页"></iframe>` : "<p>此包未携带原件，可通过通用导入页补入。</p>"}</div><aside>${table(["字段", "所用值"], [["作者", E(source.author)], ["版本", E(source.edition || source.date || "待查")], ["位置", E(r.locator)], ["加工", E(r.method || source.acquisition || "待查")], ["核读", E(r.verification || "待核")]])}${quote(r)}</aside></div>`;
+      dialog.innerHTML = `<header><h2>${E(source.title)}</h2><button data-close>关闭 ×</button></header><div class="reader-split"><div>${url ? `<iframe src="${E(url)}#page=${r.pdfPage || 1}" title="所用PDF原页"></iframe>` : missing}</div><aside>${table(["字段", "所用值"], [["作者", E(source.author)], ["版本", E(source.edition || source.date || "待查")], ["位置", E(r.locator)], ["加工", E(r.method || source.acquisition || "待查")], ["核读", E(r.verification || "待核")]])}${quote(r)}</aside></div>`;
       dialog.querySelector("[data-close]").onclick = () => dialog.close();
       dialog.addEventListener("close", () => {
         if (blob) URL.revokeObjectURL(url);

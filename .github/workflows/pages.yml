@@ -32,6 +32,10 @@ jobs:
         working-directory: apps/week04
       - run: pnpm install --frozen-lockfile --ignore-scripts
         working-directory: apps/material-importer
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+        working-directory: apps/week05
+      - run: pnpm test && pnpm run check && pnpm build
+        working-directory: apps/week05
       - run: pnpm test && pnpm run check && pnpm build
         working-directory: apps/material-importer
       - run: python3 -m unittest discover -s local/tests
