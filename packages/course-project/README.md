@@ -7,3 +7,7 @@
 跨应用通过明确打开的导入器窗口交换 `PKU_IMPORT_READY` / `PKU_PROJECT` 消息，接收者必须检查窗口身份、精确 origin 和项目版本。应用也支持下载与上传备份，部署在不同站点时不依赖共享浏览器存储。
 
 内部编号使用字母、数字、连字符与下划线，便于跨应用及Markdown文件保留。恢复前检查笔记、链接与问题依据的引用，不能把断裂关系写入当前项目。
+
+## 第四周完整备份转换（2026-10-14）
+
+`week04-backup.mjs` 把第四周“完整课程备份”ZIP（`patchouli.zip`、`reading-records.json`、`browser-drafts.json`）转换为本合同的项目：题录→`sources`（`kind` 取第四周材料来源的史料／二手文献／教师研究产物），PDF→附件（重算 SHA-256），未被取代的文本块→`segments`（保留文档实例、PDF 页序、印刷页、修订与块编号，并给出第四周证据 URI），阅读轮次→`events`，草稿原样附在 `week04Drafts`。`sqlite-read.mjs` 是只读的纯 JavaScript SQLite 读取器，只支持普通 rowid 表，不引入原生或 WASM 依赖。通用导入页与第五周各页都调用同一转换。

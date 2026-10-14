@@ -70,4 +70,6 @@ __pycache__/
 /apps/week05/src/assets/importer/
 /apps/week05/src/assets/revision/advanced.mjs
 /apps/week05/src/assets/revision/project.mjs
+/apps/week05/src/assets/revision/sqlite-read.mjs
+/apps/week05/src/assets/revision/week04-backup.mjs
 /apps/week05/artifacts-revision/

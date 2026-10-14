@@ -23,6 +23,7 @@ console.log('Assembled',pages.length,'implemented pages');
 
 await fs.copyFile(path.join(root,'modules/history-demo/advanced.mjs'),path.join(app,'src/assets/revision/advanced.mjs'));
 await fs.copyFile(path.join(root,'packages/course-project/project.mjs'),path.join(app,'src/assets/revision/project.mjs'));
+for(const f of ['sqlite-read.mjs','week04-backup.mjs'])await fs.copyFile(path.join(root,'packages/course-project',f),path.join(app,'src/assets/revision',f));
 await fs.mkdir(path.join(app,'src/assets/vendor/fflate'),{recursive:true});
 await fs.copyFile(path.join(app,'node_modules/fflate/esm/browser.js'),path.join(app,'src/assets/vendor/fflate/fflate.mjs'));
 await fs.mkdir(path.join(app,'src/assets/vendor/transformers'),{recursive:true});

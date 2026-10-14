@@ -19,6 +19,10 @@ import {
   importArchive,
 } from "../../../packages/course-project/archive.mjs";
 import {
+  convertWeek04Backup,
+  isWeek04Backup,
+} from "../../../packages/course-project/week04-backup.mjs";
+import {
   identity,
   openPDF,
   pdfText,
@@ -216,6 +220,42 @@ async function ingest(files: File[]) {
     for (const file of files) {
       const ext = file.name.split(".").pop().toLowerCase();
       if (ext === "zip") {
+        const zip = await JSZip.loadAsync(file);
+        const names = Object.keys(zip.files);
+        if (isWeek04Backup(names)) {
+          // A fourth-week complete course backup: read its Patchouli library
+          // (SQLite + PDFs) and reading records into a shared course project.
+          status = "识别为第四周完整课程备份，正在转换书库与阅读记录…";
+          render();
+          const unzip = async (bytes: Uint8Array) => {
+            const inner = await JSZip.loadAsync(bytes);
+            const out: Record<string, Uint8Array> = {};
+            for (const [k, f] of Object.entries(inner.files))
+              if (!(f as any).dir) out[k] = await (f as any).async("uint8array");
+            return out;
+          };
+          const top: Record<string, Uint8Array> = {};
+          for (const name of names)
+            if (/(^|\/)(patchouli\.zip|reading-records\.json|browser-drafts\.json)$/.test(name))
+              top[name] = await zip.file(name).async("uint8array");
+          const r = await convertWeek04Backup(top, unzip, {
+            onProgress: (message: string) => {
+              status = message;
+              render();
+            },
+          });
+          project = r.project;
+          await persist(
+            r.files.map((f: any) => ({
+              id: f.id,
+              blob: new Blob([f.bytes], { type: f.type }),
+            })),
+          );
+          current = project.sources[0]?.id || "";
+          const k = r.summary.byKind;
+          status = `已转换第四周完整备份：题录 ${r.summary.sources} 条（${Object.entries(k).map(([a, b]) => a + " " + b).join("、")}），原件 ${r.summary.attachments} 份，文本块 ${r.summary.segments} 个、约 ${Math.round(r.summary.characters / 10000)} 万字，第四周阅读轮次 ${r.summary.readingRuns} 轮。核对后可发送到课件。`;
+          continue;
+        }
         const r = await importArchive(JSZip, file);
         project = validateProject(r.project);
         await persist(r.files);
@@ -813,7 +853,7 @@ function render() {
     ),
     node(
       "p",
-      "第四周和第五周可以直接接收本页处理后的原件与记录；学生不必先手写 JSON。第三周格式仅用于兼容旧演示。",
+      "第四周和第五周可以直接接收本页处理后的原件与记录；学生不必先手写 JSON。第四周“完整课程备份”ZIP 可直接拖入，本页读取其中书库与阅读记录并转换。第三周格式仅用于兼容旧演示。",
     ),
   );
   const history = node("ol", "", "history");
