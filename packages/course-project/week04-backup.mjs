@@ -39,7 +39,12 @@ function creators(row) {
 }
 const ROLE = { 史料: "史料", 二手文献: "二手文献", 教师研究产物: "教师研究产物" };
 
-export async function convertWeek04Backup(entries, unzip, { onProgress = () => {} } = {}) {
+/**
+ * @param {Record<string, Uint8Array>} entries
+ * @param {(bytes: Uint8Array) => any} unzip
+ * @param {{onProgress?: (message: string) => void}} [options]
+ */
+export async function convertWeek04Backup(entries, unzip, { onProgress = (_message) => {} } = {}) {
   const top = Object.fromEntries(Object.entries(entries).map(([k, v]) => [k.replace(/^.*\//, ""), v]));
   if (!isWeek04Backup(Object.keys(top))) throw Error("这不是第四周完整课程备份（缺少 patchouli.zip 或 reading-records.json）。");
   onProgress("正在展开第四周书库…");

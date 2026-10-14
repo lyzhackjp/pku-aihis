@@ -1,0 +1,275 @@
+{
+  "date": "2026-10-14",
+  "browser": "155.0.8059.41",
+  "checks": [
+    {
+      "name": "25 slides, D04 and D05 merged",
+      "passed": true
+    },
+    {
+      "name": "D00 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D01 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D02 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D03 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D04 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D06 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D07 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D08 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D09 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D10 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D11 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D12 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D13 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D14 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D15 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D16 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D17 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D18 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D19 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D20 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D21 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D22 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D23 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D24 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D25 horizontal fit 1440",
+      "passed": true
+    },
+    {
+      "name": "D00 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D01 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D02 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D03 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D04 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D06 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D07 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D08 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D09 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D10 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D11 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D12 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D13 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D14 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D15 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D16 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D17 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D18 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D19 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D20 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D21 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D22 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D23 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D24 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D25 horizontal fit 390",
+      "passed": true
+    },
+    {
+      "name": "D01 selected macro stage opens substeps",
+      "passed": true
+    },
+    {
+      "name": "D04 all four methods update structured table",
+      "passed": true
+    },
+    {
+      "name": "D06 actual stored vectors and live WASM inference",
+      "passed": true
+    },
+    {
+      "name": "D07 actual single-link and DBSCAN assignments",
+      "passed": true
+    },
+    {
+      "name": "D08 actual token-before-pooling",
+      "passed": true
+    },
+    {
+      "name": "D09 and D11 steps follow selected rail",
+      "passed": true
+    },
+    {
+      "name": "D12 dynamic recurrence and path",
+      "passed": true
+    },
+    {
+      "name": "D19 full graph and redraw alias",
+      "passed": true
+    },
+    {
+      "name": "D20 three methods use independent tabs",
+      "passed": true
+    },
+    {
+      "name": "D21 actual ant system over lexical source distances",
+      "passed": true
+    },
+    {
+      "name": "D24 initially has no preloaded private research",
+      "passed": true
+    },
+    {
+      "name": "D25 structured explanation regions and back link",
+      "passed": true
+    },
+    {
+      "name": "shared model dialog; key excluded from storage",
+      "passed": true
+    },
+    {
+      "name": "shared importer receives and sends fifth-week compatible data",
+      "passed": true
+    },
+    {
+      "name": "saved real API examples restore questions, scope and editable candidates",
+      "passed": true
+    },
+    {
+      "name": "no runtime errors",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

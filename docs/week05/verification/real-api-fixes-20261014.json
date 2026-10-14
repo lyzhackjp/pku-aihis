@@ -1,0 +1,104 @@
+{
+  "date": "2026-10-14",
+  "mode": "修复后新真实API验收；与接口替身及旧响应回放分开",
+  "requestedModel": "deepseek-chat",
+  "returnedModels": [
+    "deepseek-flash"
+  ],
+  "actualCalls": 22,
+  "publicCorpusOnly": true,
+  "privateDejiaoImported": false,
+  "keyExported": false,
+  "checks": [
+    {
+      "name": "HyDE四种文体各两条，共八条；实际MiniLM检索",
+      "passed": true,
+      "calls": 1
+    },
+    {
+      "name": "三种图查询，实际trace与页面计数一致",
+      "passed": true,
+      "calls": [
+        {
+          "strategy": "GraphRAG",
+          "count": 3
+        },
+        {
+          "strategy": "LightRAG",
+          "count": 2
+        },
+        {
+          "strategy": "LazyGraphRAG",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "name": "六类阅读全部真实返回",
+      "passed": true,
+      "calls": 6
+    },
+    {
+      "name": "修改问题和预算后冻结范围不变，真实追问沿用旧原文",
+      "passed": true,
+      "calls": 1
+    },
+    {
+      "name": "公开导入范围的两次真实设置；撤回后新范围为S4，旧对话含audit-A2，追问被阻止",
+      "passed": true,
+      "setupCalls": 2,
+      "revokedCalls": 0
+    },
+    {
+      "name": "D22空独立判断限制阅读与对照",
+      "passed": true,
+      "calls": 0
+    },
+    {
+      "name": "固定路径及工具检索实际执行",
+      "passed": true,
+      "calls": 3
+    },
+    {
+      "name": "D08实际补写与浏览器编码",
+      "passed": true,
+      "calls": 1
+    },
+    {
+      "name": "D24实际重排、比较、核读",
+      "passed": true,
+      "calls": 1
+    },
+    {
+      "name": "新真实备份在独立浏览器恢复与再刷新",
+      "passed": true,
+      "detail": [
+        {
+          "name": "新浏览器恢复",
+          "passed": true,
+          "kept": 3,
+          "model": "deepseek-flash",
+          "candidateLines": 12,
+          "gradeRestored": true,
+          "cosineScoresRestored": true,
+          "cloudConsentReset": true,
+          "keyRestored": false
+        },
+        {
+          "name": "恢复后再刷新",
+          "passed": true,
+          "kept": 3,
+          "model": "deepseek-flash",
+          "candidateLines": 12,
+          "gradeRestored": true,
+          "cosineScoresRestored": true,
+          "cloudConsentReset": true,
+          "keyRestored": false
+        }
+      ]
+    }
+  ],
+  "rawRecords": "课程根目录/第五周/demo/修复_20261014/真实API_修复后.json（仅本机）",
+  "backup": "同目录/公开史料_修复后完整备份.zip（仅本机）",
+  "limitations": "调用与恢复成功不等于史料判断获教师确认；真实德教仍为手动导入，完整OCR、Safari和真实移动设备未实测。"
+}

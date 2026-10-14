@@ -1,0 +1,192 @@
+{
+  "date": "2026-10-14",
+  "mode": "current source build; isolated browser; explicit protocol substitutes; private corpus not imported",
+  "checks": [
+    {
+      "name": "three local originals and obsolete D05 alias remain readable",
+      "passed": true
+    },
+    {
+      "name": "navigation: keyboard arrows and composition stay in text input",
+      "passed": true
+    },
+    {
+      "name": "navigation: glossary entry and return preserve original page",
+      "passed": true
+    },
+    {
+      "name": "presenter: audience-to-presenter and presenter-to-audience sync",
+      "passed": true
+    },
+    {
+      "name": "semantic: all four algorithms and thresholds execute with actual prepared vectors",
+      "passed": true
+    },
+    {
+      "name": "D07 paragraph overview preserves paragraph boundaries",
+      "passed": true
+    },
+    {
+      "name": "D08 metadata, neighbours and late pooling compute with actual model",
+      "passed": true,
+      "detail": "Three actual browser encoding runs"
+    },
+    {
+      "name": "D12 all four edit presets reach the expected target string",
+      "passed": true
+    },
+    {
+      "name": "D14 three versions load their matching windows and finite scores",
+      "passed": true
+    },
+    {
+      "name": "D19 enlarged graph responds to the changed matching rule",
+      "passed": true
+    },
+    {
+      "name": "common importer transfers normalized projects to latest D24",
+      "passed": true
+    },
+    {
+      "name": "week04 synthetic ZIP converts in browser with original locator and attachment intact",
+      "passed": true,
+      "detail": {
+        "sources": 2,
+        "segments": 3,
+        "summary": {
+          "sources": 2,
+          "attachments": 1,
+          "pages": 2,
+          "segments": 3,
+          "characters": 6008,
+          "readingRuns": 1,
+          "byKind": {
+            "史料": 1,
+            "教师研究产物": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "invalid imports and corrupt backups leave existing corpus intact",
+      "passed": true
+    },
+    {
+      "name": "D13 rejects incomplete eight-candidate response",
+      "passed": true
+    },
+    {
+      "name": "D13 eight candidates switch and direct input remains editable",
+      "passed": true
+    },
+    {
+      "name": "actual eight-document response replay satisfies new HyDE contract",
+      "passed": true
+    },
+    {
+      "name": "D22 independent reading is required before first API send",
+      "passed": true
+    },
+    {
+      "name": "D22 six prompts and multi-turn followup execute",
+      "passed": true
+    },
+    {
+      "name": "D22 frozen range remains accurate after question and budget change",
+      "passed": true
+    },
+    {
+      "name": "D22 question edits clearly separate previous answer from pending question",
+      "passed": true
+    },
+    {
+      "name": "D20 query variants execute with protocol responses",
+      "passed": true
+    },
+    {
+      "name": "D21 API blackboard executes with protocol capability responses",
+      "passed": true
+    },
+    {
+      "name": "tool-search protocol retains actual tool messages",
+      "passed": true
+    },
+    {
+      "name": "stored requests, backup and export do not contain API test key",
+      "passed": true
+    },
+    {
+      "name": "D22 revoking cloud scope blocks followup containing earlier private text",
+      "passed": true
+    },
+    {
+      "name": "D24 default excludes teacher work and actual dense reranking runs",
+      "passed": true
+    },
+    {
+      "name": "D24 scope deselection invalidates previously retrieved units",
+      "passed": true
+    },
+    {
+      "name": "D24 replacement project with same IDs refreshes unit cache",
+      "passed": true
+    },
+    {
+      "name": "D24 protocol comparison, source verification and support scoring",
+      "passed": true
+    },
+    {
+      "name": "D24 complete backup carries original data and operation records",
+      "passed": true
+    },
+    {
+      "name": "D24 refresh restores retained retrieval range and generated answer",
+      "passed": true
+    },
+    {
+      "name": "D24 backup restore on fresh browser restores page stage and generated work",
+      "passed": true
+    },
+    {
+      "name": "malformed workspace backup cannot replace existing corpus or workspace",
+      "passed": true
+    },
+    {
+      "name": "API failure is shown accurately and busy state clears",
+      "passed": true
+    },
+    {
+      "name": "D08 neighbour context stays within the selected source",
+      "passed": true
+    },
+    {
+      "name": "D20 displayed model call count matches executed GraphRAG query",
+      "passed": true
+    },
+    {
+      "name": "D24 revoking teacher-work inclusion also removes retained teacher units",
+      "passed": true
+    },
+    {
+      "name": "attachment PDF MIME type survives full backup restoration",
+      "passed": true
+    },
+    {
+      "name": "D16 changing source cannot count out-of-scope citations as supported",
+      "passed": true
+    },
+    {
+      "name": "restored original PDF is readable with MIME, page anchor and intact bytes",
+      "passed": true
+    },
+    {
+      "name": "legacy real API backup recovers exact sent units and candidate",
+      "passed": true
+    },
+    {
+      "name": "no page script errors",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

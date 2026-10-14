@@ -4,8 +4,7 @@ export async function queryGraph(S,{graph,records,question,strategy,budget,allow
   const call=async(task,rs,q)=>{const r=await S.generate(task,rs,q,{allowCloud});trace.runs.push(r);return r;};
   const parsed=s=>JSON.parse(s.replace(/^\s*```(?:json)?\s*|\s*```\s*$/g,''));
   const unique=rs=>[...new Map(rs.map(r=>[r.id,r])).values()];
-  const guard=window.W5Chat.settings();
-  if(records.some(r=>r.private)&&!/^http:\/\/(localhost|127\.0\.0\.1)(:|\/)/.test(guard.baseUrl)&&!allowCloud)throw Error('当前含本机导入材料，请先允许本次选中范围发送到云端。');
+  S.assertCloudPermission(records,allowCloud);
   if(strategy==='GraphRAG'){
     const communities=(graph.communities||S.A.labelPropagation(graph)).filter(g=>g.length);
     const groups=communities.slice(0,budget).map(group=>({group,rs:records.filter(r=>group.some(n=>r.text.includes(n)||graph.nodes.find(x=>x.id===n)?.sources?.includes(r.id))).slice(0,budget)})).filter(x=>x.rs.length);

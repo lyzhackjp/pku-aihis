@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-14",
+  "baseline": "6a95d10062cfa37ad3857db34fe692ff73c741ff",
+  "build": "passed: normal pnpm build, including importer tsc + Vite and week05 Stencil",
+  "check": "passed: week05 tsc and delivery links, 25 pages, 160 minutes",
+  "tests": {
+    "week05": {
+      "passed": 15,
+      "total": 15
+    },
+    "materialImporter": {
+      "passed": 12,
+      "total": 12
+    },
+    "integration": {
+      "passed": 42,
+      "total": 42,
+      "optionalLegacyBackup": true
+    },
+    "browser": {
+      "passed": 67,
+      "total": 67
+    }
+  },
+  "sourceSHA256": {
+    "packages/course-project/week04-backup.mjs": "a857f66d91cbaddb47e63cbc573364288ec641d5ca833cc575f34f5813ecf401",
+    "apps/week05/src/assets/revision/services.mjs": "234382a67140f13f3538d227c2d20bf3f191f7c65213fef8e40a92009828e5a3",
+    "apps/week05/src/assets/revision/revision-labs.js": "aa5ef8bde118f6dc0f3290d22ba1b918dd6ccaf9932d8b109d224cf473ddab2a",
+    "apps/week05/src/assets/revision/graph-query.mjs": "cc35bf964deedd9e1161e4b58b5fcc3e5c963dd7c415453fb14970b9b89cc8ec",
+    "apps/week05/scripts/check-integration.mjs": "0c0121143e3d1abb26b2cebb1ac5b03bdde77d82d80d5c66d02f40f0ecac06c6",
+    "apps/week05/scripts/check-revision-browser.mjs": "6cf8f3733667932d47b5bea0417fede097106841cd5939f0d1157f96d4c40314",
+    "apps/week05/tests/week04-backup.test.mjs": "a75096f4b7263cf3d5b7a5527a0e12f43a912e68f8959de87101116e98c64db0",
+    "apps/week05/tests/fixtures/hyde-actual-20261014.json": "a9be127695e384d649e9947f7ede53b4a667d34def8d54c78adce7aa6151ae93"
+  },
+  "rawArtifacts": "apps/week05/artifacts-revision (local, ignored)",
+  "mainMerged": false,
+  "published": false
+}

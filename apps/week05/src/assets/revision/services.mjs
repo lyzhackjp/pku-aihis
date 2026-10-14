@@ -26,11 +26,25 @@ function put(store, key, value) {
   });
 }
 let projects = await get("state", "projects") || [], runs = await get("state", "runs") || [], sourceCache = null, recordCache = null;
+let materialRevision = await get("state", "materialRevision") || "initial";
+let workspaces = await get("state", "workspaces") || {}, workspaceWrites = Promise.resolve();
 const invalidate = () => {
   sourceCache = null;
   recordCache = null;
 };
 const corpus = {
+  revision() { return materialRevision; },
+  workspace(page) { return structuredClone(workspaces[page] || null); },
+  saveWorkspace(page, value) {
+    const copy = structuredClone(value);
+    const write = workspaceWrites.catch(() => {}).then(async () => {
+      const next = { ...workspaces, [page]: copy };
+      await put("state", "workspaces", next);
+      workspaces = next;
+    });
+    workspaceWrites = write;
+    return write;
+  },
   sources() {
     return sourceCache ||= [...base, ...projects.flatMap((p) => p.sources.map((s) => ({ ...s, private: true, projectId: p.id, edition: s.edition || s.version || s.date || "待查", provider: s.acquisition || "本机导入", scope: p.scope || "导入项目所收范围", paragraphs: p.segments.filter((r) => r.sourceId === s.id && !r.derived).map((r) => ({ ...r, source: s.id, pdfPage: r.pdfPage, text: r.text, verification: r.verification || "待核" })) })))];
   },
@@ -45,8 +59,10 @@ const corpus = {
     for (let f of files) if (f.blob instanceof Blob) await put("files", f.id, f.blob);
     await put("state", "projects", next);
     projects = next;
+    materialRevision = crypto.randomUUID();
+    await put("state", "materialRevision", materialRevision);
     invalidate();
-    window.dispatchEvent(new CustomEvent("week05-corpus-change"));
+    window.dispatchEvent(new CustomEvent("week05-corpus-change", { detail: { restored: false } }));
     return { sources: p.sources.length, segments: p.segments.filter((s) => !s.derived).length };
   },
   async importFile(file) {
@@ -76,12 +92,18 @@ const corpus = {
     return get("files", id);
   },
   async backup() {
+    window.dispatchEvent(new CustomEvent("week05-before-backup"));
+    await workspaceWrites;
     const { zipSync, strToU8 } = await import("../vendor/fflate/fflate.mjs");
-    const p = { projects, runs, uiState: Object.fromEntries(Object.entries(localStorage).filter(([k]) => k.startsWith("week05/v3/"))) }, items = { "week05-backup.json": strToU8(JSON.stringify(p)) };
+    const p = { version: 2, projects, runs, workspaces, materialRevision, fileTypes: {}, uiState: Object.fromEntries(Object.entries(localStorage).filter(([k]) => k.startsWith("week05/v3/"))) }, items = {};
     for (const project of projects) for (const s of project.sources) for (const a of s.attachments) {
       let blob = await get("files", a.id);
-      if (blob) items["files/" + a.id] = new Uint8Array(await blob.arrayBuffer());
+      if (blob) {
+        items["files/" + a.id] = new Uint8Array(await blob.arrayBuffer());
+        p.fileTypes[a.id] = blob.type || a.type || "application/octet-stream";
+      }
     }
+    items["week05-backup.json"] = strToU8(JSON.stringify(p));
     return new Blob([zipSync(items)], { type: "application/zip" });
   },
   async restore(file) {
@@ -92,14 +114,31 @@ const corpus = {
     if (!Array.isArray(b.projects) || !Array.isArray(b.runs)) throw Error("备份格式错误");
     b.projects.forEach(validateProject);
     if (b.uiState && (typeof b.uiState !== "object" || Object.entries(b.uiState).some(([k, v]) => !k.startsWith("week05/v3/") || typeof v !== "string"))) throw Error("页面记录格式错误");
-    for (const [k, v] of Object.entries(z)) if (k.startsWith("files/")) await put("files", k.slice(6), new Blob([v]));
+    if (b.workspaces && (typeof b.workspaces !== "object" || Array.isArray(b.workspaces))) throw Error("工作记录格式错误");
+    for (const [page, w] of Object.entries(b.workspaces || {})) {
+      if (!/^D\d{2}$/.test(page) || !w || typeof w !== "object" || Array.isArray(w)) throw Error("工作记录格式错误");
+      if (w.d24res && (typeof w.d24res.stamp !== "string" || !Array.isArray(w.d24res.bm25))) throw Error("检索工作记录格式错误");
+      if (w.d24answer && typeof w.d24answer.output !== "string") throw Error("模型候选记录格式错误");
+      if (w.result?.chat && !Array.isArray(w.result.chat)) throw Error("对话工作记录格式错误");
+    }
+    await workspaceWrites;
+    const types = new Map(b.projects.flatMap(p => p.sources.flatMap(s => s.attachments.map(a => [a.id, a.type || "application/octet-stream"]))));
+    for (const [k, v] of Object.entries(z)) if (k.startsWith("files/")) {
+      const id = k.slice(6), type = b.fileTypes?.[id] || types.get(id) || "application/octet-stream";
+      await put("files", id, new Blob([v], { type }));
+    }
     await put("state", "projects", b.projects);
     await put("state", "runs", b.runs);
+    workspaces = b.workspaces || {};
+    materialRevision = b.materialRevision || crypto.randomUUID();
+    await put("state", "workspaces", workspaces);
+    await put("state", "materialRevision", materialRevision);
     projects = b.projects;
     invalidate();
     runs = b.runs;
+    for (const key of Object.keys(localStorage)) if (key.startsWith("week05/v3/")) localStorage.removeItem(key);
     for (const [k, v] of Object.entries(b.uiState || {})) localStorage.setItem(k, v);
-    window.dispatchEvent(new CustomEvent("week05-corpus-change"));
+    window.dispatchEvent(new CustomEvent("week05-corpus-change", { detail: { restored: true } }));
   },
   async saveRun(run) {
     runs = [...await get("state", "runs") || [], run];
@@ -187,8 +226,7 @@ window.addEventListener("message", async (e) => {
 });
 async function generate(task, records, question, { allowCloud = false, onDelta } = {}) {
   if (!window.W5Chat?.ready()) throw Error("请先用右上角共用“模型接入”配置真实生成模型");
-  let settings = window.W5Chat.settings();
-  if (records.some((r) => r.private) && !/^http:\/\/(127\.0\.0\.1|localhost)/.test(settings.baseUrl) && !allowCloud) throw Error("当前含本机导入材料。使用本机端点，或允许本次选中范围发送到云端。");
+  assertCloudPermission(records, allowCloud);
   const input = records.map((r) => `[${r.id}] ${r.author} ${r.title} ${r.locator}
 ${r.text}`).join("\n\n");
   let messages = [{ role: "system", content: task }, { role: "user", content: question + "\n\n" + input }];
@@ -196,6 +234,14 @@ ${r.text}`).join("\n\n");
   let run = { id: "run-" + crypto.randomUUID(), time: (/* @__PURE__ */ new Date()).toISOString(), mode: "实际API运行", model: result.model, sourceIds: records.map((r) => r.id), corpusSHA256: await sha256(records), input: messages, output: result.text, seconds: result.seconds, usage: result.usage };
   await corpus.saveRun(run);
   return run;
+}
+function assertCloudPermission(records, allowCloud = false) {
+  let local = false;
+  try {
+    const url = new URL(window.W5Chat.settings().baseUrl);
+    local = url.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
+  } catch {}
+  if (records.some(r => r.private) && !local && !allowCloud) throw Error("当前含本机导入材料。使用本机端点，或允许本次选中范围发送到云端。");
 }
 function rankDense(queryVector, records, vectors) {
   return records.map((r, i) => ({ ...r, score: A.cosine(queryVector, vectors[i]) })).sort((a, b) => b.score - a.score);
@@ -220,6 +266,7 @@ export {
   corpus,
   embedding,
   generate,
+  assertCloudPermission,
   openImporter,
   prepared,
   preparedAPI,

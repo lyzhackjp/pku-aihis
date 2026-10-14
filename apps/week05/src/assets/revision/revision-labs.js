@@ -38,7 +38,7 @@
     D13: { query: "章學誠怎样看待史家的立场？", budget: 3 },
     D14: { pair: "shide", threshold: 0.9 },
     D15: { query: "史德與心術", budget: 3 },
-    D16: { answer: "章學誠要求著史者“盡其天而不益以人”。\n阿克顿认为史料批判是史学的全部工作。\n三人都主张叙述必须服从史料。", source: "all" },
+    D16: { grades: LECTURE_GRADES, answer: "章學誠要求著史者“盡其天而不益以人”。\n阿克顿认为史料批判是史学的全部工作。\n三人都主张叙述必须服从史料。", source: "all" },
     D19: { source: "all" },
     D21: { query: "史德是什麼？", rhoPaper: 0.5 },
     D22: { source: "all", query: "这几位作者怎样看待史料对叙述者的约束？", budget: 6 },
@@ -48,14 +48,16 @@
     connectedCallback() {
       if (this.started) {
         window.addEventListener("week05-corpus-change", this.refresh);
+        if (this.beforeBackup) window.addEventListener("week05-before-backup", this.beforeBackup);
         if (this.ready) this.render();
         return;
       }
       this.started = true;
       this.id = this.getAttribute("page-id");
       this.page = D.pageById(this.id);
-      this.s = Object.assign({ source: "shide", record: "", step: 0, tab: "0", method: "fixed", size: 160, overlap: 20, theta: 0.4, threshold: "absolute", semantic: "breakpoint", k: 3, lambda: 0.2, eps: 0.4, minPoints: 2, scope: 8, query: "史德與心術", a: "森鴎外", b: "森鷗外", edit: 0, editMode: "fill", permutations: 128, budget: 3, representation: "bm25", terms: "史德\n史識\n心術\n劉氏\n劉氏子元\n史料\n自然\n栗山大膳\n日蓮上人\n山椒大夫\nauthor\ncriticism\nhistory", aliases: "森鷗外=>森鴎外\nActon=>Lord Acton\n劉氏子元=>劉知幾", entityRule: "exact", zoom: 1, strategy: "GraphRAG", view: "run", context: "metadata", hypothesis: "", claim: "章學誠、阿克顿與森鴎外都認為歷史敘述必須完全服從史料。", answer: "", task: "比较", report: "", through: 0, antIter: 10, ants: 8, rho: 0.3, cloud: false, grades: {}, used: [], sub: 0, unit: "char", norm: "", topN: 40, rhoPaper: 0.5, pair: "shide", threshold: 0.9 }, structuredClone(PAGE_DEFAULTS[this.id] || {}), D.store.get(STORE + this.id, {}));
-      if (this.id === "D16" && !Object.keys(this.s.grades).length) this.s.grades = structuredClone(LECTURE_GRADES);
+      this.s = Object.assign({ source: "shide", record: "", step: 0, tab: "0", method: "fixed", size: 160, overlap: 20, theta: 0.4, threshold: "absolute", semantic: "breakpoint", k: 3, lambda: 0.2, eps: 0.4, minPoints: 2, scope: 8, query: "史德與心術", a: "森鴎外", b: "森鷗外", edit: 0, editMode: "fill", permutations: 128, budget: 3, representation: "bm25", terms: "史德\n史識\n心術\n劉氏\n劉氏子元\n史料\n自然\n栗山大膳\n日蓮上人\n山椒大夫\nauthor\ncriticism\nhistory", aliases: "森鷗外=>森鴎外\nActon=>Lord Acton\n劉氏子元=>劉知幾", entityRule: "exact", zoom: 1, strategy: "GraphRAG", view: "run", context: "metadata", hypothesis: "", claim: "章學誠、阿克顿與森鴎外都認為歷史敘述必須完全服從史料。", answer: "", task: "比较", report: "", through: 0, antIter: 10, ants: 8, rho: 0.3, cloud: false, grades: {}, used: [], sub: 0, unit: "char", norm: "", topN: 40, rhoPaper: 0.5, pair: "shide", threshold: 0.9 }, structuredClone(PAGE_DEFAULTS[this.id] || {}));
+      this.defaults = structuredClone(this.s);
+      Object.assign(this.s, D.store.get(STORE + this.id, {}));
       this.busy = false;
       this.result = null;
       this.vectors = null;
@@ -65,7 +67,9 @@
         if (e.target.closest("revision-lab") !== this) return;
         let k = e.target.dataset.k;
         if (!k) return;
+        const previous = this.s[k];
         this.s[k] = e.target.type === "range" ? Number(e.target.value) : e.target.type === "checkbox" ? e.target.checked : e.target.value;
+        if (previous !== this.s[k]) this.changed(k);
         this.save();
       });
       this.addEventListener("change", (e) => {
@@ -78,6 +82,7 @@
             this.s.passage = "";
             this.result = null;
             this.vectors = null;
+            this.changed(k);
           }
           this.save();
         }
@@ -98,6 +103,7 @@
             if (b.dataset.set === "unit") this.s.step = 0;
             if (b.dataset.set === "norm") this.s.step = 1;
             if (b.dataset.set === "hypIndex" && this.s.hyps) this.s.hypothesis = this.s.hyps[+b.dataset.v].text;
+            if (b.dataset.set === "strategy") this.result = null;
           }
           this.save();
         }
@@ -151,10 +157,22 @@
         this.s.chain[e.detail.id] = { state: e.detail.state, result: e.detail.result };
         D.store.set(STORE + this.id, this.s);
       });
-      this.refresh = () => this.render();
+      this.refresh = (e) => {
+        this.unitCache = null;
+        if (e.detail?.restored) {
+          this.s = Object.assign(structuredClone(this.defaults), D.store.get(STORE + this.id, {}), { cloud: false });
+          this.loadWork();
+        } else if (this.id === "D24") this.invalidateD24(true);
+        else if (this.id === "D22") this.result = null;
+        this.save();
+      };
+      this.beforeBackup = () => this.persistWork();
       window.addEventListener("week05-corpus-change", this.refresh);
+      window.addEventListener("week05-before-backup", this.beforeBackup);
       window.W5ServicesReady.then((x) => {
         S = x;
+        this.s.cloud = false;
+        this.loadWork();
         this.ready = true;
         this.render();
       }).catch((e) => {
@@ -164,11 +182,76 @@
     disconnectedCallback() {
       clearInterval(this.timer);
       window.removeEventListener("week05-corpus-change", this.refresh);
+      window.removeEventListener("week05-before-backup", this.beforeBackup);
     }
     save() {
+      this.sanitizeGrades();
       D.store.set(STORE + this.id, this.s);
+      this.persistWork();
       if (this.fromThrough) this.dispatchEvent(new CustomEvent("week05-through-update", { bubbles: true, detail: { id: this.id, state: structuredClone(this.s), result: this.result } }));
       this.render();
+    }
+    persistWork() {
+      if (!S || !["D22", "D24", "D18", "D20"].includes(this.id)) return;
+      return S.corpus.saveWorkspace(this.id, { result: this.result, d24res: this.d24res, d24answer: this.d24answer, graphRuns: this.graphRuns }).catch(e => {
+        this.message = "工作记录未保存：" + e.message;
+      });
+    }
+    loadWork() {
+      const saved = S.corpus.workspace(this.id), w = saved || {};
+      this.result = w.result || null;
+      this.graphRuns = w.graphRuns || {};
+      this.d24res = w.d24res || null;
+      this.d24answer = w.d24answer || null;
+      if (this.id === "D24") {
+        if (!saved) this.recoverLegacyD24();
+        if (this.d24res && this.d24res.stamp !== this.d24Stamp()) this.invalidateD24(true);
+      }
+      this.sanitizeGrades();
+    }
+    changed(k) {
+      if (this.id === "D24") {
+        if (["allowTeacher", "source", "unitSize", "query", "topN"].includes(k)) this.invalidateD24(true);
+        else if (["budget", "question", "manual"].includes(k)) this.invalidateD24(false);
+        else if (k === "d24answer") this.s.d24grades = {};
+      }
+      if (this.id === "D16" && k === "answer") this.s.grades = {};
+      if (this.id === "D08" && ["source", "record", "query", "nb"].includes(k)) this.result = null;
+    }
+    invalidateD24(retrieval) {
+      if (retrieval) { this.d24res = null; this.unitCache = null; }
+      this.d24answer = null;
+      this.result = null;
+      delete this.s.d24answer;
+      this.s.d24grades = {};
+      this.s.cloud = false;
+    }
+    d24Stamp() {
+      return JSON.stringify([S.corpus.revision(), this.d24Scope().map(m => m.id), +(this.s.unitSize || 300), this.s.query, +(this.s.topN || 40)]);
+    }
+    sanitizeGrades() {
+      if (!S || this.id !== "D16") return;
+      const valid = new Set(this.records().map(r => r.id));
+      for (const [i, g] of Object.entries(this.s.grades || {})) if (g.cite && !valid.has(g.cite)) this.s.grades[i] = { cite: "", weight: 0 };
+    }
+    recoverLegacyD24() {
+      // Old backups saved the actual API input, but not the dense scores. Recover
+      // only its exact matching input units; never invent missing cosine values.
+      const operation = [...S.corpus.runs()].reverse().find(r => r.page === "D24" && r.operation === "d24-read");
+      const run = S.corpus.runs().find(r => r.id === operation?.result?.d24run);
+      if (!run?.sourceIds?.length) return;
+      const units = this.d24Units(), input = run.input?.find(m => m.role === "user")?.content || "";
+      const kept = run.sourceIds.map(id => units.find(u => u.id === id));
+      if (kept.some(u => !u)) return;
+      for (let i = 0; i < kept.length; i++) {
+        const u = kept[i], header = `[${u.id}] ${u.author} ${u.title} ${u.locator}\n`, start = input.indexOf(header);
+        const next = kept[i + 1], end = next ? input.indexOf(`\n\n[${next.id}] `, start + header.length) : input.length;
+        if (start < 0 || end < 0 || input.slice(start + header.length, end) !== u.text) return;
+      }
+      const t0 = performance.now(), bm25 = S.sparse(this.s.query, units);
+      this.d24res = { stamp: this.d24Stamp(), total: units.length, query: this.s.query, bm25, bm25Seconds: (performance.now() - t0) / 1000, restoredKept: kept, legacy: true };
+      this.d24answer = structuredClone(run);
+      this.message = "旧版备份已接回实际发送的原文与模型候选；未保存的向量分数需重新计算。";
     }
     sources() {
       let ss = S.corpus.sources();
@@ -203,9 +286,11 @@
       const tab = Math.min(+this.s.tab || 0, C.stages.length - 1), st = C.stages[tab], sub = st.subs[+this.s.sub] || st.subs[0];
       return `<div class="w5-chapter${compact ? " compact" : ""}">${compact ? "" : `<p class="w5-lead">${E(C.lead)}</p>`}<div class="w5-rail" role="tablist" aria-label="阶段">${C.stages.map((x, i) => `<button data-stage="${i}" role="tab" aria-selected="${i === tab}" class="w5-node${i === tab ? " is-active" : ""}"><span class="w5-dot"></span><small>${E(x.tag)}</small><b>${E(x.name)}</b>${compact ? "" : `<span>${E(x.short)}</span>`}</button>`).join("")}</div><section class="w5-stage"><blockquote class="w5-quote">${E(st.quote)}<cite>${E(st.cite)}</cite></blockquote>${st.subs.length > 1 ? `<nav class="w5-subs" aria-label="小阶段">${st.subs.map((x, j) => `<button data-sub="${j}" class="${x === sub ? "on" : ""}" aria-pressed="${x === sub}">${E(x.name)}</button>`).join("")}</nav>` : ""}<article class="w5-card"><h3>${E(sub.name)}</h3><dl><dt>讲义原句</dt><dd>${/^[“"]/.test(sub.quote) ? E(sub.quote) : `<q>${E(sub.quote)}</q>`}<cite>${E(sub.cite)}</cite></dd><dt>本讲例子</dt><dd>${E(sub.example)}</dd><dt>说明</dt><dd>${E(sub.explain)}</dd></dl>${pageLinks(sub.links)}</article></section></div>`;
     }
+    sentenceInput() {
+      return this.s.passage || this.records().filter(r => !r.verification?.includes("待逐字")).map(r => r.text).join("\n\n");
+    }
     sentenceRows() {
-      let text = this.s.passage || this.records().filter((r) => !r.verification?.includes("待逐字")).map((r) => r.text).join("\n");
-      return S.A.sentences(text).slice(0, this.s.scope);
+      return S.A.sentences(this.sentenceInput()).slice(0, this.s.scope);
     }
     knownVectors(sentences) {
       if (this.vectors && JSON.stringify(this.vectors.texts) === JSON.stringify(sentences.map((s) => s.text))) return this.vectors.vectors;
@@ -213,7 +298,8 @@
       return sentences.every((s) => known.has(s.text)) ? sentences.map((s) => known.get(s.text)) : null;
     }
     contextPlan() {
-      const s = this.s, rs = this.records(), target = this.selected(), i = rs.findIndex((x) => x.id === target?.id), k = s.context === "metadata" || s.context === "api" ? 0 : +(s.nb ?? 1);
+      const s = this.s, selected = this.selected(), target = selected?.parts && new Set(selected.parts.map(r => r.source)).size > 1 ? null : selected;
+      const rs = this.records().filter(r => r.source === target?.source), i = rs.findIndex((x) => x.id === target?.id), k = s.context === "metadata" || s.context === "api" ? 0 : +(s.nb ?? 1);
       const before = i < 0 ? [] : rs.slice(Math.max(0, i - k), i), after = i < 0 ? [] : rs.slice(i + 1, i + 1 + k), source = this.sources().find((m) => m.id === target?.source) || {};
       const fields = s.metaFields || ["author", "title", "edition", "locator"], value = { author: target?.author, title: target?.title, edition: source.edition, locator: target?.locator };
       const composed = s.context === "metadata" ? fields.map((f) => value[f]).filter(Boolean).join("；") + "\n" + (target?.text || "") : s.context === "neighbors" ? [...before, target, ...after].filter(Boolean).map((x) => x.text).join("\n") : null;
@@ -232,7 +318,7 @@
       return ss.filter((m) => m.kind === "史料");
     }
     d24Units() {
-      const s = this.s, scope = this.d24Scope(), size = +(s.unitSize || 300), key = scope.map((m) => m.id).join(",") + "|" + size + "|" + S.corpus.records().length;
+      const s = this.s, scope = this.d24Scope(), size = +(s.unitSize || 300), key = scope.map((m) => m.id).join(",") + "|" + size + "|" + S.corpus.revision();
       if (this.unitCache?.key === key) return this.unitCache.units;
       const units = [];
       for (const m of scope) for (const r of S.corpus.records().filter((x) => x.source === m.id)) {
@@ -262,11 +348,13 @@
     d24Retrieve() {
       const s = this.s, r = this.d24res;
       const list = (rows, label, key) => `<div class="rank-col"><h4>${E(label)}</h4>${rows.slice(0, 15).map((x, i) => `<p><b>${i + 1}. ${E(x.id)}</b> ${number(x[key])}<br><small>${E(x.title)} · ${E(x.locator)}</small><br>${E(x.text.slice(0, 50))}…</p>`).join("")}</div>`;
-      return `<p>两步：先用 BM25 在本轮全部检索单元上“找得全”，再只对 BM25 前 N 个单元现场做 MiniLM 嵌入，按余弦“排得准”（讲义 2.3）。</p><div class="inline-form">${input("query", s.query, "检索问题")}${slider("topN", +(s.topN || 40), "现场嵌入的单元数 N", 10, 120, 10)}<button data-do="d24-bm25">① BM25 检索全部单元</button><button data-do="d24-dense" ${r?.bm25 ? "" : "disabled"}>② 对前 N 个现场嵌入重排</button></div>${r?.bm25 ? `<p class="note-box">BM25：${r.total}个单元，${r.bm25.length}个有得分，用时${number(r.bm25Seconds)}秒。${r.dense ? `嵌入：实际编码 ${r.dense.length} 个单元（来自 ${new Set(r.dense.map((x) => x.source)).size} 份材料：${E([...new Set(r.dense.map((x) => x.title))].join("、"))}），用时 ${number(r.denseSeconds)} 秒。其余 ${r.total - r.dense.length} 个单元没有参与语义排序。` : "尚未嵌入。"}</p><div class="rank-compare">${list(r.bm25, "BM25", "score")}${r.dense ? list(r.dense, "BM25 前N → 余弦重排", "cos") : ""}</div>` : ""}`;
+      return `<p>两步：先用 BM25 在本轮全部检索单元上“找得全”，再只对 BM25 前 N 个单元现场做 MiniLM 嵌入，按余弦“排得准”（讲义 2.3）。</p><div class="inline-form">${input("query", s.query, "检索问题")}${slider("topN", +(s.topN || 40), "现场嵌入的单元数 N", 10, 120, 10)}<button data-do="d24-bm25">① BM25 检索全部单元</button><button data-do="d24-dense" ${r?.bm25 ? "" : "disabled"}>② 对前 N 个现场嵌入重排</button></div>${r?.bm25 ? `${r.legacy ? '<p class="caption">旧备份接回的是原次实际输入；以下BM25为恢复时重算，原次向量分数未保存。</p>' : ""}<p class="note-box">BM25：${r.total}个单元，${r.bm25.length}个有得分，用时${number(r.bm25Seconds)}秒。${r.dense ? `嵌入：实际编码 ${r.dense.length} 个单元（来自 ${new Set(r.dense.map((x) => x.source)).size} 份材料：${E([...new Set(r.dense.map((x) => x.title))].join("、"))}），用时 ${number(r.denseSeconds)} 秒。其余 ${r.total - r.dense.length} 个单元没有参与语义排序。` : "尚未嵌入。"}</p><div class="rank-compare">${list(r.bm25, "BM25", "score")}${r.dense ? list(r.dense, "BM25 前N → 余弦重排", "cos") : ""}</div>` : ""}`;
     }
     d24Kept() {
       const r = this.d24res;
-      return (r?.dense || r?.bm25 || []).slice(0, +(this.s.budget || 6));
+      if (!r || r.stamp !== this.d24Stamp()) return [];
+      const valid = new Set(this.d24Scope().map(m => m.id));
+      return (r.restoredKept || r.dense || r.bm25 || []).filter(u => valid.has(u.source)).slice(0, +(this.s.budget || 6));
     }
     d24Graph() {
       const s = this.s, kept = this.d24Kept();
@@ -287,10 +375,11 @@
     d24Backup() {
       return `<p>完整备份包含：导入的项目（题录、正文块与第四周定位）、原件 PDF、第五周各页的实际运行记录与页面设置。可在另一台电脑或第六周课件中恢复，继续接着做。</p><button data-do="backup">下载第五周完整备份</button><label class="file-chip">恢复备份<input data-restore="1" type="file" accept=".zip"></label><button data-do="export">只导出本轮判断（JSON）</button><p class="caption">备份只在本机生成与保存；含教师材料，请勿上传公共位置。</p>`;
     }
-    frozen() {
+    plannedRecords() {
       const hits = S.sparse(this.s.query, this.records());
       return (hits.length ? hits : this.records()).slice(0, Math.max(1, +this.s.budget));
     }
+    frozen() { return this.result?.session?.records || this.plannedRecords(); }
     loadEtexts() {
       if (this.etextLoading) return;
       this.etextLoading = true;
@@ -373,6 +462,8 @@
     }
     render() {
       if (!this.ready) return;
+      this.sanitizeGrades();
+      if (this.id === "D24" && this.d24res && this.d24res.stamp !== this.d24Stamp()) this.invalidateD24(true);
       let s = this.s, r = this.selected(), rs = this.records(), html = "", sel = this.selection();
       if (this.id === "D24" && !rs.length) {
         this.innerHTML = `<div class="empty-project d24-empty"><h2>德教全量：在本机导入</h2><p>课件不预装德教原文、教师稿或研究结果。请选择第四周导出的<b>完整课程备份 ZIP</b>（含 patchouli.zip 与 reading-records.json），或通用项目的 project.json／ZIP。材料只写入本机浏览器，不上传。</p><p><label class="file-chip primary">选择德教包<input data-import="1" type="file" accept=".json,.zip"></label></p><p><button data-do="importer">改用通用导入页 ↗</button><label class="file-chip">恢复第五周完整备份<input data-restore="1" type="file" accept=".zip"></label></p><ol class="d24-stage-preview">${D24_STAGES.map((x) => `<li>${E(x[0])}</li>`).join("")}</ol><p role="status">${E(this.message)}</p></div>`;
@@ -416,7 +507,7 @@
           const body = this.flow([["输入与实现", controls], ["每句的实际情况", table(["句", "原文", "字符范围", "向量前4维"], sent.map((t, i) => [i + 1, E(t.text), `[${t.start},${t.end})`, vec ? vec[i].slice(0, 4).map(number).join(",") + " …" : "待编码"]))], ["相邻句距离", dist ? this.distanceChart(dist, s.semantic === "breakpoint" ? theta : null) + table(["句界", "d=1−cos", s.semantic === "breakpoint" ? "切断（θ=" + number(theta) + "）" : "（聚类不按阈值切）"], dist.map((d) => [`${d.i + 1}→${d.i + 2}`, number(d.distance), s.semantic === "breakpoint" ? (d.cut ? "是" : "否") : "—"])) + `<p class="caption">聚类距离：λ|i−j|/n+(1−λ)(1−max(cos,0))。</p>` : `<p class="note-box">当前文本没有预跑向量。点“浏览器内实际编码”，在本机下载并运行 MiniLM 后显示每一句的距离。</p>`], ["实际切分结果", groups.length ? groups.map((g, i) => `<article class="chunk"><small>块${i + 1}：句${g.map((x) => x + 1).join("、")}</small>${E(g.map((x) => sent[x].text).join(""))}</article>`).join("") + `<p class="caption">${E(this.vectors ? "向量为本页刚才在浏览器内实际编码" : "向量为课前在本机实际预计算（同一模型、同一修订）")}；${E(S.embedding.model)}，q8，384维。</p>` : "<p>编码后显示。</p>"]]);
           if (this.id === "D06") { html = body; break; }
           const overview = () => {
-            const text = sent.map((x) => x.text).join(""), rowsOut = [];
+            const text = [...this.sentenceInput()].slice(0, sent.at(-1)?.end || 0).join(""), rowsOut = [];
             for (const [m, l] of [["fixed", "固定长度"], ["sentence", "按句"], ["paragraph", "按段"], ["recursive", "递归"]]) {
               const cs = M.chunks(text, m, s.size || 120, m === "fixed" ? 20 : 0), ls = cs.map((c) => [...c.text].length);
               rowsOut.push([E(l), "结构／长度", cs.length, Math.round(ls.reduce((a2, b2) => a2 + b2, 0) / Math.max(1, cs.length)), cs.slice(1).map((c) => c.start).join("、") || "—"]);
@@ -567,6 +658,7 @@
         const cur = new Set(this.d24Scope().map((m) => m.id));
         el.checked ? cur.add(el.dataset.scope) : cur.delete(el.dataset.scope);
         this.s.d24scope = [...cur];
+        this.invalidateD24(true);
         this.save();
       });
       this.querySelectorAll("[data-d24cite]").forEach((el) => el.onchange = () => {
@@ -612,10 +704,10 @@
     }
     // 三种方法在当前所选片段上的本页流程：各自的中间产物与模型调用次数（按本页流程计数，不是论文数字）。
     strategyPipeline() {
-      const s = this.s, rs = this.records(), g = this.currentGraph(), comm = S.A.labelPropagation(g).filter((c) => c.length > 1), N = rs.length, C = comm.length, b = +s.budget;
+      const s = this.s, rs = this.records(), g = this.result?.graph || this.currentGraph(), comm = (g.communities || S.A.labelPropagation(g)).filter(c => c.length), N = rs.length, C = comm.length, b = +s.budget;
       const ids = (xs) => xs.map((r) => E(r.id)).join("、") || "无";
       let steps = [];
-      if (s.strategy === "GraphRAG") steps = [["建索引①", "逐块抽取实体与关系", `${N}块 → ${N}次调用；本页用共现词项替代：${g.nodes.length}节点、${g.edges.length}边，0次调用`], ["建索引②", "社区划分", comm.map((c, i) => `社区${i + 1}：${E(c.join("、"))}`).join("<br>") || "当前没有两节点以上的社区"], ["建索引③", "每个社区预写摘要", `${C}次调用（需共用模型；可载入已跑好的结果）`], ["查询", "map：每个社区分头作答；reduce：合并", `${Math.min(C, b)}+1次调用（预算${b}个社区）`]];
+      if (s.strategy === "GraphRAG") steps = [["建索引①", "逐块抽取实体与关系", `逐块抽取时估计${N}次；本页共现图${g.nodes.length}节点、${g.edges.length}边，0次；API按钮按实际批次另记`], ["建索引②", "社区划分（含单节点社区）", comm.map((c, i) => `社区${i + 1}：${E(c.join("、"))}`).join("<br>") || "当前没有社区"], ["建索引③", "每个社区预写摘要", `理论估计${C}次；本页查询时会为预算内社区现写摘要`], ["查询", "摘要→map分头回答→reduce合并", `至多2×${Math.min(C, b)}+1次（预算${b}个社区；没有可用回答时不执行reduce）`]];
       if (s.strategy === "LightRAG") {
         const low = S.sparse(s.low || "劉氏子元 劉氏", rs).slice(0, b), high = S.sparse(s.high || "心術 史德", rs).slice(0, b), lowNames = (s.low || "劉氏子元 劉氏").split(/\s+/).filter(Boolean), hit = new Set(g.nodes.filter((n) => lowNames.some((k) => n.id.includes(k) || k.includes(n.id))).map((n) => n.id)), nb = g.edges.filter((e) => hit.has(e.source) || hit.has(e.target));
         steps = [["建索引", "逐块抽取实体与关系；新材料只增量并入", `${N}次调用；追加一份材料只需处理新块`], ["查询①", "从问题提取两层关键词", `1次调用。本页可手填：${input("low", s.low || "劉氏子元 劉氏", "低层（具体实体）")}${input("high", s.high || "心術 史德", "高层（主题）")}`], ["查询②", "两层各自检索＋邻接扩展", `低层命中：${ids(low)}<br>高层命中：${ids(high)}<br>邻接边：${nb.map((e) => E(e.source + "—" + e.target)).join("、") || "无"}`], ["查询③", "合并后生成回答", "1次调用"]];
@@ -624,8 +716,12 @@
         const cand = S.sparse(s.query, rs);
         steps = [["建索引", "名词短语与共现建图，不调用模型", `0次调用：${g.nodes.length}节点、${g.edges.length}边`], ["查询①", "按问题取候选（本页用 BM25）", `${cand.length}段：${ids(cand.slice(0, 8))}${cand.length > 8 ? "…" : ""}`], ["查询②", `按预算逐段核读相关性（预算${b}段）`, `将核读：${ids(cand.slice(0, b))}；未核读：${ids(cand.slice(b, b + 6))}${cand.length > b + 6 ? "…" : ""}<br>${b}次调用`], ["查询③", "据通过核读的原文回答", "1次调用"]];
       }
-      const cost = [["GraphRAG", N + C, Math.min(C, b) + 1], ["LightRAG", N, 2], ["LazyGraphRAG", 0, b + 1]].map(([k, i, q]) => [k === s.strategy ? `<b>${k}</b>` : k, i, q]);
-      return `<section class="pipeline"><h3>${E(s.strategy)} 在当前${N}个片段上的流程</h3>${table(["步骤", "做什么", "本页产物／调用"], steps)}<h4>模型调用次数对照（按本页流程计数）</h4>${table(["方法", "建索引", "一次查询"], cost)}<p class="caption">N=${N}块，C=${C}个社区，预算=${b}。论文与官方说明中的成本数字另见引文，不与本页计数混同。</p></section>`;
+      const cost = [["GraphRAG", N + C, 2 * Math.min(C, b) + 1], ["LightRAG", N, 2], ["LazyGraphRAG", 0, Math.min(S.sparse(s.query, rs).length, b) + 1]].map(([k, i, q]) => [k === s.strategy ? `<b>${k}</b>` : k, i, "≤" + q]);
+      const actual = ["GraphRAG", "LightRAG", "LazyGraphRAG"].map(k => {
+        const r = this.graphRuns?.[k], index = r?.index;
+        return [E(k), index ? index.calls : "未运行", r?.calls != null ? `<span data-actual-calls="${k}">${r.calls}</span>` : "未运行", r?.calls != null ? `预算${r.budget}；${E(r.question)}<br><small>${E(r.time)}；${r.sourceIds.length}个片段</small>` : index ? `API建图：${index.sourceIds.length}个片段；${E(index.time)}` : "—"];
+      });
+      return `<section class="pipeline"><h3>${E(s.strategy)} 在当前${N}个片段上的流程</h3>${table(["步骤", "做什么", "本页产物／估算"], steps)}<h4>原理估算（逐块抽取；本页查询调用上限）</h4>${table(["方法", "理论建索引", "查询上限"], cost)}<p class="caption">N=${N}块，C=${C}个社区，预算=${b}；这里是估算，不是已发生的调用。</p><h4>最近一次实际模型调用</h4>${table(["方法", "本页API建图", "实际查询", "该次范围与问题"], actual)}<p class="caption">实际数按保存的调用记录逐次统计；未运行不记为0。论文成本与本页运行分开。</p></section>`;
     }
     blackboardBody(sel) {
       const s = this.s, run = this.localBoard(), step = Math.min(+(s.bbStep ?? run.log.length), run.log.length), state = run.states[step];
@@ -700,8 +796,10 @@
     }
     readingBody(sel) {
       const s = this.s, tasks = Object.keys(TASK_PROMPTS), prompt = s.prompts?.[s.task] ?? TASK_PROMPTS[s.task], chat = this.result?.chat;
+      const session = this.result?.session, manualReady = (s.answer || "").trim();
+      const changed = session && (session.query !== s.query || session.budget !== +s.budget || session.task !== s.task || session.manual !== s.answer || session.prompt !== prompt);
       const chips = (t) => E(t).replace(/\[([A-Za-z0-9_\-·]+)\]/g, (m, id) => S.corpus.records().some((r) => r.id === id) ? `<button class="cite-chip" data-reader="${id}">${id}</button>` : m);
-      return `<div class="reading-layout"><main>${sel}<div class="task-row">${tabs("task", s.task, tasks.map((t) => [t, t]))}</div><label class="field">本任务提示词（预置，可改）<textarea data-prompt="1" rows="3">${E(prompt)}</textarea></label>${input("query", s.query, "本轮研究问题")}${area("answer", s.answer, "先独立阅读：自己的80—120字回答（模型之前写）", 3)}<div class="reading-actions"><button data-do="reading">冻结所选范围，发送</button><button data-do="load-reading-example">载入所选任务已跑好的结果</button><button data-do="contrast">固定检索与工具调用对照</button><button data-do="load-contrast-example">载入已跑好的对照</button><button data-do="export">导出本轮输入、输出与判断</button></div>${this.cloudChoice()}${chat ? `<div class="chat-log">${chat.filter((m) => m.role !== "system").map((m, i) => `<article class="msg ${m.role}"><small>${m.role === "user" ? (i ? "追问" : "提问＋冻结的原文") : "模型 " + E(m.model || "")}</small><div>${m.role === "user" && !i ? E(s.query) + `<details><summary>本次实际输入的原文</summary><pre class="trace">${E(m.content)}</pre></details>` : chips(m.content)}</div></article>`).join("")}</div><div class="inline-form">${input("followup", s.followup, "追问（同一冻结范围内继续）")}<button data-do="followup">追问</button></div>` : this.result?.output ? `<article class="reading-candidate"><h3>模型回答</h3><div>${chips(this.result.output)}</div></article>` : ""}${area("report", s.report, "采用／收窄／纠错／待核：逐句依据与理由", 4)}</main><aside><h3>本轮冻结的原文范围</h3>${slider("budget", s.budget, "实际输入片段数", 1, 8)}${rsBrief(this.frozen())}<p class="caption">按本轮问题在所选材料上 BM25 取前 ${s.budget} 段，冻结后发送。回答中的 [片段ID] 可点开原页核对。沿用第四周六类任务与“先独立阅读、再看机器、最后人工判断”的顺序；模型接入用顶栏共用设置。</p></aside></div>`;
+      return `<div class="reading-layout"><main>${sel}<div class="task-row">${tabs("task", s.task, tasks.map((t) => [t, t]))}</div><label class="field">本任务提示词（预置，可改）<textarea data-prompt="1" rows="3">${E(prompt)}</textarea></label>${input("query", s.query, session ? "下一轮研究问题" : "本轮研究问题")}${area("answer", s.answer, "先独立阅读：自己的80—120字回答（模型之前写）", 3)}<div class="reading-actions"><button data-do="reading" ${manualReady ? "" : "disabled"}>冻结所选范围，发送</button><button data-do="load-reading-example">载入所选任务已跑好的结果</button><button data-do="contrast" ${manualReady ? "" : "disabled"}>固定检索与工具调用对照</button><button data-do="load-contrast-example">载入已跑好的对照</button><button data-do="export">导出本轮输入、输出与判断</button></div>${manualReady ? "" : '<p class="caption">先写下自己的阅读判断，再发送给模型。</p>'}${this.cloudChoice()}${session ? `<section class="sent-session"><h3>本轮已发送：${E(session.task)}</h3><p>${E(session.query)}</p>${changed ? '<p class="note-box">上方输入已改变。下面保留的是先前运行；追问沿用先前原文，点击“冻结所选范围，发送”才开始新一轮。</p>' : ""}</section>` : ""}${chat ? `<div class="chat-log">${chat.filter((m) => m.role !== "system").map((m, i) => `<article class="msg ${m.role}"><small>${m.role === "user" ? (i ? "追问" : "提问＋冻结的原文") : "模型 " + E(m.model || "")}</small><div>${m.role === "user" && !i ? E(session?.query || this.result?.trace?.input?.[1]?.content?.split("\n")[0] || "已保存的提问") + `<details><summary>本次实际输入的原文</summary><pre class="trace">${E(m.content)}</pre></details>` : chips(m.content)}</div></article>`).join("")}</div><div class="inline-form">${input("followup", s.followup, "追问（同一冻结范围内继续）")}<button data-do="followup">追问</button></div>` : this.result?.output ? `<article class="reading-candidate"><h3>已保存的模型回答</h3><div>${chips(this.result.output)}</div></article>` : ""}${area("report", s.report, "采用／收窄／纠错／待核：逐句依据与理由", 4)}</main><aside>${session ? `<section class="sent-scope"><h3>本轮已发送的原文范围</h3>${rsBrief(session.records)}</section>` : ""}<section class="planned-scope"><h3>${session ? "下一轮待选范围" : "待发送的原文范围"}</h3>${slider("budget", s.budget, "下一轮片段预算", 1, 8)}${rsBrief(this.plannedRecords())}</section><p class="caption">新一轮按当前问题检索；已发送范围独立保存。追问检查整段对话的实际材料范围。回答中的 [片段ID] 可点开原页核对。</p></aside></div>`;
     }
     glossary() {
       let g = D.DATA.glossary, q = (this.s.termQuery || "").toLowerCase();
@@ -816,10 +914,11 @@
         return;
       }
       if (name === "d24-bm25") {
+        this.invalidateD24(true);
         const t0 = performance.now(), units = this.d24Units();
-        this.d24res = { total: units.length, bm25: S.sparse(this.s.query, units), query: this.s.query };
+        this.d24res = { stamp: this.d24Stamp(), total: units.length, bm25: S.sparse(this.s.query, units), query: this.s.query };
         this.d24res.bm25Seconds = (performance.now() - t0) / 1000;
-        this.render();
+        this.save();
         return;
       }
       if (name === "bb-step") {
@@ -911,11 +1010,18 @@
         this.render();
         return;
       }
+      if (["reading", "contrast"].includes(name) && !(this.s.answer || "").trim()) {
+        this.message = "先写下自己的阅读判断，再发送给模型。";
+        this.render();
+        return;
+      }
       this.busy = true;
       window.W5CloudBusy = true;
       this.message = "正在实际处理…";
       this.render();
-      let records = structuredClone(this.id === "D22" ? this.frozen() : this.records().slice(0, Math.max(1, this.s.budget))), s = structuredClone(this.s);
+      let records = structuredClone(this.id === "D22" ? (name === "reading" ? this.plannedRecords() : this.frozen()) : this.records().slice(0, Math.max(1, this.s.budget))), s = structuredClone(this.s);
+      const revisionAtStart = S.corpus.revision();
+      if (name === "reading") this.result = null;
       try {
         if (name === "encode") {
           let sent = this.sentenceRows();
@@ -927,21 +1033,27 @@
           this.message = "浏览器实际编码完成；每个句子与距离已更新。";
         }
         if (name === "d24-dense") {
+          if (!this.d24res || this.d24res.stamp !== this.d24Stamp() || !this.d24res.bm25.length) throw Error("先在当前范围执行有结果的 BM25 检索");
           const top = this.d24res.bm25.slice(0, +(s.topN || 40)), t0 = performance.now();
           const v = await S.embedding.encode([this.d24res.query, ...top.map((u) => u.text)], (m) => { this.message = m; this.render(); });
           this.d24res = { ...this.d24res, dense: top.map((u, i) => ({ ...u, cos: S.A.cosine(v[0], v[i + 1]) })).sort((a, b) => b.cos - a.cos), denseSeconds: (performance.now() - t0) / 1000 };
+          delete this.d24res.restoredKept;
+          delete this.d24res.legacy;
+          this.invalidateD24(false);
           this.result = { d24: { query: this.d24res.query, encoded: top.map((u) => u.id), seconds: this.d24res.denseSeconds } };
         }
         if (name === "d24-read") {
           const kept = this.d24Kept();
+          if (!kept.length || !(s.manual || "").trim()) throw Error("先在当前范围检索，并写下自己的判断");
           const run = await S.generate("依据所给原文回答研究问题。每句一行，句末标[单元ID]；区分原文明说与推断。下面附研究者先写的独立判断，只作对照，不要迎合。", kept, (s.question || s.query) + "\n研究者的独立判断：" + s.manual, { allowCloud: s.cloud });
           this.d24answer = run;
           this.s.d24answer = undefined;
+          this.s.d24grades = {};
           this.result = { d24run: run.id };
         }
         if (name === "context") {
           const plan = this.contextPlan();
-          if (!plan.target) throw Error("先选择一个片段");
+          if (!plan.target) throw Error("先选择单一材料的片段，不把不同作者的全文混作邻段");
           let composed = plan.composed, late = null, run = null, ctx;
           if (s.context === "api") {
             run = await S.generate(plan.prompt, plan.whole, "为片段 " + plan.target.id + " 写检索用的上下文说明", { allowCloud: s.cloud });
@@ -974,7 +1086,8 @@
         if (name === "hyde-generate") {
           let run = await S.generate('你在执行 HyDE 的假想相关文档生成：只依据给定问题，不读取检索库，不添加引文 ID，不冒充史料原文。请写8段可用于检索的假想文档，四种文体各两段，两段的视角不同（如一段侧重概念界定，一段侧重论证脉络）：文言（仿清代学术文体）、现代汉语学术文字、English academic prose、日本語の学術的文章。每段约100—150字。只返回JSON {documents:[{language:"文言/现代汉语/English/日本語",angle:"视角",text:"假想文档"}]}。', [], s.query);
           let parsed = parseJSON(run.output);
-          if (!Array.isArray(parsed.documents) || parsed.documents.length < 3 || parsed.documents.some((x) => typeof x.text !== "string")) throw Error("API未返回足够的候选，原始输出已保存到实际运行记录");
+          const languages = ["文言", "现代汉语", "English", "日本語"];
+          if (!Array.isArray(parsed.documents) || parsed.documents.length !== 8 || parsed.documents.some(x => !languages.includes(x.language) || typeof x.angle !== "string" || !x.angle.trim() || typeof x.text !== "string" || !x.text.trim()) || languages.some(l => parsed.documents.filter(x => x.language === l).length !== 2)) throw Error("API未返回四种文体各两条的8个完整候选；原始输出已保存，可重试生成。原候选保留。");
           this.s.hyps = parsed.documents;
           this.s.hypIndex = 0;
           this.s.hypothesis = parsed.documents[0].text;
@@ -1012,10 +1125,12 @@
             }
           }
           this.result = { graph, trace: { extraction: run, summaries }, output: summaries.map((x) => x.output).join("\n") };
+          this.graphRuns = { ...this.graphRuns || {}, [s.strategy]: { ...this.graphRuns?.[s.strategy] || {}, index: { calls: 1 + summaries.length, time: new Date().toISOString(), sourceIds: records.map(r => r.id) } } };
         }
         if (name === "graph-query") {
           const { queryGraph } = await import("./graph-query.mjs");
           this.result = await queryGraph(S, { graph: this.result?.graph || this.currentGraph(), records: structuredClone(this.records()), question: s.query, strategy: s.strategy, budget: +s.budget, allowCloud: s.cloud });
+          this.graphRuns = { ...this.graphRuns || {}, [s.strategy]: { ...this.graphRuns?.[s.strategy] || {}, question: s.query, budget: +s.budget, calls: this.result.trace.runs.length, time: new Date().toISOString(), sourceIds: this.records().map(r => r.id), phases: this.result.trace.phases } };
         }
         if (name === "ants") {
           const input2 = S.sparse(s.query, this.records()).slice(0, +(s.antN || 6));
@@ -1031,12 +1146,13 @@
         if (name === "reading") {
           const prompt = s.prompts?.[s.task] ?? TASK_PROMPTS[s.task];
           let run = await S.generate(prompt + "\n仅用所给原文；回答中引用一律写成[片段ID]。", records, s.query + (s.answer ? "\n自己的回答：" + s.answer : ""), { allowCloud: s.cloud });
-          this.result = { output: run.output, trace: run, chat: [...run.input, { role: "assistant", content: run.output, model: run.model }] };
+          this.result = { output: run.output, trace: run, session: { records, query: s.query, task: s.task, budget: +s.budget, manual: s.answer, prompt, materialRevision: revisionAtStart }, chat: [...run.input, { role: "assistant", content: run.output, model: run.model }] };
         }
         if (name === "followup") {
           if (!this.result?.chat) throw Error("先发送一次");
           if (!s.followup?.trim()) throw Error("先写追问");
-          if (records.some((r) => r.private) && !/^http:\/\/(127\.0\.0\.1|localhost)/.test(window.W5Chat.settings().baseUrl) && !s.cloud) throw Error("当前含本机导入材料。使用本机端点，或允许本次选中范围发送到云端。");
+          if (!this.result.session?.records || this.result.session.materialRevision !== revisionAtStart) throw Error("该对话缺少有效的冻结范围，先开始新一轮阅读。");
+          S.assertCloudPermission(this.result.session.records, s.cloud);
           const messages = [...this.result.chat.map(({ role, content }) => ({ role, content })), { role: "user", content: s.followup }];
           const r = await window.W5Chat.chat(messages, { maxTokens: 2048 });
           this.result = { ...this.result, chat: [...this.result.chat, { role: "user", content: s.followup }, { role: "assistant", content: r.text, model: r.model }] };
@@ -1044,10 +1160,11 @@
           this.s.followup = "";
         }
         if (name === "contrast") {
-          let frozen = this.records().slice(0, 30), fixed = S.sparse(s.query, frozen).slice(0, s.budget), first = await S.generate("固定检索路径：据实际取回原文回答，逐句标ID。", fixed, s.query, { allowCloud: s.cloud });
+          let frozen = this.records().slice(0, 30);
+          S.assertCloudPermission(frozen, s.cloud);
+          let fixed = S.sparse(s.query, frozen).slice(0, s.budget), first = await S.generate("固定检索路径：据实际取回原文回答，逐句标ID。", fixed, s.query, { allowCloud: s.cloud });
           let collected = [], log = [];
           const settings = window.W5Chat.settings();
-          if (frozen.some((r) => r.private) && !/^http:\/\/(localhost|127\.0\.0\.1)/.test(settings.baseUrl) && !s.cloud) throw Error("本机材料需允许当前范围发送");
           let messages = [{ role: "system", content: "据库内工具返回片段回答，逐句标ID；最多3次模型调用。调用search以原语关键词检索。" }, { role: "user", content: s.query }], tools = [{ type: "function", function: { name: "search", description: "在冻结的所选史料库实际BM25检索", parameters: { type: "object", properties: { query: { type: "string" } }, required: ["query"] } } }];
           for (let i = 0; i < 3; i++) {
             let response = await window.W5Chat.chat(messages, { maxTokens: 2048, tools: i < 2 ? tools : void 0 });
@@ -1066,14 +1183,21 @@ ${r.text}`).join("\n") || "本库没有命中字词" });
           this.result = { output: "固定路径：\n" + first.output + "\n\n工具路径：\n" + (collected.join("\n") || "预算用尽，尚无最终回答"), trace: { fixed: first, agent: log, model: settings.model, corpusSHA256: await S.sha256(frozen), limit: 3, budget: s.budget } };
           await S.corpus.saveRun({ id: "contrast-" + crypto.randomUUID(), ...this.result.trace });
         }
-        this.message = "本轮实际处理完成，输入与输出可导出。";
+        if (revisionAtStart !== S.corpus.revision()) {
+          if (this.id === "D24") this.invalidateD24(true);
+          else this.result = null;
+          this.message = "材料已变化。本轮响应留在运行历史，当前页请重新处理。";
+        } else this.message = "本轮实际处理完成，输入与输出可导出。";
       } catch (e) {
         this.message = "实际处理未完成：" + e.message;
       } finally {
-        if (this.result) await S.corpus.saveRun({ id: "operation-" + crypto.randomUUID(), time: (new Date()).toISOString(), operation: name, page: this.id, state: s, result: this.result });
-        this.busy = false;
-        window.W5CloudBusy = false;
-        this.save();
+        try {
+          if (this.result) await S.corpus.saveRun({ id: "operation-" + crypto.randomUUID(), time: (new Date()).toISOString(), operation: name, page: this.id, state: s, result: this.result });
+        } finally {
+          this.busy = false;
+          window.W5CloudBusy = false;
+          this.save();
+        }
       }
     }
   }

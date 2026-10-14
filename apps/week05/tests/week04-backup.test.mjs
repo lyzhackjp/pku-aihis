@@ -46,3 +46,11 @@ test('fourth-week backup becomes a shared project with week-04 evidence identity
 test('non-backup archives are rejected without partial projects', async () => {
   await assert.rejects(() => convertWeek04Backup({ 'project.json': new Uint8Array() }, unzip), /不是第四周完整课程备份/);
 });
+
+test('importer progress receives actual messages through the shared typed callback', async () => {
+  const messages = [];
+  await convertWeek04Backup(entries, unzip, { onProgress: (message) => messages.push(message) });
+  assert.ok(messages.length >= 2);
+  assert.ok(messages.every(message => typeof message === 'string' && message.length > 0));
+  assert.match(messages.at(-1), /转换完成/);
+});
