@@ -76,5 +76,33 @@
     "acquired": "2026-10-13",
     "method": "原图直接下载",
     "sha256": "5d1891d650dc24c130a38f825a023c6d9b63d29d22b70cad64941989d4113082"
+  },
+  {
+    "file": "nii1986-fig1.png",
+    "author": "H. Penny Nii",
+    "title": "Blackboard Systems: The Blackboard Model of Problem Solving and the Evolution of Blackboard Architectures",
+    "version": "AI Magazine 7(2), Summer 1986",
+    "pdfPage": 2,
+    "figure": "Figure 1 (p. 39)",
+    "url": "https://ojs.aaai.org/index.php/aimagazine/article/view/537",
+    "doi": "10.1609/aimag.v7i2.537",
+    "rights": "AAAI；课堂引用原图，注明出处",
+    "acquired": "2026-10-14",
+    "method": "扫描PDF第2页200dpi渲染后截取原图区域，灰度，未重绘",
+    "sha256": "6e30e6ee2c3887676a2c4f4cd4d96fe509d03044d9e82962252a52b9d5af426c"
+  },
+  {
+    "file": "dorigo1996-fig1.png",
+    "author": "Marco Dorigo, Vittorio Maniezzo, Alberto Colorni",
+    "title": "The Ant System: Optimization by a colony of cooperating agents",
+    "version": "作者公开稿（页眉标IEEE TSMC-B 26(1), 1996, pp.1-13；正式刊本pp.29-41）",
+    "pdfPage": 3,
+    "figure": "Fig. 1",
+    "url": "https://staff.washington.edu/paymana/swarm/dorigo96-itsmc.pdf",
+    "doi": "10.1109/3477.484436",
+    "rights": "IEEE版权；作者公开稿经IEEE许可张贴；课堂引用原图，注明出处",
+    "acquired": "2026-10-14",
+    "method": "PDF第3页150dpi渲染后截取原图区域，灰度，未重绘",
+    "sha256": "d3f79c505c548febcd038069de40ac16837e17e15a7298f5c88bb5dceb49ea40"
   }
 ]

@@ -127,6 +127,8 @@
       let i = typeof id === 'number' ? id : this.ids.indexOf(id);
       if (i < 0) i = 0;
       if (i >= this.slides.length) return;
+      // 放大图、原页阅读等弹窗只属于当前页；翻页时一并关闭，避免遮住下一页。
+      if (i !== this.cur) document.querySelectorAll('dialog[open]').forEach((d) => d.close());
       this.cur = i;
       this.slides.forEach((s, j) => s.classList.toggle('current', i === j));
       const sid = this.ids[i];
