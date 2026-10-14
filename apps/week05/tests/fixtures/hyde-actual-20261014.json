@@ -1,0 +1,50 @@
+{
+  "mode": "真实API返回的回放，不是本轮新调用",
+  "time": "2026-10-14T13:20:00.716Z",
+  "model": "deepseek-flash",
+  "question": "章學誠怎样看待史家的立场？",
+  "response": {
+    "documents": [
+      {
+        "language": "文言",
+        "angle": "概念界定",
+        "text": "章實齋論史家立場，首重「史德」。其言曰：「史德者何？謂著書者之心術也。」蓋謂史家臨文，當持心如衡，不偏不倚，勿以私意參乎其間。又謂「千古多文人而少良史」，職是故耳。實齋以爲，史家立場非徒客觀記錄，尤在「圓神」與「方智」兼備，既能曲盡事理，復能裁斷是非，此乃其史學思想之核心也。"
+      },
+      {
+        "language": "文言",
+        "angle": "论证脉络",
+        "text": "實齋之論史家立場，由「才、學、識」三者擴而爲「德」。其《文史通義·史德》篇云：「能具史識者，必知史德。」蓋才學識所以窮理，而德所以正心。又舉「伯夷之讓」爲例，謂史家若懷私心，則雖有才學，亦不免曲筆。故其論證，先立「心術」爲本，次辨「天人之際」，終歸於「經世」之用，層層遞進，以明立場之正乃史學之基。"
+      },
+      {
+        "language": "现代汉语",
+        "angle": "概念界定",
+        "text": "章学诚对史家立场的看法，核心在于“史德”这一概念。他认为，史家不仅需要才、学、识，更需具备端正的心术，即“史德”。所谓史德，是指著史者应保持客观公正的态度，不因个人好恶而歪曲事实。在《文史通义》中，他批评了那些因私意而失实的史家，强调立场应超越个人利害，以“义”为准则。这一界定将史家立场从技术层面提升到道德层面，成为其史学理论的重要基石。"
+      },
+      {
+        "language": "现代汉语",
+        "angle": "论证脉络",
+        "text": "章学诚论证史家立场时，先指出“才、学、识”三者不足以保证史书公正，进而提出“史德”作为补充。他以“伯夷之让”为例，说明若史家心存私念，即便才学出众，也会导致记载偏颇。接着，他辨析“天人之际”，认为史家应通晓大道，不为世俗所惑。最后，他将史德与经世致用相联系，主张立场端正才能发挥史学的社会功能。这一论证从个人修养推及社会效用，层层深入，构建了完整的立场理论。"
+      },
+      {
+        "language": "English",
+        "angle": "概念界定",
+        "text": "Zhang Xuecheng's view on the historian's stance centers on the concept of 'historical virtue' (shide). He argues that a historian must possess not only talent, learning, and insight, but also a morally upright mind. Shide refers to the historian's inner disposition to remain impartial and avoid distorting facts for personal bias. In his view, the historian's stance is not merely a technical matter but an ethical one, requiring a heart that is fair and a will that seeks truth. This definition elevates the historian's position from methodology to moral philosophy, forming a cornerstone of his historiographical theory."
+      },
+      {
+        "language": "English",
+        "angle": "论证脉络",
+        "text": "Zhang Xuecheng develops his argument on the historian's stance by first acknowledging the traditional triad of talent, learning, and insight, then introducing 'historical virtue' as a necessary corrective. He illustrates with the example of Boyi's abdication, showing that even a talented historian may err if driven by selfish motives. He then discusses the 'relationship between heaven and man,' urging historians to comprehend the broader moral order. Finally, he links a proper stance to practical statecraft, asserting that only a virtuous historian can serve society. This progression moves from personal cultivation to social utility, building a coherent theory of stance."
+      },
+      {
+        "language": "日本語",
+        "angle": "概念界定",
+        "text": "章学誠は史家の立場を「史徳」という概念で捉えた。史家には才・学・識だけでなく、公正な心術が必要であるとし、これを史徳と呼ぶ。史徳とは、著者が私的な好悪に左右されず、事実を曲げない態度を指す。彼は『文史通義』において、私意によって史実を歪める史家を批判し、立場は個人の利害を超えて「義」に基づくべきだと強調した。この定義は、史家の立場を技術論から道徳論へと高め、その史学理論の基盤となった。"
+      },
+      {
+        "language": "日本語",
+        "angle": "论证脉络",
+        "text": "章学誠は史家の立場を論じるにあたり、まず才・学・識の三要素だけでは史書の公正を保証できないと指摘し、補完として「史徳」を提唱した。彼は伯夷の譲位の例を挙げ、史家が私心を抱けば、才学があっても記載が偏ると説く。次に「天人の際」を弁じ、史家は大道を理解し世俗に惑わされるべきでないとした。最後に史徳を経世致用と結びつけ、立場の端正さが史学の社会的機能を発揮させると主張した。この論証は個人の修養から社会の効用へと進み、立場理論を構築している。"
+      }
+    ]
+  }
+}

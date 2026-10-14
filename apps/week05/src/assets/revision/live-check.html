@@ -1,0 +1,19 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>第五周课前试跑</title><style>body{font:16px/1.8 system-ui;margin:30px auto;max-width:1100px;padding:20px;color:#21334e;background:#f5f7fa}button{padding:12px;margin:6px;background:#fff;border:1px solid #91abc9}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;padding:20px}small{color:#65758a}</style><h1>第五周课前试跑</h1><p>候选，未经教师确认。沿用打开此页的课件所配置接口，只处理三份公开史料的教学节录。记录原文编号、实际输入、输出和耗时；密钥保留在原课件窗口的内存。</p><p id="status">检查共用接入…</p><div id="actions"></div><button id="export">下载本轮实际结果</button><pre id="output"></pre><script src="../materials/sources.js"></script><script type="module">
+import * as S from './services.mjs';import {queryGraph} from './graph-query.mjs';import {runBlackboard} from './blackboard.mjs';
+try{window.W5Chat=window.opener?.W5Chat;}catch{}
+const status=document.querySelector('#status'),output=document.querySelector('#output'),results=[];
+const rs=S.corpus.records().filter(r=>!r.private&&r.source==='shide'),question='章學誠的史德觀如何補充劉知幾的才、學、識三長說？對著史者的心術提出了什麼要求？';
+const graph=S.A.graphFrom(rs,['史德','史識','心術','劉氏','劉氏子元']);graph.communities=S.A.labelPropagation(graph);
+const tasks={
+ 'HyDE三语候选':async()=>S.generate('执行HyDE：仅根据问题生成假想相关学术文档，不读取检索库。返回JSON {documents:[{language:"中文",text:"约120字"},{language:"English",text:"约80词"},{language:"日本語",text:"约120字"}]}。候选不作原文，不编引文ID。',[],question),
+ '上下文补写':async()=>S.generate('为原文检索片段补写必要语境，原文与补写分列，每句标[ID]，不扩大作者主张。',rs.slice(0,3),question),
+ 'GraphRAG':async()=>queryGraph(S,{graph,records:rs,question,strategy:'GraphRAG',budget:2}),
+ 'LightRAG':async()=>queryGraph(S,{graph,records:rs,question,strategy:'LightRAG',budget:2}),
+ 'LazyGraphRAG':async()=>queryGraph(S,{graph,records:rs,question,strategy:'LazyGraphRAG',budget:3}),
+ 'Blackboard System':async()=>runBlackboard(S,rs.slice(0,3),question),
+ '六项阅读任务':async()=>{const runs=[];for(const task of ['筛选','抽取','释义','概括','比较','验证']){status.textContent='实际运行：'+task;runs.push({task,...await S.generate('执行'+task+'任务；仅用原文，逐句标[ID]，区分原话、释义与推断。',rs.slice(0,3),question)});}return{runs};}
+};
+for(const [name,fn]of Object.entries(tasks)){const b=document.createElement('button');b.textContent=name;b.onclick=async()=>{document.querySelectorAll('#actions button').forEach(x=>x.disabled=true);status.textContent='正在实际运行：'+name;try{const result=await fn();results.push({name,question,time:new Date().toISOString(),mode:'实际API运行',result});output.textContent=JSON.stringify(results.at(-1),null,2);status.textContent=name+'实际运行完成';}catch(e){status.textContent=name+'运行失败：'+e.message;results.push({name,time:new Date().toISOString(),error:e.message});}finally{document.querySelectorAll('#actions button').forEach(x=>x.disabled=false);}};document.querySelector('#actions').append(b);}
+status.textContent=window.W5Chat?.ready()?'共用模型已配置，可实际试跑':'请从已配置模型的课件打开此页';
+document.querySelector('#export').onclick=()=>{const a=document.createElement('a'),b=new Blob([JSON.stringify({schema:'week05-live-check/v1',sourceIds:rs.map(r=>r.id),results},null,2)],{type:'application/json'});a.href=URL.createObjectURL(b);a.download='第五周_公开史料实际试跑.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
+</script></html>

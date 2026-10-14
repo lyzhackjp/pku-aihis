@@ -1,10 +1,10 @@
 # pku-aihis
 
-《人工智能赋能历史研究与写作》的网页演示源码与协作仓库。第三周包含29页“检索与证据”演示；第四周采用助教知识组织原则版与方案B补充，共32页。第四周默认书库仅包含助教原有四份公开课堂材料，教师德教包、未刊稿与填写记录仅在本地导入。
+《人工智能赋能历史研究与写作》的网页演示源码与协作仓库。第三周包含29页“检索与证据”演示；第四周采用助教知识组织原则版与方案B补充，共32页；第五周为25页“知识库检索与有依据的生成”演示。第四周默认书库仅包含助教原有四份公开课堂材料，教师德教包、未刊稿与填写记录仅在本地导入。
 
 教师已确认将原D14—D20合为“知识库产品、搜索引擎、向量数据库”三页。页面对应及核验见[简化版说明](docs/week03/tool-families-preview.md)；无需修改源码的本地／线上语料操作见[导入说明](apps/week03/src/assets/guides/corpus-import.md)。
 
-主线课堂入口部署到 **[第三周](https://lyzhackjp.github.io/pku-aihis/week03/)**；另有 **[第四周](https://lyzhackjp.github.io/pku-aihis/week04/)** 与 **[通用导入页](https://lyzhackjp.github.io/pku-aihis/material-importer/)**。实际发布提交和检查范围见 [交接与运行状态](docs/week03/handoff.md)。
+主线课堂入口部署到 **[第三周](https://lyzhackjp.github.io/pku-aihis/week03/)**；另有 **[第四周](https://lyzhackjp.github.io/pku-aihis/week04/)** 、**[第五周](https://lyzhackjp.github.io/pku-aihis/week05/)** 与 **[通用导入页](https://lyzhackjp.github.io/pku-aihis/material-importer/)**。实际发布提交和检查范围见 [交接与运行状态](docs/week03/handoff.md)。
 
 ## 本地使用
 
@@ -62,3 +62,7 @@ Leymore另经[课堂内容复核](docs/week03/leymore-content-review.md)，仅23
 正式第四周见 [方案B教案](docs/week04/lesson-ta-option-b.md) 与 [发布说明](docs/week04/formal-release.md)。`feat/week04-ta-slides-pending-revision`保留助教版的修改历史；`第四周教案教师原稿`冻结教师原演示，供日后复用；`feat/week04-agent-sidebar`仅承载Agent填写试验，不进入正式课件。第三周、通用导入器及共享模块继续由main维护。
 
 第四周需要.NET 10与浏览器WASM工具链，首次构建自动编译原核心、下载三份固定哈希的OCR模型。默认四份PDF和原生SQLite经明确白名单发布；其他PDF、ZIP和私有输入不进入站点。正式课件的D31仅提供研究链和本机文件导入入口，不预装德教内容。
+
+## 第五周
+
+教师2026-10-14预览确认并授权合并、发布。第五周沿用共用模型接入与通用导入页，包含实际语义切分、相似度、图检索、六类阅读与可恢复的贯穿流程。德教全量仅在本机自行导入；三份教师PDF和MiniLM权重不随站点发布。运行与检验边界见[第五周发布说明](docs/week05/formal-release.md)及[十三项修复验收](docs/week05/fixes-20261014.md)。

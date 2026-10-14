@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "课程演示页表（每周一份，数组，按页序排列）",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "section", "title", "layout", "transition", "question", "student_operation", "observable_output", "lesson_evidence", "mode", "notes", "footer", "status"],
+    "properties": {
+      "id": { "type": "string", "pattern": "^D\\d{2}$", "description": "D00 起连续编号" },
+      "section": { "type": "string", "description": "教案节次，如 1.2；或 导入／结语／贯穿／附录" },
+      "anchor": { "type": "string", "description": "讲义锚点：小节标题或 @图标签，多个用分号隔开" },
+      "title": { "type": "string" },
+      "layout": { "enum": ["hero", "flow4", "diagram", "workbench", "through", "concepts"] },
+      "theme": { "enum": ["light", "dark"], "default": "light" },
+      "minutes": { "type": "number", "description": "建议课堂时长，含练习" },
+      "transition": { "type": "string", "description": "标题下的过渡句，正向表述" },
+      "question": { "type": "string", "description": "本页回答的一个问题" },
+      "steps": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 7, "description": "flow4 的列名／through 的阶段名" },
+      "student_operation": { "type": "string" },
+      "observable_output": { "type": "string" },
+      "lesson_evidence": { "type": "string", "description": "回到讲义与原始来源的位置，含读取深度" },
+      "mode": { "type": "string", "description": "须含：浏览器实时／预计算／保存结果回放／教学构造／静态内容／本地方案 之一" },
+      "notes": {
+        "type": "object", "required": ["purpose", "guide", "mechanism"],
+        "properties": { "purpose": { "type": "string" }, "guide": { "type": "string" }, "mechanism": { "type": "string" } }
+      },
+      "footer": { "type": "string", "description": "以页号开头的一句来源与模式说明" },
+      "concepts": { "type": "array", "items": { "type": "string" }, "description": "本页首次出现的概念，名称与概念表一致" },
+      "through": { "type": "string", "description": "本页推进的贯穿阶段" },
+      "options": { "type": "object", "properties": { "A": { "type": "string" }, "B": { "type": "string" }, "recommend": { "enum": ["A", "B"] }, "chosen": { "enum": ["A", "B"] } } },
+      "status": { "enum": ["planned", "implemented", "prototype", "formal"] }
+    }
+  }
+}

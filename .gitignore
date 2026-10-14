@@ -55,3 +55,21 @@ __pycache__/
 
 # Shared importer paths retained from main.
 /apps/material-importer/public/vendor/
+
+# Week05 reproducible vendor bundle and local browser artifacts.
+/apps/week05/src/assets/vendor/
+/apps/week05/artifacts/
+
+/apps/week05/src/assets/runtime/math.js
+
+/apps/week05/src/assets/data/data.js
+/apps/week05/src/assets/materials/sources.js
+/apps/week05/src/index.html
+
+# Fifth-week generated shared resources and private-local originals.
+/apps/week05/src/assets/importer/
+/apps/week05/src/assets/revision/advanced.mjs
+/apps/week05/src/assets/revision/project.mjs
+/apps/week05/src/assets/revision/sqlite-read.mjs
+/apps/week05/src/assets/revision/week04-backup.mjs
+/apps/week05/artifacts-revision/

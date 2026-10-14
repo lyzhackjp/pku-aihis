@@ -1,0 +1,29 @@
+{
+  "title": "第X讲 · 讲题（测试原型）",
+  "pageMap": "../plan/page-map.json",
+  "glossary": "../plan/glossary.json",
+  "scripts": [
+    "deck-core.js",
+    "weekXX-labs.js"
+  ],
+  "deck": {
+    "name": "第X周 · 讲题 · 测试原型",
+    "channel": "pku-aihis-weekXX-prototype",
+    "store": "weekXX-prototype/",
+    "entries": {
+      "through": {
+        "label": "贯穿检查",
+        "page": "D24"
+      },
+      "concepts": {
+        "label": "概念表",
+        "page": "D25"
+      }
+    }
+  },
+  "bodies": {
+    "D00": "hero-cover",
+    "D24": "through-workbench",
+    "D25": "concept-table"
+  }
+}

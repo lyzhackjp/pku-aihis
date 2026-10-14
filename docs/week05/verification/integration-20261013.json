@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-13",
+  "generation": "API协议测试替身；非真实云端生成",
+  "checks": [
+    {
+      "name": "original PDFs locally readable with three identities",
+      "passed": true
+    },
+    {
+      "name": "obsolete D05 URL opens combined D04",
+      "passed": true
+    },
+    {
+      "name": "common importer transfer keeps source identity and enables D24",
+      "passed": true
+    },
+    {
+      "name": "corrupt import preserves old corpus; refresh and attachment backup round trip",
+      "passed": true
+    },
+    {
+      "name": "private imports require selected-scope permission before any API call",
+      "passed": true
+    },
+    {
+      "name": "HyDE asks only question, offers three editable candidates",
+      "passed": true
+    },
+    {
+      "name": "three graph methods perform different actual steps",
+      "passed": true
+    },
+    {
+      "name": "blackboard request, voluntary capability response and final synthesis",
+      "passed": true
+    },
+    {
+      "name": "six reading tasks and real tool search protocol; no keys in saved runs",
+      "passed": true
+    },
+    {
+      "name": "all paper figures load and graph reflects newly typed terms",
+      "passed": true
+    }
+  ],
+  "calls": 31
+}

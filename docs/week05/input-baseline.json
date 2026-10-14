@@ -1,0 +1,17 @@
+{
+  "status": "候选，未经教师确认",
+  "date": "2026-10-11",
+  "main_commit": "82f6892",
+  "framework_zip_sha256": "06a23a37bd89d1cf25e1832c4844f2cf804dfcb6da9dfdab9bc11d34ac430bdd",
+  "inputs": [
+    {
+      "name": "讲义.typ",
+      "sha256": "dc3335e2b397ab377a50b92bf9e92e1b7e587109300cfabdb8d6554d9c923544"
+    },
+    {
+      "name": "概念讲解表.typ",
+      "sha256": "311f9dfe126b689594ceb97fe57be05077b7879fa2d38a77cda30111e026cc3f"
+    }
+  ],
+  "notes": "原讲义与未刊稿不复制到公共仓库；本轮读取本机权威稿。"
+}
