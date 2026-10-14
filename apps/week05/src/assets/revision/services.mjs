@@ -169,7 +169,15 @@ const embedding = {
         env.allowLocalModels = local;
         env.allowRemoteModels = !local;
         env.localModelPath = new URL("/models/", location.origin).href;
-        return pipeline("feature-extraction", model, { revision, dtype: "q8", device: "wasm", progress_callback: (p) => onProgress(`${p.status} ${p.file || ""} ${Math.round(p.progress || 0)}%`) });
+        let lastMessage = "", lastProgressAt = 0;
+        const reportProgress = (p) => {
+          const message = `${p.status} ${p.file || ""} ${Math.round(p.progress || 0)}%`, now = performance.now();
+          if (message === lastMessage || p.status === "progress" && now - lastProgressAt < 250) return;
+          lastMessage = message;
+          lastProgressAt = now;
+          onProgress(message);
+        };
+        return pipeline("feature-extraction", model, { revision, dtype: "q8", device: "wasm", progress_callback: reportProgress });
       })().catch((e) => {
         extractorPromise = null;
         throw e;
