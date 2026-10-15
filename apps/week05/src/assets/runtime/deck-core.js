@@ -124,6 +124,7 @@
     }
     go(id, fromHash) {
       if (id === "D05") id = "D04";
+      if (id === "D07") id = "D06";
       let i = typeof id === 'number' ? id : this.ids.indexOf(id);
       if (i < 0) i = 0;
       if (i >= this.slides.length) return;
