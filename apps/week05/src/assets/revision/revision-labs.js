@@ -24,19 +24,19 @@
   // D03 题录字段：键、标签、提示、属于“定位三问”的哪一问（1 是谁，2 在哪，3 读到哪）。
   const BIB_FIELDS = [["author", "责任者", "如：章學誠", 1], ["title", "题名", "篇名或书名", 1], ["container", "所载书名／丛书", "如：文史通義 卷三 內篇三", 1], ["edition", "所用版本", "出版者、年份、版次印次", 2], ["basis", "底本", "影印或排印所据的本子", 2], ["origin", "初刊／首次发表", "年份与刊物", 2], ["access", "获取方式", "教师PDF、维基文库、青空文库……", 2], ["page", "印刷页", "书上的页码，如 63", 3], ["pdfPage", "PDF页序", "文件里的第几页，如 78", 3], ["status", "核读状态", "已核／局部核对／待核", 3], ["note", "备注", "查不到的写“待查”", 3]];
   const D24_STAGES = [["材料身份", "D03"], ["范围与切分", "D04"], ["检索", "D10"], ["图与关系", "D19"], ["机器与人工比较", "D22"], ["逐句核读", "D16"], ["备份与接续", ""]];
+  const D24_HINTS = ["从十条史料、十条研究文献与课程材料中选定本轮范围；区分史料、二手文献与教师稿，点题名查看第四周正文块。", "第四周文本块较长，按句号等分隔递归细分为检索单元，原块编号不变；调单元上限，看单元数与长度。", "先用 BM25 在全部单元上找得全，再只对前 N 个单元现场嵌入、按余弦排得准；页面写明实际编码了哪些单元。", "只在检索保留的单元上建共现图；改写称呼与概念，注意徳教／德敎等异体。", "接续第四周的阅读轮次：先写自己的判断，再把保留单元交给模型，比较两者。", "把回答拆成句子，逐句选引文、定三级支持，引文可回到第四周原页。", "完整备份含导入原件、正文、检索与核读记录，可在第六周继续。"];
   const CH = () => window.W5_CHAPTERS || {};
   const pageLinks = (links) => links?.length ? `<p class="w5-links">${links.map(([id, label]) => D.pageLink(id, id + " " + label + " →")).join("")}</p>` : "";
   // 本页默认值：只在该页第一次打开时使用；之后以浏览器里保存的设置为准。
   const PAGE_DEFAULTS = {
     D04: { record: "__whole", method: "recursive", size: 120, overlap: 20 },
-    D06: { scope: 10 },
-    D07: { source: "ogai", record: "__whole", scope: 8, view: "overview" },
+    D06: { scope: 10, view: "run" },
     D08: { source: "shide", record: "S4", context: "neighbors" },
     D09: { record: "__whole", size: 120, query: "章學誠對著史者提出了什麼要求？這一要求針對的是什麼？", used: ["S3b", "S4", "S6"] },
     D11: { unit: "char", norm: "", query: "史德与心术", passage: "能具史識者。必知史德。德者何。謂著書者之心術也。" },
     D12: { a: "森鴎外", b: "森鷗外" },
     D13: { query: "章學誠怎样看待史家的立场？", budget: 3 },
-    D14: { pair: "shide", threshold: 0.9 },
+    D14: { pair: "shide", dupThreshold: 0.9 },
     D15: { query: "史德與心術", budget: 3 },
     D16: { grades: LECTURE_GRADES, answer: "章學誠要求著史者“盡其天而不益以人”。\n阿克顿认为史料批判是史学的全部工作。\n三人都主张叙述必须服从史料。", source: "all" },
     D19: { source: "all" },
@@ -55,9 +55,10 @@
       this.started = true;
       this.id = this.getAttribute("page-id");
       this.page = D.pageById(this.id);
-      this.s = Object.assign({ source: "shide", record: "", step: 0, tab: "0", method: "fixed", size: 160, overlap: 20, theta: 0.4, threshold: "absolute", semantic: "breakpoint", k: 3, lambda: 0.2, eps: 0.4, minPoints: 2, scope: 8, query: "史德與心術", a: "森鴎外", b: "森鷗外", edit: 0, editMode: "fill", permutations: 128, budget: 3, representation: "bm25", terms: "史德\n史識\n心術\n劉氏\n劉氏子元\n史料\n自然\n栗山大膳\n日蓮上人\n山椒大夫\nauthor\ncriticism\nhistory", aliases: "森鷗外=>森鴎外\nActon=>Lord Acton\n劉氏子元=>劉知幾", entityRule: "exact", zoom: 1, strategy: "GraphRAG", view: "run", context: "metadata", hypothesis: "", claim: "章學誠、阿克顿與森鴎外都認為歷史敘述必須完全服從史料。", answer: "", task: "比较", report: "", through: 0, antIter: 10, ants: 8, rho: 0.3, cloud: false, grades: {}, used: [], sub: 0, unit: "char", norm: "", topN: 40, rhoPaper: 0.5, pair: "shide", threshold: 0.9 }, structuredClone(PAGE_DEFAULTS[this.id] || {}));
+      this.s = Object.assign({ source: "shide", record: "", step: 0, tab: "0", method: "fixed", size: 160, overlap: 20, theta: 0.4, threshold: "absolute", semantic: "breakpoint", k: 3, lambda: 0.2, eps: 0.4, minPoints: 2, scope: 8, query: "史德與心術", a: "森鴎外", b: "森鷗外", edit: 0, editMode: "fill", permutations: 128, budget: 3, representation: "bm25", terms: "史德\n史識\n心術\n劉氏\n劉氏子元\n史料\n自然\n栗山大膳\n日蓮上人\n山椒大夫\nauthor\ncriticism\nhistory", aliases: "森鷗外=>森鴎外\nActon=>Lord Acton\n劉氏子元=>劉知幾", entityRule: "exact", zoom: 1, strategy: "GraphRAG", view: "run", context: "metadata", hypothesis: "", claim: "章學誠、阿克顿與森鴎外都認為歷史敘述必須完全服從史料。", answer: "", task: "比较", report: "", through: 0, antIter: 10, ants: 8, rho: 0.3, cloud: false, grades: {}, used: [], sub: 0, unit: "char", norm: "", topN: 40, rhoPaper: 0.5, pair: "shide", dupThreshold: 0.9 }, structuredClone(PAGE_DEFAULTS[this.id] || {}));
       this.defaults = structuredClone(this.s);
       Object.assign(this.s, D.store.get(STORE + this.id, {}));
+      if (!["absolute", "percentile", "std", "iqr"].includes(this.s.threshold)) this.s.threshold = "absolute";
       this.busy = false;
       this.result = null;
       this.vectors = null;
@@ -91,7 +92,7 @@
       });
       this.addEventListener("click", (e) => {
         if (e.target.closest("revision-lab") !== this) return;
-        let b = e.target.closest("[data-set],[data-do],[data-rail],[data-reader],[data-node],[data-stage],[data-sub],[data-flow]");
+        let b = e.target.closest("[data-set],[data-do],[data-rail],[data-reader],[data-node],[data-stage],[data-sub],[data-flow],[data-d24src],[data-d24unit]");
         if (!b) return;
         if (b.dataset.set) {
           if (b.dataset.set.startsWith("grade")) {
@@ -100,12 +101,27 @@
           } else {
             this.s[b.dataset.set] = b.dataset.v;
             if (b.dataset.set === "editMode") this.s.edit = 0;
+            if (b.dataset.set === "through") this.s.d24tab = "work";
+            if (b.dataset.set === "method") this.s.chunkFocus = -1;
             if (b.dataset.set === "unit") this.s.step = 0;
             if (b.dataset.set === "norm") this.s.step = 1;
             if (b.dataset.set === "hypIndex" && this.s.hyps) this.s.hypothesis = this.s.hyps[+b.dataset.v].text;
             if (b.dataset.set === "strategy") this.result = null;
           }
           this.save();
+        }
+        if (b.dataset.d24src || b.dataset.d24unit) {
+          if (b.dataset.d24unit) {
+            const u = this.d24Units().find((x) => x.id === b.dataset.d24unit);
+            this.s.d24unit = b.dataset.d24unit;
+            this.s.d24src = u?.source;
+          } else {
+            this.s.d24src = b.dataset.d24src;
+            this.s.d24unit = "";
+          }
+          this.s.d24tab = "reader";
+          this.save();
+          return;
         }
         if (b.dataset.stage) {
           this.s.tab = b.dataset.stage;
@@ -273,8 +289,8 @@
       return { ...first, id: (this.s.source === "all" ? "全部" : first.source) + "·整份", text: rs.map((r) => r.text).join("\n\n"), locator: rs.length > 1 ? `${first.locator} 至 ${last.locator}（${rs.length}段合并）` : first.locator, verification: [...new Set(rs.map((r) => r.verification || "待核"))].join("；"), parts: rs };
     }
     selection() {
-      const ss = this.sources();
-      return `<div class="selection-bar"><label>材料<select data-k="source"><option value="all" ${this.s.source === "all" ? "selected" : ""}>本页可用全部材料</option>${ss.map((m) => `<option value="${E(m.id)}" ${m.id === this.s.source ? "selected" : ""}>${E(m.author || "待查")} · ${E(m.title)}</option>`).join("")}</select></label><label>片段<select data-k="record"><option value="__whole" ${this.s.record === "__whole" ? "selected" : ""}>整份材料（${this.records().length}段合并）</option>${this.records().map((r) => `<option value="${E(r.id)}" ${r.id === this.s.record ? "selected" : ""}>${E(r.id + " " + r.locator)}</option>`).join("")}</select></label><button data-do="importer">通用导入页 ↗</button><label class="file-chip">导入本机项目<input data-import="1" type="file" accept=".json,.zip"></label><small>共${this.records().length}个片段</small></div>`;
+      const ss = this.sources(), rs = this.records();
+      return `<div class="selection-bar" role="group" aria-label="材料与片段"><label><span>材料</span><select data-k="source"><option value="all" ${this.s.source === "all" ? "selected" : ""}>本页可用全部材料</option>${ss.map((m) => `<option value="${E(m.id)}" ${m.id === this.s.source ? "selected" : ""}>${E(m.author || "待查")} · ${E(m.title)}</option>`).join("")}</select></label><label><span>片段</span><select data-k="record"><option value="__whole" ${this.s.record === "__whole" ? "selected" : ""}>整份材料（${rs.length}段合并）</option>${rs.map((r) => `<option value="${E(r.id)}" ${r.id === this.s.record ? "selected" : ""}>${E(r.id + " " + r.locator)}</option>`).join("")}</select></label><small>共${rs.length}段</small><span class="sel-tools"><label class="mini-btn" title="选择本机 project.json、通用项目 ZIP 或第四周完整课程备份 ZIP">导入本机材料<input class="visually-hidden" data-import="1" type="file" accept=".json,.zip"></label><button class="mini-btn" data-do="importer" title="在新窗口打开通用导入页">通用导入页 ↗</button></span></div>`;
     }
     flow(cols) {
       let html = D.flowShell({ ...this.page, steps: cols.map((c) => c[0]) }, cols.map(([title, body, why]) => ({ title, body, why })), { active: +this.s.step });
@@ -284,7 +300,9 @@
       const C = CH()[this.id];
       if (!C) return "";
       const tab = Math.min(+this.s.tab || 0, C.stages.length - 1), st = C.stages[tab], sub = st.subs[+this.s.sub] || st.subs[0];
-      return `<div class="w5-chapter${compact ? " compact" : ""}">${compact ? "" : `<p class="w5-lead">${E(C.lead)}</p>`}<div class="w5-rail" role="tablist" aria-label="阶段">${C.stages.map((x, i) => `<button data-stage="${i}" role="tab" aria-selected="${i === tab}" class="w5-node${i === tab ? " is-active" : ""}"><span class="w5-dot"></span><small>${E(x.tag)}</small><b>${E(x.name)}</b>${compact ? "" : `<span>${E(x.short)}</span>`}</button>`).join("")}</div><section class="w5-stage"><blockquote class="w5-quote">${E(st.quote)}<cite>${E(st.cite)}</cite></blockquote>${st.subs.length > 1 ? `<nav class="w5-subs" aria-label="小阶段">${st.subs.map((x, j) => `<button data-sub="${j}" class="${x === sub ? "on" : ""}" aria-pressed="${x === sub}">${E(x.name)}</button>`).join("")}</nav>` : ""}<article class="w5-card"><h3>${E(sub.name)}</h3><dl><dt>讲义原句</dt><dd>${/^[“"]/.test(sub.quote) ? E(sub.quote) : `<q>${E(sub.quote)}</q>`}<cite>${E(sub.cite)}</cite></dd><dt>本讲例子</dt><dd>${E(sub.example)}</dd><dt>说明</dt><dd>${E(sub.explain)}</dd></dl>${pageLinks(sub.links)}</article></section></div>`;
+      const q = (t) => /^[“"]/.test(t) ? E(t) : `<q>${E(t)}</q>`;
+      const paper = (p) => p ? `<div class="w5-paper"><p class="en">“${E(p.en)}”</p><p class="zh">${E(p.zh)}</p><cite>${E(p.cite)}</cite></div>` : "";
+      return `<div class="w5-chapter${compact ? " compact" : ""}">${compact ? "" : `<p class="w5-lead">${E(C.lead)}</p>`}<div class="w5-rail" role="tablist" aria-label="阶段">${C.stages.map((x, i) => `<button data-stage="${i}" role="tab" aria-selected="${i === tab}" class="w5-node${i === tab ? " is-active" : ""}"><span class="w5-dot"></span><small>${E(x.tag)}</small><b>${E(x.name)}</b>${compact ? "" : `<span>${E(x.short)}</span>`}</button>`).join("")}</div><section class="w5-stage"><div class="w5-stage-quotes${st.paper ? "" : " single"}">${st.paper ? `<div class="w5-src"><h4>论文／综述</h4>${paper(st.paper)}${st.paper.note ? `<p class="w5-note"><b>注</b>${E(st.paper.note)}</p>` : ""}</div>` : ""}<div class="w5-src lecture"><h4>讲义</h4><blockquote class="w5-quote">${q(st.quote)}<cite>${E(st.cite)}</cite></blockquote></div></div>${st.subs.length > 1 ? `<nav class="w5-subs" aria-label="小阶段">${st.subs.map((x, j) => `<button data-sub="${j}" class="${x === sub ? "on" : ""}" aria-pressed="${x === sub}">${E(x.name)}</button>`).join("")}</nav>` : ""}<article class="w5-card"><h3>${E(sub.name)}</h3><dl>${sub.paper ? `<dt>原文</dt><dd>${paper(sub.paper)}</dd><dt>注释</dt><dd class="w5-note">${E(sub.paper.note || "")}</dd>` : ""}<dt>讲义</dt><dd>${q(sub.quote)}<cite>${E(sub.cite)}</cite></dd><dt>本讲例子</dt><dd>${E(sub.example)}</dd><dt>说明</dt><dd>${E(sub.explain)}</dd></dl>${pageLinks(sub.links)}</article></section></div>`;
     }
     sentenceInput() {
       return this.s.passage || this.records().filter(r => !r.verification?.includes("待逐字")).map(r => r.text).join("\n\n");
@@ -303,9 +321,20 @@
       const before = i < 0 ? [] : rs.slice(Math.max(0, i - k), i), after = i < 0 ? [] : rs.slice(i + 1, i + 1 + k), source = this.sources().find((m) => m.id === target?.source) || {};
       const fields = s.metaFields || ["author", "title", "edition", "locator"], value = { author: target?.author, title: target?.title, edition: source.edition, locator: target?.locator };
       const composed = s.context === "metadata" ? fields.map((f) => value[f]).filter(Boolean).join("；") + "\n" + (target?.text || "") : s.context === "neighbors" ? [...before, target, ...after].filter(Boolean).map((x) => x.text).join("\n") : null;
-      const whole = rs.filter((x) => x.source === target?.source);
+      // 上下文化检索原法把全文与片段一起交给模型；全文过长时只取目标前后若干段（上限约 6000 字），并在页面上写明。
+      let whole = rs.filter((x) => x.source === target?.source);
+      const limit = 6000, total = whole.reduce((n, x) => n + [...x.text].length, 0);
+      if (total > limit && i >= 0) {
+        let lo = i, hi = i, chars = [...whole[i].text].length;
+        while (chars < limit && (lo > 0 || hi < whole.length - 1)) {
+          if (hi < whole.length - 1) { hi++; chars += [...whole[hi].text].length; }
+          if (lo > 0 && chars < limit) { lo--; chars += [...whole[lo].text].length; }
+        }
+        whole = whole.slice(lo, hi + 1);
+      }
+      const wholeChars = whole.reduce((n, x) => n + [...x.text].length, 0), windowed = wholeChars < total;
       const prompt = "下面是整份材料，各段以[片段ID]开头。之后会给出其中一个需要放进全文语境的片段。请用一两句简短的中文说明：这一片段在全文中处于什么位置、承接什么、在讲什么，以便改进检索。只输出这一两句说明，不复述原文，不评价。目标片段：" + (target?.id || "");
-      return { target, before, after, window: [...before, target, ...after].filter(Boolean), fields, composed, whole, prompt };
+      return { target, before, after, window: [...before, target, ...after].filter(Boolean), fields, composed, whole, wholeChars, totalChars: total, windowed, prompt };
     }
     cslOf(b) {
       const c = { type: b.type || "chapter", title: b.title || undefined, author: b.author ? [{ literal: b.author }] : undefined, "container-title": b.container || undefined, publisher: b.edition || undefined, "original-date": b.origin ? { literal: b.origin } : undefined, page: b.page || undefined, note: [b.basis && "底本：" + b.basis, b.access && "获取：" + b.access, b.pdfPage && "PDF页序：" + b.pdfPage, b.status && "核读：" + b.status, b.note].filter(Boolean).join("；") || undefined };
@@ -329,17 +358,37 @@
       return units;
     }
     d24() {
-      const s = this.s, ss = this.sources(), stage = Math.min(+s.through || 0, 6), kinds = {};
+      const s = this.s, ss = this.sources(), stage = Math.min(+s.through || 0, 6), tab = s.d24tab || "work", kinds = {};
       ss.forEach((m) => (kinds[m.kind || "课程材料"] = (kinds[m.kind || "课程材料"] || 0) + 1));
       const runs4 = S.corpus.projects().flatMap((p) => p.events || []).filter((e) => e.week04Run);
-      const body = [() => this.d24Identity(), () => this.d24Units_(), () => this.d24Retrieve(), () => this.d24Graph(), () => this.d24Compare(runs4), () => this.d24Verify(), () => this.d24Backup()][stage]();
-      return `<div class="d24"><main class="d24-main"><header class="d24-head"><small>阶段 ${stage + 1} / 7${D24_STAGES[stage][1] ? " · 复用 " + D24_STAGES[stage][1] + " 的做法" : ""}</small><h2>${E(D24_STAGES[stage][0])}</h2></header>${body}</main><aside class="d24-side"><section><h3>研究问题</h3>${area("question", s.question, "本轮研究问题（由教师确定）", 3)}</section><section><h3>已导入材料</h3><p>${Object.entries(kinds).map(([k, v]) => `${E(k)} <b>${v}</b>`).join("　")}</p><p class="caption">${S.corpus.records().filter((r) => r.private).length} 个正文块；第四周阅读轮次 ${runs4.length} 轮。本轮范围：${this.d24Scope().length} 份材料。</p></section><section><h3>阶段</h3><ol class="d24-stages">${D24_STAGES.map((x, i) => `<li><button data-set="through" data-v="${i}" class="${i === stage ? "on" : ""}" aria-pressed="${i === stage}">${i + 1}　${E(x[0])}</button></li>`).join("")}</ol></section><section><h3>本轮判断记录</h3>${area("report", s.report, "已读范围、判断、缺口与下一步", 4)}</section><section class="d24-export"><button data-do="export">导出本轮判断</button><button data-do="backup">完整备份</button></section></aside></div>`;
+      const body = tab === "reader" ? this.d24Reader() : tab === "record" ? this.d24Record() : [() => this.d24Identity(), () => this.d24Units_(), () => this.d24Retrieve(), () => this.d24Graph(), () => this.d24Compare(runs4), () => this.d24Verify(), () => this.d24Backup()][stage]();
+      const r = this.d24res, kept = this.d24Kept(), graded = Object.values(s.d24grades || {}).filter((g) => g && g.weight != null).length;
+      const progress = [["本轮范围", this.d24Scope().length + " 份"], ["检索单元", this.d24Units().length + " 个"], ["BM25", r?.bm25 ? r.bm25.length + " 个命中" : "未做"], ["现场嵌入", r?.dense ? r.dense.length + " 个单元" : "未做"], ["保留单元", kept.length + " 个"], ["模型候选", this.d24answer ? "已生成" : "无"], ["已定级句子", graded + " 句"]];
+      const reader = this.d24ReaderTarget();
+      return `<div class="d24w"><section class="d24w-main"><nav class="d24w-tabs" role="tablist"><button data-set="d24tab" data-v="work" class="${tab === "work" ? "on" : ""}" role="tab" aria-selected="${tab === "work"}">工作区：${stage + 1} ${E(D24_STAGES[stage][0])}</button><button data-set="d24tab" data-v="reader" class="${tab === "reader" ? "on" : ""}" role="tab" aria-selected="${tab === "reader"}">原件与正文${reader ? "：" + E(reader.title.slice(0, 14)) : ""}</button><button data-set="d24tab" data-v="record" class="${tab === "record" ? "on" : ""}" role="tab" aria-selected="${tab === "record"}">本轮判断记录 ↓</button></nav><div class="d24w-body">${body}</div><footer class="d24w-foot">D24 · 第五周德教贯穿：同一导入包接续第四周的题录、正文块与阅读记录；材料只在本机浏览器。</footer></section><aside class="d24w-side"><h3>德教研究：用同一库走完检索与核读</h3><label class="d24w-q"><span>问题起点</span><textarea data-k="question" rows="3" placeholder="不同材料怎样使用“德教／徳教／德敎”？哪些用法可比较，哪些尚缺依据？">${E(s.question ?? "")}</textarea></label><div class="d24w-stages">${D24_STAGES.map((x, i) => `<button data-set="through" data-v="${i}" class="${i === stage ? "on" : ""}" aria-pressed="${i === stage}"><b>${i + 1}</b>${E(x[0])}</button>`).join("")}</div><p class="d24w-hint">${E(D24_HINTS[stage])}</p><section class="d24w-sum"><h4>已导入材料</h4><p class="kind-chips">${Object.entries(kinds).map(([k, v]) => `<span class="kind-${E(k)}">${E(k)} <b>${v}</b></span>`).join("")}</p><p class="caption">${S.corpus.records().filter((x) => x.private).length} 个正文块 · 第四周阅读 ${runs4.length} 轮</p></section><section class="d24w-sum"><h4>本轮进度</h4><dl class="d24w-progress">${progress.map(([k, v]) => `<dt>${E(k)}</dt><dd>${E(v)}</dd>`).join("")}</dl></section><div class="d24w-export"><button class="mini-btn" data-do="export">导出本轮判断</button><button class="mini-btn" data-do="backup">完整备份</button></div></aside></div>`;
+    }
+    d24ReaderTarget() {
+      const id = this.s.d24src;
+      return id ? this.sources().find((m) => m.id === id) : null;
+    }
+    d24Reader() {
+      const m = this.d24ReaderTarget();
+      if (!m) return `<p class="note-box">在“材料身份”表中点一条题名，或在检索结果中点一个单元，这里显示它的题录字段与第四周正文块。</p>`;
+      const recs = S.corpus.records().filter((r) => r.source === m.id), focus = this.s.d24unit;
+      return `<div class="d24-reader"><header><h3>${E(m.title)}</h3><p>${E(m.author || "待查")} · ${E(m.edition || "待查")} · ${E(m.kind || "课程材料")}</p></header>${table(["字段", "值"], [["题录来源", E(m.acquisition || "")], ["第四周题录", E(m.week04?.itemId || "—")], ["原件", m.attachments?.length ? m.attachments.map((a) => E(a.name) + "（" + (a.pages || "?") + "页）").join("；") : "无（工作稿附注）"], ["正文块", recs.length + " 个"]])}<ol class="d24-blocks">${recs.map((r) => `<li class="${focus && focus.startsWith(r.id) ? "focus" : ""}"><small>${E(r.id)} · ${E(r.locator)} · ${E(r.verification || "")}</small><p>${E(r.text.slice(0, 420))}${r.text.length > 420 ? "…" : ""}</p><button class="mini-btn" data-reader="${E(r.id)}">打开原页</button></li>`).join("")}</ol></div>`;
+    }
+    d24Record() {
+      const s = this.s, r = this.d24res, kept = this.d24Kept(), lines = (s.d24answer ?? this.d24answer?.output ?? "").split("\n").map((x) => x.trim()).filter(Boolean), x = M.support(lines.map((_, i) => (s.d24grades || {})[i] || { cite: "", weight: 0 }));
+      return `<div class="d24-record">${area("report", s.report, "本轮判断：已读范围、判断、缺口与下一步", 6)}${table(["环节", "本轮实际"], [["问题", E(s.question || "（未填）")], ["范围", E(this.d24Scope().map((m) => m.title).join("；"))], ["检索问题", E(r?.query || "—")], ["保留单元", E(kept.map((u) => u.id).join("、") || "—")], ["自己的判断", E(s.manual || "—")], ["模型候选", E(this.d24answer ? (this.d24answer.model || "") + "，" + (this.d24answer.output || "").slice(0, 80) + "…" : "—")], ["逐句核读", lines.length ? `P_w ${x.cited ? number(x.P) : "—"}，R_w ${number(x.R)}（${lines.length}句）` : "—"]])}<p class="caption">“导出本轮判断”保存上表与全部设置；“完整备份”另含导入的原件与正文。</p></div>`;
     }
     d24Identity() {
-      const s = this.s, scope = new Set(this.d24Scope().map((m) => m.id)), order = ["史料", "二手文献", "课程材料", "教师研究产物"];
-      const groups = order.map((k) => [k, this.sources().filter((m) => (m.kind || "课程材料") === k)]).filter(([, v]) => v.length);
+      const s = this.s, scope = new Set(this.d24Scope().map((m) => m.id)), f = s.d24kind || "全部", q = (s.d24q || "").trim().toLowerCase();
       const n = (m) => S.corpus.records().filter((r) => r.source === m.id).length;
-      return `<p>题录按第四周书库中的材料性质分列。勾选本轮进入检索的材料；<b>教师研究产物只作对照，默认不进检索</b>，以免模型读了结论再“发现”结论。</p><label class="cloud-permission"><input type="checkbox" data-k="allowTeacher" ${s.allowTeacher ? "checked" : ""}>允许教师研究产物进入本轮检索（教师显式打开）</label>${groups.map(([k, ms]) => `<h3 class="kind-head">${E(k)}　${ms.length}条</h3>${table(["本轮", "题名", "责任者", "版本／出版", "正文块", "原件"], ms.map((m) => [`<input type="checkbox" data-scope="${E(m.id)}" ${scope.has(m.id) ? "checked" : ""} ${k === "教师研究产物" && !s.allowTeacher ? "disabled title=\"对照，不进检索\"" : ""}>`, E(m.title), E(m.author || "待查"), E(m.edition || "待查"), n(m), m.attachments?.length ? m.attachments.length + "份PDF" : "无"]))}`).join("")}`;
+      const rows = this.sources().filter((m) => (f === "全部" || (m.kind || "课程材料") === f) && (!q || [m.title, m.author, m.edition].join(" ").toLowerCase().includes(q)));
+      const year = (m) => String(m.date || m.edition || "").match(/(1[89]\d\d|20\d\d)/)?.[1] || "—";
+      const order = ["史料", "二手文献", "课程材料", "教师研究产物"];
+      rows.sort((a, b) => order.indexOf(a.kind || "课程材料") - order.indexOf(b.kind || "课程材料") || year(a).localeCompare(year(b)));
+      return `<div class="lib-toolbar"><nav class="seg-btns">${["全部", "史料", "二手文献", "课程材料", "教师研究产物"].map((k) => `<button data-set="d24kind" data-v="${k}" class="${f === k ? "on" : ""}">${k}</button>`).join("")}</nav><input data-k="d24q" value="${E(s.d24q || "")}" placeholder="筛选题名／作者／出处"><label class="lib-teacher"><input type="checkbox" data-k="allowTeacher" ${s.allowTeacher ? "checked" : ""}>教师研究产物进入检索（默认关闭）</label></div><div class="table-scroll lib-table"><table class="kv"><thead><tr><th>本轮</th><th>性质</th><th>年份</th><th>作者</th><th>题名</th><th>出处／版本</th><th>文本块</th><th>原件</th></tr></thead><tbody>${rows.map((m) => { const teacher = m.kind === "教师研究产物" && !s.allowTeacher; return `<tr class="${scope.has(m.id) ? "in" : ""}${teacher ? " muted" : ""}"><td><input type="checkbox" data-scope="${E(m.id)}" ${scope.has(m.id) ? "checked" : ""} ${teacher ? "disabled title=\"对照，不进检索\"" : ""}></td><td><span class="kind-tag kind-${E(m.kind || "课程材料")}">${E(m.kind || "课程材料")}</span></td><td>${E(year(m))}</td><td>${E(m.author || "待查")}</td><td><button class="link-btn" data-d24src="${E(m.id)}" title="${E(m.title)}">${E(m.title)}</button></td><td>${E(m.edition || "待查")}</td><td>${n(m)}</td><td>${m.attachments?.length ? "PDF" : "—"}</td></tr>`; }).join("")}</tbody></table></div><p class="caption">${rows.length} 条 · 本轮 ${scope.size} 份。勾选进入本轮检索的材料；点题名在“原件与正文”中查看第四周正文块。教师研究产物只作对照，以免模型读了结论再“发现”结论。</p>`;
     }
     d24Units_() {
       const s = this.s, units = this.d24Units(), lens = units.map((u) => [...u.text].length), blocks = new Set(units.map((u) => u.parentId)).size;
@@ -347,7 +396,7 @@
     }
     d24Retrieve() {
       const s = this.s, r = this.d24res;
-      const list = (rows, label, key) => `<div class="rank-col"><h4>${E(label)}</h4>${rows.slice(0, 15).map((x, i) => `<p><b>${i + 1}. ${E(x.id)}</b> ${number(x[key])}<br><small>${E(x.title)} · ${E(x.locator)}</small><br>${E(x.text.slice(0, 50))}…</p>`).join("")}</div>`;
+      const list = (rows, label, key) => `<div class="rank-col"><h4>${E(label)}</h4><table class="kv rank-table"><thead><tr><th>#</th><th>${key === "cos" ? "余弦" : "BM25"}</th><th>题名 · 定位 · 开头</th></tr></thead><tbody>${rows.slice(0, 15).map((x, i) => `<tr data-d24unit="${E(x.id)}" title="在“原件与正文”中查看"><td>${i + 1}</td><td>${number(x[key])}</td><td><b>${E(x.title)}</b><br><small>${E(x.locator)}</small><br>${E(x.text.slice(0, 60))}…</td></tr>`).join("")}</tbody></table></div>`;
       return `<p>两步：先用 BM25 在本轮全部检索单元上“找得全”，再只对 BM25 前 N 个单元现场做 MiniLM 嵌入，按余弦“排得准”（讲义 2.3）。</p><div class="inline-form">${input("query", s.query, "检索问题")}${slider("topN", +(s.topN || 40), "现场嵌入的单元数 N", 10, 120, 10)}<button data-do="d24-bm25">① BM25 检索全部单元</button><button data-do="d24-dense" ${r?.bm25 ? "" : "disabled"}>② 对前 N 个现场嵌入重排</button></div>${r?.bm25 ? `${r.legacy ? '<p class="caption">旧备份接回的是原次实际输入；以下BM25为恢复时重算，原次向量分数未保存。</p>' : ""}<p class="note-box">BM25：${r.total}个单元，${r.bm25.length}个有得分，用时${number(r.bm25Seconds)}秒。${r.dense ? `嵌入：实际编码 ${r.dense.length} 个单元（来自 ${new Set(r.dense.map((x) => x.source)).size} 份材料：${E([...new Set(r.dense.map((x) => x.title))].join("、"))}），用时 ${number(r.denseSeconds)} 秒。其余 ${r.total - r.dense.length} 个单元没有参与语义排序。` : "尚未嵌入。"}</p><div class="rank-compare">${list(r.bm25, "BM25", "score")}${r.dense ? list(r.dense, "BM25 前N → 余弦重排", "cos") : ""}</div>` : ""}`;
     }
     d24Kept() {
@@ -363,14 +412,14 @@
       return `<div class="entity-workspace"><aside>${slider("budget", +(s.budget || 6), "保留单元数", 2, 20)}${area("d24terms", s.d24terms ?? "德教\n徳教\n天皇\n國體\n教育勅語\n忠孝", "在保留单元中查找的称呼与概念（每行一个，可改）", 7)}<p class="caption">共现只说明同一单元里同时出现，不证明关系。默认词项仅为起点，请按材料改写。</p></aside><main>${this.graphSVG(g)}${table(["节点", "出处单元"], g.nodes.map((n) => [E(n.id), E(n.sources.join("、"))]))}</main></div>`;
     }
     d24Compare(runs4) {
-      const s = this.s, kept = this.d24Kept(), out = this.d24answer;
-      return `<p>接续第四周的阅读记录：先看已做过的轮次，再开新一轮——<b>先独立阅读写下判断，再看机器候选</b>。</p>${runs4.length ? table(["第四周轮次", "任务", "时间"], runs4.map((e) => [E(e.week04Run?.id || e.id), E(e.week04Run?.task || e.detail || ""), E((e.time || "").slice(0, 16))])) : "<p>导入包里没有第四周阅读轮次。</p>"}${area("manual", s.manual, "新一轮：自己的判断（先写）", 4)}<p>输入范围：检索保留的 ${kept.length} 个单元 ${E(kept.map((x) => x.id).join("、"))}</p>${this.cloudChoice()}<button data-do="d24-read" ${kept.length && (s.manual || "").trim() ? "" : "disabled"}>写好自己的判断后，发送给模型</button>${out ? `<article class="reading-candidate"><h3>模型候选 <small>${E(out.model || "")}</small></h3><pre>${E(out.output)}</pre></article>` : ""}`;
+      const s = this.s, kept = this.d24Kept(), out = this.d24answer, srcOf = (itemId) => this.sources().find((m) => m.week04?.itemId === itemId);
+      return `<p>接续第四周的阅读记录：先看已做过的轮次，再开新一轮——<b>先独立阅读写下判断，再看机器候选</b>。</p>${runs4.length ? table(["第四周轮次", "任务", "所读题录", "时间"], runs4.map((e, i) => [i + 1, E(e.week04Run?.task || e.detail || ""), E(srcOf(e.week04Run?.itemId)?.title || "—"), E((e.time || "").slice(0, 16).replace("T", " "))])) : "<p>导入包里没有第四周阅读轮次。</p>"}<div class="d24-two"><section>${area("manual", s.manual, "新一轮：自己的判断（先写，才能发送）", 6)}${this.cloudChoice()}<button data-do="d24-read" ${kept.length && (s.manual || "").trim() ? "" : "disabled"}>写好自己的判断后，发送给模型</button></section><section><h4>本轮交给模型的 ${kept.length} 个单元</h4>${kept.length ? `<ol class="kept-list">${kept.map((u) => `<li data-d24unit="${E(u.id)}" title="${E(u.id)}"><b>${E(u.title)}</b> <small>${E(u.locator)}</small></li>`).join("")}</ol>` : '<p class="note-box">先在第3阶段检索。</p>'}</section></div>${out ? `<article class="reading-candidate"><h3>模型候选 <small>${E(out.model || "")}</small></h3><pre>${E(out.output)}</pre></article>` : ""}`;
     }
     d24Verify() {
       const s = this.s, kept = this.d24Kept(), text = s.d24answer ?? this.d24answer?.output ?? "", lines = text.split("\n").map((x) => x.trim()).filter(Boolean), grades = s.d24grades || {};
       const rows = lines.map((_, i) => grades[i] || { cite: "", weight: 0 }), x = M.support(rows);
       const all = S.corpus.records();
-      return `${area("d24answer", text, "要核读的回答（每行一句；默认取上一阶段的模型候选）", 5)}${lines.map((t, i) => { const g = grades[i] || {}, unit = kept.find((u) => u.id === g.cite), rec = all.find((r) => r.id === (unit?.parentId || g.cite)); return `<article class="grade-line"><p>${E(t)}</p><label>引文<select data-d24cite="${i}"><option value="">无引文</option>${kept.map((u) => `<option value="${E(u.id)}" ${g.cite === u.id ? "selected" : ""}>${E(u.id)}</option>`).join("")}</select></label>${[[1, "完全支持"], [0.5, "部分支持"], [0, "不支持"]].map(([w, l]) => `<button data-do="d24-grade" data-v="${i}|${w}" class="${g.weight === w ? "on" : ""}">${l}</button>`).join("")}${rec ? `<p class="caption">回到第四周原页：${E(rec.uri || rec.locator)} <button data-reader="${E(rec.id)}">打开原页</button></p>` : ""}</article>`; }).join("")}${table(["比例", "代入", "数值"], [["P_w", `${x.sum}/${x.cited}`, x.cited ? number(x.P) : "—"], ["R_w", `${x.sum}/${x.sentences}`, x.sentences ? number(x.R) : "—"]])}`;
+      return `${area("d24answer", text, "要核读的回答（每行一句；默认取上一阶段的模型候选）", 5)}${lines.map((t, i) => { const g = grades[i] || {}, unit = kept.find((u) => u.id === g.cite), rec = all.find((r) => r.id === (unit?.parentId || g.cite)); return `<article class="grade-line"><p>${E(t)}</p><label>引文<select data-d24cite="${i}"><option value="">无引文</option>${kept.map((u, k) => `<option value="${E(u.id)}" ${g.cite === u.id ? "selected" : ""}>${k + 1}. ${E(u.title.slice(0, 18))} · ${E(u.locator.slice(0, 18))}</option>`).join("")}</select></label>${[[1, "完全支持"], [0.5, "部分支持"], [0, "不支持"]].map(([w, l]) => `<button data-do="d24-grade" data-v="${i}|${w}" class="${g.weight === w ? "on" : ""}">${l}</button>`).join("")}${rec ? `<p class="caption">回到第四周原页：${E(rec.uri || rec.locator)} <button data-reader="${E(rec.id)}">打开原页</button></p>` : ""}</article>`; }).join("")}${table(["比例", "代入", "数值"], [["P_w", `${x.sum}/${x.cited}`, x.cited ? number(x.P) : "—"], ["R_w", `${x.sum}/${x.sentences}`, x.sentences ? number(x.R) : "—"]])}`;
     }
     d24Backup() {
       return `<p>完整备份包含：导入的项目（题录、正文块与第四周定位）、原件 PDF、第五周各页的实际运行记录与页面设置。可在另一台电脑或第六周课件中恢复，继续接着做。</p><button data-do="backup">下载第五周完整备份</button><label class="file-chip">恢复备份<input data-restore="1" type="file" accept=".zip"></label><button data-do="export">只导出本轮判断（JSON）</button><p class="caption">备份只在本机生成与保存；含教师材料，请勿上传公共位置。</p>`;
@@ -466,7 +515,7 @@
       if (this.id === "D24" && this.d24res && this.d24res.stamp !== this.d24Stamp()) this.invalidateD24(true);
       let s = this.s, r = this.selected(), rs = this.records(), html = "", sel = this.selection();
       if (this.id === "D24" && !rs.length) {
-        this.innerHTML = `<div class="empty-project d24-empty"><h2>德教全量：在本机导入</h2><p>课件不预装德教原文、教师稿或研究结果。请选择第四周导出的<b>完整课程备份 ZIP</b>（含 patchouli.zip 与 reading-records.json），或通用项目的 project.json／ZIP。材料只写入本机浏览器，不上传。</p><p><label class="file-chip primary">选择德教包<input data-import="1" type="file" accept=".json,.zip"></label></p><p><button data-do="importer">改用通用导入页 ↗</button><label class="file-chip">恢复第五周完整备份<input data-restore="1" type="file" accept=".zip"></label></p><ol class="d24-stage-preview">${D24_STAGES.map((x) => `<li>${E(x[0])}</li>`).join("")}</ol><p role="status">${E(this.message)}</p></div>`;
+        this.innerHTML = `<div class="d24w"><section class="d24w-main"><nav class="d24w-tabs"><button class="on">工作区：先导入德教包</button></nav><div class="d24w-body"><div class="d24-empty"><h2>德教全量：在本机导入</h2><p>课件不预装德教原文、教师稿或研究结果。请选择第四周导出的<b>完整课程备份 ZIP</b>（含 patchouli.zip 与 reading-records.json），或通用项目的 project.json／ZIP。材料只写入本机浏览器，不上传。</p><p><label class="file-chip primary">选择德教包<input class="visually-hidden" data-import="1" type="file" accept=".json,.zip"></label></p><p class="d24-empty-more"><button class="mini-btn" data-do="importer">改用通用导入页 ↗</button><label class="mini-btn">恢复第五周完整备份<input class="visually-hidden" data-restore="1" type="file" accept=".zip"></label></p><p role="status">${E(this.message)}</p></div></div><footer class="d24w-foot">D24 · 第五周德教贯穿；导入后七个阶段依次可用。</footer></section><aside class="d24w-side"><h3>德教研究：用同一库走完检索与核读</h3><p class="d24w-hint">问题起点：不同材料怎样使用“德教／徳教／德敎”？哪些用法可比较，哪些尚缺依据？</p><div class="d24w-stages">${D24_STAGES.map((x, i) => `<button disabled><b>${i + 1}</b>${E(x[0])}</button>`).join("")}</div><p class="d24w-hint">先在左侧导入德教包。</p></aside></div>`;
         return;
       }
       switch (this.id) {
@@ -488,24 +537,27 @@
           const levelName = (c) => ({ "\n\n": "空行（段界）", "\n": "换行", " ": "空格", "字符": "逐字（无可用分隔符）", "完整单位": "整体未超长", "句": "句末标点", "段": "换行（段界）" })[c.level] || c.level;
           const chunks = run(s.method), lens = chunks.map((c) => [...c.text].length);
           const rows = chunks.map((c, i) => [String(i + 1), E(levelName(c)), `[${c.start}, ${c.end})`, String(lens[i]), i && chunks[i - 1].end > c.start ? String(chunks[i - 1].end - c.start) : "0", `<span class="chunk-text">${E(c.text)}</span>`]);
-          const ribbon = (m, label) => {
-            const cs = run(m), chars = [...text], cuts = new Set(cs.map((c) => c.start).filter((x) => x > 0));
-            let html = "", seg = 0;
-            chars.forEach((ch, i) => {
-              if (cuts.has(i)) { seg++; html += `<i class="cut" title="切点：字符${i}">✂</i>`; }
-              html += ch === "\n" ? (chars[i + 1] === "\n" ? "" : `<span class="nl">¶</span>`) : `<span class="seg${seg % 2}">${E(ch)}</span>`;
-            });
-            return `<div class="cut-row${m === s.method ? " on" : ""}"><button data-set="method" data-v="${m}">${E(label)}<small>${cs.length}块</small></button><p>${html}</p></div>`;
-          };
-          html = sel + `<div class="chunk-lab"><div class="chunk-controls">${tabs("method", s.method, METHODS.map(([id, l]) => [id, l]))}${slider("size", s.size, "块大小上限（字符）", 30, 600, 10)}${slider("overlap", s.overlap, "固定长度的重叠（字符）", 0, 100, 5)}<details><summary>修改实际文本</summary>${area("passage", text, "当前文本（可改；清空恢复所选材料）", 6)}</details></div><section class="chunk-ribbons"><h3>切点落在哪里：四种切法上下对照</h3>${METHODS.map(([m, l]) => ribbon(m, l)).join("")}<p class="caption">✂ 为切点；底色交替表示相邻两块。重叠部分只在下表“与前块重叠”一列显示。</p></section><section class="chunk-table"><h3>${E(METHODS.find((x) => x[0] === s.method)[1])}：${chunks.length}块，平均${chunks.length ? Math.round(lens.reduce((a, b2) => a + b2, 0) / chunks.length) : 0}字，最长${Math.max(0, ...lens)}字</h3>${table(["块", "切法依据", "字符范围", "字数", "与前块重叠", "实际文本"], rows)}<p class="caption">${E(r?.locator || "")}；所有偏移按 Unicode 字符计。句读来自所用版本（影印本圈点以句号显示）或工作转写，不把自动断句当原刊固有结构。按句、按段两种切法不受块大小限制。</p></section></div>`;
+          const focus = +(s.chunkFocus ?? -1);
+          const chars = [...text], starts = chunks.map((c) => c.start);
+          let rib = "", seg = -1;
+          chars.forEach((ch, i) => {
+            while (seg + 1 < starts.length && starts[seg + 1] <= i) { seg++; if (i > 0) rib += `<i class="cut" title="切点：字符${i}">✂</i>`; }
+            const cls = `seg${seg % 2}${seg === focus ? " focus" : ""}`;
+            rib += ch === "\n" ? (chars[i + 1] === "\n" ? "" : `<span class="nl">¶</span>`) : `<span class="${cls}">${E(ch)}</span>`;
+          });
+          const counts = Object.fromEntries(METHODS.map(([m]) => [m, run(m).length]));
+          const rowsH = chunks.map((c, i) => `<tr data-chunk="${i}" class="${i === focus ? "focus" : ""}"><td>${i + 1}</td><td>${E(levelName(c))}</td><td>[${c.start}, ${c.end})</td><td>${lens[i]}</td><td>${i && chunks[i - 1].end > c.start ? chunks[i - 1].end - c.start : 0}</td><td class="chunk-text">${E(c.text)}</td></tr>`).join("");
+          const cur = METHODS.find((x) => x[0] === s.method);
+          html = sel + `<div class="chunk-lab2"><aside class="chunk-controls">${slider("size", s.size, "块大小上限（字符）", 30, 600, 10)}${slider("overlap", s.overlap, "重叠（只用于固定长度）", 0, 100, 5)}<table class="kv mini"><thead><tr><th>切法</th><th>块数</th></tr></thead><tbody>${METHODS.map(([m, l]) => `<tr class="${m === s.method ? "on" : ""}"><td>${E(l)}</td><td>${counts[m]}</td></tr>`).join("")}</tbody></table><details><summary>修改实际文本</summary>${area("passage", text, "清空则恢复所选材料", 6)}</details><p class="caption">偏移按 Unicode 字符计；按句、按段不受块大小限制。</p></aside><section class="chunk-main"><nav class="chunk-tabs" role="tablist">${METHODS.map(([m, l, basis]) => `<button role="tab" data-set="method" data-v="${m}" aria-selected="${m === s.method}" class="${m === s.method ? "on" : ""}">${E(l)}<small>${counts[m]}块 · ${E(basis)}</small></button>`).join("")}</nav><p class="chunk-sum"><b>${E(cur[1])}</b>：${chunks.length}块，平均${chunks.length ? Math.round(lens.reduce((a2, b2) => a2 + b2, 0) / chunks.length) : 0}字，最长${Math.max(0, ...lens)}字。${E(r?.locator || "")}</p><div class="chunk-two"><section class="ribbon-pane"><h3>切点落在哪里</h3><p class="ribbon">${rib}</p><p class="caption">✂ 为切点，底色交替表示相邻两块；点右表一行，左侧对应块加框。</p></section><section class="table-pane"><h3>结构化片段表</h3><div class="table-scroll"><table class="kv chunk-table2"><thead><tr><th>块</th><th>切法依据</th><th>字符范围</th><th>字数</th><th>重叠</th><th>实际文本</th></tr></thead><tbody>${rowsH}</tbody></table></div></section></div></section></div>`;
           break;
         }
-        case "D06":
-        case "D07": {
+        case "D06": {
           let sent = this.sentenceRows(), vec = this.knownVectors(sent), sem = this.semantic(sent, vec, s.semantic), { dist, theta, groups } = sem;
-          const controls = sel + slider("scope", s.scope, "实际句数", 3, 16) + tabs("semantic", s.semantic, [["breakpoint", "嵌入断点"], ["single", "位置＋语义单链接聚类"], ["dbscan", "DBSCAN"], ["fixed", "固定句数基线"]]) + (s.semantic === "breakpoint" ? tabs("threshold", s.threshold, [["absolute", "绝对阈值"], ["percentile", "80%分位"], ["std", "均值＋标准差"], ["iqr", "IQR"]]) + slider("theta", s.theta, "绝对距离阈值θ", 0, 1, 0.01) : "") + (["single", "fixed"].includes(s.semantic) ? slider("k", s.k, s.semantic === "fixed" ? "每块句数" : "簇数", 1, 6) : "") + (["single", "dbscan"].includes(s.semantic) ? slider("lambda", s.lambda, "位置距离权重λ", 0, 1, 0.05) : "") + (s.semantic === "dbscan" ? slider("eps", s.eps, "DBSCAN邻域ε", 0.1, 0.9, 0.05) + slider("minPoints", s.minPoints, "DBSCAN最少邻居（含自身）", 1, 5) : "") + `<button data-do="encode">${vec ? "浏览器内重新编码" : "浏览器内实际编码（首次需下载模型）"}</button>`;
-          const body = this.flow([["输入与实现", controls], ["每句的实际情况", table(["句", "原文", "字符范围", "向量前4维"], sent.map((t, i) => [i + 1, E(t.text), `[${t.start},${t.end})`, vec ? vec[i].slice(0, 4).map(number).join(",") + " …" : "待编码"]))], ["相邻句距离", dist ? this.distanceChart(dist, s.semantic === "breakpoint" ? theta : null) + table(["句界", "d=1−cos", s.semantic === "breakpoint" ? "切断（θ=" + number(theta) + "）" : "（聚类不按阈值切）"], dist.map((d) => [`${d.i + 1}→${d.i + 2}`, number(d.distance), s.semantic === "breakpoint" ? (d.cut ? "是" : "否") : "—"])) + `<p class="caption">聚类距离：λ|i−j|/n+(1−λ)(1−max(cos,0))。</p>` : `<p class="note-box">当前文本没有预跑向量。点“浏览器内实际编码”，在本机下载并运行 MiniLM 后显示每一句的距离。</p>`], ["实际切分结果", groups.length ? groups.map((g, i) => `<article class="chunk"><small>块${i + 1}：句${g.map((x) => x + 1).join("、")}</small>${E(g.map((x) => sent[x].text).join(""))}</article>`).join("") + `<p class="caption">${E(this.vectors ? "向量为本页刚才在浏览器内实际编码" : "向量为课前在本机实际预计算（同一模型、同一修订）")}；${E(S.embedding.model)}，q8，384维。</p>` : "<p>编码后显示。</p>"]]);
-          if (this.id === "D06") { html = body; break; }
+          const seg = (k, v, items) => `<div class="seg-btns" role="radiogroup">${items.map(([id, l]) => `<button data-set="${k}" data-v="${E(id)}" role="radio" aria-checked="${String(id) === String(v)}" class="${String(id) === String(v) ? "on" : ""}">${E(l)}</button>`).join("")}</div>`;
+          const SEM = { breakpoint: "嵌入断点", single: "位置＋语义单链接聚类", dbscan: "DBSCAN", fixed: "固定句数基线" };
+          const opts = s.semantic === "breakpoint" ? `<fieldset class="ctl-sub"><legend>阈值怎样定 <small>（嵌入断点的选项）</small></legend>${seg("threshold", s.threshold, [["absolute", "绝对值"], ["percentile", "80%分位"], ["std", "均值＋标准差"], ["iqr", "IQR"]])}${s.threshold === "absolute" ? slider("theta", s.theta, "θ", 0, 1, 0.01) : `<p class="caption">按全部距离自动算出 θ=${number(theta)}</p>`}</fieldset>` : `<fieldset class="ctl-sub"><legend>参数 <small>（${E(SEM[s.semantic])}的选项）</small></legend>${["single", "fixed"].includes(s.semantic) ? slider("k", s.k, s.semantic === "fixed" ? "每块句数" : "簇数", 1, 6) : ""}${["single", "dbscan"].includes(s.semantic) ? slider("lambda", s.lambda, "位置距离权重 λ", 0, 1, 0.05) : ""}${s.semantic === "dbscan" ? slider("eps", s.eps, "邻域 ε", 0.1, 0.9, 0.05) + slider("minPoints", s.minPoints, "最少邻居（含自身）", 1, 5) : ""}</fieldset>`;
+          const controls = `<div class="ctl-compact">${slider("scope", s.scope, "实际句数", 3, 16)}<fieldset class="ctl-main"><legend>切分做法</legend>${seg("semantic", s.semantic, Object.entries(SEM))}</fieldset>${opts}<button class="mini-btn" data-do="encode">${vec ? "浏览器内重新编码" : "浏览器内实际编码"}</button></div>`;
+          const body = sel + this.flow([["输入与实现", controls], ["每句的实际情况", table(["句", "原文", "字符范围", "向量前4维"], sent.map((t, i) => [i + 1, E(t.text), `[${t.start},${t.end})`, vec ? vec[i].slice(0, 4).map(number).join(",") + " …" : "待编码"]))], ["相邻句距离", dist ? this.distanceChart(dist, s.semantic === "breakpoint" ? theta : null) + table(["句界", "d=1−cos", s.semantic === "breakpoint" ? "切断（θ=" + number(theta) + "）" : "（聚类不按阈值切）"], dist.map((d) => [`${d.i + 1}→${d.i + 2}`, number(d.distance), s.semantic === "breakpoint" ? (d.cut ? "是" : "否") : "—"])) + `<p class="caption">聚类距离：λ|i−j|/n+(1−λ)(1−max(cos,0))。</p>` : `<p class="note-box">当前文本没有预跑向量。点“浏览器内实际编码”，在本机下载并运行 MiniLM 后显示每一句的距离；下载进度也可在顶栏“模型接入”中查看。</p>`], ["实际切分结果", groups.length ? groups.map((g, i) => `<article class="chunk"><small>块${i + 1}：句${g.map((x) => x + 1).join("、")}</small>${E(g.map((x) => sent[x].text).join(""))}</article>`).join("") + `<p class="caption">${E(this.vectors ? "向量为本页刚才在浏览器内实际编码" : "向量为课前实际预计算（同一模型、同一修订）")}；${E(S.embedding.model)}，q8，384维。</p>` : "<p>编码后显示。</p>"]]);
           const overview = () => {
             const text = [...this.sentenceInput()].slice(0, sent.at(-1)?.end || 0).join(""), rowsOut = [];
             for (const [m, l] of [["fixed", "固定长度"], ["sentence", "按句"], ["paragraph", "按段"], ["recursive", "递归"]]) {
@@ -521,7 +573,8 @@
             }
             return `<div class="overview-lab"><p>同一份材料（${E(this.records()[0]?.author || "")}，前${sent.length}句，共${[...text].length}字）按八种做法实际切分。切点以字符偏移表示；结构切法块大小上限${s.size || 120}字，固定长度重叠20字；嵌入切法用当前参数（θ=${number(theta)}，k=${s.k}，λ=${s.lambda}，ε=${s.eps}）。</p>${table(["做法", "依据", "块数", "平均块长（字）", "切点位置（字符）"], rowsOut)}<p class="caption">${vec ? "嵌入向量来自" + (this.vectors ? "本页浏览器内实际编码" : "课前本机实际预计算") : "嵌入四行需先编码"}。按句、按段、递归的实际块表见 ${D.pageLink("D04", "D04 →")}；嵌入断点的逐句距离见“史料实际试跑”。</p></div>`;
           };
-          html = tabs("view", s.view, [["overview", "实现方式总览"], ["run", "史料实际试跑"], ["paper", "论文原图与结果"]]) + (s.view === "paper" ? `<div class="paper-figs"><figure><img src="assets/revision/figures/chunking-fig1.png" alt="Qu等论文Figure 1"><figcaption>Qu、Tu、Bao，“Is Semantic Chunking Worth the Computational Cost?”，arXiv:2410.13070，Figure 1：固定句数、断点式与聚类式三种切法示意（论文原图）。</figcaption></figure><figure><img src="assets/revision/figures/chunking-table1.png" alt="Qu等论文Table 1"><figcaption>同文 Table 1。讲义 1.2：语义切分明显占优的是人为拼接的数据（如 Miracl，F1@5 由 69.45 升到 81.89）；原本就是长文档时固定切分略好（HotpotQA 90.59 对 87.37）。全部为英文数据，嵌入模型以 stella_en_1.5B_v5 为主。</figcaption></figure><blockquote>“these benefits were highly context-dependent and did not consistently justify the additional computational cost”（这些好处高度依赖具体情境，并不能稳定地抵得上额外的计算成本）。</blockquote></div>` : s.view === "overview" ? sel + overview() : body);
+          const fig = (src, alt, cap) => `<figure><a href="${src}" target="_blank" rel="noopener" title="新窗口打开原图"><img src="${src}" alt="${E(alt)}" loading="eager" onerror="this.closest('figure').classList.add('img-failed')"></a><p class="img-fallback">图片未能加载。<a href="${src}" target="_blank" rel="noopener">直接打开图片</a>，或到 <a href="https://arxiv.org/abs/2410.13070" target="_blank" rel="noopener">arXiv:2410.13070</a> 查看原文。</p><figcaption>${cap}</figcaption></figure>`;
+          html = tabs("view", s.view, [["run", "史料实际试跑"], ["overview", "八种做法总览"], ["paper", "论文原图与结果"]]) + (s.view === "paper" ? `<div class="paper-figs big">${fig("assets/revision/figures/chunking-fig1.png", "Qu等论文Figure 1", "Qu、Tu、Bao，“Is Semantic Chunking Worth the Computational Cost?”，arXiv:2410.13070，Figure 1：固定句数、断点式与聚类式三种切法示意（论文原图；点击放大）。")}${fig("assets/revision/figures/chunking-table1.png", "Qu等论文Table 1", "同文 Table 1。讲义 1.2：语义切分明显占优的是人为拼接的数据（如 Miracl，F1@5 由 69.45 升到 81.89）；原本就是长文档时固定切分略好（HotpotQA 90.59 对 87.37）。全部为英文数据，嵌入模型以 stella_en_1.5B_v5 为主。")}<blockquote>“these benefits were highly context-dependent and did not consistently justify the additional computational cost”（这些好处高度依赖具体情境，并不能稳定地抵得上额外的计算成本）。——Qu 等 2024，摘要</blockquote></div>` : s.view === "overview" ? sel + overview() : body);
           break;
         }
         case "D08": {
@@ -530,7 +583,7 @@
           const opts = s.context === "metadata" ? `<fieldset class="mini-check"><legend>前置哪些字段</legend>${[["author", "作者"], ["title", "题名"], ["edition", "所用版本"], ["locator", "定位"]].map(([k, l]) => `<label><input type="checkbox" data-meta="${k}" ${plan.fields.includes(k) ? "checked" : ""}>${l}</label>`).join("")}</fieldset>` : s.context === "api" ? this.cloudChoice() : slider("nb", s.nb ?? 1, s.context === "late" ? "窗口：前后各取几段" : "前后各补几段", 0, 3);
           const doc = [
             ["输入原文", `<p><b>${E(plan.target?.id)}</b> ${E(plan.target?.author)}《${E(plan.target?.title)}》${E(plan.target?.locator)}</p><blockquote>${E(plan.target?.text)}</blockquote>${plan.before.length + plan.after.length ? `<p>相邻原文：${[...plan.before, ...plan.after].map((x) => E(x.id)).join("、")}（同一材料、显示顺序前后）</p>` : ""}`],
-            ["补写／编码", `<p><b>${E(METHOD[s.context])}</b></p>` + (s.context === "metadata" ? `<p>把所选字段按“；”连成一行，放在片段原文之前，再整体编码。</p>` : s.context === "neighbors" ? `<p>把前后相邻的原文按显示顺序接在一起，作为一个更大的检索单位编码；补入部分仍保留各自片段 ID。</p>` : s.context === "api" ? `<p>让所配置的生成模型同时读整份材料和这一片段，写一两句说明，拼在片段之前再编码（据 Anthropic“Introducing Contextual Retrieval”，2024-09-19）。</p><pre class="trace">${E(plan.prompt)}</pre>` : `<p>把窗口内各段一次送入 MiniLM，取每个词元带上下文的向量，再只对目标片段的词元求平均（据 Günther 等，arXiv:2409.04701 的思路；MiniLM 窗口仅 512 词元，不是论文长上下文模型的复现）。</p>`) + (res?.late ? table(["段", "词元范围"], res.late.ranges.map((x, i) => [E(plan.window[i]?.id), `[${x.start},${x.end})`])) : "")],
+            ["补写／编码", `<p><b>${E(METHOD[s.context])}</b></p>` + (s.context === "metadata" ? `<p>把所选字段按“；”连成一行，放在片段原文之前，再整体编码。</p>` : s.context === "neighbors" ? `<p>把前后相邻的原文按显示顺序接在一起，作为一个更大的检索单位编码；补入部分仍保留各自片段 ID。</p>` : s.context === "api" ? `<p>让所配置的生成模型同时读整份材料和这一片段，写一两句说明，拼在片段之前再编码（据 Anthropic“Introducing Contextual Retrieval”，2024-09-19）。</p><p class="caption">本次发送 ${plan.wholeChars} 字（${plan.whole.length} 段）${plan.windowed ? `；全文 ${plan.totalChars} 字过长，只取目标前后约 6000 字` : "；即整份材料"}。等待时间主要来自：模型读这些字并逐字生成（启用流式，状态栏实时显示）；首次还要下载约 118 MB 的 MiniLM 再编码。同一片段、同一设置再次执行时复用上次补写，不重复调用。</p>${res?.timing ? `<p class="caption">本次用时：${res.timing.cached ? "补写复用上次结果" : `模型 ${number(res.timing.generate || 0)} 秒（首字 ${number(res.timing.firstToken || 0)} 秒）`}；编码 ${number(res.timing.encode || 0)} 秒。</p>` : ""}<pre class="trace">${E(plan.prompt)}</pre>` : `<p>把窗口内各段一次送入 MiniLM，取每个词元带上下文的向量，再只对目标片段的词元求平均（据 Günther 等，arXiv:2409.04701 的思路；MiniLM 窗口仅 512 词元，不是论文长上下文模型的复现）。</p>`) + (res?.late ? table(["段", "词元范围"], res.late.ranges.map((x, i) => [E(plan.window[i]?.id), `[${x.start},${x.end})`])) : "")],
             ["片段与表示", res?.example ? `<p>已跑好的补写（未在本页编码）：</p><blockquote>${E(res.composed)}</blockquote><p class="caption">要比较向量与余弦，请配置模型后点“执行当前方法”。</p>` : res ? `<p>实际进入编码的文本：</p><blockquote>${E(res.composed || plan.target?.text)}</blockquote>${table(["表示", "向量前5维"], [["原片段单独编码", res.plain.slice(0, 5).map(number).join(",") + " …"], [E(METHOD[s.context]), res.ctx.slice(0, 5).map(number).join(",") + " …"]])}` : `<p>拟编码文本（执行后显示实际向量）：</p><blockquote>${E(plan.composed ?? plan.target?.text)}</blockquote>`],
             ["查询与原页", `${input("query", s.query, "检索问题")}${res && !res.example ? table(["比较", "余弦"], [["问题 · 原片段", number(res.cosPlain)], ["问题 · " + E(METHOD[s.context]), number(res.cosCtx)]]) + `<p class="caption">两项都是本次在浏览器内实际计算；余弦只表示向量更近，不表示依据更可靠。</p>` : "<p>执行后在这里对照：同一问题与“原片段”“加上下文后”的余弦。</p>"}<p>引用仍回到原片段：${E(plan.target?.locator)}；核读状态：${E(plan.target?.verification || "待核")}。</p>${plan.target ? `<button data-reader="${E(plan.target.id)}">打开原页</button>` : ""}`],
           ];
@@ -600,10 +653,10 @@
             bLabel = PAIRS[s.pair][1];
             bVersion = PAIRS[s.pair][1];
           }
-          const h = a && b ? M.minhash(a.text, b.text, s.permutations) : null, th = +s.threshold;
+          const h = a && b ? M.minhash(a.text, b.text, s.permutations) : null, th = +(s.dupThreshold ?? 0.9);
           const strip = (t) => [...t.replace(/[\p{P}\p{Z}\s\[\]0-9]/gu, "")].slice(0, 220).join("");
           const diff = a && b ? S.A.editSteps(strip(a.text), strip(b.text)).path.filter((x) => x.operation !== "保持") : [];
-          html = `<nav class="revision-tabs">${[["shide", "《史德》：影印本 ↔ 维基文库"], ["acton", "阿克顿：1911重印本 ↔ Gutenberg"], ["ogai", "森鴎外：筑摩1964 ↔ 青空文库"], ["custom", "自选两段"]].map(([k, l]) => `<button data-set="pair" data-v="${k}" class="${s.pair === k ? "on" : ""}">${E(l)}</button>`).join("")}</nav>` + (s.pair === "custom" ? sel : "") + this.flow([["两个版本的文本", s.pair === "custom" ? `<label>候选A<select data-k="docA">${this.records().map((r2) => `<option value="${r2.id}" ${a?.id === r2.id ? "selected" : ""}>${E(r2.id + " " + r2.text.slice(0, 24))}</option>`).join("")}</select></label><label>候选B<select data-k="docB">${this.records().map((r2) => `<option value="${r2.id}" ${b?.id === r2.id ? "selected" : ""}>${E(r2.id + " " + r2.text.slice(0, 24))}</option>`).join("")}</select></label>` + (a ? quote(a) + quote(b) : "") : (a ? quote(a) : "") + (b ? `<article class="source-excerpt"><small>${E(bLabel)} · ${E(b.locator)}</small><p>${E(b.text)}</p></article>` : "<p>正在读取电子文本…</p>")], ["MinHash 实际计算", h ? slider("permutations", s.permutations, "随机排列次数", 16, 256, 16) + table(["排列", "A最小", "B最小", "相同"], h.pairs.slice(0, 10).map((x, i) => [i + 1, E(x.a), E(x.b), x.hit ? "是" : "否"])) + `<p>字二元组精确 J = <b>${number(h.exact)}</b>；最小哈希估计 = ${h.hits}/${h.count} = ${number(h.estimate)}</p>` : ""], ["两本差在哪里", diff.length ? `<p>去掉标点、空白与页码标记后，前220字内的逐字差异（编辑距离路径）：共${diff.length}处</p>` + table(["操作", "A", "B"], diff.slice(0, 24).map((x) => [x.operation, E(x.from || "∅"), E(x.to || "∅")])) : "<p>两段去标点后逐字相同。</p>"], ["去重之前先看版本", slider("threshold", th, "近似重复阈值（Manning 等例为0.9）", 0.5, 1, 0.01) + (h ? `<p class="verdict ${h.exact >= th ? "dup" : ""}">按阈值，机器${h.exact >= th ? "会把两段判为近似重复，只留一段" : "不会把两段当作重复"}。</p>` : "") + table(["", "A", "B"], [["版本", E(this.sources().find((m) => m.id === a?.source)?.edition || all.length && S.corpus.sources().find((m) => m.id === a?.source)?.edition), E(bVersion)], ["定位", E(a?.locator), E(b?.locator)], ["核读", E(a?.verification), E(b?.verification)]]) + tabs("decision", s.decision || "", [["keep", "两版都保留（差异是研究对象）"], ["merge", "合并为一条，注明另一版本"], ["drop", "删去副本"]]) + area("report", s.report, "写下决定的理由", 3)]]);
+          html = `<nav class="revision-tabs">${[["shide", "《史德》：影印本 ↔ 维基文库"], ["acton", "阿克顿：1911重印本 ↔ Gutenberg"], ["ogai", "森鴎外：筑摩1964 ↔ 青空文库"], ["custom", "自选两段"]].map(([k, l]) => `<button data-set="pair" data-v="${k}" class="${s.pair === k ? "on" : ""}">${E(l)}</button>`).join("")}</nav>` + (s.pair === "custom" ? sel : "") + this.flow([["两个版本的文本", s.pair === "custom" ? `<label>候选A<select data-k="docA">${this.records().map((r2) => `<option value="${r2.id}" ${a?.id === r2.id ? "selected" : ""}>${E(r2.id + " " + r2.text.slice(0, 24))}</option>`).join("")}</select></label><label>候选B<select data-k="docB">${this.records().map((r2) => `<option value="${r2.id}" ${b?.id === r2.id ? "selected" : ""}>${E(r2.id + " " + r2.text.slice(0, 24))}</option>`).join("")}</select></label>` + (a ? quote(a) + quote(b) : "") : (a ? quote(a) : "") + (b ? `<article class="source-excerpt"><small>${E(bLabel)} · ${E(b.locator)}</small><p>${E(b.text)}</p></article>` : "<p>正在读取电子文本…</p>")], ["MinHash 实际计算", h ? slider("permutations", s.permutations, "随机排列次数", 16, 256, 16) + table(["排列", "A最小", "B最小", "相同"], h.pairs.slice(0, 10).map((x, i) => [i + 1, E(x.a), E(x.b), x.hit ? "是" : "否"])) + `<p>字二元组精确 J = <b>${number(h.exact)}</b>；最小哈希估计 = ${h.hits}/${h.count} = ${number(h.estimate)}</p>` : ""], ["两本差在哪里", diff.length ? `<p>去掉标点、空白与页码标记后，前220字内的逐字差异（编辑距离路径）：共${diff.length}处</p>` + table(["操作", "A", "B"], diff.slice(0, 24).map((x) => [x.operation, E(x.from || "∅"), E(x.to || "∅")])) : "<p>两段去标点后逐字相同。</p>"], ["去重之前先看版本", slider("dupThreshold", th, "近似重复阈值（Manning 等例为0.9）", 0.5, 1, 0.01) + (h ? `<p class="verdict ${h.exact >= th ? "dup" : ""}">按阈值，机器${h.exact >= th ? "会把两段判为近似重复，只留一段" : "不会把两段当作重复"}。</p>` : "") + table(["", "A", "B"], [["版本", E(this.sources().find((m) => m.id === a?.source)?.edition || all.length && S.corpus.sources().find((m) => m.id === a?.source)?.edition), E(bVersion)], ["定位", E(a?.locator), E(b?.locator)], ["核读", E(a?.verification), E(b?.verification)]]) + tabs("decision", s.decision || "", [["keep", "两版都保留（差异是研究对象）"], ["merge", "合并为一条，注明另一版本"], ["drop", "删去副本"]]) + area("report", s.report, "写下决定的理由", 3)]]);
           break;
         }
         case "D15":
@@ -673,6 +726,11 @@
       this.querySelectorAll("[data-prompt]").forEach((el) => el.onchange = () => {
         this.s.prompts = { ...this.s.prompts || {}, [this.s.task]: el.value };
         this.save();
+      });
+      this.querySelectorAll("tr[data-chunk]").forEach((tr) => tr.onclick = () => {
+        this.s.chunkFocus = +tr.dataset.chunk === +(this.s.chunkFocus ?? -1) ? -1 : +tr.dataset.chunk;
+        this.save();
+        this.querySelector(".ribbon .focus")?.scrollIntoView({ block: "nearest" });
       });
       this.querySelectorAll("[data-meta]").forEach((el) => el.onchange = () => {
         this.s.metaFields = [...this.querySelectorAll("[data-meta]:checked")].map((x) => x.dataset.meta);
@@ -1061,17 +1119,33 @@
         if (name === "context") {
           const plan = this.contextPlan();
           if (!plan.target) throw Error("先选择单一材料的片段，不把不同作者的全文混作邻段");
-          let composed = plan.composed, late = null, run = null, ctx;
+          let composed = plan.composed, late = null, run = null, ctx, tGen = 0;
+          const timing = {};
           if (s.context === "api") {
-            run = await S.generate(plan.prompt, plan.whole, "为片段 " + plan.target.id + " 写检索用的上下文说明", { allowCloud: s.cloud });
+            const key = JSON.stringify([plan.target.id, plan.whole.map((x) => x.id), plan.prompt, window.W5Chat?.settings?.().model]);
+            if (this.contextCache?.key === key) {
+              run = this.contextCache.run;
+              timing.cached = true;
+            } else {
+              const t0 = performance.now();
+              let shown = 0;
+              this.message = `① 已把 ${plan.wholeChars} 字原文（${plan.whole.length} 段）与目标片段发给模型，等待首个字……`;
+              this.render();
+              run = await S.generate(plan.prompt, plan.whole, "为片段 " + plan.target.id + " 写检索用的上下文说明", { allowCloud: s.cloud, maxTokens: 300, onDelta: (t) => { if (!shown) timing.firstToken = (performance.now() - t0) / 1000; shown = t.length; this.message = `① 模型正在写（首字用时 ${number(timing.firstToken)} 秒）：${t.slice(-80)}`; this.render(); } });
+              tGen = (performance.now() - t0) / 1000;
+              timing.generate = tGen;
+              this.contextCache = { key, run };
+            }
             composed = run.output.trim() + "\n" + plan.target.text;
           }
-          const [q, plain] = await S.embedding.encode([s.query, plan.target.text], (m) => { this.message = m; this.render(); });
+          const t1 = performance.now();
+          const [q, plain] = await S.embedding.encode([s.query, plan.target.text], (m) => { this.message = "② " + m; this.render(); });
           if (s.context === "late") {
             late = await S.embedding.late(plan.window.map((x) => x.text));
             ctx = late.ranges[plan.before.length].vector;
           } else ctx = (await S.embedding.encode([composed]))[0];
-          this.result = { method: s.context, target: plan.target.id, composed, late, run, output: run?.output, plain, ctx, cosPlain: S.A.cosine(q, plain), cosCtx: S.A.cosine(q, ctx), mode: "浏览器内实际编码" + (run ? "；补写为实际API调用" : "") };
+          timing.encode = (performance.now() - t1) / 1000;
+          this.result = { method: s.context, target: plan.target.id, composed, late, run, output: run?.output, plain, ctx, cosPlain: S.A.cosine(q, plain), cosCtx: S.A.cosine(q, ctx), timing, sentChars: s.context === "api" ? plan.wholeChars : 0, mode: "浏览器内实际编码" + (run ? "；补写为实际API调用" : "") };
           this.s.flowNode = 3;
         }
         if (name === "representation") {
@@ -1217,4 +1291,37 @@ ${r.text}`).join("\n") || "本库没有命中字词" });
     return rs.map((r) => `<p><b>${E(r.id)}</b> ${E(r.title)}<br><small>${E(r.locator)}</small></p>`).join("");
   }
   D.register("revision-lab", RevisionLab);
+  // 模型接入页中的嵌入模型状态：载入程序库 → 检查下载地址 → 下载权重（逐文件进度）→ 就绪／失败。
+  class EmbeddingStatus extends HTMLElement {
+    connectedCallback() {
+      this.onState = (e) => this.render(e.detail);
+      window.addEventListener("week05-embedding-state", this.onState);
+      this.addEventListener("click", async (e) => {
+        const b = e.target.closest("[data-emb]");
+        if (!b) return;
+        const S2 = await window.W5ServicesReady;
+        if (b.dataset.emb === "load") S2.embedding.load().catch(() => {});
+        if (b.dataset.emb === "retry") { S2.embedding.reset(); S2.embedding.load().catch(() => {}); }
+      });
+      this.addEventListener("change", async (e) => {
+        if (!e.target.matches("[data-emb-host]")) return;
+        const S2 = await window.W5ServicesReady;
+        S2.embedding.setHost(e.target.value);
+      });
+      this.render(window.W5EmbeddingState || { phase: "idle", message: "尚未加载", files: {} });
+    }
+    disconnectedCallback() {
+      window.removeEventListener("week05-embedding-state", this.onState);
+    }
+    render(st) {
+      const files = Object.entries(st.files || {}), total = files.reduce((n, [, f]) => n + (f.total || 0), 0), loaded = files.reduce((n, [, f]) => n + (f.loaded || 0), 0), pct = st.phase === "ready" ? 100 : total ? Math.round((loaded / total) * 100) : 0;
+      const label = { idle: "未加载", library: "载入程序库", host: "检查下载地址", downloading: "取得模型文件", ready: "已就绪", error: "加载失败" }[st.phase] || st.phase;
+      const mb = (x) => (x / 1048576).toFixed(1);
+      let host = "";
+      try { host = localStorage.getItem("week05/v3/embeddingHost") || ""; } catch {}
+      const busy = ["library", "host", "downloading"].includes(st.phase);
+      this.innerHTML = `<div class="emb-status emb-${E(st.phase)}"><div class="emb-head"><b>${E(label)}</b><span>${E(st.phase === "downloading" && total ? `${pct}%　${mb(loaded)} / ${mb(total)} MB` : "")}</span></div><div class="emb-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="width:${busy || st.phase === "ready" ? pct || (busy ? 4 : 0) : 0}%"></i></div><p role="status">${E(st.message || "")}</p>${files.length ? `<table class="kv emb-files"><thead><tr><th>文件</th><th>大小</th><th>状态</th></tr></thead><tbody>${files.map(([n, f]) => `<tr><td>${E(n)}</td><td>${f.total ? mb(f.loaded || 0) + " / " + mb(f.total) + " MB" : "—"}</td><td>${E({ initiate: "开始", download: "下载中", progress: "下载中", done: "完成", ready: "就绪" }[f.status] || f.status || "")}</td></tr>`).join("")}</tbody></table>` : ""}<div class="emb-actions"><button data-emb="load" ${busy ? "disabled" : ""}>${st.phase === "ready" ? "检查嵌入模型" : "加载嵌入模型"}</button>${st.phase === "error" ? '<button data-emb="retry">重试</button>' : ""}<label>权重来源<select data-emb-host ${busy ? "disabled" : ""}><option value="" ${host ? "" : "selected"}>自动（先 huggingface.co，不通则 hf-mirror.com）</option><option value="https://huggingface.co/" ${host === "https://huggingface.co/" ? "selected" : ""}>huggingface.co</option><option value="https://hf-mirror.com/" ${host === "https://hf-mirror.com/" ? "selected" : ""}>hf-mirror.com（国内镜像）</option></select></label></div><p class="caption">程序库先从本站载入，失败时改用 jsDelivr；权重约 118 MB，只下载一次，之后从浏览器缓存读取。各页“实时编码”与这里共用同一个模型。</p></div>`;
+    }
+  }
+  customElements.get("embedding-status") || customElements.define("embedding-status", EmbeddingStatus);
 })();

@@ -155,31 +155,124 @@ const corpus = {
 const sha256 = async (value) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(value))))].map((b) => b.toString(16).padStart(2, "0")).join("");
 const model = "Xenova/paraphrase-multilingual-MiniLM-L12-v2", revision = "2c4055b12046f11709e9df2c122e59ffbdc2f900";
 let extractorPromise = null;
+// 嵌入模型的加载状态：模型接入页与各演示页共用。程序库与权重各有备用来源，失败时写明原因。
+const LIB_SOURCES = [["本站", new URL("../vendor/transformers/", import.meta.url).href], ["jsDelivr", "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/"]];
+const MODEL_HOSTS = [["huggingface.co", "https://huggingface.co/"], ["hf-mirror.com（国内镜像）", "https://hf-mirror.com/"]];
+const HOST_KEY = "week05/v3/embeddingHost";
+const embState = { phase: "idle", message: "尚未加载", lib: "", host: "", files: {}, error: "", startedAt: 0, readyAt: 0, downloaded: false };
+let stateTimer = null;
+function setEmb(patch, now = false) {
+  Object.assign(embState, patch);
+  window.W5EmbeddingState = embState;
+  const fire = () => {
+    stateTimer = null;
+    window.dispatchEvent(new CustomEvent("week05-embedding-state", { detail: structuredClone(embState) }));
+  };
+  if (now) {
+    clearTimeout(stateTimer);
+    fire();
+  } else stateTimer ??= setTimeout(fire, 200);
+}
+function embSummary() {
+  const fs = Object.values(embState.files), total = fs.reduce((n, f) => n + (f.total || 0), 0), loaded = fs.reduce((n, f) => n + (f.loaded || 0), 0);
+  return { total, loaded, percent: total ? Math.round((loaded / total) * 100) : 0 };
+}
+function embMessage() {
+  if (embState.phase === "downloading") {
+    const x = embSummary();
+    return x.total ? `下载 MiniLM 权重 ${x.percent}%（${(x.loaded / 1048576).toFixed(1)} / ${(x.total / 1048576).toFixed(1)} MB，来源 ${embState.host}）` : `正在连接 ${embState.host}…`;
+  }
+  return embState.message;
+}
+const withTimeout = (promise, ms, label) => Promise.race([promise, new Promise((_, rej) => setTimeout(() => rej(Error(label + "超时")), ms))]);
+async function importLibrary() {
+  const errors = [];
+  for (const [name, base] of LIB_SOURCES) {
+    try {
+      // 失败过的同一地址会被浏览器缓存为失败，重试时带上次数参数。
+      const mod = await withTimeout(import(base + "transformers.min.js" + (embState.attempt ? "?retry=" + embState.attempt : "")), 60000, "载入程序库");
+      return { mod, name, base };
+    } catch (e) {
+      errors.push(`${name}：${e.message}`);
+    }
+  }
+  throw Error("嵌入程序库（transformers.js）载入失败。" + errors.join("；") + "。请检查网络后点“重试”。");
+}
+async function pickHost() {
+  let saved = "";
+  try { saved = localStorage.getItem(HOST_KEY) || ""; } catch {}
+  const hosts = saved ? MODEL_HOSTS.filter(([, h]) => h === saved).concat(MODEL_HOSTS.filter(([, h]) => h !== saved)) : MODEL_HOSTS, errors = [];
+  for (const [name, host] of hosts) {
+    try {
+      const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 8000);
+      const r = await fetch(`${host}${model}/resolve/${revision}/config.json`, { signal: ctl.signal, cache: "no-store" });
+      clearTimeout(t);
+      if (r.ok) return { name, host };
+      errors.push(`${name} 返回 ${r.status}`);
+    } catch (e) {
+      errors.push(`${name} 无法连接`);
+    }
+  }
+  throw Error("模型权重的下载地址都无法连接（" + errors.join("；") + "）。预存向量与结果仍可使用。");
+}
 const embedding = {
   model,
   revision,
+  state: () => structuredClone(embState),
+  setHost(host) {
+    try { host ? localStorage.setItem(HOST_KEY, host) : localStorage.removeItem(HOST_KEY); } catch {}
+    if (embState.phase !== "ready") this.reset();
+  },
+  reset() {
+    extractorPromise = null;
+    setEmb({ phase: "idle", message: "尚未加载", files: {}, error: "" }, true);
+  },
   async load(onProgress = () => {
   }) {
     if (!extractorPromise) {
       extractorPromise = (async () => {
-        const { pipeline, env } = await import("../vendor/transformers/transformers.min.js");
+        setEmb({ phase: "library", message: "正在载入嵌入程序库（transformers.js 3.8.1，约 0.9 MB）…", error: "", files: {}, startedAt: performance.now(), readyAt: 0, downloaded: false, attempt: (embState.attempt || 0) + 1 }, true);
+        onProgress(embState.message);
+        const { mod, name, base } = await importLibrary(), { pipeline, env } = mod;
         env.backends.onnx.wasm.numThreads = 1;
-        env.backends.onnx.wasm.wasmPaths = new URL("../vendor/transformers/", import.meta.url).href;
-        let local = await fetch("/models/" + model + "/config.json").then((r) => r.ok).catch(() => false);
+        env.backends.onnx.wasm.wasmPaths = base;
+        setEmb({ phase: "host", lib: name, message: "程序库已载入（" + name + "）；正在检查模型权重的下载地址…" }, true);
+        onProgress(embState.message);
+        let local = location.hostname === "localhost" || location.hostname === "127.0.0.1" ? await fetch("/models/" + model + "/config.json").then((r) => r.ok).catch(() => false) : false;
         env.allowLocalModels = local;
         env.allowRemoteModels = !local;
         env.localModelPath = new URL("/models/", location.origin).href;
-        let lastMessage = "", lastProgressAt = 0;
-        const reportProgress = (p) => {
-          const message = `${p.status} ${p.file || ""} ${Math.round(p.progress || 0)}%`, now = performance.now();
-          if (message === lastMessage || p.status === "progress" && now - lastProgressAt < 250) return;
-          lastMessage = message;
-          lastProgressAt = now;
-          onProgress(message);
+        if (!local) {
+          const { name: hostName, host } = await pickHost();
+          env.remoteHost = host;
+          env.remotePathTemplate = "{model}/resolve/{revision}/";
+          setEmb({ host: hostName });
+        } else setEmb({ host: "本机模型目录" });
+        setEmb({ phase: "downloading", message: "正在取得模型文件（已下载过的从浏览器缓存读取）…" }, true);
+        let lastAt = 0;
+        const progress = (p) => {
+          const f = p.file ? (embState.files[p.file] ||= { loaded: 0, total: 0, status: "" }) : null;
+          if (f) {
+            f.status = p.status;
+            if (p.loaded != null) f.loaded = p.loaded;
+            if (p.total) f.total = p.total;
+            if (p.status === "done" && f.total) f.loaded = f.total;
+            if (p.status === "progress") embState.downloaded = true;
+          }
+          setEmb({});
+          const now = performance.now();
+          if (now - lastAt > 300 || p.status === "done") {
+            lastAt = now;
+            onProgress(embMessage());
+          }
         };
-        return pipeline("feature-extraction", model, { revision, dtype: "q8", device: "wasm", progress_callback: reportProgress });
+        const pipe = await pipeline("feature-extraction", model, { revision, dtype: "q8", device: "wasm", progress_callback: progress });
+        setEmb({ phase: "ready", readyAt: performance.now(), message: `MiniLM 已就绪（${embState.downloaded ? "本次下载" : "浏览器缓存"}；来源 ${embState.host}；程序库 ${embState.lib}；用时 ${((performance.now() - embState.startedAt) / 1000).toFixed(1)} 秒）` }, true);
+        onProgress(embState.message);
+        return pipe;
       })().catch((e) => {
         extractorPromise = null;
+        setEmb({ phase: "error", error: e.message, message: "加载失败：" + e.message }, true);
         throw e;
       });
     }
@@ -232,13 +325,13 @@ window.addEventListener("message", async (e) => {
     }
   }
 });
-async function generate(task, records, question, { allowCloud = false, onDelta } = {}) {
+async function generate(task, records, question, { allowCloud = false, onDelta, maxTokens = 2048 } = {}) {
   if (!window.W5Chat?.ready()) throw Error("请先用右上角共用“模型接入”配置真实生成模型");
   assertCloudPermission(records, allowCloud);
   const input = records.map((r) => `[${r.id}] ${r.author} ${r.title} ${r.locator}
 ${r.text}`).join("\n\n");
   let messages = [{ role: "system", content: task }, { role: "user", content: question + "\n\n" + input }];
-  let result = await window.W5Chat.chat(messages, { maxTokens: 2048, onDelta });
+  let result = await window.W5Chat.chat(messages, { maxTokens, onDelta });
   let run = { id: "run-" + crypto.randomUUID(), time: (/* @__PURE__ */ new Date()).toISOString(), mode: "实际API运行", model: result.model, sourceIds: records.map((r) => r.id), corpusSHA256: await sha256(records), input: messages, output: result.text, seconds: result.seconds, usage: result.usage };
   await corpus.saveRun(run);
   return run;
@@ -268,7 +361,8 @@ function sparse(query, records, { tfidf = false } = {}) {
 }
 const prepared = await fetch(new URL("precomputed.json", import.meta.url)).then((r) => r.json());
 const preparedAPI = await fetch(new URL("api-examples.json", import.meta.url)).then((r) => r.ok ? r.json() : { results: [] });
-window.addEventListener("week05-load-embedding", () => embedding.load((msg) => window.dispatchEvent(new CustomEvent("week05-embedding-progress", { detail: msg }))).then(() => window.dispatchEvent(new CustomEvent("week05-embedding-progress", { detail: "实际浏览器模型已加载" }))).catch((e) => window.dispatchEvent(new CustomEvent("week05-embedding-progress", { detail: e.message }))));
+window.addEventListener("week05-load-embedding", () => embedding.load((msg) => window.dispatchEvent(new CustomEvent("week05-embedding-progress", { detail: msg }))).catch(() => {}));
+setEmb({}, true);
 export {
   A,
   corpus,

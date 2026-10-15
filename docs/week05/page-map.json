@@ -164,55 +164,31 @@
     "id": "D06",
     "section": "1.2",
     "anchor": "fig-breakpoint",
-    "title": "断点式语义切分",
+    "title": "语义切分：断点、聚类与研究结论",
     "layout": "flow4",
     "theme": "light",
-    "minutes": 3,
+    "minutes": 5,
     "transition": "不依赖格式标记时，可以按相邻两句的距离找话题转换处。",
-    "question": "阈值决定在哪里切开，它找到的就是话题边界吗？",
+    "question": "按意思切，切点落在哪里？它一定更好吗？",
     "steps": [
       "句子",
       "相邻距离",
       "阈值",
       "切块"
     ],
-    "student_operation": "拖动阈值 θ，看切点数量与块的变化。",
-    "observable_output": "d_i > θ 处切开；距离为教学示意。",
-    "lesson_evidence": "讲义 @fig-breakpoint 与公式 d_i = 1 − cos(e_i, e_{i+1})。",
-    "mode": "本机实际预计算（MiniLM，2026-10-14）／浏览器实时重算",
+    "student_operation": "先拖动阈值看断点切分，再看八种做法在同一材料上的块数与切点，最后读论文原图与结论。",
+    "observable_output": "每句向量与相邻距离、实际切块；八种做法的对照；Qu 等论文 Figure 1、Table 1（Miracl 69.45→81.89；HotpotQA 90.59 对 87.37）。",
+    "lesson_evidence": "讲义 @fig-breakpoint 与公式 d_i = 1 − cos(e_i, e_{i+1})。；Qu, Tu, Bao arXiv:2410.13070；Kreileder 等 arXiv:2607.01852。",
+    "mode": "本机实际预计算（MiniLM）／浏览器实时重算；论文原图",
     "notes": {
-      "purpose": "理解断点法的机制与阈值的作用。",
-      "guide": "把 θ 从 0.2 拉到 0.6，问：切点减少时，哪两句被放在了一起？",
-      "mechanism": "阈值可以是固定值或全部距离的百分位；页面数值沿用讲义示意。"
+      "purpose": "理解断点法的机制与阈值的作用，并把“按意思切不一定更好”说具体。",
+      "guide": "先把 θ 从 0.2 拉到 0.6；再到“八种做法总览”看块数差别；最后请学生先猜哪组数据上语义切分占优，再看论文表 1。",
+      "mechanism": "阈值可为固定值或全部距离的统计量；拼接数据的话题突变正是断点法最容易捕捉的地方。原 D07 并入本页，旧链接 #D07 自动跳到 D06。"
     },
-    "footer": "D06 / 讲义 1.2；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
+    "footer": "D06 / 讲义 1.2（原 D07 并入本页）；运行性质见本页。",
     "concepts": [
       "语义切分"
     ],
-    "status": "implemented",
-    "component": "revision-lab"
-  },
-  {
-    "id": "D07",
-    "section": "1.2",
-    "anchor": "Qu 等 2024；Kreileder 等 2026",
-    "title": "按意思切，一定更好吗",
-    "layout": "diagram",
-    "theme": "light",
-    "minutes": 2,
-    "transition": "直觉上按意思切更好；看看研究实际比较出了什么。",
-    "question": "语义切分在什么材料上占优？",
-    "student_operation": "先看八种做法在森鴎外开篇上的块数与切点，再切到史料试跑或论文原图。",
-    "observable_output": "Miracl 69.45→81.89；HotpotQA 90.59 对 87.37；英文数据、英文模型。",
-    "lesson_evidence": "Qu, Tu, Bao arXiv:2410.13070 实验部分；Kreileder 等 arXiv:2607.01852 结论。",
-    "mode": "本机实际预计算（MiniLM）／浏览器实时；论文原图",
-    "notes": {
-      "purpose": "把“依赖情境”说具体。",
-      "guide": "请学生先猜哪组占优，再看两组数字。",
-      "mechanism": "拼接处话题突变，正是断点法最容易捕捉的地方；后一项研究规模小，只作旁证。"
-    },
-    "footer": "D07 / 讲义 1.2；教师PDF局部工作转写或自行导入材料；运行性质见本页。",
-    "concepts": [],
     "status": "implemented",
     "component": "revision-lab"
   },
