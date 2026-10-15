@@ -224,8 +224,8 @@ window.W5_CHAPTERS = {
               ]
             ],
             "paper": {
-              "en": "These agents leverage agentic design patterns reflection, planning, tool use, and multi-agent collaboration to dynamically manage retrieval strategies, iteratively refine contextual understanding, and adapt workflows.",
-              "zh": "这些智能体运用反思、规划、工具使用与多智能体协作等智能体设计模式，动态管理检索策略，迭代地深化对上下文的理解，并调整工作流程。",
+              "en": "These agents leverage agentic design patterns reflection, planning, tool use, and multi-agent collaboration to dynamically manage retrieval strategies, iteratively refine contextual understanding, and adapt workflows through operational structures ranging from sequential steps to adaptive collaboration.",
+              "zh": "这些智能体运用反思、规划、工具使用与多智能体协作等智能体设计模式，动态管理检索策略，迭代地深化对上下文的理解，并通过从顺序步骤到自适应协作的各种运作结构来调整工作流程。",
               "cite": "Singh 等，arXiv:2501.09136v4，摘要",
               "note": "原文“design patterns”与所列四项之间没有标点，照录。D22 的“工具调用路径”只演示其中的工具使用一项。"
             }
@@ -457,8 +457,8 @@ window.W5_CHAPTERS = {
           }
         ],
         "paper": {
-          "en": "In this view of a document, known in the literature as the bag of words model, the exact ordering of the terms in a document is ignored but the number of occurrences of each term is material.",
-          "zh": "在这种看待文档的方式（文献中称为词袋模型）下，词项在文档中的确切顺序被忽略，但每个词项出现的次数是要紧的。",
+          "en": "In this view of a document, known in the literature as the bag of words model, the exact ordering of the terms in a document is ignored but the number of occurrences of each term is material (in contrast to Boolean retrieval).",
+          "zh": "在这种看待文档的方式（文献中称为词袋模型）下，词项在文档中的确切顺序被忽略，但每个词项出现的次数是要紧的（这与布尔检索不同）。",
           "cite": "Manning、Raghavan、Schütze，Introduction to Information Retrieval，剑桥大学出版社 2008，§6.2 在线版",
           "note": "同节举例：“Mary is quicker than John”与“John is quicker than Mary”在词袋看来完全相同。稀疏表示由此得名：向量长度等于词表大小，大多数分量为零。"
         }
