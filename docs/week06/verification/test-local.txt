@@ -1,0 +1,54 @@
+$ node --test tests/*.test.mjs
+✔ F01 saved NDL line counts and original TYPE (0.789291ms)
+✔ F02 column label and page number remain original OCR (0.051208ms)
+✔ F03 confidence and bbox of semantic error (0.054084ms)
+✔ F04 lowest-confidence lines (0.064375ms)
+✔ F05 same-page variant outputs (0.0455ms)
+✔ F06 text vs unrecognized blocks are not conflated (0.075875ms)
+✔ F07 saved 良/艮 example (0.032ms)
+✖ F08 actual shared NDL character inventory (3.670625ms)
+✔ F09 115-character alignment with editable mapping (1.578084ms)
+✔ F10 CTC merge before blank deletion (0.1435ms)
+✔ F11 Gardella quoted median and mean (0.0495ms)
+✔ F12 PureDocBench reported changes (0.02875ms)
+✔ F13 Sasagawa synthetic orientation comparison (0.020583ms)
+✔ F14 HIPE source figures (0.022416ms)
+✔ F15 eight interference groups cover each original number exactly once (0.036792ms)
+✔ F16 page map minutes, pages, concepts (1.474083ms)
+✔ adapters preserve null text, XML hierarchy and Unicode entities (0.263292ms)
+✔ NDLLite must not label detector score as recognition confidence (0.103458ms)
+✔ PP, Florence, dots and invalid MLLM retain raw output (0.260625ms)
+✔ PAGE-XML preserves polygon baseline text and confidence (0.269333ms)
+✔ XY cutting uses actual whitespace and direction (0.18075ms)
+✔ CER codepoints, NFC, S/D/I, denominator, line order (0.171916ms)
+✔ Otsu, manual threshold and geometry are immutable (0.164833ms)
+✔ schema validation and max IoU matching (0.796584ms)
+✔ seven dependent stages reject mutation and corrupt restore (2.674292ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 24
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 53.706666
+
+✖ failing tests:
+
+test at tests/ocr.test.mjs:16:1
+✖ F08 actual shared NDL character inventory (3.670625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  7141 !== 7143
+
+      at TestContext.<anonymous> (file:///Users/liyuanzhen/Desktop/2026%E5%B9%B4%E7%A7%8B%E5%AD%A3%E5%AD%A6%E6%9C%9F/%E3%80%8A%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E8%B5%8B%E8%83%BD%E5%8E%86%E5%8F%B2%E7%A0%94%E7%A9%B6%E4%B8%8E%E5%86%99%E4%BD%9C%E3%80%8B%E8%AF%BE%E7%A8%8B%E6%9D%90%E6%96%99/pku-aihis/apps/week06/tests/ocr.test.mjs:16:284)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 7141,
+    expected: 7143,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+[ELIFECYCLE] Test failed. See above for more details.

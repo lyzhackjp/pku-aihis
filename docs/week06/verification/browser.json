@@ -1,0 +1,548 @@
+{
+  "date": "2026-10-18T03:40:24.819Z",
+  "checks": [
+    {
+      "name": "public material control loads real source image",
+      "result": "passed"
+    },
+    {
+      "name": "CTC and typing focus",
+      "result": "passed"
+    },
+    {
+      "name": "through / concepts return and first-slide backlinks",
+      "result": "passed"
+    },
+    {
+      "name": "presenter bidirectional synchronization",
+      "result": "passed"
+    },
+    {
+      "name": "persisted checklist and conventions survive refresh",
+      "result": "passed"
+    },
+    {
+      "name": "CER mapping, matrix and immutable typed inputs",
+      "result": "passed"
+    },
+    {
+      "name": "transform and binarization preserve source identity as parent",
+      "result": "passed"
+    },
+    {
+      "name": "offline dots status and saved-record import remain available",
+      "result": "passed"
+    },
+    {
+      "name": "manual layout annotation, keyboard regions and overlay synchronization",
+      "result": "passed"
+    },
+    {
+      "name": "undownloaded and failed model state (no model bytes loaded)",
+      "result": "passed"
+    },
+    {
+      "name": "export, valid restore, corrupt-file preservation",
+      "result": "passed"
+    },
+    {
+      "name": "API key stays in memory and no call before consent",
+      "result": "passed"
+    },
+    {
+      "name": "local saved XML: D01 D03 D05 D09 D20 and locked original",
+      "result": "passed"
+    },
+    {
+      "name": "all pages fit both viewport widths",
+      "result": "passed"
+    }
+  ],
+  "pages": [
+    {
+      "id": "D00",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D01",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D02",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D03",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D04",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D05",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D06",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D07",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D08",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D09",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D10",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D11",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D12",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D13",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D14",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D15",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D16",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D17",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D18",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D19",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D20",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D21",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D22",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D23",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D24",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D25",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D00",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D01",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D02",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D03",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D04",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D05",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D06",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D07",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D08",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D09",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D10",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D11",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D12",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D13",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D14",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D15",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D16",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D17",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D18",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D19",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D20",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D21",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D22",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D23",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D24",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    },
+    {
+      "id": "D25",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "renderError": false
+    }
+  ],
+  "errors": [],
+  "expectedUnavailableNetwork": [
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED"
+  ],
+  "networkModelsAttempted": [
+    "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+    "https://huggingface.co/onnx-community/Florence-2-base-ft/resolve/e88a44eaf3791a35eae0c5a47b3dbcd36e67eb6f/preprocessor_config.json",
+    "https://example.invalid/v1/chat/completions"
+  ],
+  "actualModelInference": false,
+  "browser": "155.0.8059.80"
+}

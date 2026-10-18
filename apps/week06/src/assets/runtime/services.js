@@ -51,7 +51,7 @@ export async function cloudOCR({consent=false,bbox,provider='ChatGPT',instructio
  const messages=[{role:'user',content:[{type:'text',text:prompt},{type:'image_url',image_url:{url:crop.toDataURL('image/png')}}]}];
  const date=new Date().toISOString(),request={provider,endpoint:window.W6Chat.endpoint(window.W6Chat.settings().baseUrl),model:window.W6Chat.settings().model,messages,image_sha256:source.image.sha256,bbox:bbox||[0,0,canvas.width,canvas.height]};
  try{const answer=await window.W6Chat.chat(messages,{maxTokens:8192});const r=fromMLLM(answer.text,meta('mllm','按共用API实际调用',answer.model,{provider,prompt,bbox:request.bbox},source.image));r.regions.forEach(v=>{if(v.bbox){v.bbox[0]+=offset[0];v.bbox[1]+=offset[1];}});r.engine.usage=answer.usage||{};r.engine.elapsed_ms=answer.seconds*1000;r.raw={text:answer.text,request,response:answer.raw};state.runs.push({date,request,response:answer.raw,usage:answer.usage,elapsed_ms:r.engine.elapsed_ms});await addRecord(r);return r;}
- catch(error){state.runs.push({date,request,error:error.message});await save();throw error;}
+ catch(error){state.runs.push({date,request,error:error.message,response:error.raw??null,elapsed_ms:error.seconds!=null?error.seconds*1000:Date.now()-Date.parse(date)});await save();throw error;}
 }
 export async function postprocess(kind,consent){
  if(!consent)throw Error('请明确勾选本次发送的文字／图像范围');const original=state.through.stages[2]?.value.record||lastRecord();if(!original)throw Error('待课前运行：先取得原始识读');
@@ -63,7 +63,7 @@ export async function postprocess(kind,consent){
   try{obj=JSON.parse(answer.text);if(!Array.isArray(obj.changes)||obj.changes.some(c=>!selected.some(r=>r.id===c.id)||typeof c.text!=='string'||typeof c.reason!=='string')||new Set(obj.changes.map(c=>c.id)).size!==obj.changes.length)throw Error('changes 格式错误');}
   catch(e){await save();throw Error('解析失败，原回复已保留：'+e.message);}
   state.through.draft.candidates||={};state.through.draft.candidates[kind]={original,changes:obj.changes,raw,decisions:{}};await save();return obj;
- }catch(error){state.runs.push({date,request,error:error.message});await save();throw error;}
+ }catch(error){state.runs.push({date,request,error:error.message,response:error.raw??null,elapsed_ms:error.seconds!=null?error.seconds*1000:Date.now()-Date.parse(date)});await save();throw error;}
 }
 export function revisedRecord(kind){const c=state.through.draft.candidates?.[kind];if(!c)throw Error('待课前运行');if(c.changes.some(x=>!c.decisions[x.id]))throw Error('先逐条采纳或驳回');const regions=structuredClone(c.original.regions);for(const x of c.changes)if(c.decisions[x.id]==='accept')regions.find(r=>r.id===x.id).text=x.text;return {record:deriveRecord(c.original,{regions},'逐条人工裁定；候选，不覆盖原始识读'),decisions:c.changes.map(x=>({...x,decision:c.decisions[x.id]}))};}
 let importer;

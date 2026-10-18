@@ -1,0 +1,64 @@
+$ node scripts/check-browser.mjs
+{
+  "checks": [
+    {
+      "name": "public material control loads real source image",
+      "result": "passed"
+    },
+    {
+      "name": "CTC and typing focus",
+      "result": "passed"
+    },
+    {
+      "name": "through / concepts return and first-slide backlinks",
+      "result": "passed"
+    },
+    {
+      "name": "presenter bidirectional synchronization",
+      "result": "passed"
+    },
+    {
+      "name": "persisted checklist and conventions survive refresh",
+      "result": "passed"
+    },
+    {
+      "name": "CER mapping, matrix and immutable typed inputs",
+      "result": "passed"
+    },
+    {
+      "name": "transform and binarization preserve source identity as parent",
+      "result": "passed"
+    },
+    {
+      "name": "offline dots status and saved-record import remain available",
+      "result": "passed"
+    },
+    {
+      "name": "manual layout annotation, keyboard regions and overlay synchronization",
+      "result": "passed"
+    },
+    {
+      "name": "undownloaded and failed model state (no model bytes loaded)",
+      "result": "passed"
+    },
+    {
+      "name": "export, valid restore, corrupt-file preservation",
+      "result": "passed"
+    },
+    {
+      "name": "API key stays in memory and no call before consent",
+      "result": "passed"
+    },
+    {
+      "name": "local saved XML: D01 D03 D05 D09 D20 and locked original",
+      "result": "passed"
+    },
+    {
+      "name": "all pages fit both viewport widths",
+      "result": "passed"
+    }
+  ],
+  "pages": 52,
+  "errors": [],
+  "expectedUnavailableNetwork": 7
+}

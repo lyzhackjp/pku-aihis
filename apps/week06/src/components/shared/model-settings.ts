@@ -87,6 +87,7 @@ export async function chatCompletions(
     ? AbortSignal.any([opts.signal, AbortSignal.timeout(180000)])
     : AbortSignal.timeout(180000);
   const start = performance.now();
+  const failed=(message:string,raw:unknown)=>{const error:any=new Error(message);error.raw=raw;error.seconds=(performance.now()-start)/1000;return error;};
   let r: Response;
   try {
     r = await fetch(url, {
@@ -113,9 +114,7 @@ export async function chatCompletions(
   }
   if (!r.ok) {
     const detail = (await r.text().catch(() => "")).split(c.apiKey||'\u0000').join('[REDACTED]');
-    throw Error(
-      `API 返回 HTTP ${r.status}${detail ? "：" + detail.slice(0, 200) : ""}；请核对模型、余额和 Key。`,
-    );
+    throw failed(`API 返回 HTTP ${r.status}${detail ? "：" + detail.slice(0, 200) : ""}；请核对模型、余额和 Key。`,detail);
   }
   if(opts.onDelta&&r.headers.get('content-type')?.includes('text/event-stream')){
     const reader=r.body.getReader(),decoder=new TextDecoder();let pending='',text='',model=c.model,usage:any,finishReason='',calls:any[]=[];
@@ -124,12 +123,12 @@ export async function chatCompletions(
     if(!text.trim()&&!calls.length)throw Error('API 未返回答案正文。');
     return {text,model,usage,finishReason,seconds:(performance.now()-start)/1000,toolCalls:calls.filter(Boolean)};
   }
-  const rawText = await r.text();
-  const d = JSON.parse(rawText.split(c.apiKey||'\u0000').join('[REDACTED]'));
+  const rawText = (await r.text()).split(c.apiKey||'\u0000').join('[REDACTED]');
+  let d:any;try{d=JSON.parse(rawText);}catch{throw failed('API 返回的响应不是合法 JSON；原文已记录。',rawText);}
   const choice = d.choices?.[0];
   const text = choice?.message?.content;
   if ((!text || !text.trim()) && !choice?.message?.tool_calls?.length)
-    throw Error("API 未返回答案正文。");
+    throw failed("API 未返回答案正文。",d);
   opts.onDelta?.(text||'');
   return {
     text: text || '',
