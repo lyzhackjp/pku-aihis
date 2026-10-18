@@ -1,0 +1,52 @@
+{
+  "source_url": "https://emmo.folger.edu/view/La2/diplomatic/",
+  "source_tier": "公开转录",
+  "edition": "diplomatic",
+  "page": "leaf 1 recto",
+  "lines": [
+    {
+      "id": "1",
+      "html": "<span style=\"left: 75px;\"><span style=\"left: 75px;\">After most harty co<span style=\"text-decoration: overline;\">m</span>endac<span style=\"text-decoration: overline;\">on</span>s Righte worshipfull evon So I Shalbe glad",
+      "text": "After most harty comendacons Righte worshipfull evon So I Shalbe glad"
+    },
+    {
+      "id": "2",
+      "html": "to here of your yealthe and well doyng as your Brother S<sup>r</sup> Rauff was",
+      "text": "to here of your yealthe and well doyng as your Brother Sr Rauff was"
+    },
+    {
+      "id": "3",
+      "html": "vppon Wensdaie last att Stafford castill and where as my Brother",
+      "text": "vppon Wensdaie last att Stafford castill and where as my Brother"
+    },
+    {
+      "id": "4",
+      "html": "in lawe the Brynger hereof Iohn Bagott haithe a vnconstant hedd",
+      "text": "in lawe the Brynger hereof Iohn Bagott haithe a vnconstant hedd"
+    },
+    {
+      "id": "5",
+      "html": "and is more youthfull and wilfull then Sober wittyd haithe vowed",
+      "text": "and is more youthfull and wilfull then Sober wittyd haithe vowed"
+    },
+    {
+      "id": "6",
+      "html": "a voyage into Ireland to go Sowe his wild oot{es} god Send them",
+      "text": "a voyage into Ireland to go Sowe his wild oot{es} god Send them"
+    },
+    {
+      "id": "7",
+      "html": "good Reypinge / in dede he haithe witt ynoughe Butt a foole haithe",
+      "text": "good Reypinge / in dede he haithe witt ynoughe Butt a foole haithe"
+    },
+    {
+      "id": "8",
+      "html": "the kepynge therof / albeit I do assure you he is vnsusspected of",
+      "text": "the kepynge therof / albeit I do assure you he is vnsusspected of"
+    }
+  ],
+  "note": "纯文本去除了上划线、上标、斜体等排版；比对时先约定转换规则。html 字段保留公开转录的原始标记。",
+  "sha256_html": "b04e35bd65a09cdcf5bceb1f0566d2c28127b3cb7276ceaa96a707d1b18fc011",
+  "license": "CC BY-SA 4.0",
+  "date": "2026-10-18"
+}

@@ -1,0 +1,1368 @@
+[
+  {
+    "id": "D00",
+    "section": "导入",
+    "anchor": "导入：文从何来",
+    "title": "文从何来",
+    "layout": "hero",
+    "minutes": 2,
+    "transition": "上一讲我们追问每一句回答能否回到原文；这一讲追问原文本身从哪里来。",
+    "question": "一行电子文本，凭什么可以代替原页被引用？",
+    "student_operation": "无。",
+    "observable_output": "中心问题；第五周库中《史德》文本的来历（识读产物）。",
+    "lesson_evidence": "讲义导入第一、二段。",
+    "mode": "静态内容",
+    "notes": {
+      "purpose": "提出中心问题，交代第五周所用文本为识读产物。",
+      "guide": "先问学生：第五周检索的那段《史德》是谁录入的？",
+      "mechanism": "征引史料须说清所据何本、在于何页（L-009 先立规范）。"
+    },
+    "footer": "D00 / 讲义导入；静态内容。 候选，未经教师确认。",
+    "concepts": [],
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "成像来源",
+      "c002": "几何变形",
+      "c003": "文字方向",
+      "c004": "图像信号退化",
+      "c005": "遮挡与材料损伤",
+      "c006": "字体与书写系统",
+      "c007": "版面与内容结构",
+      "c008": "文本分布与语言干扰",
+      "c009": " · 官方示例，本课未运行</figcaption></figure>",
+      "c010": "待课前运行",
+      "c011": "未定义",
+      "c012": "</b>；分母 ",
+      "c013": "正在检查本机服务",
+      "c014": "正文",
+      "c015": "人工框选，非模型输出",
+      "c016": "教学构造",
+      "c017": "人工框选 v1",
+      "c018": "处理中…",
+      "c019": "处理中…",
+      "c020": "已保存到本机课堂记录。",
+      "c021": "修订记录与页影不同",
+      "c022": "先取得原始识读",
+      "c023": "保存结果回放；请补充人工裁定理由",
+      "c024": "人工核对机器初稿",
+      "c025": "本机服务已加载：",
+      "c026": "模型加载中",
+      "c027": "模型未加载",
+      "c028": "实际运行完成，原始结果已另存。",
+      "c029": "本课未运行：已选择不用 dots.ocr",
+      "c030": "请恰好选择 8 行，再揭示比较",
+      "c031": "此实验请使用公开页影",
+      "c032": " · 派生",
+      "c033": "EMMO 转录仅对应 Folger；请先选择 Folger",
+      "c034": "公开转录",
+      "c035": "待课前运行",
+      "c036": "识读记录.json",
+      "c037": "实际调用记录.json",
+      "c038": "对校四层记录.json",
+      "c039": "对校四层记录.md",
+      "c040": "# 对校四层记录\n候选，未经教师确认\n\n",
+      "c041": "贯穿记录.json",
+      "c042": "贯穿记录.md",
+      "c043": "八类干扰.json",
+      "c044": "先取得原图",
+      "c045": "贯穿公开版请选 Folger 1r 并导入高清图；本机版选择《史德》",
+      "c046": "待课前运行：需要带区域的记录",
+      "c047": "待课前运行：需要原始文字",
+      "c048": "D22 小样本与贯穿原图材料不一致",
+      "c049": "先在 D22 填写参照小样本",
+      "c050": "<details class=\"material-panel\"><summary>材料与保存记录 · ",
+      "c051": "请选择页影",
+      "c052": "可用",
+      "c053": "仅本机",
+      "c054": "待准备",
+      "c055": "打开所选材料",
+      "c056": "公开《史德》",
+      "c057": "本机《史德》",
+      "c058": "本机鷗外",
+      "c059": "</div><label>导入页影 PNG/JPEG（材料身份按上方选择）<input type=\"file\" data-k=\"image\" accept=\"image/png,image/jpeg\"></label><label>读取保存记录（统一 JSON / NDL XML / PAGE-XML / dots 日志）<input type=\"file\" data-k=\"record\" accept=\".json,.xml\"></label>",
+      "c060": "<details><summary>原图身份、页码与指纹</summary><pre>",
+      "c061": "需本机材料或选择公开页影",
+      "c062": "导出当前原始识读",
+      "c063": "保存结果回放",
+      "c064": "待课前运行",
+      "c065": "未见",
+      "c066": "轻",
+      "c067": "中",
+      "c068": "重",
+      "c069": "需要本页实际检测框或保存记录；未以构造框代替",
+      "c070": "<div class=\"three-columns\"><section><h3>我的读序</h3><ol class=\"order-list\">",
+      "c071": "\" aria-label=\"上移 ",
+      "c072": "\" aria-label=\"下移 ",
+      "c073": "</ol></section><section><h3>XY 切分</h3>",
+      "c074": "机器读序",
+      "c075": "dots.ocr 读序",
+      "c076": "无重叠区域",
+      "c077": "本课未运行；可读取保存记录",
+      "c078": "官方读序示例",
+      "c079": "约 262.2 MiB（q8 权重；另有配置）",
+      "c080": "约 29.6 MiB（检测＋识读）",
+      "c081": "本课未运行 · 仅展示官方示例",
+      "c082": "本机服务实时 · ",
+      "c083": "模型加载中",
+      "c084": "模型未加载",
+      "c085": "检查服务",
+      "c086": "超时秒数",
+      "c087": "本机实际识读",
+      "c088": "教师机不用 dots.ocr",
+      "c089": "官方繁体古籍示例；本课未运行",
+      "c090": "<p>未加载时为待下载 · ",
+      "c091": "下载所需模型并实际识读",
+      "c092": "概率图",
+      "c093": "检测框",
+      "c094": "裁切行",
+      "c095": "逐行文字",
+      "c096": "配置本次服务与模型",
+      "c097": "发送范围 [x,y,w,h]；留空表示整页",
+      "c098": "我已选定本次发送范围，并同意发送给所配置的服务",
+      "c099": "实际请求文字与坐标",
+      "c100": "导出完整请求与回复（无 Key）",
+      "c101": "录文规范 ",
+      "c102": "近也",
+      "c103": "近也",
+      "c104": "{\"説\":\"說\",\"断\":\"斷\"}",
+      "c105": "参照转录（保留原文）",
+      "c106": "原始识读／手算输入",
+      "c107": "应用字形映射",
+      "c108": "打乱识读行顺序（仅本比较）",
+      "c109": "整页逐格计算",
+      "c110": "手算第 ",
+      "c111": " 行",
+      "c112": "本行改变文义的错与位置",
+      "c113": "映射表 JSON；原始识读不变",
+      "c114": "<p>逐格手算：",
+      "c115": "点击一格，标出其 C / S / D / I",
+      "c116": "。</p><div class=\"metrics\">按行加权 ",
+      "c117": " · 均值 ",
+      "c118": " · 中位数 ",
+      "c119": " · 按整页读序 ",
+      "c120": "</div><details><summary>编辑距离矩阵与路径</summary><div class=\"table-wrap\"><table>",
+      "c121": "<p class=\"caption\">先 NFC，再按映射表转换；计量单位为 Unicode 码点。原始文本保留。整页样本过大时请缩小范围。</p>",
+      "c122": "我同意本次发送当前原始识读；带图时同时发送当前整页图像",
+      "c123": "<div class=\"three-columns\"><section><h3>锁定的原始识读</h3>",
+      "c124": "只给文字",
+      "c125": "文字与原图",
+      "c126": "实际生成修订候选",
+      "c127": "待课前运行；也可读取保存的候选记录",
+      "c128": "待裁定",
+      "c129": "采纳",
+      "c130": "驳回",
+      "c131": "<p>模型未提出改动，保留原文。</p>",
+      "c132": "文字候选",
+      "c133": "带图候选",
+      "c134": "<label>读取保存的修订记录<input type=\"file\" data-k=\"candidate\" accept=\".json\"></label>",
+      "c135": "导出实际调用记录",
+      "c136": "待课前准备：需要页影与原始识读",
+      "c137": "所选练习、页影与原始识读不是同一材料",
+      "c138": "先填写约 5 行参照与对校转录",
+      "c139": "原图",
+      "c140": "原始识读",
+      "c141": "对校稿",
+      "c142": "处理说明与页码",
+      "c143": "《史德》",
+      "c144": "Folger 前 8 行",
+      "c145": "たまかき書状",
+      "c146": "打开所选练习材料",
+      "c147": "<p>参照转录来源层级：",
+      "c148": "公开转录",
+      "c149": "据翻刻",
+      "c150": "人工核对机器初稿",
+      "c151": "公开转录",
+      "c152": "载入 EMMO 前 8 行参照",
+      "c153": "载入当前识读前 8 行",
+      "c154": "<p>《史德》：",
+      "c155": "已有本机回放；参照待人工核对",
+      "c156": "待课前准备",
+      "c157": "；Folger：公开转录已取得，机器结果",
+      "c158": "已保存",
+      "c159": "待课前准备",
+      "c160": "；たまかき書状、P.2965：参照与识读结果待课前准备。</p><div class=\"two-columns\">",
+      "c161": "参照转录／人工核对文本，每行一行",
+      "c162": "本组对校文本／原始识读，每行一行",
+      "c163": "<article><b>第 ",
+      "c164": " 行</b>",
+      "c165": "识读错误",
+      "c166": "规范差异",
+      "c167": "无法判定",
+      "c168": "无法判定",
+      "c169": "导出四层记录 Markdown 与 JSON",
+      "c170": "<p class=\"caption\">EMMO 纯文本去除了上划线、上标、斜体；请先确定这些排版如何进入比较。参照转录不等于机器输出。</p>",
+      "c171": "<div class=\"hero-copy\"><span class=\"eyebrow\">从页影到可引用的文本</span><h2>",
+      "c172": "</h2><div class=\"hero-chain\"><span>页影</span><b>→</b><span>识读</span><b>→</b><span>核对</span><b>→</b><span>引用</span></div><p>候选，未经教师确认</p></div>",
+      "c173": "页面编号未登记",
+      "c174": "<details class=\"teacher-note\"><summary>本页操作与回查</summary><p>",
+      "c175": "人工指出的干扰位置，待核对",
+      "c176": "页面状态错误：",
+      "c177": "<p>点击检测框即可查看该行原图裁切。</p><pre>",
+      "c178": "导入的保存记录没有概率图；真实 PP 运行会保存此中间结果"
+    }
+  },
+  {
+    "id": "D01",
+    "section": "导入",
+    "anchor": "fig-shide",
+    "title": "找不同：原页与识读结果",
+    "layout": "flow4",
+    "minutes": 8,
+    "transition": "把原页和机器给出的文字放在一起，先找出它们的不同。",
+    "question": "机器读出的这一页，和原页有哪些不同？",
+    "steps": [
+      "原页",
+      "识读结果",
+      "找出不同",
+      "归类"
+    ],
+    "student_operation": "对照原页与识读文字，点出认为不同的地方（2 分钟）；点完后揭示参考答案。",
+    "observable_output": "四类问题：字认错（盡→姦、術→衛、盡其天而不益以人→蓋其天而不盆以人）、字形被换（德→徳、斷→断、當→当）、版面读错（书口与页码混入正文）、整类信息消失（圈点）；每行置信度多在 0.8 以上。",
+    "lesson_evidence": "讲义导入；@fig-shide；识读输出为第五周保存的 NDL 系 XML（版本待登记，待核实事项 V-08）；错字判定为备课目验（V-02）。",
+    "mode": "保存结果回放（本机材料：教师 PDF 页影）；公开构建显示替代页或\"需本机材料\"",
+    "notes": {
+      "purpose": "让学生先凭眼睛发现问题，再用后面各节的词汇命名它们。",
+      "guide": "先不揭示答案，收集两三位同学的发现再翻开。",
+      "mechanism": "置信度高与读对无关，2.2 详谈；字形问题 2.1 详谈。"
+    },
+    "footer": "D01 / 讲义导入 @fig-shide；第五周保存的识读输出回放；错字判定为备课目验，待核。 候选，未经教师确认。",
+    "concepts": [],
+    "through": "原图身份",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "<section><h3>逐行找不同</h3>",
+      "c002": "需本机材料；公开替代页的识读结果待课前运行",
+      "c003": "<p>已点出 ",
+      "c004": " 行</p>",
+      "c005": "揭示／收起四类问题",
+      "c006": "</p><p class=\"pending\">备课目验，待核（V-02）；工具版本待核（V-08）；本机页码层次待核（V-01）。公开替代版不套用此页错字判定。</p>"
+    }
+  },
+  {
+    "id": "D02",
+    "section": "1.1",
+    "anchor": "四项视觉任务；fig-tasks",
+    "title": "四项视觉任务",
+    "layout": "flow4",
+    "minutes": 8,
+    "transition": "刚才找到的问题，可以用计算机视觉的四项基本任务逐一归位。",
+    "question": "每一处错误出在哪一种视觉判断上？",
+    "steps": [
+      "分类",
+      "定位",
+      "检测",
+      "分割"
+    ],
+    "student_operation": "把 D01 找到的问题拖进四格之一；归不进去的放到\"其他\"（2 分钟）。",
+    "observable_output": "每格亮出对应示意：字切片与候选字（分类）、一个边界框四个数（定位）、全页所有行与区域（检测）、像素掩膜（分割）；\"其他\"格引出阅读顺序与序列预测。",
+    "lesson_evidence": "讲义 1.1；@fig-tasks（框架据助教建议）。",
+    "mode": "浏览器实时（归类交互）；分割示意为教学构造",
+    "notes": {
+      "purpose": "给学生一套描述错误的词汇。",
+      "guide": "强调检测＝对多个对象同时做定位与分类；读一整行是一串分类连成的序列预测。",
+      "mechanism": "阅读顺序不属于四项任务，是在检测结果上另建的先后关系（1.3）。"
+    },
+    "footer": "D02 / 讲义 1.1 @fig-tasks；归类交互浏览器实时，分割示意为教学构造。 候选，未经教师确认。",
+    "concepts": [
+      "计算机视觉",
+      "图像分类",
+      "目标定位",
+      "边界框",
+      "目标检测",
+      "图像分割",
+      "阅读顺序",
+      "序列预测"
+    ],
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "字认错",
+      "c002": "页码归入正文",
+      "c003": "正文被切断",
+      "c004": "圈点消失",
+      "c005": "振假名的读序",
+      "c006": "分类",
+      "c007": "定位",
+      "c008": "检测",
+      "c009": "分割",
+      "c010": "其他",
+      "c011": "字切片 → 候选字",
+      "c012": "一个框：[x,y,w,h]",
+      "c013": "全页多个对象：位置＋类别",
+      "c014": "像素级标记（教学构造）",
+      "c015": "阅读顺序与序列预测",
+      "c016": "</div><details><summary>键盘归类</summary>",
+      "c017": "未归类",
+      "c018": "分类",
+      "c019": "定位",
+      "c020": "检测",
+      "c021": "分割",
+      "c022": "其他",
+      "c023": "未归类",
+      "c024": "</details><p class=\"caption\">拖动卡片后，归类写入贯穿记录。示意不代表模型输出。</p>"
+    },
+    "ui": {
+      "task_examples": {
+        "分类": "<svg viewBox=\"0 0 140 90\" role=\"img\" aria-label=\"字切片与候选字（教学构造）\"><rect x=\"8\" y=\"10\" width=\"60\" height=\"60\" fill=\"#fff\" stroke=\"#777\"/><text x=\"16\" y=\"56\" font-size=\"42\">德</text><text x=\"82\" y=\"34\" font-size=\"14\">德？</text><text x=\"82\" y=\"60\" font-size=\"14\">徳？</text></svg>",
+        "定位": "<svg viewBox=\"0 0 140 90\" role=\"img\" aria-label=\"一个框四个数（教学构造）\"><rect x=\"20\" y=\"15\" width=\"90\" height=\"40\" fill=\"none\" stroke=\"#9b321d\" stroke-width=\"2\"/><text x=\"10\" y=\"80\" font-size=\"13\">[20,15,90,40]</text></svg>",
+        "检测": "<svg viewBox=\"0 0 140 90\" role=\"img\" aria-label=\"全页多个对象（教学构造）\"><rect x=\"15\" y=\"10\" width=\"25\" height=\"65\" fill=\"#dbe8e9\" stroke=\"#4b636c\"/><rect x=\"50\" y=\"10\" width=\"25\" height=\"65\" fill=\"#dbe8e9\" stroke=\"#4b636c\"/><rect x=\"90\" y=\"10\" width=\"20\" height=\"30\" fill=\"#f5d4b4\" stroke=\"#8b4a29\"/></svg>",
+        "分割": "<svg viewBox=\"0 0 140 90\" role=\"img\" aria-label=\"逐像素掩膜（教学构造）\"><rect x=\"12\" y=\"8\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"27\" y=\"8\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"42\" y=\"8\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"57\" y=\"8\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"72\" y=\"8\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"87\" y=\"8\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"102\" y=\"8\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"117\" y=\"8\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"12\" y=\"23\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"27\" y=\"23\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"42\" y=\"23\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"57\" y=\"23\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"72\" y=\"23\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"87\" y=\"23\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"102\" y=\"23\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"117\" y=\"23\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"12\" y=\"38\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"27\" y=\"38\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"42\" y=\"38\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"57\" y=\"38\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"72\" y=\"38\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"87\" y=\"38\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"102\" y=\"38\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"117\" y=\"38\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"12\" y=\"53\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"27\" y=\"53\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"42\" y=\"53\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"57\" y=\"53\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"72\" y=\"53\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"87\" y=\"53\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"102\" y=\"53\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"117\" y=\"53\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"12\" y=\"68\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"27\" y=\"68\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"42\" y=\"68\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"57\" y=\"68\" width=\"14\" height=\"14\" fill=\"#456c4e\"/><rect x=\"72\" y=\"68\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"87\" y=\"68\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"102\" y=\"68\" width=\"14\" height=\"14\" fill=\"#ddd\"/><rect x=\"117\" y=\"68\" width=\"14\" height=\"14\" fill=\"#ddd\"/></svg>",
+        "其他": "<p>区域如何成为有先后的文本？</p>"
+      }
+    }
+  },
+  {
+    "id": "D03",
+    "section": "1.2",
+    "anchor": "版面：哪些是正文",
+    "title": "版面：哪些是正文",
+    "layout": "workbench",
+    "minutes": 6,
+    "transition": "检测找到了区域，还要判断每个区域是什么。",
+    "question": "机器能\"看见\"哪些版面类别，由什么决定？",
+    "student_operation": "在《史德》与鷗外页上开关各类别图层；找出被当作正文的两行（2 分钟）；对照 NDLOCR-Lite 17 类与 dots.ocr 11 类清单。",
+    "observable_output": "《史德》16 行全部为\"本文\"，书口\"文史通義卷三內篇三\"与页码\"六十三\"混入；鷗外 83 行文字＋32 个无文字区块（振假名 28、柱 2、页码 2）；\"左右良（まてら）の城\"读作\"左右艮の城\"，读音只在振假名区块坐标里。",
+    "lesson_evidence": "讲义 1.2；NDLOCR-Lite 仓库 src/config/ndl.yaml；dots.ocr README；保存的 XML。",
+    "mode": "保存结果回放；可经导入页 NDLOCR-Lite 浏览器实时重跑",
+    "notes": {
+      "purpose": "说明类别清单决定机器能看见什么；保存识读结果要带坐标与类别。",
+      "guide": "问：如果你的材料有双行小注，你希望多一个什么类别？",
+      "mechanism": "PAGE-XML 与 ALTO 是历史文献识读通行的两种 XML 格式，下一讲用到。"
+    },
+    "footer": "D03 / 讲义 1.2；保存的识读 XML 回放，可现场以导入页 NDLOCR-Lite 重跑。 候选，未经教师确认。",
+    "concepts": [
+      "版面分析",
+      "文本检测",
+      "文本行",
+      "视觉语言模型"
+    ],
+    "through": "版面与读序",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "<section><h3>引擎实际类别清单</h3><div class=\"two-columns\"><div><b>NDLOCR-Lite · ",
+      "c002": " 类</b>",
+      "c003": " 类</b>",
+      "c004": "</div></div><p>从已保存的 ndl.yaml 与官方 README 提取。</p>",
+      "c005": "<p>当前 ",
+      "c006": " 个文字区域；",
+      "c007": " 个未识读区域。</p>",
+      "c008": "<p class=\"pending\">原版例子的 28 个振假名区块只有定位，text=null。需要本机鷗外保存记录；错字目验待核 V-02。</p></section></div>"
+    }
+  },
+  {
+    "id": "D04",
+    "section": "1.2",
+    "anchor": "fig-kraken；fig-pylaia",
+    "title": "手写的行：基线与多边形",
+    "layout": "diagram",
+    "minutes": 2,
+    "transition": "印刷体的字行之外，手写材料需要先确定基线与行的外框。",
+    "question": "手写识别系统怎样表示一行字？",
+    "student_operation": "点 Kraken 结构图的各阶段，下部展开说明；切换到 Folger 页上的基线示例。",
+    "observable_output": "像素标注→热图→基线与方向→外框多边形→行排序；IDP 博客：分割是最不成熟的一环。",
+    "lesson_evidence": "讲义 1.2；@fig-kraken（Kraken 文档）、@fig-pylaia（Puigcerver 2017 图 2）；Smith 2024 IDP 博客（全文）。",
+    "mode": "静态内容（官方图）；Folger 页 kraken 实例待课前运行，未运行时显示官方示例；Transkribus 截图待课前运行（教师 2026-10-18 决定使用）",
+    "notes": {
+      "purpose": "引出手写文本识别与基线。",
+      "guide": "工具小传只口述\"一句话\"。",
+      "mechanism": "Kraken 默认识读模型：4 层卷积＋3 层双向 LSTM＋CTC。"
+    },
+    "footer": "D04 / 讲义 1.2；官方结构图；Folger 实例待课前运行。 候选，未经教师确认。",
+    "concepts": [
+      "手写文本识别",
+      "基线"
+    ],
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui": {
+      "stages": [
+        {
+          "name": "像素标注",
+          "explanation": "网络为每个像素判断所属的区域、行与分隔。标签来自训练时的标注。",
+          "figure": "figure-1"
+        },
+        {
+          "name": "热图",
+          "explanation": "将逐像素得分画成热图，显示可能的文字行与分隔位置。热图尚未成为可裁切的行。",
+          "figure": "figure-1"
+        },
+        {
+          "name": "基线与方向",
+          "explanation": "把行热图矢量化成基线，同时确定文字沿基线阅读的方向。",
+          "figure": "figure-3"
+        },
+        {
+          "name": "外框多边形",
+          "explanation": "沿基线及其周围字形求出包住整行的轮廓，用多边形保留弯曲与不规则边界。",
+          "figure": "figure-3"
+        },
+        {
+          "name": "行排序",
+          "explanation": "对分出的行建立先后关系。基线、轮廓和读序都应随 PAGE-XML 保存。",
+          "figure": "figure-0"
+        }
+      ],
+      "limitation": "Smith 的 IDP 博客记录一次敦煌汉文写本实践：分割是流程中最不成熟的一环；文章未给量化错误率，不能概括所有写本。"
+    },
+    "ui_copy": {
+      "c001": "Kraken 官方结构与输出图",
+      "c002": "Folger 的 Kraken / eScriptorium PAGE-XML 与 Transkribus 输出待课前运行"
+    }
+  },
+  {
+    "id": "D05",
+    "section": "1.3",
+    "anchor": "fig-xycut",
+    "title": "XY 切分：一刀一刀排读序",
+    "layout": "flow4",
+    "minutes": 5,
+    "transition": "找到了各行，还要把它们排成可以连续阅读的顺序。",
+    "question": "规则怎样从一堆框里排出读序？",
+    "steps": [
+      "真实框",
+      "找最宽空白",
+      "递归切分",
+      "读出顺序"
+    ],
+    "student_operation": "逐步点\"下一刀\"；切换\"竖排从右到左／横排从上到下\"规则。",
+    "observable_output": "每一刀的位置、得到的块与最终块序；振假名区块被排到哪里。",
+    "lesson_evidence": "讲义 1.3；@fig-xycut；NDLOCR-Lite 读序实现（导入页 src/ndl/reading-order.ts 对照）。",
+    "mode": "浏览器实时（鷗外页真实框坐标）",
+    "notes": {
+      "purpose": "让学生看到规则读序的做法与边界。",
+      "guide": "停在振假名被切开的那一刀。",
+      "mechanism": "学习式读序（LayoutReader）与端到端行检测排序（Kiessling 2026）见下一页。"
+    },
+    "footer": "D05 / 讲义 1.3 @fig-xycut；真实坐标上的浏览器实时计算。 候选，未经教师确认。",
+    "concepts": [
+      "XY切分"
+    ],
+    "through": "版面与读序",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "竖排从右到左",
+      "c002": "横排从上到下",
+      "c003": "下一刀",
+      "c004": "从头开始",
+      "c005": "下载 NDL 所需模型并实际检测识读",
+      "c006": "<p>已展示 ",
+      "c007": " 刀；最终顺序：",
+      "c008": "先读取鷗外真实框；公开版选择公开页影并实际运行 NDL。"
+    }
+  },
+  {
+    "id": "D06",
+    "section": "1.3",
+    "anchor": "阅读顺序：把各行排成文本",
+    "title": "读序是编辑决定",
+    "layout": "flow4",
+    "minutes": 4,
+    "transition": "规则排出的顺序，不一定是我们要的顺序。",
+    "question": "振假名、小注、页码该排在哪里，由谁决定？",
+    "steps": [
+      "拖动排序",
+      "机器读序",
+      "并列比较",
+      "写进规范"
+    ],
+    "student_operation": "拖动振假名与正文行，排出自己的读序（3 分钟），再与 XY 切分、dots.ocr 读序并列。",
+    "observable_output": "三种读序的差异逐处标出；Kiessling 原话\"different scholarly uses of the same page may therefore imply different reading orders\"。",
+    "lesson_evidence": "讲义 1.3；Kiessling 2026 预印本；LayoutReader（Wang et al. 2021）。",
+    "mode": "浏览器实时（拖动与比较）；dots.ocr 读序为保存结果回放或本机服务实时",
+    "options": {
+      "A": "学生拖动排序后与机器读序对比",
+      "B": "只播放 XY 切分与 dots.ocr 读序动画",
+      "recommend": "A"
+    },
+    "notes": {
+      "purpose": "读序是录文者的编辑决定，应写进录文规范。",
+      "guide": "请两位排法不同的同学说理由。（A／B 教师未另指示，按推荐 A 实施，试用后可改）",
+      "mechanism": "＊检测准不准常用交并比衡量，读序要另外比较先后。"
+    },
+    "footer": "D06 / 讲义 1.3；拖动比较浏览器实时，dots.ocr 读序见运行标签。 候选，未经教师确认。",
+    "concepts": [
+      "交并比"
+    ],
+    "through": "版面与读序",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "<blockquote>“different scholarly uses of the same page may therefore imply different reading orders”</blockquote><p class=\"caption\">Kiessling；讲义 1.3。三种顺序按对应区域逐处比较。</p>"
+    }
+  },
+  {
+    "id": "D07",
+    "section": "2.1",
+    "anchor": "fig-ctc",
+    "title": "从切字到整行：CTC",
+    "layout": "flow4",
+    "minutes": 6,
+    "transition": "找到了行，接着要把一行图像读成文字。",
+    "question": "不先切字，怎样读出一整行？",
+    "steps": [
+      "行图像窄条",
+      "逐条判断",
+      "合并重复",
+      "删去空白"
+    ],
+    "student_operation": "修改逐条判断序列（可加空白、重复），看合并结果；试\"盡盡\"连写的情况。",
+    "observable_output": "\"盡、盡、－、其、其、－、－、理、理、－\"→\"盡其理\"；不隔空白时\"盡盡\"会被合成一个\"盡\"。",
+    "lesson_evidence": "讲义 2.1；@fig-ctc（教学构造）；Graves et al. 2006；Shi et al. CRNN；KuroNet（PC Watch 2019）。",
+    "mode": "教学构造（讲义 @fig-ctc 的合并规则，浏览器实时计算）",
+    "notes": {
+      "purpose": "讲清整行识读与 CTC 输出规则。",
+      "guide": "先给 KuroNet 整页找字一句，再进入整行。",
+      "mechanism": "写本重文符输出符号还是展开，由录文规范决定（5.1）。"
+    },
+    "footer": "D07 / 讲义 2.1 @fig-ctc；合并规则为教学构造。 候选，未经教师确认。",
+    "concepts": [
+      "字符集",
+      "连接时序分类"
+    ],
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "盡 盡 － 其 其 － － 理 理 －",
+      "c002": "逐条判断（空格分隔，－ 表示空白）",
+      "c003": "<div class=\"three-columns\"><section><h3>逐条判断</h3><p class=\"tokens\">",
+      "c004": "</p></section><section><h3>合并相邻重复</h3><p class=\"tokens\">",
+      "c005": "</p></section><section><h3>删除空白</h3><p class=\"result-text\">",
+      "c006": "</p></section></div><p>盡 盡 盡 → 盡；盡 － 盡 → 盡盡。教学构造，规则在浏览器实时计算。</p>"
+    }
+  },
+  {
+    "id": "D08",
+    "section": "2.1",
+    "anchor": "从单字到整行（语言先验段）",
+    "title": "字表里有\"德\"，为什么读成\"徳\"",
+    "layout": "flow4",
+    "minutes": 6,
+    "transition": "识读模型在认字的同时，也学会了哪些字常常连在一起。",
+    "question": "模型明明能输出原字形，为什么选了另一个？",
+    "steps": [
+      "查字表",
+      "看本页输出",
+      "比较两处\"斷\"",
+      "语言先验"
+    ],
+    "student_operation": "在 NDLOCR-Lite 字表中查任意字；用一句话解释\"德→徳\"（2 分钟）。",
+    "observable_output": "实际 NDLmoji.yaml 为 7141 字，与 F08 的 7143 不符；德／徳、斷／断、當／当、卷／巻均可现场检索；第 5 行「断」、第 6 行「撃斷」同页不同。字表差异保留待教师决定。",
+    "lesson_evidence": "讲义 2.1；NDLOCR-Lite src/config/NDLmoji.yaml；PARSeq（Bautista & Atienza 2022，摘要）；保存的识读输出。",
+    "mode": "浏览器实时（真实字表）；本页输出为保存结果回放",
+    "notes": {
+      "purpose": "引出语言先验。",
+      "guide": "提示：\"徳\"在唐代写本碑刻中常见，\"断\"\"当\"同大陆简化字。",
+      "mechanism": "\"为日本资料训练、日本新字体更易胜出\"是推断（NDL 未公开字形分布）。"
+    },
+    "footer": "D08 / 讲义 2.1；真实字表查询；识读输出回放。 候选，未经教师确认。",
+    "concepts": [
+      "语言先验"
+    ],
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "德徳斷断當当卷巻",
+      "c002": "检索实际 NDL 字表",
+      "c003": "<p class=\"metrics\">当前实际字表：",
+      "c004": " 字 ",
+      "c005": "（与 F08 不符，请报告）",
+      "c006": "在字表中 · ",
+      "c007": "不在字表中",
+      "c008": "用一句话解释「德 → 徳」",
+      "c009": "<p>字表决定可以输出哪些字，识读模型决定在本图上输出哪一个。</p>",
+      "c010": "同页「断／斷」例子需本机《史德》回放",
+      "c011": "<p class=\"caption\">字表指纹："
+    }
+  },
+  {
+    "id": "D09",
+    "section": "2.2",
+    "anchor": "fig-conf",
+    "title": "置信度能告诉我们什么",
+    "layout": "flow4",
+    "minutes": 8,
+    "transition": "识读结果往往附带一个分数，说明模型有多大把握。",
+    "question": "按置信度挑行校对，能挑出改变文义的错吗？",
+    "steps": [
+      "逐行置信度",
+      "学生选一半",
+      "揭示错误",
+      "校准"
+    ],
+    "student_operation": "只有时间校对一半的行：按置信度挑，或另有挑法（2 分钟）；提交后揭示。",
+    "observable_output": "\"盡→姦\"一行置信度 0.856，与读对的行相差无几；最低两行是页码与\"卷三\"；漏掉的改变文义的错误数。",
+    "lesson_evidence": "讲义 2.2；@fig-conf（问题栏为备课目验，待核 V-02）。",
+    "mode": "保存结果回放",
+    "notes": {
+      "purpose": "置信度能找整行问题，不能证明某行可靠。",
+      "guide": "比较按分数挑与按人名、数字挑两种结果。",
+      "mechanism": "校准良好：报 0.9 的判断约九成正确；识读工具一般不保证在历史材料上校准。"
+    },
+    "footer": "D09 / 讲义 2.2 @fig-conf；保存结果回放；错误判定待核。 候选，未经教师确认。",
+    "concepts": [
+      "置信度",
+      "校准"
+    ],
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "已选一半，揭示结果",
+      "c002": "<p class=\"metrics\">漏掉 ",
+      "c003": " / 7 行改变文义的错误。</p><p class=\"pending\">判定据讲义 @fig-conf 的备课目验，待核 V-02；只说明这一页。</p>",
+      "c004": "需本机《史德》保存的 16 行记录；公开替代页不使用这些判定。"
+    }
+  },
+  {
+    "id": "D10",
+    "section": "3（导语）",
+    "anchor": "fig-ppocr；fig-florence；fig-dots",
+    "title": "三条路",
+    "layout": "diagram",
+    "minutes": 3,
+    "transition": "同样的看、读、排三步，可以由不同的模型完成。",
+    "question": "流水线、多任务模型、视觉语言模型各怎样工作？",
+    "student_operation": "选择大阶段（流水线／多任务视觉模型／文档视觉语言模型／通用多模态大模型），下部展开结构图与一句话小传。",
+    "observable_output": "PP-OCRv6 检测→裁切→识读；Florence-2 图像编码器＋编码器－解码器，位置词元；dots.ocr 一次写出框、类别、读序与文字。",
+    "lesson_evidence": "讲义第三节导语与 3.1；@fig-ppocr（Zhang et al. 2026 图 2）、@fig-florence（Xiao et al. 2023 图 2）、@fig-dots（官方示例）。",
+    "mode": "静态内容（官方图，课堂引用）",
+    "notes": {
+      "purpose": "建立三条路线的结构对照。",
+      "guide": "工具小传只口述\"一句话\"部分。",
+      "mechanism": "后两条都属广义视觉语言模型，区别在规模与是否专为文档训练。"
+    },
+    "footer": "D10 / 讲义第三节；官方结构图，课堂引用。 候选，未经教师确认。",
+    "concepts": [
+      "流水线",
+      "多模态大语言模型",
+      "词元"
+    ],
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui": {
+      "routes": [
+        {
+          "name": "流水线",
+          "steps": [
+            "检测",
+            "裁切与缩放",
+            "行识读"
+          ],
+          "bio": "PaddlePaddle 的 PP-OCRv6 把检测与识读分开。先取得框，再把每条行图交给识读模型；可逐阶段检查。"
+        },
+        {
+          "name": "多任务视觉模型",
+          "steps": [
+            "图像＋任务提示",
+            "编码器—解码器",
+            "文字与位置词元"
+          ],
+          "bio": "Microsoft Florence-2 以任务提示选择输出。OCR_WITH_REGION 同时返回文字与四边形；官方未说明本课中日文与竖排能力，须当场检验。"
+        },
+        {
+          "name": "文档视觉语言模型",
+          "steps": [
+            "整页图像",
+            "视觉语言模型",
+            "框、类别、读序与文字"
+          ],
+          "bio": "rednote-hilab 的 dots.ocr 一次生成版面元素，提示决定只做布局、只读文字或全部输出。官方示例不等于本课实测。"
+        },
+        {
+          "name": "通用多模态大模型",
+          "steps": [
+            "图像＋指令",
+            "通用模型",
+            "文字与所请求坐标"
+          ],
+          "bio": "本课接入 ChatGPT 与 Gemini。能给出字符串不保证坐标准确；请求、回复及耗时一起保存。"
+        }
+      ]
+    },
+    "ui_copy": {
+      "c001": "</p><p class=\"caption\">据讲义与官方实现重新绘制的结构示意，非模型运行输出。</p></div>",
+      "c002": "dots.ocr 官方输入页影"
+    }
+  },
+  {
+    "id": "D11",
+    "section": "3.1",
+    "anchor": "同一页，三种模型怎样工作",
+    "title": "同一页，三种模型",
+    "layout": "workbench",
+    "minutes": 8,
+    "transition": "把三条路放在同一页上跑一遍。",
+    "question": "同一行字，三种模型各框在哪里、读成什么？",
+    "student_operation": "盯住同一行（讲义练习）：点任一栏中的一行，三栏同步高亮；PP-OCRv6 逐步查看概率图、框、裁切行、文字。",
+    "observable_output": "三栏并排：PP-OCRv6（逐步中间结果）、dots.ocr（框＋类别＋读序＋文字）、Florence-2（默认不加载，可点按钮加载）；每栏标运行模式、版本与耗时。",
+    "lesson_evidence": "讲义 3.1；PP-OCRv6 官方 ONNX；dots.ocr 仓库；Florence-2-base-ft 模型卡。",
+    "mode": "PP-OCRv6 浏览器实时；dots.ocr 本机服务实时，服务不在时保存结果回放；Florence-2 浏览器实时（默认不加载）；教师机跑不动时 dots.ocr 栏只显示官方示例图，标\"本课未运行\"",
+    "options": {
+      "A": "三栏并排，同一行同步高亮",
+      "B": "同一页影上叠层切换",
+      "recommend": "A",
+      "chosen": "A"
+    },
+    "notes": {
+      "purpose": "让学生看到三条路的中间产物与输出形态的差别。",
+      "guide": "教师 2026-10-18：三栏并排先试；窄屏退为叠层切换。",
+      "mechanism": "压缩时只演 PP-OCRv6 与 dots.ocr，Florence-2 只看结构图。"
+    },
+    "footer": "D11 / 讲义 3.1；各栏运行模式分别标注。 候选，未经教师确认。",
+    "concepts": [],
+    "through": "识读",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab"
+  },
+  {
+    "id": "D12",
+    "section": "3.2",
+    "anchor": "通用多模态大模型",
+    "title": "通用多模态大模型：认得字，指不准",
+    "layout": "diagram",
+    "minutes": 7,
+    "transition": "Gemini、GPT 一类通用大模型也能读图。",
+    "question": "通用大模型读文书，长处和短处在哪里？",
+    "student_operation": "选择阶段：识字（PureDocBench）／定位（PP-OCRv6 检测比较、Chronicles-OCR）／现场试一页（请 ChatGPT 与 Gemini 输出文字与坐标，把框画回原图）。",
+    "observable_output": "PureDocBench 原话与数字（Digital −3.34、Real −11.61）；检测得分只及专用中型模型一半左右（厂商自建基准）；Chronicles-OCR 甲骨金文定位近零；现场或保存的框叠在原图上。",
+    "lesson_evidence": "讲义 3.2；PureDocBench（arXiv:2605.07492，结果节）；PP-OCRv6 论文；Chronicles-OCR（arXiv:2605.11960，结果节）。",
+    "mode": "静态内容（论文数字）；现场试一页按共用 API 实际调用，或保存结果回放",
+    "notes": {
+      "purpose": "\"认得出字、指不准位置\"及其分工含义。",
+      "guide": "展示 ChatGPT 与 Gemini（教师 2026-10-18 指定），不排名次，记录上课当周的型号与版本。",
+      "mechanism": "Chronicles-OCR 是字形最陌生材料上的极端例子，不直接推到一般古籍。"
+    },
+    "footer": "D12 / 讲义 3.2；论文数字照录；现场调用见运行标签。 候选，未经教师确认。",
+    "concepts": [],
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui": {
+      "stages": [
+        {
+          "name": "识字",
+          "text": "PureDocBench 以同一批网页内容生成 clean、digital 与 real 三类图像；覆盖手写与古籍有限。",
+          "quote": "Scores drop by 3.34 points on Digital and 11.61 points on Real on average, relative to Clean",
+          "source": "Li 等，PureDocBench v2，结果节；讲义 3.2。",
+          "url": "https://arxiv.org/abs/2605.07492"
+        },
+        {
+          "name": "定位",
+          "text": "PP-OCRv6 论文的厂商自建基准中，所比较大型通用模型最好的三种为 38%—47%，中型专用模型为 86.2%。Chronicles-OCR 的定位近零结论限于甲骨金文。",
+          "source": "PP-OCRv6 与 Chronicles-OCR 结果节；讲义 3.2。",
+          "url": "https://arxiv.org/abs/2605.11960"
+        },
+        {
+          "name": "现场试一页",
+          "text": "选择图像范围，配置 ChatGPT 或 Gemini，再明确同意发送。实际返回的坐标画回原图；保存回复和错误。",
+          "source": "实际请求入口；本课输出待课前运行。"
+        }
+      ]
+    },
+    "ui_copy": {
+      "c001": "识字",
+      "c002": " · 流水线 −",
+      "c003": "现场试一页"
+    }
+  },
+  {
+    "id": "D13",
+    "section": "3.3",
+    "anchor": "另一种错误",
+    "title": "另一种错误：通顺而错误",
+    "layout": "flow4",
+    "minutes": 9,
+    "transition": "视觉语言模型的错误，常常读起来不像错误。",
+    "question": "哪些错误不会在错误率里显出来？",
+    "steps": [
+      "四类错误",
+      "中位数与平均数",
+      "改对与古化",
+      "本课输出"
+    ],
+    "student_operation": "在本课保存的 MLLM 输出中找\"被改对\"的地方；写下自己材料里最可能被改对的两类字词（2 分钟）。",
+    "observable_output": "Gardella 四类错误；最好通用模型 CER 中位数 1.72%、平均数 11.17%；Levchenko 过度古化（GPT-4o 59%）；HisDoc-OCR 原话；本课输出中的改动逐处高亮。",
+    "lesson_evidence": "讲义 3.3；Gardella et al. 2026（第 4—5 节）；Levchenko 2025（方法与结果）；HisDoc-OCR（全文）。",
+    "mode": "静态内容（论文）；本课输出为保存结果回放",
+    "notes": {
+      "purpose": "原书错字与时代写法本身是证据。",
+      "guide": "人名换名一例最能说明问题。",
+      "mechanism": "这类错误对 CER 影响极小（5.2 再谈盲区）。"
+    },
+    "footer": "D13 / 讲义 3.3；论文数字照录；本课模型输出回放。 候选，未经教师确认。",
+    "concepts": [],
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui": {
+      "evidence": [
+        {
+          "text": "Levchenko：GPT-4o 在其 18 世纪俄文印本样本的 59% 文件中出现过度古化。",
+          "quote": "over-historicize",
+          "source": "LM4DH 2025，方法与结果；讲义 3.3。",
+          "url": "https://arxiv.org/abs/2510.06743"
+        },
+        {
+          "text": "HisDoc-OCR 将古字形与退化图像下的错误联系到语言先验压过视觉依据。",
+          "quote": "severe hallucinations, character fabrication, uncontrolled repetition, and semantic drift",
+          "source": "Cao 等，Findings of ACL 2026，6053–6066；讲义 3.3。"
+        }
+      ]
+    },
+    "ui_copy": {
+      "c001": "</p><p class=\"metrics\">CER 中位数 ",
+      "c002": "% · 平均数 ",
+      "c003": "漏读／循环重复",
+      "c004": "统一拼写与标点",
+      "c005": "看不清处补写",
+      "c006": "替换同类人名或国名",
+      "c007": "待课前运行：需要同页的原始识读与 MLLM 实际输出",
+      "c008": "本组最容易被改写的一类字词",
+      "c009": "另一类字词"
+    }
+  },
+  {
+    "id": "D14",
+    "section": "3.4",
+    "anchor": "fig-tools",
+    "title": "按材料选工具",
+    "layout": "diagram",
+    "minutes": 6,
+    "transition": "材料不同，起点工具也不同。",
+    "question": "我的材料该从哪个工具开始试？",
+    "student_operation": "在 @fig-tools 中选最接近自己材料的一行（1 分钟）。",
+    "observable_output": "起点工具与说明；坐标、离线、复现三问；CMMHWR 2026 三项任务与名次；敦煌与胡语一行带\"待核\"标记。",
+    "lesson_evidence": "讲义 3.4；@fig-tools；CMMHWR 2026 结果页（待核 V-05）；MEDUSA 论文；3.4 注（待核 V-06、V-07）。",
+    "mode": "静态内容",
+    "notes": {
+      "purpose": "把选择落到坐标、离线、复现三项考虑。",
+      "guide": "请没有合适一行的同学说材料特殊在哪里。",
+      "mechanism": "专用识读器在见过的语言上仍强；没见过的语言上大模型帮助更大。"
+    },
+    "footer": "D14 / 讲义 3.4 @fig-tools；竞赛名次待核。 候选，未经教师确认。",
+    "concepts": [],
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui": {
+      "tools": [
+        [
+          "ndlocr-lite",
+          "日文近代印刷物、部分手写",
+          "NDLOCR-Lite",
+          "本机运行，有桌面版；类别含柱、页码、振假名。"
+        ],
+        [
+          "ndl-koten-ocr-lite",
+          "日文くずし字古典籍",
+          "NDL 古典籍 OCR-Lite",
+          "以众包翻刻数据训练。"
+        ],
+        [
+          "pp-ocrv6",
+          "中文古籍、中英日及多种拉丁字母文字",
+          "PaddleOCR；识典古籍",
+          "前者开源可本机运行；后者是带标点与存疑字提示的在线整理平台。"
+        ],
+        [
+          "kraken",
+          "欧洲中世纪与近代早期手稿",
+          "Kraken／eScriptorium；CATMuS；MEDUSA",
+          "开源，可针对材料训练；MEDUSA 是微调的视觉语言模型。"
+        ],
+        [
+          "transkribus",
+          "各类手写档案",
+          "Transkribus",
+          "在线平台，按点数计费；材料须上传。"
+        ],
+        [
+          "dunhuang",
+          "敦煌吐鲁番汉文写本及胡语文书",
+          "Kraken／eScriptorium 自训候选",
+          "成熟专用模型与数据集现状待核（V-06、V-07）。"
+        ],
+        [
+          "mllm",
+          "快速初读一页",
+          "通用多模态大模型",
+          "坐标可靠性与文字都须核对。"
+        ]
+      ],
+      "competition": "CMMHWR 2026 三项任务：已见语言；未见罗曼语族的奥克语；另一语族的捷克语。讲义记 MEDUSA 名次为第三、第一、第二；名次待核 V-05。"
+    },
+    "ui_copy": {
+      "c001": "能否回查坐标",
+      "c002": "能否离线运行",
+      "c003": "能否记录版本与复现"
+    }
+  },
+  {
+    "id": "D15",
+    "section": "4.1",
+    "anchor": "fig-eight；成像与几何",
+    "title": "八类干扰：成像与几何",
+    "layout": "flow4",
+    "minutes": 8,
+    "transition": "同一个工具，换一页就可能表现很差；原因常在图像里。",
+    "question": "图像是怎样得来的，会怎样影响识读？",
+    "steps": [
+      "八类总表",
+      "成像来源",
+      "旋转与透视",
+      "重跑检测"
+    ],
+    "student_operation": "判断自己材料的成像来源（1 分钟）；拖动旋转与透视滑块，看 PP-OCRv6 检测框变化。",
+    "observable_output": "@fig-eight 八类（序号沿用助教原序：1 成像来源、2 几何变形、3 文字方向、4 图像信号退化、5 遮挡与材料损伤、6 字体与书写系统、7 版面与内容结构、8 文本分布与语言干扰）；变形后框的漏检与错切。",
+    "lesson_evidence": "讲义第四节导语与 4.1；@fig-eight；PureDocBench clean/digital/real。",
+    "mode": "浏览器实时（公开页影上的变形与 PP-OCRv6 检测）；故障时保存结果回放",
+    "options": {
+      "A": "滑块改图后实时重跑检测",
+      "B": "预存几张变形图的结果",
+      "recommend": "A"
+    },
+    "notes": {
+      "purpose": "建立八类检查清单，先讲第 1、2 类。",
+      "guide": "总数严格为 8，四组讲完。（A／B 教师未另指示，按推荐 A 实施，试用后可改）",
+      "mechanism": "第 1、2 类 4.1；4、5 类 4.2；3、7 类 4.3；6、8 类 4.4。"
+    },
+    "footer": "D15 / 讲义 4.1 @fig-eight；公开页影上的实时计算。 候选，未经教师确认。",
+    "concepts": [
+      "几何变形"
+    ],
+    "through": "干扰自查",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "<p>公开页影上的成像实验；先保存变形页影，再运行真实检测。</p><div class=\"toolbar\">",
+      "c002": "旋转（度）",
+      "c003": "透视参数",
+      "c004": "保存派生页影与参数",
+      "c005": "下载检测模型并实际检测",
+      "c006": "</div><div class=\"two-columns\"><canvas class=\"transform\" aria-label=\"变形后的真实页影\"></canvas>"
+    }
+  },
+  {
+    "id": "D16",
+    "section": "4.2",
+    "anchor": "fig-medusa-synth；退化与损伤",
+    "title": "退化与损伤",
+    "layout": "flow4",
+    "minutes": 7,
+    "transition": "图像质量的损失，与材料本身的损伤，是两回事。",
+    "question": "二值化、破洞与印章怎样干扰识读？",
+    "steps": [
+      "原图",
+      "二值化阈值",
+      "损伤与印章",
+      "校改符号"
+    ],
+    "student_operation": "拖动二值化阈值，看笔画粘连；在敦煌写本或古文书上指出干扰区域（2 分钟）。",
+    "observable_output": "阈值变化下细笔与朱笔消失；MEDUSA 合成流程（@fig-medusa-synth）；P.2011 破洞与收藏印；重文符、倒乙符、删除符示例。",
+    "lesson_evidence": "讲义 4.2；MEDUSA 论文图 3；Smith 2024 IDP 博客（二值化丢失淡墨与朱笔）。",
+    "mode": "浏览器实时（公开页影二值化）；其余静态内容",
+    "notes": {
+      "purpose": "保存与识读用原始彩色或灰度图，二值化只作可选步骤。",
+      "guide": "《史德》\"益→盆\"一例只在本机模式显示。",
+      "mechanism": "校改符号按图像性质归第 5 或第 7 类，处理由录文规范规定。"
+    },
+    "footer": "D16 / 讲义 4.2；公开页影实时二值化；论文图课堂引用。 候选，未经教师确认。",
+    "concepts": [
+      "图像退化",
+      "二值化"
+    ],
+    "through": "干扰自查",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "打开 P.2011 公开页影",
+      "c002": "二值化阈值",
+      "c003": "计算大津阈值",
+      "c004": "另存二值化页影",
+      "c005": "</div><div class=\"two-columns\"><canvas class=\"transform\" aria-label=\"二值化页影；点击登记干扰区域\"></canvas><section><p>点击图像登记干扰位置；当前标记 ",
+      "c006": " 个。</p><pre>",
+      "c007": "MEDUSA 公开合成流程",
+      "c008": "</section></div><p>P.2011 公开扫描已取得，可在原图上指出破损与收藏印。重文符、倒乙符与删除符的位置须回到实际原页核对。</p>"
+    }
+  },
+  {
+    "id": "D17",
+    "section": "4.3",
+    "anchor": "方向与版面",
+    "title": "方向与版面",
+    "layout": "flow4",
+    "minutes": 7,
+    "transition": "文字方向与页面结构，是另一组难点。",
+    "question": "竖排与双行小注为什么难？",
+    "steps": [
+      "竖排评测",
+      "P.2510 双行小注",
+      "学生读序",
+      "机器读序"
+    ],
+    "student_operation": "在 P.2510 上排出正文与双行小注的读序，与机器读序比较。",
+    "observable_output": "Sasagawa 原话；GPT-4.1 单栏合成页横排 1.88%、竖排 18.2%；合成竖排数据稍加训练即可降到 1% 以下（限合成页面）；小注被拼进正文的情况。",
+    "lesson_evidence": "讲义 4.3；Sasagawa et al. 2025（前半，合成数据部分）。",
+    "mode": "静态内容（论文）；读序比较浏览器实时（公开图像）",
+    "notes": {
+      "purpose": "方向与结构需在录文规范中事先规定。",
+      "guide": "回扣 D06 的读序决定。",
+      "mechanism": "真实竖排样本结果未读。"
+    },
+    "footer": "D17 / 讲义 4.3；论文数字照录；读序比较实时。 候选，未经教师确认。",
+    "concepts": [],
+    "through": "干扰自查",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui": {
+      "evidence": [
+        {
+          "text": "合成竖排数据微调后，合成页面 CER 可低于 1%；结论不延伸到未读的真实页面结果。",
+          "quote": "the existing MLLMs perform worse on vertically written Japanese text than on horizontally written Japanese text",
+          "source": "Sasagawa 等，2025，合成数据部分；讲义 4.3。",
+          "url": "https://arxiv.org/abs/2511.15059"
+        }
+      ]
+    },
+    "ui_copy": {
+      "c001": "<p class=\"metrics\">GPT-4.1 · 合成单栏页：横排 ",
+      "c002": "% / 竖排 ",
+      "c003": "打开 P.2510 公开页影",
+      "c004": "在原图上拖动框选（人工标注）",
+      "c005": "正文",
+      "c006": "注释",
+      "c007": "正文",
+      "c008": "实际取得机器识读与读序",
+      "c009": "<p>人工框选另存记录；拖动或用上下键排列正文与小注。机器结果待课前运行，可导入保存记录比较。</p>",
+      "c010": "打开 P.2510 后，可框选正文与双行小注，保存人工读序。"
+    }
+  },
+  {
+    "id": "D18",
+    "section": "4.4",
+    "anchor": "字形、书写系统与文本分布",
+    "title": "字形、书写系统与文本分布",
+    "layout": "diagram",
+    "minutes": 8,
+    "transition": "最后两类关于文字用什么写、写了什么。",
+    "question": "我的材料在八类中最严重的是哪两类？",
+    "student_operation": "用八类清单为自己的材料逐类打勾，找出最严重的两类（2 分钟）。",
+    "observable_output": "HR-Ciphers 2024、早期印本字形检测（ICDAR 2025）要点；打勾汇总与导出。",
+    "lesson_evidence": "讲义 4.4；Fornés et al. ICDAR 2024；Seuret et al. ICDAR 2025 竞赛页。",
+    "mode": "静态内容（论文）；打勾浏览器实时，存入贯穿记录",
+    "notes": {
+      "purpose": "把八类变成学生可带走的检查清单。",
+      "guide": "课间休息前收束。",
+      "mechanism": "打勾结果进入贯穿第 4 阶段。"
+    },
+    "footer": "D18 / 讲义 4.4；打勾记录存于本浏览器。 候选，未经教师确认。",
+    "concepts": [],
+    "through": "干扰自查",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui": {
+      "evidence": [
+        {
+          "text": "ICDAR 2025 早期印本字形检测：15 世纪活字模仿手写体，缩写和连字多；标注以精度为先，未覆盖全页。",
+          "source": "竞赛页；讲义 4.4。",
+          "url": "https://lme.tf.fau.de/?p=23865"
+        },
+        {
+          "text": "HR-Ciphers 2024：五类共 691 页历史密码文书，多数使用自造符号字母表；词典和语言模型难以提供通常的帮助。",
+          "source": "Fornés 等，接受稿；讲义 4.4。",
+          "url": "https://ddd.uab.cat/record/325042"
+        }
+      ]
+    },
+    "ui_copy": {
+      "c001": "<p class=\"metrics\">本组最严重的两类：",
+      "c002": "、",
+      "c003": "请评分",
+      "c004": "导出八类干扰记录"
+    }
+  },
+  {
+    "id": "D19",
+    "section": "5.1",
+    "anchor": "fig-medusa-conv；小样本与录文规范",
+    "title": "录文规范先于转录",
+    "layout": "flow4",
+    "minutes": 9,
+    "transition": "要知道识读错了多少，先要有一份按规范做的人工转录。",
+    "question": "同一页，为什么会有两份都\"对\"的转录？",
+    "steps": [
+      "分层抽样",
+      "照录与半照录",
+      "四维规范",
+      "写三条规范"
+    ],
+    "student_operation": "切换 Folger 第 6 行照录与半照录；为本组材料写三条录文规范（3 分钟）。",
+    "observable_output": "\"Sowe his wild oot{es}\"与展开形式；MEDUSA 四维（缩写、分词、u/v 与 i/j、字母异体）；学生规范存入贯穿记录；附录\"扩充部分\"入口。",
+    "lesson_evidence": "讲义 5.1；EMMO Folger MS L.a.2 转录（CC BY-SA 4.0）；MEDUSA 图 2。",
+    "mode": "静态内容（公开转录）；规范记录浏览器实时",
+    "notes": {
+      "purpose": "分层抽样、先定规范、对着同一张图像转录。",
+      "guide": "NFC 与字形映射的区别在下一页算给学生看。",
+      "mechanism": "扩充部分（刘向、陈垣、TEI、IVS、IIIF）不占课堂时间。"
+    },
+    "footer": "D19 / 讲义 5.1 @fig-medusa-conv；公开转录；规范记录本浏览器保存。 候选，未经教师确认。",
+    "concepts": [
+      "人工转录小样本",
+      "参照转录",
+      "录文规范",
+      "Unicode 规范化"
+    ],
+    "through": "规范与小样本",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui": {
+      "dimensions": [
+        "缩写",
+        "分词",
+        "u/v 与 i/j",
+        "字母异体"
+      ]
+    },
+    "ui_copy": {
+      "c001": "照录本",
+      "c002": "半照录本",
+      "c003": "<div class=\"quote-card\"><b>Folger MS L.a.2 · 1r · 第 6 行</b><p>",
+      "c004": "</p><p class=\"caption\">EMMO 公开转录 · CC BY-SA 4.0 · <a href=\"",
+      "c005": "\" target=\"_blank\" rel=\"noopener\">回到来源</a></p></div><div class=\"four-types\">",
+      "c006": "MEDUSA 转录规范四维",
+      "c007": "<a href=\"#D25\">概念讲解表与扩充解释 →</a>"
+    }
+  },
+  {
+    "id": "D20",
+    "section": "5.2",
+    "anchor": "fig-cer",
+    "title": "字符错误率及其盲区",
+    "layout": "flow4",
+    "minutes": 9,
+    "transition": "有了参照转录，就能算出识读错了多少。",
+    "question": "同一个识读结果，错误率为什么可以差三倍？",
+    "steps": [
+      "逐字对齐",
+      "S／D／I 计数",
+      "规范化与映射",
+      "盲区"
+    ],
+    "student_operation": "切换字形映射开关；切换按行与整页比较；任选一行手算 CER 并标出改变文义的错（3 分钟）。",
+    "observable_output": "CER=(S+D+I)/N；3/115≈2.6%，映射\"説→說\"\"断→斷\"后 1/115≈0.87%；读序打乱时按行与整页两种结果；平均数与中位数。",
+    "lesson_evidence": "讲义 5.2；@fig-cer（参照为第五周局部工作转写，非正式校本）；OCR-D 评测规范；Beyene & Dancy 2026。",
+    "mode": "浏览器实时（真实识读输出与工作转写；本机材料）；公开构建用 Folger 识读结果与 EMMO 转录",
+    "notes": {
+      "purpose": "会算 CER，并知道它依赖规范、看不见文义轻重。",
+      "guide": "先算 3/115，再打开映射。",
+      "mechanism": "复用 modules/history-demo/math.js 编辑距离与路径。"
+    },
+    "footer": "D20 / 讲义 5.2 @fig-cer；浏览器实时计算。 候选，未经教师确认。",
+    "concepts": [
+      "字符错误率"
+    ],
+    "through": "规范与小样本",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab"
+  },
+  {
+    "id": "D21",
+    "section": "5.3",
+    "anchor": "OCR 后处理",
+    "title": "后处理：改对，还是改坏",
+    "layout": "flow4",
+    "minutes": 9,
+    "transition": "识读之后仍有错字，于是有人请大模型来改。",
+    "question": "模型只看文本改字，会出什么问题？",
+    "steps": [
+      "原始识读",
+      "只给文本",
+      "同时给图",
+      "逐处判定"
+    ],
+    "student_operation": "在两份后处理结果中各找一处被\"改对\"的原文写法（2 分钟），把每处改动判为采纳或驳回。",
+    "observable_output": "三栏对照与改动高亮；HIPE-OCRepair 2.26%→0.50% 与\"Overcorrection on low-noise inputs\"原话；Boros 2024 原话；Levchenko 原话。",
+    "lesson_evidence": "讲义 5.3；Boros et al. 2024（摘要）；HIPE-OCRepair 2026（主要各节）；Levchenko 2025。",
+    "mode": "保存结果回放；可现场按共用 API 实际调用",
+    "notes": {
+      "purpose": "后处理是有风险的编辑：保留原始识读、列出改动、抽查、小样本验证。",
+      "guide": "先看只给文本的那份。",
+      "mechanism": "判定结果进入贯穿第 6 阶段。"
+    },
+    "footer": "D21 / 讲义 5.3；预存两种提示的输出，现场调用见运行标签。 候选，未经教师确认。",
+    "concepts": [
+      "OCR 后处理",
+      "过度纠正"
+    ],
+    "through": "修订",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui": {
+      "evidence": [
+        {
+          "quote": "Overcorrection on low-noise inputs emerges as a recurring challenge",
+          "text": "HIPE-OCRepair 比较只给文本的后处理；保留结果变好与低噪声过度纠正这两个观察。",
+          "source": "Ehrmann 等，2026；讲义 5.3。",
+          "url": "https://arxiv.org/abs/2607.08143"
+        },
+        {
+          "quote": "Our evaluation shows that LLMs are anything but efficient at this task",
+          "text": "Boros 等 2024 的结论来自其 14 个基础模型与历史转写评测。",
+          "source": "LaTeCH-CLfL 2024；讲义 5.3。"
+        },
+        {
+          "quote": "degrades rather than improves performance",
+          "text": "Levchenko 的后处理观察限于其俄文历史印本样本。",
+          "source": "LM4DH 2025；讲义 5.3。",
+          "url": "https://arxiv.org/abs/2510.06743"
+        }
+      ]
+    }
+  },
+  {
+    "id": "D22",
+    "section": "5.4",
+    "anchor": "fig-record；对校实践",
+    "title": "对校实践：四层记录",
+    "layout": "workbench",
+    "minutes": 10,
+    "transition": "把本讲的方法落到一次完整操作上。",
+    "question": "一处修改，要留下哪些记录才能被检验？",
+    "student_operation": "两人一组选一种材料（《史德》一页／Folger 前 8 行／たまかき書状前若干行／P.2965 一段），转录约 5 行，一人读原图一人持识读结果对照；与预发参照转录比对；差异分三类；填四层记录并导出。",
+    "observable_output": "逐行差异表（识读错误／规范差异／无法判定）；四层记录（原图、原始识读、修订、页码）；导出 Markdown 与 JSON。",
+    "lesson_evidence": "讲义 5.4；@fig-record；EMMO 照录本；たまかき書状与 P.2965 的识读结果和参照转录（待课前准备）。",
+    "mode": "浏览器实时（预存识读结果）；《史德》为本机材料",
+    "notes": {
+      "purpose": "原始识读不能被修订后的文本覆盖。",
+      "guide": "时间不足只做前三步，四层记录课后补交。",
+      "mechanism": "页码层分列原书叶码、影印本页码、PDF 页序、图像编号（《史德》待核 V-01）。"
+    },
+    "footer": "D22 / 讲义 5.4 @fig-record；预存识读结果上的实时对照与记录。 候选，未经教师确认。",
+    "concepts": [],
+    "through": "四层记录",
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab"
+  },
+  {
+    "id": "D23",
+    "section": "结语",
+    "anchor": "结语：留得住",
+    "title": "留得住",
+    "layout": "hero",
+    "minutes": 5,
+    "transition": "回到导入的问题。",
+    "question": "一行电子文本，凭什么可以代替原页被引用？",
+    "student_operation": "无。",
+    "observable_output": "看得见、读得准、排得对、留得住；下一讲：从识读好的文本中抽取实体。",
+    "lesson_evidence": "讲义结语。",
+    "mode": "静态内容",
+    "notes": {
+      "purpose": "收束四点并接下一讲。",
+      "guide": "回扣第五周\"每一句能否回到原文\"。",
+      "mechanism": "人名错误、异体字与录文规范将直接决定抽取结果。"
+    },
+    "footer": "D23 / 讲义结语；静态内容。 候选，未经教师确认。",
+    "concepts": [],
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "<div class=\"hero-copy\"><h2>看得见 · 读得准<br>排得对 · 留得住</h2><p>",
+      "c002": "</p><a href=\"#D24\">回到贯穿记录 →</a></div>"
+    }
+  },
+  {
+    "id": "D24",
+    "section": "贯穿",
+    "anchor": "全讲",
+    "title": "贯穿：从一页原图到一行可引用的文本",
+    "layout": "through",
+    "minutes": 0,
+    "transition": "把同一页材料从原图一路走到四层记录。",
+    "question": "第五周库里的那份《史德》文本，是从哪里来的？（公开版：Folger MS L.a.2）",
+    "steps": [
+      "原图身份",
+      "版面与读序",
+      "识读",
+      "干扰自查",
+      "规范与小样本",
+      "修订",
+      "四层记录"
+    ],
+    "student_operation": "逐阶段完成并记下；可跳去对应讲解页再返回；最后导出记录。",
+    "observable_output": "一份完整的四层记录与自查清单。",
+    "lesson_evidence": "讲义全讲；材料身份见 materials.json。",
+    "mode": "浏览器实时；本机版经导入页读取教师原件，公开版用 Folger 公开图像与 EMMO 转录",
+    "notes": {
+      "purpose": "把全讲方法链条在一页材料上走通。",
+      "guide": "教师 2026-10-18 同意本机用《史德》、公开版用 Folger，之后可能更新材料。",
+      "mechanism": "第 3 阶段锁定原始识读，后续阶段不得覆盖。"
+    },
+    "footer": "D24 / 贯穿；记录存于本浏览器，可导出与恢复。 候选，未经教师确认。",
+    "concepts": [],
+    "theme": "light",
+    "status": "implemented",
+    "component": "week06-lab",
+    "ui_copy": {
+      "c001": "<p>本机版：《史德》；公开版：Folger 1r。每一步承接前一步的图像身份。改动上游后，下游重新完成；第 3 阶段原始识读锁定。</p>",
+      "c002": "已保存 · ",
+      "c003": "当前阶段",
+      "c004": "先完成前一阶段",
+      "c005": "\">转到讲解／操作页</a>",
+      "c006": "锁定原始识读",
+      "c007": "完成此阶段",
+      "c008": "使用文字候选",
+      "c009": "使用带图候选",
+      "c010": "导出与保存贯穿记录",
+      "c011": "新建空白贯穿记录",
+      "c012": "<label>恢复贯穿记录 JSON<input type=\"file\" data-k=\"restore\" accept=\".json\"></label></div><details><summary>当前已保存阶段</summary><pre>"
+    }
+  },
+  {
+    "id": "D25",
+    "section": "附录",
+    "anchor": "概念讲解表",
+    "title": "概念讲解表",
+    "layout": "concepts",
+    "minutes": 0,
+    "transition": "本讲 34 个概念，按理解的先后分六组。",
+    "question": "这个词在本讲是什么意思、第一次出现在哪一页？",
+    "student_operation": "搜索、按组浏览、点首次出现页。",
+    "observable_output": "34 条概念卡与前几周已讲清单。",
+    "lesson_evidence": "第六周概念讲解表.typ（2026-10-18，34 条）。",
+    "mode": "静态内容＋客户端搜索",
+    "notes": {
+      "purpose": "随时查概念。",
+      "guide": "顶栏\"概念表\"随时进入。",
+      "mechanism": "由 typ-concepts-to-md.mjs 转换；CER 公式条目保留 ⚠。"
+    },
+    "footer": "D25 / 附录；概念讲解表转换。 候选，未经教师确认。",
+    "concepts": [],
+    "theme": "light",
+    "status": "implemented",
+    "component": "concept-table"
+  }
+]

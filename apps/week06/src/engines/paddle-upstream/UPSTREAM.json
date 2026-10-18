@@ -1,0 +1,259 @@
+{
+  "repository": "https://github.com/PaddlePaddle/PaddleOCR",
+  "commit": "dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf",
+  "version": "0.4.2",
+  "files": [
+    {
+      "path": "index.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/index.ts",
+      "sha256": "b74e0208ae4d13a6a6f861d6790f43f09224d11dacb0416f82ce9c59f0a38ed0",
+      "bytes": 1368
+    },
+    {
+      "path": "models/common.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/models/common.ts",
+      "sha256": "d50f7b740c1f8966c7b8c99b84c3ae0e688a0fe73966486efd4116d845cc4496",
+      "bytes": 7641
+    },
+    {
+      "path": "models/det.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/models/det.ts",
+      "sha256": "8ea4378c7cda0df51b605eacdd91aca9a4ea77025ff34dcb4d8d20a00ec6e5e7",
+      "bytes": 16449
+    },
+    {
+      "path": "models/index.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/models/index.ts",
+      "sha256": "0afcd4f795ff14afe644c1f88e9cb0eb3d9db4d25b3f41dd50868384bd2ee47d",
+      "bytes": 510
+    },
+    {
+      "path": "models/infer.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/models/infer.ts",
+      "sha256": "e9b2cdad10457ddf5c75a803940db7e861e94a0e9cc60b4826c40e1da468bf2b",
+      "bytes": 444
+    },
+    {
+      "path": "models/rec.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/models/rec.ts",
+      "sha256": "cbf13aa70e340fb9db2eaa6db368999415f9f46dcbc6d29d2ecf6f8acf7cdbdc",
+      "bytes": 9787
+    },
+    {
+      "path": "pipelines/index.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/pipelines/index.ts",
+      "sha256": "7d2d4a058267ed3ba25e3a1cc24f6d3db5588a69ee4969455f4bd7da2bdfe529",
+      "bytes": 209
+    },
+    {
+      "path": "pipelines/ocr/config.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/pipelines/ocr/config.ts",
+      "sha256": "01956c487715ea5dd9a938b691b0816f4277de4deb797f403d7060e7441dfead",
+      "bytes": 7754
+    },
+    {
+      "path": "pipelines/ocr/core.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/pipelines/ocr/core.ts",
+      "sha256": "4fdb157717f433fef9b28d2fcc0565f685134d2b770cacf879315111a637706a",
+      "bytes": 10672
+    },
+    {
+      "path": "pipelines/ocr/crop.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/pipelines/ocr/crop.ts",
+      "sha256": "9a2ca52e86d32dc55ef493afff70ba900bc63b815f1ebee9a79c393f5f431b1d",
+      "bytes": 1784
+    },
+    {
+      "path": "pipelines/ocr/default-config.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/pipelines/ocr/default-config.ts",
+      "sha256": "6ce361b5762b02258c03622821526497765b0afa5a42879a7fffa907e12db015",
+      "bytes": 1212
+    },
+    {
+      "path": "pipelines/ocr/index.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/pipelines/ocr/index.ts",
+      "sha256": "11c6fdb0682b34abbd915969bb839831b97a36945b327617e21d260ceadca4c7",
+      "bytes": 3126
+    },
+    {
+      "path": "pipelines/ocr/runtime-params.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/pipelines/ocr/runtime-params.ts",
+      "sha256": "8272f83ff945df9184018674a4276bb92e492565fd61bdda02cd844246a7974b",
+      "bytes": 3435
+    },
+    {
+      "path": "pipelines/ocr/shared.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/pipelines/ocr/shared.ts",
+      "sha256": "ca15dfdbbbb537338bfc7f47f23c0f0dcb652689a1d8596ae7e4232537078cfa",
+      "bytes": 18577
+    },
+    {
+      "path": "pipelines/ocr/worker-backed.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/pipelines/ocr/worker-backed.ts",
+      "sha256": "81ce1f74fbace5909a3ac39f660037778c7684f26a2653f61a479b2650ff6839",
+      "bytes": 5082
+    },
+    {
+      "path": "pipelines/ocr/worker-entry.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/pipelines/ocr/worker-entry.ts",
+      "sha256": "44ee654f54c9ec80b556b182e09dc94f6fc8257a298482430c6b8497fa2a9388",
+      "bytes": 1707
+    },
+    {
+      "path": "platform/browser.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/platform/browser.ts",
+      "sha256": "a0c76ba05de4f5e6a73d759de7b9ac00b366213bd284333bd2272c3a181d6a11",
+      "bytes": 3677
+    },
+    {
+      "path": "platform/worker.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/platform/worker.ts",
+      "sha256": "e6d926338feafbda3d6c228dd28edc04fa4ae8814c3fff8a6628c2ddc905a396",
+      "bytes": 2207
+    },
+    {
+      "path": "resources/index.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/resources/index.ts",
+      "sha256": "f6fa0e592dabdc094695bd5dd440cf241a592f4624a1213768a30b0c060d0b8d",
+      "bytes": 478
+    },
+    {
+      "path": "resources/model-asset.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/resources/model-asset.ts",
+      "sha256": "4e79fb183ee8cdf5332b18c3db2a7f751c24415e86a11f5e732af54e1eac94b7",
+      "bytes": 4710
+    },
+    {
+      "path": "resources/tar.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/resources/tar.ts",
+      "sha256": "8bc88c5834cd2cc3475b4ac4cfe88aee6098a362e5f71955303b396cc7f67b3f",
+      "bytes": 2461
+    },
+    {
+      "path": "runtime/index.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/runtime/index.ts",
+      "sha256": "da55a81307b5df56459cef407858ebf3a6b198c9dbee4a7b9ba75c3618783575",
+      "bytes": 158
+    },
+    {
+      "path": "runtime/opencv.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/runtime/opencv.ts",
+      "sha256": "7ff0d53096a1c423315feca8ea59c7349b85f15254ab855de7d5d54f7afdb8bf",
+      "bytes": 998
+    },
+    {
+      "path": "runtime/ort.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/runtime/ort.ts",
+      "sha256": "cfad473a5b42bbb04d6d501cb7257ecf6a2827fec4555e31a9e09098f4f3a866",
+      "bytes": 4073
+    },
+    {
+      "path": "types/clipper-lib.d.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/types/clipper-lib.d.ts",
+      "sha256": "36599b30cfd47133195bec61e2444f5b67b6e4217318c960e88e20cb346ada58",
+      "bytes": 759
+    },
+    {
+      "path": "types/index.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/types/index.ts",
+      "sha256": "a924aa8ca4e1687974816c6f37066313e3aef6d22fe23f0d50509162e1604916",
+      "bytes": 1758
+    },
+    {
+      "path": "types/opencv.d.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/types/opencv.d.ts",
+      "sha256": "115ab7cbbf6791b6fff62bcd72ff96d6a65e5ea497b5c6eaea4d436c23824b91",
+      "bytes": 2880
+    },
+    {
+      "path": "utils/common.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/utils/common.ts",
+      "sha256": "a1530a3aaa5c16553ace4d28b3a9fa093fa03778bfc863ab53f6e8c27e6b98d8",
+      "bytes": 2008
+    },
+    {
+      "path": "viz/canvas-factory.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/viz/canvas-factory.ts",
+      "sha256": "bfe303cabad55558ed100e50cb6ba37f7955416912a5d1e9ba39d1fcc2093181",
+      "bytes": 1180
+    },
+    {
+      "path": "viz/color.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/viz/color.ts",
+      "sha256": "d69789a8979dfdeeae23dc38bc14fedce66c546ff150e3b9b8c193d3f0996b44",
+      "bytes": 487
+    },
+    {
+      "path": "viz/font.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/viz/font.ts",
+      "sha256": "9cf722de0c1979dd90e13368cefabb85f320d3bc275ca9e03b07f805858b22ce",
+      "bytes": 554
+    },
+    {
+      "path": "viz/index.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/viz/index.ts",
+      "sha256": "58c9f67de68287d9d4f176554c73bcb0a4ff427248c859053cf55b37609f9160",
+      "bytes": 351
+    },
+    {
+      "path": "viz/ocr/draw-boxes.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/viz/ocr/draw-boxes.ts",
+      "sha256": "f3c35df6827afc12e952704e1a871ae8e609bd20bf811353570ca20836131080",
+      "bytes": 1555
+    },
+    {
+      "path": "viz/ocr/draw-text.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/viz/ocr/draw-text.ts",
+      "sha256": "9fa24ec15eec7abfeb20aad3a7bf8df7262311bbcf5556e70f5a23a8c33843ce",
+      "bytes": 5142
+    },
+    {
+      "path": "viz/ocr/renderer.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/viz/ocr/renderer.ts",
+      "sha256": "224a10e12e6e2c4fe879f6872fdac19bb226148202fae69c86423dddb2d57d57",
+      "bytes": 2500
+    },
+    {
+      "path": "viz/ocr/side-by-side.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/viz/ocr/side-by-side.ts",
+      "sha256": "75ef8098abefb06902b737ac26ffedd459c46bca7a524e4698e6b0cf2ca6d345",
+      "bytes": 1983
+    },
+    {
+      "path": "viz/ocr/types.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/viz/ocr/types.ts",
+      "sha256": "482aa9c8ef0ddad2b7f2ccc693cb6442ce7d40c79619260e77c9baa6d88fb5bf",
+      "bytes": 849
+    },
+    {
+      "path": "viz/types.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/viz/types.ts",
+      "sha256": "9406de6fb0fd84ec1a39fc4dda06d9a9e53886fd42f276b1400defd6e8e4bff3",
+      "bytes": 474
+    },
+    {
+      "path": "worker/client.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/worker/client.ts",
+      "sha256": "4795e7c4698b01c8565cb45e8546cf7e851ea7643827e51ad3dcb7b93686dc47",
+      "bytes": 2996
+    },
+    {
+      "path": "worker/entry.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/worker/entry.ts",
+      "sha256": "05eb78af8c90deb19f936ed9ea6b17f01d4dc9cdb34ca7b764afe7faffb3f256",
+      "bytes": 1144
+    },
+    {
+      "path": "worker/protocol.ts",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/paddleocr-js/packages/core/src/worker/protocol.ts",
+      "sha256": "6a6088623b6b68a5357b0788ca2134ffb175e39335a5e8ff3bdb107ca63e90dd",
+      "bytes": 2426
+    },
+    {
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/LICENSE",
+      "sha256": "3840c5c0c61c294264d2dd77b8777be6ddd90121ef4e0e64abcd22edea581d6e",
+      "bytes": 11376
+    }
+  ]
+}
