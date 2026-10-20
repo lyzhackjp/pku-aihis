@@ -15,9 +15,11 @@ export async function initPaddle(kind:'pp-det'|'pp-rec',progress:(s:string)=>voi
  return (kind==='pp-det'?det:rec).provider;
 }
 function bgrImage(cv:any,image:ImageData){const rgba=cv.matFromArray(image.height,image.width,cv.CV_8UC4,image.data),bgr=new cv.Mat();cv.cvtColor(rgba,bgr,cv.COLOR_RGBA2BGR);rgba.delete();return bgr;}
-export async function paddleLine(image:ImageData,progress:(s:string)=>void){
- await initPaddle('pp-rec',progress);const {cv}=await initOpenCvRuntime(),bgr=bgrImage(cv,image);
- try{return (await rec.predict(cv,[bgr]))[0];}finally{bgr.delete();}
+export async function paddleLine(image:ImageData,progress:(s:string)=>void,options:{autoRotate?:boolean}={}){
+ await initPaddle('pp-rec',progress);const {cv}=await initOpenCvRuntime(),bgr=bgrImage(cv,image);let input=bgr,rotation=0;
+ // Same orientation rule as upstream cropByPoly, without re-warping an axis-aligned crop.
+ if(options.autoRotate!==false&&bgr.rows/Math.max(1,bgr.cols)>=1.5){input=new cv.Mat();cv.rotate(bgr,input,cv.ROTATE_90_COUNTERCLOCKWISE);rotation=-90;}
+ try{const result=(await rec.predict(cv,[input]))[0];return {...result,input:{...result.input,rotation}};}finally{if(input!==bgr)input.delete();bgr.delete();}
 }
 export async function paddle(image:ImageData,progress:(s:string)=>void,detectOnly=false){
  await initPaddle('pp-det',progress);if(!detectOnly)await initPaddle('pp-rec',progress);const {cv}=await initOpenCvRuntime(),bgr=bgrImage(cv,image),crops=[];

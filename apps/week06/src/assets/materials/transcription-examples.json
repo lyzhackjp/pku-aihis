@@ -1,0 +1,124 @@
+[
+  {
+    "id": "en",
+    "label": "英文 · Folger",
+    "source": "https://emmo.folger.edu/view/La2/diplomatic/；L.a.2，第1r页，第6行；EMMO已有公开转录",
+    "tier": "公开转录",
+    "status": "照录/半照录改变缩写标示，不是改正机器错误",
+    "versions": [
+      {
+        "name": "照录",
+        "text": "a voyage into Ireland to go Sowe his wild oot{es} god Send them"
+      },
+      {
+        "name": "半照录",
+        "text": "a voyage into Ireland to go Sowe his wild ootes god Send them"
+      }
+    ],
+    "dimensions": [
+      "缩写：{es} → es（原版以斜体标示）",
+      "分词：保留",
+      "字形：此行不改",
+      "标点／行款：保留行界"
+    ]
+  },
+  {
+    "id": "la",
+    "label": "古法文 · CATMuS",
+    "source": "CATMuS general principles, Exemple：BnF, Département des manuscrits, fr.412，示例第二行；https://catmus-guidelines.github.io/html/guidelines/en/generalites.html；2026-10-20核读",
+    "tier": "公开规范的短行节录；展开由本课拟",
+    "status": "采用原网页9词短行；不复制未核许可的页影。q̃展开为que是本课规范示例，待教师确认。",
+    "versions": [
+      {
+        "name": "保留缩写（CATMuS原行）",
+        "text": "manda q̃ symon li enchanterres uenist"
+      },
+      {
+        "name": "展开缩写（本课拟）",
+        "text": "manda que symon li enchanterres uenist"
+      }
+    ],
+    "dimensions": [
+      "缩写：q̃→que",
+      "分词：保留",
+      "字形：uenist保留，不另改v/u",
+      "标点／行款：保持同一行，不增标点"
+    ]
+  },
+  {
+    "id": "ja",
+    "label": "日文 · たまかき",
+    "source": "京都府立京都学・歴彩館「国宝東寺百合文書展―人・物・情報が行き交う中世― 文書の解説（後期）」2016、掲載番号51、印刷p19／PDF頁序21、冒頭部抜粋；https://hyakugo.pref.kyoto.lg.jp/wordpress_jp/wp-content/uploads/exhib_2016_2.pdf",
+    "tier": "据翻刻；本课读下候选",
+    "status": "京都府立京都学・歴彩館 東寺百合文書WEB から。网站内容原则CC BY 2.1 JP，本页未见非CC标记；改写部分为本课拟，未经教师确认。翻刻边注释字未混入正文。",
+    "versions": [
+      {
+        "name": "翻刻（照录节录）",
+        "text": "ゆうせいの御事、かやうに御なり候事、御いたわしさ"
+      },
+      {
+        "name": "读下／汉字与假名整理（本课拟）",
+        "text": "祐清の御事、かようにおなり候うこと、御いたわしさ"
+      }
+    ],
+    "dimensions": [
+      "缩写：本节录无缩写展开",
+      "分词：保留刊本逗点，不加空格",
+      "字形：ゆうせい→祐清（据刊本边注）；かやう→かよう",
+      "标点／行款：节录同一文句；候→候う为本课读下，页影行界不据此重排"
+    ],
+    "rights": {
+      "license": "CC BY 2.1 JP（官方网站一般条款）",
+      "url": "https://hyakugo.pref.kyoto.lg.jp/?page_id=1453",
+      "checked": "2026-10-20",
+      "attribution": "京都府立京都学・歴彩館 東寺百合文書WEB から",
+      "pdf_sha256": "83100ef3226cbee198dfdb36556ecf07ea998568f913de7a861a19ae7eddd664"
+    }
+  },
+  {
+    "id": "zh",
+    "label": "中文刻本 ·《史德》",
+    "source": "1926年本《章氏遺書》所收《文史通義》，印刷页141，PDF161；本课拟",
+    "tier": "人工参照候选，待逐字核对",
+    "status": "教学规范对照，课前核对，不用作模型评测参照。",
+    "versions": [
+      {
+        "name": "原字形／不加句读",
+        "text": "才學識三者得一不易而兼三尤難"
+      },
+      {
+        "name": "通行规范字／加句读",
+        "text": "才学识三者，得一不易，而兼三尤难。"
+      }
+    ],
+    "dimensions": [
+      "缩写：无",
+      "分词：不加空格",
+      "字形：繁体原字／通行简化字",
+      "标点／行款：不加／本课拟句读"
+    ]
+  },
+  {
+    "id": "dh",
+    "label": "敦煌写本",
+    "source": "P.2510 公开局部；参照待课前准备（E10）",
+    "tier": "来源待核",
+    "status": "框架：待人工照录后填写，避免以印本正字替代原图。",
+    "versions": [
+      {
+        "name": "照录俗字",
+        "text": ""
+      },
+      {
+        "name": "校录正字",
+        "text": ""
+      }
+    ],
+    "dimensions": [
+      "缩写：重文符保留／展开",
+      "分词：按原行",
+      "字形：俗字／正字",
+      "标点／行款：倒乙符保留／调整读序并记校"
+    ]
+  }
+]

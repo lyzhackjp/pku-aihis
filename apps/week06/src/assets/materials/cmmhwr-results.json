@@ -1,0 +1,169 @@
+{
+  "candidate": true,
+  "url": "https://cmmhwr26.inria.fr/results/",
+  "checked": "2026-10-20",
+  "archived_pdf": "CMMHWR2026_Results_20261017.pdf，PDF页序1—3",
+  "archived_sha256": "8fd60b83bb17a2e39908605551eb6b1a1383861196748bf21aae67d496434ee6",
+  "tasks": [
+    "任务1：法／拉丁／西班牙宏平均",
+    "任务2：奥克语",
+    "任务3：捷克语"
+  ],
+  "note": "CER百分比，越低越好；各队最佳提交。空值为未提交；基线未做额外调整。论文自报数字不混入此表。",
+  "rows": [
+    {
+      "team": "PERO",
+      "cer": [
+        7.71,
+        6.58,
+        10.27
+      ],
+      "baseline": false,
+      "medusa": false,
+      "late": false
+    },
+    {
+      "team": "Swedish National Archives AI lab",
+      "cer": [
+        7.73,
+        6.83,
+        23.39
+      ],
+      "baseline": false,
+      "medusa": false,
+      "late": false
+    },
+    {
+      "team": "École nationale des chartes / MEDUSA",
+      "cer": [
+        8.03,
+        5.01,
+        10.79
+      ],
+      "baseline": false,
+      "medusa": true,
+      "late": false
+    },
+    {
+      "team": "PRHLT-tS",
+      "cer": [
+        8.23,
+        7.43,
+        25.99
+      ],
+      "baseline": false,
+      "medusa": false,
+      "late": false
+    },
+    {
+      "team": "FamilySearch & GGateway",
+      "cer": [
+        9.02,
+        8.5,
+        24.04
+      ],
+      "baseline": false,
+      "medusa": false,
+      "late": false
+    },
+    {
+      "team": "TeamAnannya",
+      "cer": [
+        9.09,
+        9.56,
+        27.17
+      ],
+      "baseline": false,
+      "medusa": false,
+      "late": false
+    },
+    {
+      "team": "Kraken + CATMuS Medieval 1.6 基线",
+      "cer": [
+        9.3,
+        7.92,
+        25.92
+      ],
+      "baseline": true,
+      "medusa": false,
+      "late": false
+    },
+    {
+      "team": "Teodor Bors",
+      "cer": [
+        9.61,
+        9.71,
+        27.38
+      ],
+      "baseline": false,
+      "medusa": false,
+      "late": false
+    },
+    {
+      "team": "Qianfan-OCR",
+      "cer": [
+        9.94,
+        null,
+        null
+      ],
+      "baseline": false,
+      "medusa": false,
+      "late": false
+    },
+    {
+      "team": "STUDIUM.AI",
+      "cer": [
+        12.87,
+        null,
+        null
+      ],
+      "baseline": false,
+      "medusa": false,
+      "late": false
+    },
+    {
+      "team": "Devansh Gupta",
+      "cer": [
+        14.81,
+        13.08,
+        33.35
+      ],
+      "baseline": false,
+      "medusa": false,
+      "late": false
+    },
+    {
+      "team": "flame_cai",
+      "cer": [
+        15.48,
+        13.74,
+        29.04
+      ],
+      "baseline": false,
+      "medusa": false,
+      "late": false
+    },
+    {
+      "team": "nampfiev1995",
+      "cer": [
+        42.38,
+        null,
+        null
+      ],
+      "baseline": false,
+      "medusa": false,
+      "late": false
+    },
+    {
+      "team": "PERO（逾期生产模型）",
+      "cer": [
+        6.94,
+        6.08,
+        10.11
+      ],
+      "baseline": false,
+      "medusa": false,
+      "late": true
+    }
+  ]
+}
