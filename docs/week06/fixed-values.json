@@ -35,7 +35,7 @@
         "D09",
         "D22"
       ],
-      "what": "含'謂足姦'的行",
+      "what": "含'謂足姦'的行及其检测置信度 CONF",
       "expect": {
         "ORDER": "3",
         "CONF": 0.856,
@@ -50,7 +50,7 @@
       "page": [
         "D09"
       ],
-      "what": "置信度最低两行",
+      "what": "检测置信度 CONF 最低两行",
       "expect": [
         {
           "ORDER": "15",
@@ -112,9 +112,9 @@
         "D08"
       ],
       "what": "NDLOCR-Lite 字表",
-      "source": "ndl-lab/ndlocr-lite src/config/NDLmoji.yaml（导入页 src/ndl 所用同一字表；以实际文件为准，不符时报告）",
+      "source": "教师2026-10-20修正：ndlocr-lite d001dad与ndlkotenocr-lite 3c62c34字表均7141，实际导入器字表核对。",
       "expect": {
-        "size": 7143,
+        "size": 7141,
         "contains": [
           "德",
           "徳",
@@ -296,6 +296,273 @@
         "minutes": 160,
         "pages": 26,
         "concepts": 34
+      }
+    },
+    {
+      "id": "F17",
+      "page": [
+        "D07"
+      ],
+      "what": "论文CTC映射",
+      "expect": [
+        {
+          "in": [
+            "a",
+            "－",
+            "a",
+            "b",
+            "－"
+          ],
+          "out": "aab"
+        },
+        {
+          "in": [
+            "－",
+            "a",
+            "a",
+            "－",
+            "－",
+            "a",
+            "b",
+            "b"
+          ],
+          "out": "aab"
+        }
+      ]
+    },
+    {
+      "id": "F18",
+      "page": [
+        "D07"
+      ],
+      "what": "讲义教学概率表最佳路径（其余概率保留为其他候选）",
+      "probabilities": [
+        [
+          {
+            "text": "盡",
+            "prob": 0.62
+          },
+          {
+            "text": "姦",
+            "prob": 0.31
+          },
+          {
+            "text": "其他",
+            "prob": 0.07
+          }
+        ],
+        [
+          {
+            "text": "盡",
+            "prob": 0.55
+          },
+          {
+            "text": "姦",
+            "prob": 0.4
+          },
+          {
+            "text": "其他",
+            "prob": 0.05
+          }
+        ],
+        [
+          {
+            "text": "－",
+            "prob": 0.7
+          },
+          {
+            "text": "盡",
+            "prob": 0.2
+          },
+          {
+            "text": "其他",
+            "prob": 0.1
+          }
+        ],
+        [
+          {
+            "text": "其",
+            "prob": 0.81
+          },
+          {
+            "text": "－",
+            "prob": 0.15
+          },
+          {
+            "text": "其他",
+            "prob": 0.04
+          }
+        ],
+        [
+          {
+            "text": "－",
+            "prob": 0.66
+          },
+          {
+            "text": "其",
+            "prob": 0.3
+          },
+          {
+            "text": "其他",
+            "prob": 0.04
+          }
+        ],
+        [
+          {
+            "text": "理",
+            "prob": 0.58
+          },
+          {
+            "text": "埋",
+            "prob": 0.27
+          },
+          {
+            "text": "其他",
+            "prob": 0.15
+          }
+        ],
+        [
+          {
+            "text": "理",
+            "prob": 0.74
+          },
+          {
+            "text": "－",
+            "prob": 0.2
+          },
+          {
+            "text": "其他",
+            "prob": 0.06
+          }
+        ],
+        [
+          {
+            "text": "－",
+            "prob": 0.9
+          },
+          {
+            "text": "理",
+            "prob": 0.08
+          },
+          {
+            "text": "其他",
+            "prob": 0.02
+          }
+        ]
+      ],
+      "expect": {
+        "text": "盡其理",
+        "score": 0.67,
+        "best_path_probability_3dp": 0.049,
+        "alternate_path_probability_3dp": 0.014
+      }
+    },
+    {
+      "id": "F19",
+      "page": [
+        "D03"
+      ],
+      "what": "NDL17类，变量名、id、原名与原文件逐项核对",
+      "expect": {
+        "count": 17,
+        "categories": [
+          {
+            "id": 0,
+            "name": "text_block",
+            "org_name": "本文ブロック"
+          },
+          {
+            "id": 1,
+            "name": "line_main",
+            "org_name": "本文"
+          },
+          {
+            "id": 2,
+            "name": "line_caption",
+            "org_name": "キャプション"
+          },
+          {
+            "id": 3,
+            "name": "line_ad",
+            "org_name": "広告文字"
+          },
+          {
+            "id": 4,
+            "name": "line_note",
+            "org_name": "割注"
+          },
+          {
+            "id": 5,
+            "name": "line_note_tochu",
+            "org_name": "頭注"
+          },
+          {
+            "id": 6,
+            "name": "block_fig",
+            "org_name": "図版"
+          },
+          {
+            "id": 7,
+            "name": "block_ad",
+            "org_name": "広告"
+          },
+          {
+            "id": 8,
+            "name": "block_pillar",
+            "org_name": "柱"
+          },
+          {
+            "id": 9,
+            "name": "block_folio",
+            "org_name": "ノンブル"
+          },
+          {
+            "id": 10,
+            "name": "block_rubi",
+            "org_name": "ルビ"
+          },
+          {
+            "id": 11,
+            "name": "block_chart",
+            "org_name": "組織図"
+          },
+          {
+            "id": 12,
+            "name": "block_eqn",
+            "org_name": "数式"
+          },
+          {
+            "id": 13,
+            "name": "block_cfm",
+            "org_name": "化学式"
+          },
+          {
+            "id": 14,
+            "name": "block_eng",
+            "org_name": "欧文"
+          },
+          {
+            "id": 15,
+            "name": "block_table",
+            "org_name": "表組"
+          },
+          {
+            "id": 16,
+            "name": "line_title",
+            "org_name": "タイトル本文"
+          }
+        ]
+      }
+    },
+    {
+      "id": "F20",
+      "page": [
+        "D08"
+      ],
+      "what": "PARSeq保留叠字，与上游Python argmax/首0截断对照",
+      "expect": {
+        "text": "人人時時",
+        "stop": 4
       }
     }
   ]

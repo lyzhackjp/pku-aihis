@@ -10,3 +10,7 @@ page-overlay{display:block;min-width:0}page-overlay .overlay-controls, page-over
 .caption{overflow-wrap:anywhere}
 
 .week06-content button,.week06-content input,.week06-content textarea,.week06-content select,.teacher-note,.concept-card dl,.concept-card .body p,.previous{font-size:16px}.glossary aside .group,.concept-card .check{font-size:13px}.evidence{border-left:3px solid #82927c;padding:6px 15px;background:#f5f3e9}.evidence blockquote{font-size:16px;margin:8px 0}
+
+.preflight main{max-width:1400px;padding:24px;margin:auto}.preflight-table{max-height:none}.preflight-table th,.preflight-table td{padding:12px;text-align:left;border:1px solid #ccc}.preflight-table button{margin:4px}.preflight figure img{max-height:300px}.preflight-table pre{max-width:700px}
+
+[data-drag]{touch-action:none;user-select:none}.dragging{opacity:.6;outline:3px solid #8b321f}.drop-target{outline:4px solid #8b321f;background:#fae5c8!important}.score-details{display:grid;grid-template-columns:auto 1fr;gap:6px}.score-details dd{margin:0}.char-probabilities label{display:block}.import-panel .two-columns>section{max-height:none}.import-panel textarea{width:100%}.import-panel .table-wrap{max-height:360px}.import-panel th,.import-panel td{padding:7px;border:1px solid #ccc}

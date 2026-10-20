@@ -4,6 +4,7 @@
  * 参照実装: ndlkotenocr-worker/src/worker/text-recognizer.js
  */
 
+import {decodePARSeq} from './parseq-decode.mjs'
 import * as yaml from 'js-yaml'
 import type * as OrtType from 'onnxruntime-web'
 import { ort, createSession } from './onnx-config'
@@ -15,15 +16,24 @@ interface RecognizerConfig {
   maxLength: number
 }
 
-interface RecognitionResult {
+export interface RecognitionResult {
   text: string
-  confidence: number
+  confidence: null
+  rec_score: number | null
+  rec_score_source: string
+  chars: any[]
+  positions: any[]
+  heatmap: any
+  stop: number
+  input?: {width:number;height:number;rgba:number[];rotated:boolean}
 }
 
 export class TextRecognizer {
   private session: OrtType.InferenceSession | null = null
   private initialized = false
   private config: RecognizerConfig
+  private lastInput: RecognitionResult["input"]
+  private autoRotate = true
   private configPath = new URL('../assets/NDLmoji.yaml', import.meta.url).href
 
   constructor(inputShape?: [number, number, number, number]) {
@@ -64,7 +74,7 @@ export class TextRecognizer {
 
       if ((yamlConfig?.model as Record<string, unknown>)?.charset_train) {
         const charsetTrain = (yamlConfig.model as Record<string, unknown>).charset_train as string
-        this.config.charList = charsetTrain.split('')
+        this.config.charList = Array.from(charsetTrain)
         console.log(`Character list loaded: ${this.config.charList.length} characters`)
       }
     } catch (error) {
@@ -77,12 +87,13 @@ export class TextRecognizer {
     return this.recognizeCropped(cropped)
   }
 
-  async recognizeCropped(croppedImageData: ImageData): Promise<RecognitionResult> {
+  async recognizeCropped(croppedImageData: ImageData, options: {autoRotate?:boolean} = {}): Promise<RecognitionResult> {
     if (!this.initialized || !this.session) {
       throw new Error('Text recognizer not initialized')
     }
 
     try {
+      this.autoRotate = options.autoRotate !== false
       const inputTensor = this.preprocess(croppedImageData)
       const output = await this.session.run({
         [this.session.inputNames[0]]: inputTensor,
@@ -129,7 +140,7 @@ export class TextRecognizer {
     const canvas = new OffscreenCanvas(1, 1)
     const ctx = canvas.getContext('2d')!
 
-    if (imgHeight > imgWidth) {
+    if (this.autoRotate && imgHeight > imgWidth * 0.8) {
       canvas.width = imgHeight
       canvas.height = imgWidth
       ctx.translate(canvas.width / 2, canvas.height / 2)
@@ -151,6 +162,7 @@ export class TextRecognizer {
     resizeCtx.drawImage(canvas, 0, 0, width, height)
 
     const resized = resizeCtx.getImageData(0, 0, width, height)
+    this.lastInput={width,height,rgba:Array.from(resized.data),rotated:this.autoRotate&&imgHeight>imgWidth*0.8}
     const { data } = resized
 
     // Float32Array: [-1, 1] 正規化 (NCHW形式)
@@ -168,52 +180,9 @@ export class TextRecognizer {
     return new ort.Tensor('float32', tensorData, this.config.inputShape)
   }
 
-  private decodeOutput(
-    outputs: Record<string, OrtType.Tensor>
-  ): RecognitionResult {
-    try {
-      const outputName = this.session!.outputNames[0]
-      const rawLogits = outputs[outputName].data as Float32Array
-      const logits = Array.from(rawLogits).map((v) =>
-        typeof v === 'bigint' ? Number(v) : v
-      )
-
-      const dims = outputs[outputName].dims
-      const [, seqLength, vocabSize] = dims
-
-      const resultClassIds: number[] = []
-
-      for (let i = 0; i < seqLength; i++) {
-        const scores = logits.slice(i * vocabSize, (i + 1) * vocabSize)
-        const maxScore = Math.max(...scores)
-        const maxIndex = scores.indexOf(maxScore)
-
-        // <eos> (ID=0) で終了
-        if (maxIndex === 0) break
-        // 特殊トークン (<s>=1, </s>=2, <pad>=3) をスキップ
-        if (maxIndex < 4) continue
-
-        resultClassIds.push(maxIndex - 1)
-      }
-
-      // 連続重複を除去してテキスト生成
-      const resultChars: string[] = []
-      let prevId = -1
-      for (const id of resultClassIds) {
-        if (id !== prevId && id < this.config.charList.length) {
-          resultChars.push(this.config.charList[id])
-          prevId = id
-        }
-      }
-
-      return {
-        text: resultChars.join('').trim(),
-        confidence: 0.9,
-      }
-    } catch (error) {
-      console.error('Error decoding output:', error)
-      throw error
-    }
+  private decodeOutput(outputs: Record<string, OrtType.Tensor>): RecognitionResult {
+    const output=outputs[this.session!.outputNames[0]];
+    return {...decodePARSeq(output.data as Float32Array,output.dims,this.config.charList),input:this.lastInput};
   }
 
   dispose(): void {

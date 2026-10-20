@@ -91,7 +91,7 @@
           <span class="deck-name">${esc(DECK.name)}</span>
           <button data-act="map">课程地图</button>
           ${Object.entries(DECK.entries).map(([k, e]) => `<button class="entry" data-act="entry" data-entry="${esc(k)}" title="随时进入；再次点击返回原页">${esc(e.label)}</button>`).join('')}
-          <button data-act="importer">材料导入</button><button data-act="model">模型接入</button><button data-act="live">识读工作台</button><button data-act="presenter">备注 ↗</button>
+          <button data-act="importer">材料导入</button><button data-act="model">模型接入</button><button data-act="live">识读工作台</button><a href="preflight.html" target="_blank" rel="noopener">课前检查</a><a href="preflight.html#formal" target="_blank" rel="noopener">课前试跑</a><button data-act="presenter">备注 ↗</button>
         </div>`;
       shell.append(main);
       const nav = document.createElement('nav'); nav.className = 'deck-nav';

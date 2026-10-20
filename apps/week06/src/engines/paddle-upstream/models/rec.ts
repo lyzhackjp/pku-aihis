@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {decodeCTCProbabilities} from '../../../../../../modules/history-demo/ocr/probabilities.mjs';
 import type { OpenCv, Mat } from "@techstark/opencv-js";
 import type { Tensor } from "onnxruntime-web";
 
@@ -20,6 +21,9 @@ export interface RecModelConfig {
 }
 
 export interface RecResult {
+  chars?: any[];
+  trace?: any;
+  input?: {width:number;height:number;chw:Float32Array};
   text: string;
   score: number;
 }
@@ -134,7 +138,7 @@ export async function createRecModel({
       const samples = preprocess(ctx, mats);
       const charDict = config.charDict;
       const ordered = samples.slice().sort((a, b) => a.width - b.width);
-      const decoded: Array<{ inputIndex: number; text: string; score: number }> = [];
+      const decoded: Array<RecResult & {inputIndex:number}> = [];
       const targetH = config.imageShape[1];
 
       for (const batch of chunkArray(ordered, batchSize)) {
@@ -144,13 +148,14 @@ export async function createRecModel({
         for (let index = 0; index < batchResults.length; index += 1) {
           decoded.push({
             inputIndex: batch[index].inputIndex,
+            input: {width:batch[index].width,height:targetH,chw:batch[index].chw},
             ...batchResults[index]
           });
         }
       }
 
       decoded.sort((a, b) => a.inputIndex - b.inputIndex);
-      return decoded.map(({ text, score }) => ({ text, score }));
+      return decoded.map(({ inputIndex, ...result }) => result);
     },
     async dispose() {
       await releaseSessions(sessionState?.session);
@@ -254,41 +259,13 @@ function packRecBatchTensor(ort: OrtModule, samples: RecSample[], targetH: numbe
   return createBatchTensor(ort, samples, maxW, targetH);
 }
 
-function decodeCTCSample(
-  data: Float32Array,
-  offset: number,
-  timeSteps: number,
-  classes: number,
-  charDict: string[]
-): { text: string; score: number } {
-  let prevIdx = -1;
-  let text = "";
-  const probs: number[] = [];
-  for (let step = 0; step < timeSteps; step += 1) {
-    let maxIdx = 0;
-    let maxVal = -Infinity;
-    const stepOffset = offset + step * classes;
-    for (let cls = 0; cls < classes; cls += 1) {
-      const value = data[stepOffset + cls];
-      if (value > maxVal) {
-        maxVal = value;
-        maxIdx = cls;
-      }
-    }
-    if (maxIdx > 0 && maxIdx !== prevIdx) {
-      const dictIdx = maxIdx - 1;
-      if (dictIdx >= 0 && dictIdx < charDict.length) {
-        text += charDict[dictIdx];
-        probs.push(maxVal);
-      }
-    }
-    prevIdx = maxIdx;
-  }
-  const score = probs.length ? probs.reduce((a, b) => a + b, 0) / probs.length : 0;
-  return { text, score };
+function decodeCTCSample(data:Float32Array,offset:number,timeSteps:number,classes:number,charDict:string[]):RecResult {
+  if(classes!==charDict.length+1)throw Error('CTC字表与输出维度不符');
+  const rows=Array.from({length:timeSteps},(_,t)=>data.subarray(offset+t*classes,offset+(t+1)*classes));
+  return decodeCTCProbabilities(rows,['<blank>',...charDict]);
 }
 
-function postprocess(output: Tensor, charDict: string[]): Array<{ text: string; score: number }> {
+function postprocess(output: Tensor, charDict: string[]): RecResult[] {
   const dims = output.dims;
   if (dims.length !== 3) {
     throw new Error(`Unexpected rec output dims: [${dims.join(", ")}]`);
@@ -298,7 +275,7 @@ function postprocess(output: Tensor, charDict: string[]): Array<{ text: string; 
   const classes = dims[2];
   const data = output.data as Float32Array;
   const stride = timeSteps * classes;
-  const results: Array<{ text: string; score: number }> = [];
+  const results: RecResult[] = [];
   for (let index = 0; index < sampleCount; index += 1) {
     results.push(decodeCTCSample(data, index * stride, timeSteps, classes, charDict));
   }

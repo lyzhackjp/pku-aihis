@@ -1,215 +1,243 @@
 {
- "$schema": "https://json-schema.org/draft/2020-12/schema",
- "title": "第六周识读页面记录（所有识读引擎的统一输出）",
- "type": "object",
- "required": [
-  "record_version",
-  "image",
-  "engine",
-  "regions",
-  "raw"
- ],
- "properties": {
-  "record_version": {
-   "const": "week06-ocr-1"
-  },
-  "image": {
-   "type": "object",
-   "required": [
-    "name",
-    "sha256",
-    "width",
-    "height",
-    "source"
-   ],
-   "properties": {
-    "name": {
-     "type": "string"
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "第六周识读页面记录（所有识读引擎的统一输出）",
+  "type": "object",
+  "required": [
+    "record_version",
+    "image",
+    "engine",
+    "regions",
+    "raw"
+  ],
+  "properties": {
+    "record_version": {
+      "const": "week06-ocr-1"
     },
-    "sha256": {
-     "type": "string",
-     "pattern": "^[0-9a-f]{64}$"
-    },
-    "width": {
-     "type": "integer"
-    },
-    "height": {
-     "type": "integer"
-    },
-    "source": {
-     "type": "object",
-     "description": "材料身份：materials.json 中的 id，加页码体系",
-     "properties": {
-      "material_id": {
-       "type": "string"
-      },
-      "page_systems": {
-       "type": "object",
-       "description": "原书叶码、影印本页码、PDF 页序、图像编号分别填写；未核写 '待核'"
-      }
-     }
-    },
-    "local_only": {
-     "type": "boolean"
-    },
-    "transform": {
-     "type": "object",
-     "description": "若为变形或二值化后的图像，记录参数（D15、D16）"
-    }
-   }
-  },
-  "engine": {
-   "type": "object",
-   "required": [
-    "name",
-    "version",
-    "run_mode",
-    "date"
-   ],
-   "properties": {
-    "name": {
-     "enum": [
-      "ndlocr-lite",
-      "ndl-koten-ocr-lite",
-      "pp-ocrv6",
-      "florence-2",
-      "dots.ocr",
-      "mllm",
-      "kraken",
-      "manual"
-     ]
-    },
-    "version": {
-     "type": "string",
-     "description": "模型版本或提交号；未知写 '待登记'"
-    },
-    "model": {
-     "type": "string"
-    },
-    "params": {
-     "type": "object",
-     "description": "提示词、提示模式、阈值等，原样保存"
-    },
-    "run_mode": {
-     "enum": [
-      "浏览器实时",
-      "本机服务实时",
-      "按共用API实际调用",
-      "保存结果回放",
-      "教学构造"
-     ]
-    },
-    "date": {
-     "type": "string",
-     "format": "date-time"
-    },
-    "elapsed_ms": {
-     "type": "number"
-    },
-    "backend": {
-     "type": "string"
-    },
-    "usage": {
-     "type": "object"
-    }
-   }
-  },
-  "regions": {
-   "type": "array",
-   "items": {
-    "type": "object",
-    "required": [
-     "id",
-     "class"
-    ],
-    "properties": {
-     "id": {
-      "type": "string"
-     },
-     "bbox": {
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "minItems": 4,
-      "maxItems": 4,
-      "description": "[x, y, w, h]，原图像素"
-     },
-     "polygon": {
-      "type": "array",
-      "items": {
-       "type": "array",
-       "items": {
-        "type": "number"
-       },
-       "minItems": 2,
-       "maxItems": 2
-      }
-     },
-     "baseline": {
-      "type": "array",
-      "items": {
-       "type": "array",
-       "items": {
-        "type": "number"
-       },
-       "minItems": 2,
-       "maxItems": 2
-      }
-     },
-     "class": {
-      "type": "string",
-      "description": "引擎原类别名，原样保存（如 本文、ルビ、Footnote）"
-     },
-     "class_norm": {
-      "type": "string",
-      "description": "课件统一类别（正文、标题、页码、书口或柱、注音、注释、图、其他），映射表由课件维护"
-     },
-     "order": {
-      "type": [
-       "integer",
-       "null"
-      ]
-     },
-     "text": {
-      "type": [
-       "string",
-       "null"
+    "image": {
+      "type": "object",
+      "required": [
+        "name",
+        "sha256",
+        "width",
+        "height",
+        "source"
       ],
-      "description": "未识读的区块为 null，不能写空串冒充"
-     },
-     "conf": {
-      "type": [
-       "number",
-       "null"
-      ]
-     },
-     "chars": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        },
+        "source": {
+          "type": "object",
+          "description": "材料身份：materials.json 中的 id，加页码体系",
+          "properties": {
+            "material_id": {
+              "type": "string"
+            },
+            "page_systems": {
+              "type": "object",
+              "description": "原书叶码、影印本页码、PDF 页序、图像编号分别填写；未核写 '待核'"
+            }
+          }
+        },
+        "local_only": {
+          "type": "boolean"
+        },
+        "transform": {
+          "type": "object",
+          "description": "若为变形或二值化后的图像，记录参数（D15、D16）"
+        }
+      }
+    },
+    "engine": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "run_mode",
+        "date"
+      ],
+      "properties": {
+        "name": {
+          "enum": [
+            "ndlocr-lite",
+            "ndl-koten-ocr-lite",
+            "pp-ocrv6",
+            "florence-2",
+            "dots.ocr",
+            "mllm",
+            "kraken",
+            "manual"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "description": "模型版本或提交号；未知写 '待登记'"
+        },
+        "model": {
+          "type": "string"
+        },
+        "params": {
+          "type": "object",
+          "description": "提示词、提示模式、阈值等，原样保存"
+        },
+        "run_mode": {
+          "enum": [
+            "浏览器实时",
+            "本机服务实时",
+            "按共用API实际调用",
+            "保存结果回放",
+            "教学构造"
+          ]
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "elapsed_ms": {
+          "type": "number"
+        },
+        "backend": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "object"
+        }
+      }
+    },
+    "regions": {
       "type": "array",
       "items": {
-       "type": "object",
-       "properties": {
-        "text": {
-         "type": "string"
-        },
-        "conf": {
-         "type": "number"
+        "type": "object",
+        "required": [
+          "id",
+          "class"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "bbox": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 4,
+            "maxItems": 4,
+            "description": "[x, y, w, h]，原图像素"
+          },
+          "polygon": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "baseline": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "class": {
+            "type": "string",
+            "description": "引擎原类别名，原样保存（如 本文、ルビ、Footnote）"
+          },
+          "class_norm": {
+            "type": "string",
+            "description": "课件统一类别（正文、标题、页码、书口或柱、注音、注释、图、其他），映射表由课件维护"
+          },
+          "order": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "text": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "未识读的区块为 null，不能写空串冒充"
+          },
+          "chars": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "prob": {
+                  "type": "number"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "step": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "det_score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "检测分数；NDL CONF 只放在此处"
+          },
+          "rec_score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "行识读分数；与检测分数分开"
+          },
+          "det_score_source": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "引擎原值或本课计算，注明算法与来源"
+          },
+          "rec_score_source": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "引擎原值或本课计算，注明算法与来源"
+          }
         }
-       }
       }
-     }
+    },
+    "raw": {
+      "description": "引擎原始输出，原样保存（XML 文本、JSON 或模型回复全文）"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "失败与警告原样保存"
     }
-   }
-  },
-  "raw": {
-   "description": "引擎原始输出，原样保存（XML 文本、JSON 或模型回复全文）"
-  },
-  "errors": {
-   "type": "array",
-   "items": {
-    "type": "string"
-   },
-   "description": "失败与警告原样保存"
   }
- }
 }

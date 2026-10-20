@@ -84,3 +84,7 @@ __pycache__/
 /apps/week06/artifacts/
 
 apps/week06/src/assets/modules/
+
+# macOS/sync duplicate suffixes are not source files.
+/apps/week06/**/** 2.*
+/apps/week06/**/** 4.*

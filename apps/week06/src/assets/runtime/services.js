@@ -29,7 +29,7 @@ export async function importRecord(file){
 export async function runEngine(name,progress=()=>{},options={}){
  const source=structuredClone(state.material),makeMeta=(name,mode,version,params={})=>meta(name,mode,version,params,source?.image);const start=performance.now();const {imageData}=await pixels(source);let r;
  const engine=await import('../ocr/engines.js');
- if(name==='ndlocr-lite'){const out=await engine.runNDL(imageData,progress);r=fromNDLLite(out,makeMeta(name,'浏览器实时','NDLOCR-Lite / DEIM + PARSeq16; importer pin 50216ccc'),DATA.categories.ndl);}
+ if(name==='ndlocr-lite'){const out=await engine.runNDL(imageData,progress,options);r=fromNDLLite(out,makeMeta(name,'浏览器实时','NDLOCR-Lite / DEIM + PARSeq16; importer pin 50216ccc'),DATA.categories.ndl);}
  if(name==='pp-ocrv6'){const out=await engine.runPaddle(imageData,progress,options.detectOnly);r=fromPPOCR(out,makeMeta(name,'浏览器实时',engine.models['pp-det'].revision+' / '+engine.models['pp-rec'].revision,{detectOnly:!!options.detectOnly}));}
  if(name==='florence-2'){const out=await engine.runFlorence(imageData,progress,options.task);r=fromFlorence(out.parsed,makeMeta(name,'浏览器实时',out.revision,{task:out.task}));r.raw={output:out.parsed,generated:out.generated};}
  if(!r)throw Error('引擎未登记');r.engine.elapsed_ms=performance.now()-start;await addRecord(r);return r;

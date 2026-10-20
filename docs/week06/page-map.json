@@ -219,13 +219,13 @@
       "归类"
     ],
     "student_operation": "对照原页与识读文字，点出认为不同的地方（2 分钟）；点完后揭示参考答案。",
-    "observable_output": "四类问题：字认错（盡→姦、術→衛、盡其天而不益以人→蓋其天而不盆以人）、字形被换（德→徳、斷→断、當→当）、版面读错（书口与页码混入正文）、整类信息消失（圈点）；每行置信度多在 0.8 以上。",
+    "observable_output": "四类问题：字认错（盡→姦、術→衛、盡其天而不益以人→蓋其天而不盆以人）、字形被换（德→徳、斷→断、當→当）、版面读错（书口与页码混入正文）、整类信息消失（圈点）；每行检测置信度 CONF多在 0.8 以上。",
     "lesson_evidence": "讲义导入；@fig-shide；识读输出为第五周保存的 NDL 系 XML（版本待登记，待核实事项 V-08）；错字判定为备课目验（V-02）。",
     "mode": "保存结果回放（本机材料：教师 PDF 页影）；公开构建显示替代页或\"需本机材料\"",
     "notes": {
       "purpose": "让学生先凭眼睛发现问题，再用后面各节的词汇命名它们。",
       "guide": "先不揭示答案，收集两三位同学的发现再翻开。",
-      "mechanism": "置信度高与读对无关，2.2 详谈；字形问题 2.1 详谈。"
+      "mechanism": "NDL XML 的 CONF 来自版面检测器，不衡量框中文字读得对不对；2.2 区分检测分数与识读分数。"
     },
     "footer": "D01 / 讲义导入 @fig-shide；第五周保存的识读输出回放；错字判定为备课目验，待核。 候选，未经教师确认。",
     "concepts": [],
@@ -240,6 +240,9 @@
       "c004": " 行</p>",
       "c005": "揭示／收起四类问题",
       "c006": "</p><p class=\"pending\">备课目验，待核（V-02）；工具版本待核（V-08）；本机页码层次待核（V-01）。公开替代版不套用此页错字判定。</p>"
+    },
+    "ui_round2": {
+      "lecture_quote": "这个值是在识读之前、由版面检测模型给出的：它是检测器对\"这个框是一个某类文本行\"的把握"
     }
   },
   {
@@ -258,9 +261,9 @@
       "分割"
     ],
     "student_operation": "把 D01 找到的问题拖进四格之一；归不进去的放到\"其他\"（2 分钟）。",
-    "observable_output": "每格亮出对应示意：字切片与候选字（分类）、一个边界框四个数（定位）、全页所有行与区域（检测）、像素掩膜（分割）；\"其他\"格引出阅读顺序与序列预测。",
+    "observable_output": "与D01同页的逐位候选、单行定位、全页17类检测结果、PP文字概率图及阈值图；拖放五个问题关联输出。",
     "lesson_evidence": "讲义 1.1；@fig-tasks（框架据助教建议）。",
-    "mode": "浏览器实时（归类交互）；分割示意为教学构造",
+    "mode": "浏览器实时",
     "notes": {
       "purpose": "给学生一套描述错误的词汇。",
       "guide": "强调检测＝对多个对象同时做定位与分类；读一整行是一串分类连成的序列预测。",
@@ -328,7 +331,7 @@
     "student_operation": "在《史德》与鷗外页上开关各类别图层；找出被当作正文的两行（2 分钟）；对照 NDLOCR-Lite 17 类与 dots.ocr 11 类清单。",
     "observable_output": "《史德》16 行全部为\"本文\"，书口\"文史通義卷三內篇三\"与页码\"六十三\"混入；鷗外 83 行文字＋32 个无文字区块（振假名 28、柱 2、页码 2）；\"左右良（まてら）の城\"读作\"左右艮の城\"，读音只在振假名区块坐标里。",
     "lesson_evidence": "讲义 1.2；NDLOCR-Lite 仓库 src/config/ndl.yaml；dots.ocr README；保存的 XML。",
-    "mode": "保存结果回放；可经导入页 NDLOCR-Lite 浏览器实时重跑",
+    "mode": "浏览器实时；未运行的模型结果标待课前运行",
     "notes": {
       "purpose": "说明类别清单决定机器能看见什么；保存识读结果要带坐标与类别。",
       "guide": "问：如果你的材料有双行小注，你希望多一个什么类别？",
@@ -478,7 +481,7 @@
     "student_operation": "拖动振假名与正文行，排出自己的读序（3 分钟），再与 XY 切分、dots.ocr 读序并列。",
     "observable_output": "三种读序的差异逐处标出；Kiessling 原话\"different scholarly uses of the same page may therefore imply different reading orders\"。",
     "lesson_evidence": "讲义 1.3；Kiessling 2026 预印本；LayoutReader（Wang et al. 2021）。",
-    "mode": "浏览器实时（拖动与比较）；dots.ocr 读序为保存结果回放或本机服务实时",
+    "mode": "浏览器实时；未运行的模型结果标待课前运行；dots.ocr为本机服务实时或保存结果回放",
     "options": {
       "A": "学生拖动排序后与机器读序对比",
       "B": "只播放 XY 切分与 dots.ocr 读序动画",
@@ -504,28 +507,33 @@
   {
     "id": "D07",
     "section": "2.1",
-    "anchor": "fig-ctc",
+    "anchor": [
+      "fig-ctc",
+      "fig-ctc-code",
+      "fig-ctc-example",
+      "fig-vgsl"
+    ],
     "title": "从切字到整行：CTC",
     "layout": "flow4",
-    "minutes": 6,
+    "minutes": 8,
     "transition": "找到了行，接着要把一行图像读成文字。",
     "question": "不先切字，怎样读出一整行？",
     "steps": [
-      "行图像窄条",
-      "逐条判断",
-      "合并重复",
-      "删去空白"
+      "逐条概率",
+      "映射 B",
+      "路径求和",
+      "最佳路径解码"
     ],
-    "student_operation": "修改逐条判断序列（可加空白、重复），看合并结果；试\"盡盡\"连写的情况。",
-    "observable_output": "\"盡、盡、－、其、其、－、－、理、理、－\"→\"盡其理\"；不隔空白时\"盡盡\"会被合成一个\"盡\"。",
-    "lesson_evidence": "讲义 2.1；@fig-ctc（教学构造）；Graves et al. 2006；Shi et al. CRNN；KuroNet（PC Watch 2019）。",
-    "mode": "教学构造（讲义 @fig-ctc 的合并规则，浏览器实时计算）",
+    "student_operation": "在教学概率表上改选路径；运行所选行，单步看 CTC 解码；逐层展开网络；手动修改序列。",
+    "observable_output": "概率表、最佳路径、合并重复与删除空白、逐字概率的平均；Kraken 按 VGSL 推算的数据形状待实测（V-13）。",
+    "lesson_evidence": "讲义 2.1；@fig-ctc、@fig-ctc-code、@fig-ctc-example、@fig-vgsl；Graves 2006 第3.1、3.2节；固定 PaddleOCR rec.ts；V-13。",
+    "mode": "教学构造（原理概率表与按 VGSL 推算）；浏览器实时（PP-OCRv6 识读与解码）",
     "notes": {
       "purpose": "讲清整行识读与 CTC 输出规则。",
       "guide": "先给 KuroNet 整页找字一句，再进入整行。",
       "mechanism": "写本重文符输出符号还是展开，由录文规范决定（5.1）。"
     },
-    "footer": "D07 / 讲义 2.1 @fig-ctc；合并规则为教学构造。 候选，未经教师确认。",
+    "footer": "D07 / 讲义 2.1；原理概率为教学构造，实算概率来自本次模型运行；VGSL形状待核 V-13。候选，未经教师确认。",
     "concepts": [
       "字符集",
       "连接时序分类"
@@ -540,6 +548,9 @@
       "c004": "</p></section><section><h3>合并相邻重复</h3><p class=\"tokens\">",
       "c005": "</p></section><section><h3>删除空白</h3><p class=\"result-text\">",
       "c006": "</p></section></div><p>盡 盡 盡 → 盡；盡 － 盡 → 盡盡。教学构造，规则在浏览器实时计算。</p>"
+    },
+    "ui_round2": {
+      "lecture_quote": "一个字符串的概率，等于所有映射到它的路径的概率之和；一条路径的概率，则是它在每个窄条上所选那一项的概率连乘"
     }
   },
   {
@@ -557,10 +568,10 @@
       "比较两处\"斷\"",
       "语言先验"
     ],
-    "student_operation": "在 NDLOCR-Lite 字表中查任意字；用一句话解释\"德→徳\"（2 分钟）。",
-    "observable_output": "实际 NDLmoji.yaml 为 7141 字，与 F08 的 7143 不符；德／徳、斷／断、當／当、卷／巻均可现场检索；第 5 行「断」、第 6 行「撃斷」同页不同。字表差异保留待教师决定。",
+    "student_operation": "查字表；选行查看候选；从同页裁出字块拼行或遮字，再比较 NDL PARSeq 与 PP-OCRv6。",
+    "observable_output": "实际字表7141字；逐位候选、同字换上下文与遮字的真实识读对照，不预设结果。",
     "lesson_evidence": "讲义 2.1；NDLOCR-Lite src/config/NDLmoji.yaml；PARSeq（Bautista & Atienza 2022，摘要）；保存的识读输出。",
-    "mode": "浏览器实时（真实字表）；本页输出为保存结果回放",
+    "mode": "浏览器实时；拼行与遮字为教学构造的输入，输出来自实际模型运行",
     "notes": {
       "purpose": "引出语言先验。",
       "guide": "提示：\"徳\"在唐代写本碑刻中常见，\"断\"\"当\"同大陆简化字。",
@@ -585,6 +596,9 @@
       "c009": "<p>字表决定可以输出哪些字，识读模型决定在本图上输出哪一个。</p>",
       "c010": "同页「断／斷」例子需本机《史德》回放",
       "c011": "<p class=\"caption\">字表指纹："
+    },
+    "ui_round2": {
+      "lecture_quote": "识读模型在读字的同时，也学会了\"上一个字是这个，下一个字多半是那个\""
     }
   },
   {
@@ -594,22 +608,22 @@
     "title": "置信度能告诉我们什么",
     "layout": "flow4",
     "minutes": 8,
-    "transition": "识读结果往往附带一个分数，说明模型有多大把握。",
-    "question": "按置信度挑行校对，能挑出改变文义的错吗？",
+    "transition": "先查分数衡量什么，再决定怎样用它安排校对。",
+    "question": "检测分数与识读分数各能帮助我们挑出什么问题？",
     "steps": [
-      "逐行置信度",
-      "学生选一半",
-      "揭示错误",
-      "校准"
+      "检测分数",
+      "识读分数",
+      "分别选一半",
+      "揭示漏查"
     ],
     "student_operation": "只有时间校对一半的行：按置信度挑，或另有挑法（2 分钟）；提交后揭示。",
-    "observable_output": "\"盡→姦\"一行置信度 0.856，与读对的行相差无几；最低两行是页码与\"卷三\"；漏掉的改变文义的错误数。",
+    "observable_output": "NDL XML 的检测置信度 CONF 与 PP-OCRv6 识读分数并列；展开逐字概率；两种选行策略各漏查的改变文义行数（目验，待核V-02）。",
     "lesson_evidence": "讲义 2.2；@fig-conf（问题栏为备课目验，待核 V-02）。",
-    "mode": "保存结果回放",
+    "mode": "保存结果回放（NDL XML）；浏览器实时（PP-OCRv6与PARSeq识读分数）",
     "notes": {
       "purpose": "置信度能找整行问题，不能证明某行可靠。",
       "guide": "比较按分数挑与按人名、数字挑两种结果。",
-      "mechanism": "校准良好：报 0.9 的判断约九成正确；识读工具一般不保证在历史材料上校准。"
+      "mechanism": "CONF 由版面检测器给出；PP-OCRv6 行分数为保留字符各自最大概率的平均。NDL PARSeq 的逐字 softmax 与均分为本课计算，NDL 工具不输出。"
     },
     "footer": "D09 / 讲义 2.2 @fig-conf；保存结果回放；错误判定待核。 候选，未经教师确认。",
     "concepts": [
@@ -624,6 +638,9 @@
       "c002": "<p class=\"metrics\">漏掉 ",
       "c003": " / 7 行改变文义的错误。</p><p class=\"pending\">判定据讲义 @fig-conf 的备课目验，待核 V-02；只说明这一页。</p>",
       "c004": "需本机《史德》保存的 16 行记录；公开替代页不使用这些判定。"
+    },
+    "ui_round2": {
+      "lecture_quote": "NDL 识读 XML 中的 CONF 是版面检测的分数，PP-OCRv6 的分数是逐字最大概率的平均。"
     }
   },
   {
@@ -707,10 +724,10 @@
     "minutes": 8,
     "transition": "把三条路放在同一页上跑一遍。",
     "question": "同一行字，三种模型各框在哪里、读成什么？",
-    "student_operation": "盯住同一行（讲义练习）：点任一栏中的一行，三栏同步高亮；PP-OCRv6 逐步查看概率图、框、裁切行、文字。",
+    "student_operation": "在三个全宽引擎标签间切换，选同一行，在底部对照三个引擎的框与文字。",
     "observable_output": "三栏并排：PP-OCRv6（逐步中间结果）、dots.ocr（框＋类别＋读序＋文字）、Florence-2（默认不加载，可点按钮加载）；每栏标运行模式、版本与耗时。",
     "lesson_evidence": "讲义 3.1；PP-OCRv6 官方 ONNX；dots.ocr 仓库；Florence-2-base-ft 模型卡。",
-    "mode": "PP-OCRv6 浏览器实时；dots.ocr 本机服务实时，服务不在时保存结果回放；Florence-2 浏览器实时（默认不加载）；教师机跑不动时 dots.ocr 栏只显示官方示例图，标\"本课未运行\"",
+    "mode": "浏览器实时；未运行的模型结果标待课前运行；dots.ocr为本机服务实时或保存结果回放",
     "options": {
       "A": "三栏并排，同一行同步高亮",
       "B": "同一页影上叠层切换",
@@ -735,10 +752,10 @@
     "anchor": "通用多模态大模型",
     "title": "通用多模态大模型：认得字，指不准",
     "layout": "diagram",
-    "minutes": 7,
+    "minutes": 5,
     "transition": "Gemini、GPT 一类通用大模型也能读图。",
     "question": "通用大模型读文书，长处和短处在哪里？",
-    "student_operation": "选择阶段：识字（PureDocBench）／定位（PP-OCRv6 检测比较、Chronicles-OCR）／现场试一页（请 ChatGPT 与 Gemini 输出文字与坐标，把框画回原图）。",
+    "student_operation": "配置模型、先用公开小图验证视觉能力，再选两至三个模型对同一范围识读并比较坐标。",
     "observable_output": "PureDocBench 原话与数字（Digital −3.34、Real −11.61）；检测得分只及专用中型模型一半左右（厂商自建基准）；Chronicles-OCR 甲骨金文定位近零；现场或保存的框叠在原图上。",
     "lesson_evidence": "讲义 3.2；PureDocBench（arXiv:2605.07492，结果节）；PP-OCRv6 论文；Chronicles-OCR（arXiv:2605.11960，结果节）。",
     "mode": "静态内容（论文数字）；现场试一页按共用 API 实际调用，或保存结果回放",
@@ -798,7 +815,7 @@
     "student_operation": "在本课保存的 MLLM 输出中找\"被改对\"的地方；写下自己材料里最可能被改对的两类字词（2 分钟）。",
     "observable_output": "Gardella 四类错误；最好通用模型 CER 中位数 1.72%、平均数 11.17%；Levchenko 过度古化（GPT-4o 59%）；HisDoc-OCR 原话；本课输出中的改动逐处高亮。",
     "lesson_evidence": "讲义 3.3；Gardella et al. 2026（第 4—5 节）；Levchenko 2025（方法与结果）；HisDoc-OCR（全文）。",
-    "mode": "静态内容（论文）；本课输出为保存结果回放",
+    "mode": "按共用 API 实际调用或保存结果回放；参照与差异分类为浏览器实时",
     "notes": {
       "purpose": "原书错字与时代写法本身是证据。",
       "guide": "人名换名一例最能说明问题。",
@@ -848,7 +865,7 @@
     "student_operation": "在 @fig-tools 中选最接近自己材料的一行（1 分钟）。",
     "observable_output": "起点工具与说明；坐标、离线、复现三问；CMMHWR 2026 三项任务与名次；敦煌与胡语一行带\"待核\"标记。",
     "lesson_evidence": "讲义 3.4；@fig-tools；CMMHWR 2026 结果页（待核 V-05）；MEDUSA 论文；3.4 注（待核 V-06、V-07）。",
-    "mode": "静态内容",
+    "mode": "浏览器实时；未运行的模型结果标待课前运行",
     "notes": {
       "purpose": "把选择落到坐标、离线、复现三项考虑。",
       "guide": "请没有合适一行的同学说材料特殊在哪里。",
@@ -930,7 +947,7 @@
     "student_operation": "判断自己材料的成像来源（1 分钟）；拖动旋转与透视滑块，看 PP-OCRv6 检测框变化。",
     "observable_output": "@fig-eight 八类（序号沿用助教原序：1 成像来源、2 几何变形、3 文字方向、4 图像信号退化、5 遮挡与材料损伤、6 字体与书写系统、7 版面与内容结构、8 文本分布与语言干扰）；变形后框的漏检与错切。",
     "lesson_evidence": "讲义第四节导语与 4.1；@fig-eight；PureDocBench clean/digital/real。",
-    "mode": "浏览器实时（公开页影上的变形与 PP-OCRv6 检测）；故障时保存结果回放",
+    "mode": "浏览器实时；未运行的模型结果标待课前运行",
     "options": {
       "A": "滑块改图后实时重跑检测",
       "B": "预存几张变形图的结果",
@@ -976,7 +993,7 @@
     "student_operation": "拖动二值化阈值，看笔画粘连；在敦煌写本或古文书上指出干扰区域（2 分钟）。",
     "observable_output": "阈值变化下细笔与朱笔消失；MEDUSA 合成流程（@fig-medusa-synth）；P.2011 破洞与收藏印；重文符、倒乙符、删除符示例。",
     "lesson_evidence": "讲义 4.2；MEDUSA 论文图 3；Smith 2024 IDP 博客（二值化丢失淡墨与朱笔）。",
-    "mode": "浏览器实时（公开页影二值化）；其余静态内容",
+    "mode": "浏览器实时；未运行的模型结果标待课前运行",
     "notes": {
       "purpose": "保存与识读用原始彩色或灰度图，二值化只作可选步骤。",
       "guide": "《史德》\"益→盆\"一例只在本机模式显示。",
@@ -1020,7 +1037,7 @@
     "student_operation": "在 P.2510 上排出正文与双行小注的读序，与机器读序比较。",
     "observable_output": "Sasagawa 原话；GPT-4.1 单栏合成页横排 1.88%、竖排 18.2%；合成竖排数据稍加训练即可降到 1% 以下（限合成页面）；小注被拼进正文的情况。",
     "lesson_evidence": "讲义 4.3；Sasagawa et al. 2025（前半，合成数据部分）。",
-    "mode": "静态内容（论文）；读序比较浏览器实时（公开图像）",
+    "mode": "浏览器实时；未运行的模型结果标待课前运行",
     "notes": {
       "purpose": "方向与结构需在录文规范中事先规定。",
       "guide": "回扣 D06 的读序决定。",
@@ -1067,7 +1084,7 @@
     "student_operation": "用八类清单为自己的材料逐类打勾，找出最严重的两类（2 分钟）。",
     "observable_output": "HR-Ciphers 2024、早期印本字形检测（ICDAR 2025）要点；打勾汇总与导出。",
     "lesson_evidence": "讲义 4.4；Fornés et al. ICDAR 2024；Seuret et al. ICDAR 2025 竞赛页。",
-    "mode": "静态内容（论文）；打勾浏览器实时，存入贯穿记录",
+    "mode": "浏览器实时；未运行的模型结果标待课前运行",
     "notes": {
       "purpose": "把八类变成学生可带走的检查清单。",
       "guide": "课间休息前收束。",
