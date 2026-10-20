@@ -1,143 +1,27 @@
-// 第六讲模型接入：OpenAI 兼容 chat/completions 配置与调用。
-// 配置持久化到 localStorage；Key 只发往所填端点，不写入其他渠道。
-export interface ModelSettings {
-  baseUrl: string;
-  apiKey: string;
-  model: string;
+import presets from '../../../../../modules/history-demo/ocr/api-presets.json';
+import {endpoint,buildRequest,parseResponse,redact,COORDINATES} from '../../../../../modules/history-demo/ocr/api.mjs';
+export {presets,COORDINATES};
+export interface ModelSettings {id:string;preset:string;baseUrl:string;apiKey:string;model:string;protocol:string;coordinates:string;proxy:boolean;vision?:any}
+const STORAGE_KEY='week06-model-profiles-v2';
+function defaults(preset='openai',id:string=crypto.randomUUID()):ModelSettings{const p=presets.find(p=>p.id===preset)||presets[0];return {id,preset:p.id,baseUrl:p.baseUrl,model:'',apiKey:'',protocol:p.protocol,coordinates:p.coordinates,proxy:false,vision:null};}
+let profiles:ModelSettings[]=[];try{profiles=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]').map((p:any)=>({...defaults(p.preset,p.id),...p,apiKey:'',vision:null}));}catch{}if(!profiles.length)profiles=[defaults(),defaults('gemini')];let selected=profiles[0].id;
+export const getProfiles=()=>profiles.map(p=>({...p,apiKey:undefined}));
+export const getModelSettings=(id=selected):ModelSettings=>({...profiles.find(p=>p.id===id)||profiles[0]});
+export function selectProfile(id:string){if(!profiles.some(p=>p.id===id))throw Error('配置未登记');selected=id;window.dispatchEvent(new Event('model-settings-change'));}
+export function addProfile(preset='openai'){const p=defaults(preset);profiles.push(p);selected=p.id;persist();return p;}
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(profiles.map(({apiKey,vision,...p})=>p)));}catch{}window.dispatchEvent(new Event('model-settings-change'));}
+export function setModelSettings(patch:Partial<ModelSettings>,id=selected){const i=profiles.findIndex(p=>p.id===id);if(i<0)throw Error('配置未登记');let p=profiles[i];if(patch.preset&&patch.preset!==p.preset)p=defaults(patch.preset,p.id);const changed=['baseUrl','model','apiKey','protocol','proxy'].some(k=>k in patch&&(patch as any)[k]!== (p as any)[k]);profiles[i]={...p,...patch,...(changed?{vision:null}:{})};persist();}
+export const isModelReady=(id=selected)=>{const c=getModelSettings(id);return !!c.model.trim()&&!!c.baseUrl.trim()&&(!!c.apiKey.trim()||/^http:\/\/(localhost|127\.0\.0\.1)(:|\/)/.test(c.baseUrl));};
+export const visionReady=(id=selected)=>!!getModelSettings(id).vision?.passed;
+export const chatEndpoint=endpoint;
+export function openModelSettings(){window.dispatchEvent(new Event('open-model-settings'));}
+export async function chatCompletions(messages:any[],opts:{profileId?:string;maxTokens?:number;signal?:AbortSignal;visionTest?:boolean}={}){
+ const c=getModelSettings(opts.profileId);if(!isModelReady(c.id))throw Error('请先填写实际服务地址、模型和Key');const hasImage=messages.some(m=>Array.isArray(m.content)&&m.content.some(p=>p.type==='image_url'));
+ if(hasImage&&!opts.visionTest&&!visionReady(c.id))throw Error('先在模型接入中通过公开图视觉测试，才能发送材料页');
+ const built=buildRequest(c,messages,opts),signal=opts.signal?AbortSignal.any([opts.signal,AbortSignal.timeout(180000)]):AbortSignal.timeout(180000),start=performance.now();
+ const secrets=profiles.map(p=>p.apiKey),request=redact({...built.metadata,via_proxy:c.proxy},secrets),clean=(v:any)=>redact(v,secrets);let raw:any=null;
+ try{const url=c.proxy?'http://127.0.0.1:8796/forward':built.url,body=c.proxy?{target:built.url,protocol:c.protocol,payload:built.body}:built.body;
+  const r=await fetch(url,{method:'POST',headers:built.headers,body:JSON.stringify(body),signal,redirect:'error',credentials:'omit'});raw=clean(await r.text());if(!r.ok)throw Error('API返回HTTP '+r.status+'：'+raw.slice(0,200));let parsed;try{parsed=JSON.parse(raw);}catch{throw Error('API回复不是合法JSON');}const answer=parseResponse(parsed,c.protocol);return {...answer,text:clean(answer.text),raw:parsed,request,model:answer.model||c.model,seconds:(performance.now()-start)/1000,profileId:c.id};
+ }catch(e){const err:any=new Error(clean((e as Error).message));err.raw=raw;err.request=request;err.seconds=(performance.now()-start)/1000;err.detail=clean((e as Error).stack||String(e));throw err;}
 }
-
-const STORAGE_KEY = "week06-model-settings";
-
-function load(): ModelSettings {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      localStorage.setItem(STORAGE_KEY,JSON.stringify({baseUrl:String(parsed.baseUrl||''),model:String(parsed.model||'')}));
-      return {
-        baseUrl: String(parsed.baseUrl || ""),
-        apiKey: "",
-        model: String(parsed.model || ""),
-      };
-    }
-  } catch {
-    /* 损坏的本地配置按未配置处理 */
-  }
-  return { baseUrl: "", apiKey: "", model: "" };
-}
-
-let settings: ModelSettings = load();
-
-export const getModelSettings = (): ModelSettings => ({ ...settings });
-
-export function setModelSettings(patch: Partial<ModelSettings>) {
-  settings = { ...settings, ...patch };
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ baseUrl: settings.baseUrl, model: settings.model }));
-  } catch {
-    /* 隐私模式等场景写不进 localStorage 时，配置仍在本页内存生效 */
-  }
-  window.dispatchEvent(new CustomEvent("model-settings-change"));
-}
-
-export const isModelReady = () =>
-  !!settings.baseUrl.trim() && !!settings.model.trim() && (!!settings.apiKey.trim() || /^http:\/\/(localhost|127\.0\.0\.1)(:|\/)/.test(settings.baseUrl));
-
-export function openModelSettings() {
-  window.dispatchEvent(new CustomEvent("open-model-settings"));
-}
-
-export function chatEndpoint(base: string) {
-  const u = new URL(base.trim());
-  if (u.username || u.password || u.search || u.hash)
-    throw Error("服务地址不能包含密钥、查询参数或用户密码。");
-  if (
-    u.protocol !== "https:" &&
-    !(
-      u.protocol === "http:" &&
-      ["localhost", "127.0.0.1", "[::1]"].includes(u.hostname)
-    )
-  )
-    throw Error("远程 API 须使用 HTTPS；HTTP 仅用于本机。");
-  const clean = u.href.replace(/\/$/, "");
-  return clean.endsWith("/chat/completions")
-    ? clean
-    : clean + "/chat/completions";
-}
-
-export interface ChatResult {
-  text: string;
-  raw?: any;
-  request?: any;
-  model: string;
-  seconds: number;
-  usage?: any;
-  finishReason?: string;
-  toolCalls?: any[];
-}
-
-export async function chatCompletions(
-  messages: { role: string; content: string | any[] | null; tool_calls?: any[]; tool_call_id?: string }[],
-  opts: { maxTokens?: number; signal?: AbortSignal; tools?: any[]; onDelta?: (text:string)=>void } = {},
-): Promise<ChatResult> {
-  const c = getModelSettings();
-  if (!isModelReady()) throw Error("请先在右上角「模型接入」中填写端点、模型与 Key。");
-  const url = chatEndpoint(c.baseUrl);
-  const signal = opts.signal
-    ? AbortSignal.any([opts.signal, AbortSignal.timeout(180000)])
-    : AbortSignal.timeout(180000);
-  const start = performance.now();
-  const failed=(message:string,raw:unknown)=>{const error:any=new Error(message);error.raw=raw;error.seconds=(performance.now()-start)/1000;return error;};
-  let r: Response;
-  try {
-    r = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${c.apiKey}`,
-      },
-      body: JSON.stringify({
-        messages,
-        model: c.model,
-        stream: !!opts.onDelta,
-        temperature: 0.3,
-        max_tokens: opts.maxTokens || 2048,
-        ...(opts.tools ? {tools:opts.tools,tool_choice:'auto'} : {}),
-      }),
-      signal,
-      redirect: "error",
-      credentials: "omit",
-    });
-  } catch (e) {
-    if (signal.aborted) throw Error("请求已取消或模型响应超时。");
-    throw Error("API 连接失败；请核对端点地址与网络。");
-  }
-  if (!r.ok) {
-    const detail = (await r.text().catch(() => "")).split(c.apiKey||'\u0000').join('[REDACTED]');
-    throw failed(`API 返回 HTTP ${r.status}${detail ? "：" + detail.slice(0, 200) : ""}；请核对模型、余额和 Key。`,detail);
-  }
-  if(opts.onDelta&&r.headers.get('content-type')?.includes('text/event-stream')){
-    const reader=r.body.getReader(),decoder=new TextDecoder();let pending='',text='',model=c.model,usage:any,finishReason='',calls:any[]=[];
-    const consume=(line:string)=>{if(!line.startsWith('data:'))return;const data=line.slice(5).trim();if(!data||data==='[DONE]')return;const frame=JSON.parse(data),choice=frame.choices?.[0];model=frame.model||model;usage=frame.usage||usage;if(choice?.finish_reason)finishReason=choice.finish_reason;const delta=choice?.delta;if(typeof delta?.content==='string'){text+=delta.content;opts.onDelta(text);}for(const part of delta?.tool_calls||[]){const index=part.index||0,current=calls[index] ||= {id:'',type:'function',function:{name:'',arguments:''}};if(part.id)current.id=part.id;if(part.function?.name)current.function.name+=part.function.name;if(part.function?.arguments)current.function.arguments+=part.function.arguments;}};
-    try{while(true){const result=await reader.read();pending+=decoder.decode(result.value||new Uint8Array(),{stream:!result.done});let newline;while((newline=pending.indexOf('\n'))>=0){consume(pending.slice(0,newline).replace(/\r$/,''));pending=pending.slice(newline+1);}if(result.done)break;}if(pending.trim())consume(pending.replace(/\r$/,''));}finally{reader.releaseLock();}
-    if(!text.trim()&&!calls.length)throw Error('API 未返回答案正文。');
-    return {text,model,usage,finishReason,seconds:(performance.now()-start)/1000,toolCalls:calls.filter(Boolean)};
-  }
-  const rawText = (await r.text()).split(c.apiKey||'\u0000').join('[REDACTED]');
-  let d:any;try{d=JSON.parse(rawText);}catch{throw failed('API 返回的响应不是合法 JSON；原文已记录。',rawText);}
-  const choice = d.choices?.[0];
-  const text = choice?.message?.content;
-  if ((!text || !text.trim()) && !choice?.message?.tool_calls?.length)
-    throw failed("API 未返回答案正文。",d);
-  opts.onDelta?.(text||'');
-  return {
-    text: text || '',
-    raw: d,
-    request: {endpoint:url,model:c.model,messages,temperature:0.3,max_tokens:opts.maxTokens||2048},
-    model: d.model || c.model,
-    seconds: (performance.now() - start) / 1000,
-    usage: d.usage,
-    finishReason: choice.finish_reason,
-    toolCalls: choice.message.tool_calls,
-  };
-}
+export async function testVision(id=selected){setModelSettings({vision:null},id);const original=getModelSettings(id),identity=(c:ModelSettings)=>JSON.stringify([c.baseUrl,c.model,c.apiKey,c.protocol,c.proxy]);const canvas=document.createElement('canvas');canvas.width=420;canvas.height=110;const ctx=canvas.getContext('2d')!;ctx.fillStyle='#fff';ctx.fillRect(0,0,420,110);ctx.fillStyle='#111';ctx.font='bold 56px serif';ctx.fillText('史德 7141',20,75);const messages=[{role:'user',content:[{type:'text',text:'只照录图中的全部文字和数字，不解释。'},{type:'image_url',image_url:{url:canvas.toDataURL('image/png')}}]}];const result=await chatCompletions(messages,{profileId:id,visionTest:true,maxTokens:1024}),text=result.text.normalize('NFKC').replace(/\s/g,'');const vision={passed:text.includes('史德')&&text.includes('7141'),date:new Date().toISOString(),test:'内置公开测试图：史德 7141',...result};if(identity(original)!==identity(getModelSettings(id)))throw Error('测试期间配置已变化，请重新测试');setModelSettings({vision},id);return vision;}
