@@ -63,4 +63,3 @@ export function hydrateVision(l){if(!l.visionEvents){l.visionEvents=true;pointer
  l.querySelectorAll('[data-heat-step]').forEach(td=>td.classList.toggle('active-step',+td.dataset.heatStep===(l.v.ctcStep||0)));
  for(const n of l.querySelectorAll('[data-v-file="trace"]'))n.onchange=()=>l.guarded(async()=>{const files=Array.from(n.files),json=files.find(f=>f.name.endsWith('.json')),x=json?JSON.parse(await json.text()):l.traceMeta;if(!x?.model||!Array.isArray(x.nodes)||!x.nodes.length)throw Error(R('r0165'));if(x.model.sha256!==DATA.ppGraph.model.sha256)throw Error(R('r0273'));const imgs={...l.traceImages};for(const file of files.filter(f=>f.name.endsWith('.png'))){const sig=new Uint8Array(await file.slice(0,8).arrayBuffer());if(sig.join(',')!=='137,80,78,71,13,10,26,10')throw Error(R('r0165'));imgs[file.name]=await S.blobDataURL(file);}l.traceMeta=x;l.traceImages=imgs;l.v.featureNode='0';});
 }
-

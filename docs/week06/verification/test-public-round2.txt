@@ -1,0 +1,68 @@
+$ node --test tests/*.test.mjs
+✔ API protocol fixture: openai (0.770542ms)
+✔ API protocol fixture: gemini (0.140334ms)
+✔ API protocol fixture: claude (0.181708ms)
+✔ API protocol fixture: deepseek (0.068959ms)
+✔ API protocol fixture: qwen (0.069041ms)
+✔ API protocol fixture: glm (0.060208ms)
+✔ API protocol fixture: kimi (0.050625ms)
+✔ API protocol fixture: doubao (0.05975ms)
+✔ API protocol fixture: siliconflow (0.075333ms)
+✔ API protocol fixture: openrouter (0.107917ms)
+✔ API protocol fixture: local (0.077041ms)
+✔ API protocol fixture: custom (0.057125ms)
+✔ coordinates use explicit format, preserve bounds, and strip only JSON fences (0.616292ms)
+✔ NDL and ALTO scores remain different and text import preserves blank lines (1.481125ms)
+✔ TEI mixed content and choices preserve sequence; untrusted text remains literal (0.465459ms)
+✔ manual mapping, empty matches, provenance gate and failed import are transactional (0.437042ms)
+✔ source label alone is not sufficient evidence for evaluation (0.173792ms)
+﹣ F01 saved NDL line counts and original TYPE (0.4745ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F02 column label and page number remain original OCR (0.0465ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F03 confidence and bbox of semantic error (0.029292ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F04 lowest-confidence lines (0.035208ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F05 same-page variant outputs (0.031625ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F06 text vs unrecognized blocks are not conflated (0.030833ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F07 saved 良/艮 example (0.027542ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+✔ F08 actual shared NDL character inventory (3.636917ms)
+﹣ F09 115-character alignment with editable mapping (0.083917ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+✔ F10 CTC merge before blank deletion (0.396542ms)
+✔ F11 Gardella quoted median and mean (0.120416ms)
+✔ F12 PureDocBench reported changes (0.0645ms)
+✔ F13 Sasagawa synthetic orientation comparison (0.043167ms)
+✔ F14 HIPE source figures (0.029208ms)
+✔ F15 eight interference groups cover each original number exactly once (0.052875ms)
+✔ F16 page map minutes, pages, concepts (1.949708ms)
+✔ adapters preserve null text, XML hierarchy and Unicode entities (0.940708ms)
+✔ NDLLite must not label detector score as recognition confidence (0.174417ms)
+✔ PP, Florence, dots and invalid MLLM retain raw output (0.264167ms)
+✔ PAGE-XML preserves polygon baseline text and confidence (0.374167ms)
+✔ XY cutting uses actual whitespace and direction (0.193125ms)
+✔ CER codepoints, NFC, S/D/I, denominator, line order (0.331542ms)
+✔ Otsu, manual threshold and geometry are immutable (0.182292ms)
+✔ schema validation and max IoU matching (0.881ms)
+✔ seven dependent stages reject mutation and corrupt restore (3.560167ms)
+✔ F20 PARSeq agrees with upstream Python: repeats (0.824875ms)
+✔ F20 PARSeq agrees with upstream Python: low-ids (0.114125ms)
+✔ F20 PARSeq agrees with upstream Python: no-eos (0.069459ms)
+✔ F20 PARSeq agrees with upstream Python: immediate-eos (0.047209ms)
+✔ PARSeq rejects dimension drift and non-finite logits; stable softmax (0.124542ms)
+✔ F17 CTC paper paths retain blank-separated repeats (0.06975ms)
+✔ F18 eight-step probabilities, CTC score and path products (0.484083ms)
+✔ F19 all 17 categories and original names match pinned extraction (2.68675ms)
+✔ preflight without models: missing (0.878917ms)
+✔ preflight without models: sha (0.101625ms)
+✔ preflight without models: session-error (0.510875ms)
+✔ preflight without models: warmup (0.085709ms)
+✔ CTC instruction playback matches retained tokens including blank-separated repeats (0.830792ms)
+✔ pixel effects preserve source and deterministically change pixels (0.291042ms)
+✔ all NDL actual variable names use same mapping as source labels (0.433667ms)
+✔ PP metadata is fixed-model static shape inference with no weights (0.997333ms)
+✔ candidate decisions apply each edit independently without altering original (0.374625ms)
+ℹ tests 59
+ℹ suites 0
+ℹ pass 51
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 8
+ℹ todo 0
+ℹ duration_ms 60.242417

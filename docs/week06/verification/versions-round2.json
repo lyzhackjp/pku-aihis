@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-20T06:39:40.510872+00:00",
+  "node": "v24.19.0",
+  "pnpm": "11.25.0",
+  "python": "3.12.1",
+  "macOS": "26.6.2",
+  "chrome": "Google Chrome 155.0.8059.85",
+  "declaredDependencies": {
+    "name": "pku-aihis-week06",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+      "build": "node scripts/assemble.mjs && vite build --config vite.engines.ts && stencil build",
+      "check": "tsc --noEmit && tsc -p tsconfig.engines.json && node scripts/check-delivery.mjs",
+      "test": "node --test tests/*.test.mjs",
+      "check:browser": "node scripts/check-browser.mjs",
+      "preview": "python3 scripts/serve-preview.py"
+    },
+    "devDependencies": {
+      "@stencil/core": "4.45.0",
+      "typescript": "5.9.3",
+      "playwright": "1.63.0",
+      "vite": "7.3.1",
+      "@types/js-yaml": "4.0.9",
+      "@types/node": "24.10.1"
+    },
+    "dependencies": {
+      "@huggingface/transformers": "3.8.1",
+      "onnxruntime-web": "1.24.3",
+      "@techstark/opencv-js": "4.10.0-release.1",
+      "clipper-lib": "6.4.2",
+      "js-yaml": "4.1.0"
+    },
+    "packageManager": "pnpm@11.19.0",
+    "engines": {
+      "node": ">=22"
+    }
+  },
+  "staticOnnx": "1.20.1 (temporary environment; shape inference only)"
+}
