@@ -13,7 +13,7 @@ export function probabilityTrace(rows,labels,{blank=0,topK=5,probes=[]}={}){
  return {positions,heatmap:{ids:heatIds,labels:heatIds.map(k=>labels[k]),values:heatIds.map(k=>rows.map(r=>Number(r[k])))} };
 }
 export function decodeCTCProbabilities(rows,labels,blank=0){
- const trace=probabilityTrace(rows,labels,{blank});let prev=blank;const chars=[];
+ const trace=probabilityTrace(rows,labels,{blank,probes:['德','徳']});let prev=blank;const chars=[];
  for(const p of trace.positions){if(p.id!==blank&&p.id!==prev)chars.push({text:p.text,prob:p.prob,step:p.step,source:'引擎原值：CTC输出概率'});prev=p.id;}
  return {text:chars.map(x=>x.text).join(''),score:chars.length?chars.reduce((s,x)=>s+x.prob,0)/chars.length:0,chars,trace:{...trace,blank_id:blank,kept_steps:chars.map(x=>x.step)}};
 }

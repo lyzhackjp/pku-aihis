@@ -2,6 +2,7 @@ import {state,ready,save,addRecord} from './storage.js';
 import * as S from './services.js';
 import {parseReading,parseReference,alignImports,REFERENCE_TIERS,mayEvaluate,referenceIssues} from '../modules/ocr/imports.mjs';
 const E=window.Deck.esc,DATA=window.DECK_DATA,drafts=new Map();
+window.addEventListener('week06-cleared',()=>drafts.clear());
 export function referenceEditor(){const source=state.imports?.reference?.source;if(!source)return '';const q=window.Deck.pageById('D22').ui_round2;return `<fieldset class="reference-source"><legend>${E(q.metadata)}</legend>${q.source_fields.map(([k,label,type])=>`<label>${E(label)}<input data-source-field="${k}" type="${type}" value="${E(source[k]||'')}"></label>`).join('')}<label><input type="checkbox" data-source-field="verified" ${source.verified?'checked':''}>${E(q.verified)}</label><p>${E(referenceIssues(state.imports.reference).length?q.missing+referenceIssues(state.imports.reference).join('；'):'✓')}</p></fieldset>`;}
 export function bindReferenceEditor(host){for(const n of host.querySelectorAll('[data-source-field]'))n.onchange=async()=>{state.imports.reference.source[n.dataset.sourceField]=n.type==='checkbox'?n.checked:n.value;await synchronize();};}
 const options=(items,value)=>items.map(([v,l])=>`<option value="${E(v)}" ${v===value?'selected':''}>${E(l)}</option>`).join('');

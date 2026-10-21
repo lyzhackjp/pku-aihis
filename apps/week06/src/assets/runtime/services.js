@@ -6,7 +6,7 @@ import {validateProject} from '../modules/project.mjs';
 const DATA=window.DECK_DATA;export const digest=async bytes=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');
 export const blobDataURL=blob=>new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(blob);});
 export async function materialFromBlob(blob,source,name){const bytes=await blob.arrayBuffer(),image=await createImageBitmap(blob);const material={image:{name,sha256:await digest(bytes),width:image.width,height:image.height,source:{material_id:source.id,identity:source.identity||source.title,page_systems:source.page_systems||{'位置':'用户导入，待填写'}},local_only:source.public!==true},dataUrl:await blobDataURL(blob)};image.close();return material;}
-export function currentRecords(){return state.records.filter(r=>r.image.sha256===state.material?.image.sha256);}
+export function currentRecords(){return state.records.filter(r=>r.image.sha256===state.material?.image.sha256).sort((a,b)=>Date.parse(a.engine.date)-Date.parse(b.engine.date));}
 export function lastRecord(name){return currentRecords().filter(r=>!name||r.engine.name===name).at(-1);}
 export function meta(name,run_mode='浏览器实时',version='待登记',params={},image=state.material?.image){if(!image)throw Error('先选择页影');return {image:structuredClone(image),engine:{name,version,run_mode,date:new Date().toISOString(),params}};}
 export async function pixels(material=state.material){if(!material?.dataUrl)throw Error('需本机材料或导入公开页影');const image=await createImageBitmap(await (await fetch(material.dataUrl)).blob());const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(image,0,0);image.close();return {canvas,imageData:c.getImageData(0,0,canvas.width,canvas.height)};}
@@ -74,3 +74,19 @@ let importer;
 export function openImporter(){importer=window.open(new URL('assets/importer/?receiver='+encodeURIComponent(location.origin),document.baseURI),'week06-material-importer');}
 window.addEventListener('message',async e=>{if(e.origin!==location.origin||e.source!==importer)return;if(e.data?.type==='PKU_IMPORT_READY')importer.postMessage({type:'PKU_IMPORT_HELLO'},location.origin);if(e.data?.type==='PKU_PROJECT'){try{const project=validateProject(e.data.project),files=e.data.files||[];await put('imported-project',project);let count=0;for(const file of files){if(!(file.blob instanceof Blob))throw Error('附件格式错误');await put('attachment/'+file.id,file.blob);if(file.blob.type.startsWith('image/')&&count===0){state.material=await materialFromBlob(file.blob,{id:'imported',public:false,title:'从导入页接收；请填写页码'},file.id);count++;}}await save();importer.postMessage({type:'PKU_IMPORT_ACCEPTED'},location.origin);window.dispatchEvent(new CustomEvent('week06-notice',{detail:count?'已接收图像与项目；请核对材料身份':'项目已接收；请选择其中一页导出为 PNG/JPEG 后在本课导入'}));}catch(error){importer.postMessage({type:'PKU_IMPORT_REJECTED',message:error.message},location.origin);}}});
 window.W6ServicesReady=ready.then(()=>({openImporter}));
+
+export const materialMode=()=>['localhost','127.0.0.1'].includes(location.hostname)&&new URLSearchParams(location.search).get('local')==='1'?'local':'public';
+let defaultQueue=Promise.resolve();
+export async function ensurePageMaterial(page,view){
+ if(!page.material_defaults)return;
+ const mode=materialMode(),id=view['chosenMaterial_'+mode]||page.material_defaults[mode];
+ defaultQueue=defaultQueue.catch(()=>{}).then(async()=>{
+  if(state.material?.image.source.material_id!==id)await selectMaterial(id);
+  // Public saved results are actual runs with a fixed image fingerprint. Never load private fallback in public mode.
+  if(mode==='public'&&id==='shide_public'&&!currentRecords().length){
+   const response=await fetch('assets/materials/shide-1926-default-record.json.gz');
+   if(response.ok){const record=validateRecord(await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).json());if(record.image.sha256!==state.material.image.sha256)throw Error('默认记录与页影指纹不符');record.original_run_mode=record.engine.run_mode;record.engine.run_mode='保存结果回放';await addRecord(record);}
+  }
+ });
+ return defaultQueue;
+}

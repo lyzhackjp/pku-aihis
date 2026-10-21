@@ -13,6 +13,7 @@
  */
 
 import type * as OrtType from 'onnxruntime-web'
+import {serializable} from '../../../../modules/history-demo/ocr/serializable.mjs'
 import { ort, createSession } from './onnx-config'
 import type { TextRegion, PageBlock, LayoutDetectionResult } from './types/ocr'
 
@@ -169,7 +170,7 @@ export class LayoutDetector {
       const bboxesData = output[outputNames[1]].data as Float32Array
       const scoresData = output[outputNames[2]].data as Float32Array
       const charCountsData = outputNames.length > 3
-        ? (output[outputNames[3]].data as Float32Array)
+        ? (output[outputNames[3]].data as Float32Array | BigInt64Array)
         : null
 
       const numDetections = scoresData.length
@@ -218,8 +219,10 @@ export class LayoutDetector {
           const width = finalX2 - finalX1
           const height = finalY2 - finalY1
           if (width >= 10 && height >= 10) {
-            const charCountCategory = charCountsData ? Number(charCountsData[i]) : 100
-            lineDetections.push({ detectionId:'deim-'+i, x: finalX1, y: finalY1, width, height, confidence: score, classId, charCountCategory })
+            const count = serializable({charCountCategory:charCountsData?.[i] ?? 100}) as {
+              charCountCategory:number|string;serialization_notes?:Array<{path:string;value:string;reason:string}>
+            }
+            lineDetections.push({ detectionId:'deim-'+i, x: finalX1, y: finalY1, width, height, confidence: score, classId, ...count })
           }
         }
       }
