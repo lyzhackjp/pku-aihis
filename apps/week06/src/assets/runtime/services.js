@@ -1,3 +1,4 @@
+import {environmentReady,runtimeEnvironment,modelIdentity} from '../modules/ocr/run-environment.mjs';
 import {candidateEdits,applyCandidateEdits} from '../modules/ocr/candidate-edits.mjs';
 import {state,ready,save,addRecord,put} from './storage.js';
 import {validateRecord,fromNDLXML,fromPageXML,fromPPOCR,fromNDLLite,fromFlorence,fromDots,fromMLLM,makeRecord,deriveRecord} from '../modules/ocr/record.mjs';
@@ -8,7 +9,8 @@ export const blobDataURL=blob=>new Promise((resolve,reject)=>{const r=new FileRe
 export async function materialFromBlob(blob,source,name){const bytes=await blob.arrayBuffer(),image=await createImageBitmap(blob);const material={image:{name,sha256:await digest(bytes),width:image.width,height:image.height,source:{material_id:source.id,identity:source.identity||source.title,page_systems:source.page_systems||{'位置':'用户导入，待填写'}},local_only:source.public!==true},dataUrl:await blobDataURL(blob)};image.close();return material;}
 export function currentRecords(){return state.records.filter(r=>r.image.sha256===state.material?.image.sha256).sort((a,b)=>Date.parse(a.engine.date)-Date.parse(b.engine.date));}
 export function lastRecord(name){return currentRecords().filter(r=>!name||r.engine.name===name).at(-1);}
-export function meta(name,run_mode='浏览器实时',version='待登记',params={},image=state.material?.image){if(!image)throw Error('先选择页影');return {image:structuredClone(image),engine:{name,version,run_mode,date:new Date().toISOString(),params}};}
+export const environmentReadyForRun=()=>environmentReady;
+export function meta(name,run_mode='浏览器实时',version='待登记',params={},image=state.material?.image){if(!image)throw Error('先选择页影');return {image:structuredClone(image),engine:{name,version,run_mode,date:new Date().toISOString(),params,model_id:modelIdentity(name),runtime:runtimeEnvironment(name,params.experiment?'line':'full')}};}
 export async function pixels(material=state.material){if(!material?.dataUrl)throw Error('需本机材料或导入公开页影');const image=await createImageBitmap(await (await fetch(material.dataUrl)).blob());const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(image,0,0);image.close();return {canvas,imageData:c.getImageData(0,0,canvas.width,canvas.height)};}
 export async function selectMaterial(id){
  const source=DATA.sources.find(s=>s.id===id);if(!source)throw Error('材料未登记');
@@ -17,7 +19,7 @@ export async function selectMaterial(id){
   const res=await fetch('/local-materials/manifest');if(!res.ok)throw Error('本机材料接口未启动');const item=(await res.json()).find(s=>s.id===id);if(!item)throw Error('需通过导入页打开该材料');
   const blob=await (await fetch(item.image_url)).blob();const m=await materialFromBlob(blob,{id,public:false,identity:source.identity,page_systems:item.image.source.page_systems},id);
   if(m.image.sha256!==item.image.sha256)throw Error('本机页影指纹与登记不符');state.material=m;
-  const xml=await (await fetch(item.xml_url)).text();const r=fromNDLXML(xml,meta('ndlocr-lite','保存结果回放','待登记（V-08）',{source:'第五周已保存 XML；未重跑',date_known:'2026-10-13'}));r.engine.date='2026-10-13T00:00:00+08:00';if(!currentRecords().some(x=>x.raw===xml))state.records.push(r);
+  const xml=await (await fetch(item.xml_url)).text();const r=fromNDLXML(xml,meta('ndlocr-lite','保存结果回放','待登记（V-08）',{source:'第五周已保存 XML；未重跑',date_known:'2026-10-13'}));r.engine.date='2026-10-13T00:00:00+08:00';delete r.engine.runtime;delete r.engine.model_id;if(!currentRecords().some(x=>x.raw===xml))state.records.push(r);
  }else if(source.file){const r=await fetch(new URL('../materials/'+source.file,import.meta.url));if(!r.ok)throw Error('公开页影未取得');const m=await materialFromBlob(await r.blob(),source,source.file);if(m.image.sha256!==source.sha256)throw Error('公开页影指纹不符');state.material=m;
  }else throw Error(id==='folger_la2'?'Folger 高清页影待取得；公开转录已可用。请导入有来源的 1r 图像。':'公开替代页尚未取得：需本机材料');
  await save();return state.material;
@@ -26,15 +28,16 @@ export async function importRecord(file){
  if(!state.material)throw Error('先选择与保存记录相同的页影');const text=await file.text();let r;
  if(text.trim().startsWith('<'))r=text.includes('OCRDATASET')?fromNDLXML(text,meta('ndlocr-lite','保存结果回放','待登记')):fromPageXML(text,meta('kraken','保存结果回放','待登记'));
  else{const x=JSON.parse(text);if(x.record_version)r=validateRecord(x);else{const response=x.response||x;if(response.model?.includes('dots.ocr')&&response.image){if(response.image.sha256!==state.material.image.sha256)throw Error('保存记录与当前页影指纹不同');r=fromDots(response,meta('dots.ocr','保存结果回放',response.revision||'待登记'));r.engine.date=response.started_at;r.engine.backend=response.backend;}else throw Error('需要统一识读记录、dots 服务日志或 NDL/PAGE XML');}}
+ if(text.trim().startsWith('<')){delete r.engine.runtime;delete r.engine.model_id;}
  if(r.image.sha256!==state.material.image.sha256)throw Error('保存记录与页影指纹不同');r.replayed_at=new Date().toISOString();r.source_file={name:file.name,sha256:await digest(await file.arrayBuffer())};await addRecord(r);return r;
 }
 export async function runEngine(name,progress=()=>{},options={}){
- const source=structuredClone(state.material),makeMeta=(name,mode,version,params={})=>meta(name,mode,version,params,source?.image);const start=performance.now();const {imageData}=await pixels(source);let r;
+ await environmentReady;const source=structuredClone(state.material),makeMeta=(name,mode,version,params={})=>meta(name,mode,version,params,source?.image);const start=performance.now();const {imageData}=await pixels(source);let r;
  const engine=await import('../ocr/engines.js');
- if(name==='ndlocr-lite'){const out=await engine.runNDL(imageData,progress,options);r=fromNDLLite(out,makeMeta(name,'浏览器实时','NDLOCR-Lite / DEIM + PARSeq16; importer pin 50216ccc'),DATA.categories.ndl);}
+ if(name==='ndlocr-lite'){const out=await engine.runNDL(imageData,progress,options);r=fromNDLLite(out,makeMeta(name,'浏览器实时','NDLOCR-Lite / DEIM + PARSeq16; importer pin 50216ccc',{detectOnly:!!options.detectOnly}),DATA.categories.ndl);}
  if(name==='pp-ocrv6'){const out=await engine.runPaddle(imageData,progress,options.detectOnly);r=fromPPOCR(out,makeMeta(name,'浏览器实时',engine.models['pp-det'].revision+' / '+engine.models['pp-rec'].revision,{detectOnly:!!options.detectOnly}));}
  if(name==='florence-2'){const out=await engine.runFlorence(imageData,progress,options.task);r=fromFlorence(out.parsed,makeMeta(name,'浏览器实时',out.revision,{task:out.task}));r.raw={output:out.parsed,generated:out.generated};}
- if(!r)throw Error('引擎未登记');r.engine.elapsed_ms=performance.now()-start;await addRecord(r);return r;
+ if(!r)throw Error('引擎未登记');r.engine.elapsed_ms=performance.now()-start;if(options.pageId)r.engine.page_id=options.pageId;await addRecord(r);return r;
 }
 export async function dotsHealth(){try{const r=await fetch('http://127.0.0.1:8786/health',{signal:AbortSignal.timeout(1500)});if(!r.ok)throw Error('HTTP '+r.status);return await r.json();}catch(error){return {ok:false,loaded:false,error:'本机服务未启动',detail:error.message};}}
 export async function runDots(mode,timeout=180){
@@ -76,17 +79,29 @@ window.addEventListener('message',async e=>{if(e.origin!==location.origin||e.sou
 window.W6ServicesReady=ready.then(()=>({openImporter}));
 
 export const materialMode=()=>['localhost','127.0.0.1'].includes(location.hostname)&&new URLSearchParams(location.search).get('local')==='1'?'local':'public';
+const defaultFiles={'ndlocr-lite':'shide-1926-ndl-default-record.json.gz','pp-ocrv6':'shide-1926-default-record.json.gz'},defaultRecords=new Map();
+export async function loadDefaultRecord(name){
+ if(!defaultFiles[name])return null;
+ if(!defaultRecords.has(name))defaultRecords.set(name,(async()=>{const response=await fetch('assets/materials/'+defaultFiles[name]);if(!response.ok)throw Error('默认记录未取得：'+name);const record=validateRecord(await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).json());record.original_run_mode=record.engine.run_mode;record.engine.run_mode='保存结果回放';record.default_replay=defaultFiles[name];return record;})().catch(e=>{defaultRecords.delete(name);throw e;}));
+ return structuredClone(await defaultRecords.get(name));
+}
+export function recordForPage(id,view={}){
+ const rs=currentRecords(),full=rs.filter(r=>!r.engine.params?.experiment),pub=state.material?.image.source.material_id==='shide_public';
+ if(pub&&id==='D01')return full.filter(r=>r.engine.name===(view.ndlPreview?'ndlocr-lite':'pp-ocrv6')).at(-1);
+ return full.filter(r=>r.engine.page_id===id&&!r.default_replay).at(-1)||(pub&&['D03','D05','D06'].includes(id)?full.filter(r=>r.engine.name==='ndlocr-lite').at(-1):null)||rs.at(-1);
+}
 let defaultQueue=Promise.resolve();
 export async function ensurePageMaterial(page,view){
- if(!page.material_defaults)return;
+ await environmentReady;if(!page.material_defaults)return;
  const mode=materialMode(),id=view['chosenMaterial_'+mode]||page.material_defaults[mode];
  defaultQueue=defaultQueue.catch(()=>{}).then(async()=>{
   if(state.material?.image.source.material_id!==id)await selectMaterial(id);
-  // Public saved results are actual runs with a fixed image fingerprint. Never load private fallback in public mode.
-  if(mode==='public'&&id==='shide_public'&&!currentRecords().length){
-   const response=await fetch('assets/materials/shide-1926-default-record.json.gz');
-   if(response.ok){const record=validateRecord(await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).json());if(record.image.sha256!==state.material.image.sha256)throw Error('默认记录与页影指纹不符');record.original_run_mode=record.engine.run_mode;record.engine.run_mode='保存结果回放';await addRecord(record);}
+  if(mode==='public'&&id==='shide_public'){
+   if(page.id==='D08'&&!state.controlled_experiments){const response=await fetch('assets/materials/d08-round4-controlled.json.gz');if(response.ok){state.controlled_experiments=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).json();await save();}}
+   const names=['D03','D05','D06'].includes(page.id)||page.id==='D01'&&view.ndlPreview?['ndlocr-lite']:['pp-ocrv6'];
+   for(const name of names)if(!currentRecords().some(r=>r.engine.name===name&&!r.engine.params?.experiment)){
+    const record=await loadDefaultRecord(name);if(record.image.sha256!==state.material.image.sha256)throw Error('默认记录与页影指纹不符');await addRecord(record);
+   }
   }
- });
- return defaultQueue;
+ });return defaultQueue;
 }

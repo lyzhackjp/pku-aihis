@@ -29,3 +29,19 @@ page-overlay{display:block;min-width:0}page-overlay .overlay-controls, page-over
 /* Round 3: explicit crop viewport, compact controls, exact score values on hover. */
 .deck-shell{grid-template-columns:minmax(0,1fr)}.deck-shell>main,week06-lab{min-width:0}week06-lab{display:block;width:100%}
 .ctc-lab .overlay-detail{display:none}.bbox-values{display:grid;grid-template-columns:repeat(4,auto);gap:.25rem}.bbox-values dd{margin:0}.record-summary{font-size:14px;color:#46576b}.preflight-table{overflow-x:auto}.preflight-table td{vertical-align:top}.preflight-table pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto;max-width:400px}.preflight-table samp{white-space:pre-wrap;overflow-wrap:anywhere}.selected-crop{background:#f6f2e9}.selected-crop svg.line-crop{min-height:0}.certainty-note{padding:12px;background:#fff0c9}
+/* Round 4: preserve each actual input's aspect ratio; probability details remain inspectable. */
+.controlled-group{margin:1.5rem 0;padding:1rem;border:1px solid #aebbc9;border-radius:8px}
+.controlled-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.controlled-condition{padding:1rem;background:#f5f7fa;min-width:0;overflow:hidden}
+.controlled-condition h4{margin:0 0 .6rem}
+.controlled-condition p,.run-provenance{font-size:.8rem;overflow-wrap:anywhere}
+.condition-images{display:grid;grid-template-columns:90px minmax(0,1fr);gap:12px;align-items:start}
+.condition-images figure{margin:0;min-width:0}.condition-images figure>img{display:block;width:auto;max-width:100%;height:auto;max-height:220px}
+.condition-images .network-preview img{width:100%;height:auto;max-height:none;image-rendering:pixelated}
+.condition-images figcaption{font-size:.75rem;line-height:1.4;margin-top:.4rem}
+.controlled-condition .position-table{font-size:.75rem}.controlled-condition .position-table td{white-space:normal;overflow-wrap:anywhere}
+.controlled-output{font-weight:600}.controlled-condition details pre{max-height:300px;overflow:auto}
+.context-outcome{background:#fff6df;padding:.7rem}.legacy-experiments,.legacy-rerun{margin:1rem 0}
+.replay-comparison td{overflow-wrap:anywhere;max-width:32vw}.replay-comparison table{width:100%}
+@media(max-width:900px){.controlled-results{grid-template-columns:1fr}}
+.condition-images .network-zoom{overflow-x:auto;margin-top:12px;background:white;border:1px solid #cbd0d0;padding:6px 0}.condition-images .network-zoom img{max-width:none!important;max-height:none;margin:0;image-rendering:pixelated}.controlled-condition .position-table td:nth-last-child(-n+2){min-width:6rem;white-space:nowrap}

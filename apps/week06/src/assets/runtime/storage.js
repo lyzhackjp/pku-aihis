@@ -9,7 +9,8 @@ export async function get(key,fallback=null){const d=await database(),v=await re
 export async function put(key,value){const d=await database();return new Promise((resolve,reject)=>{const t=d.transaction('entries','readwrite');t.objectStore('entries').put(structuredClone(value),key);t.oncomplete=()=>resolve(value);t.onerror=()=>reject(t.error);});}
 export const state=emptyClassroom();
 export const ready=(async()=>{try{Object.assign(state,await repairClassroom(await get('classroom',{})));}catch(e){state.recovery_notices=['旧课堂记录无法读取：'+e.message];}return state;})();
-export async function save(){await put('classroom',serializable(state));window.dispatchEvent(new Event('week06-state'));}
+export let pendingSaves=0;
+export async function save(){pendingSaves++;try{await put('classroom',serializable(state));window.dispatchEvent(new Event('week06-state'));}finally{pendingSaves--;}}
 export async function restore(text){const parsed=JSON.parse(text);await validateThrough(parsed);state.through=structuredClone(parsed);const source=parsed.stages[0]?.value;if(source)state.material={...source};if(parsed.stages[2])state.records=[structuredClone(parsed.stages[2].value.record)];await save();return parsed;}
 export async function addRecord(record){state.records.push(upgradeScores(record));await save();}
 

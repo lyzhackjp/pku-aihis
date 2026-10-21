@@ -941,6 +941,47 @@
       "pp_rec_source": "PP-OCRv6：固定 PaddleOCR dab3fe3 rec.ts；CTC 逐窄条概率与保留字符最大概率平均。",
       "ndl_rec_source": "NDL PARSeq：固定 d001dad src/parseq.py read；逐位 softmax 与识读分数由本课计算。",
       "mask_empty": "所选遮挡没有改变图像像素；请把遮挡位置移到字形上再运行。"
+    },
+    "ui_round4": {
+      "jump_variant": "跳到含‘德／徳’的位置",
+      "no_variant": "本行没有",
+      "pp_det": "检测分数（PP-OCRv6：DB 框内概率均值）",
+      "ndl_det": "CONF（NDL：检测器框分数）",
+      "pp_rec": "识读分数（PP-OCRv6：保留字符最大概率均值）",
+      "sort_pp_det": "按 PP-OCRv6 检测分数（DB 框内概率均值）从低到高",
+      "sort_ndl_det": "按 NDL XML CONF（检测器框分数）从低到高",
+      "sort_rec": "按 PP-OCRv6 识读分数（保留字符概率均值）从低到高",
+      "pick_det": "按检测分数挑",
+      "pick_rec": "按识读分数挑",
+      "save_half": "登记这次挑选",
+      "half_note": "按两种分数各挑一半；奇数行取向上取整。公开页的检测与识读分数均来自同一次 PP-OCRv6 记录。",
+      "det_explain": "PP-OCRv6 的检测分数是 DB 框内文字概率均值；识读分数是 CTC 保留字符最大概率的均值。两者对应不同判断。",
+      "ndl_explain": "本机 NDL XML 的 CONF 是检测器框分数；右栏另列对应行的 PP-OCRv6 识读分数。没有对应实算记录时留空。",
+      "run_once": "本页一次实际运行的结果，未经人工校定",
+      "ndl_preview": "预览 NDL 实际记录（D01 默认关闭，是否采用待教师决定）",
+      "compare": "与保存记录比较",
+      "difference_note": "现场运行与保存记录可能因浏览器与缩放实现不同而略有出入，课堂讲解以课前在授课电脑上保存的记录为准",
+      "compare_same": "逐行文字相同",
+      "compare_changed": "以下逐行文字有差异；保存记录保留原样",
+      "old_environment": "旧记录未登记浏览器或缩放实现",
+      "controlled": "原位替换：保持行尺寸与前处理不变",
+      "controlled_label": "教学构造的输入，实际运行的输出",
+      "controlled_run": "运行本组全部条件（NDL 与 PP）",
+      "body_group": "正文：同一个德字块，改变前一格",
+      "title_group": "标题：保持德字不变，替换史字",
+      "mask_group": "遮字：保持原行尺寸",
+      "controlled_note": "每个条件按固定坐标修改一格。图块缩放到目标格，以目标格周边的局部中位灰度填平背景；原行尺寸、模型版本与前处理保持一致。下方同时显示原尺寸输入与旋转、缩放后真正送入网络的图像。",
+      "legacy": "未控制输入形状的尝试（第三轮保存结果）",
+      "legacy_note": "上一轮拼行改变了宽高比；NDL 在高大于宽的 0.8 倍时会自动旋转，100×90 的拼行仍会触发。输出成为数字和逗号，不能将差异单独归因于上下文。上一轮遮字保留标题尺寸，但没有完整核对网络输入，作为原样试验记录保留；它的异常输出不能全归因于形状变化。",
+      "no_context_effect": "本组实验未观察到前文改变字形选择",
+      "context_effect": "本组实验观察到字形选择随前一格替换发生变化；仅限这组输入，不能单独归因于语言先验",
+      "unlocated": "未稳定定位到目标字；保留全部候选，不作不存在上下文作用的结论",
+      "network_input": "模型实际收到的网络输入图像",
+      "all_positions": "全部有效位置的前 5 候选与德／徳概率",
+      "pp_target": "PP 对应窄条（按目标格的几何范围映射；不是字形定位真值）",
+      "saved_experiments": "本组保存结果回放；可展开运行工具重跑",
+      "legacy_load": "展开读取第三轮原样结果",
+      "public_only": "这组固定坐标实验使用公开的 1926 年本《史德》首页。"
     }
   },
   {
@@ -1522,7 +1563,7 @@
     "title": "字表里有\"德\"，为什么读成\"徳\"",
     "layout": "flow4",
     "minutes": 6,
-    "transition": "识读模型在认字的同时，也学会了哪些字常常连在一起。",
+    "transition": "控制行的形状后，只改前一格，候选概率和字形选择会怎样变化？",
     "question": "模型明明能输出原字形，为什么选了另一个？",
     "steps": [
       "查字表",
@@ -1530,12 +1571,12 @@
       "比较两处\"斷\"",
       "语言先验"
     ],
-    "student_operation": "查字表；选行查看候选；从同页裁出字块拼行或遮字，再比较 NDL PARSeq 与 PP-OCRv6。",
+    "student_operation": "查字表；在原尺寸正文行、标题行内替换或遮盖一格；查看实际网络输入与 NDL、PP 的逐位候选。上一轮拼行结果保留在折叠区。",
     "observable_output": "实际字表7141字；逐位候选、同字换上下文与遮字的真实识读对照，不预设结果。",
     "lesson_evidence": "讲义 2.1；NDLOCR-Lite src/config/NDLmoji.yaml；PARSeq（Bautista & Atienza 2022，摘要）；保存的识读输出。",
     "mode": "浏览器实时／保存结果回放；未运行的模型结果标待课前运行",
     "notes": {
-      "purpose": "引出语言先验。",
+      "purpose": "比较固定输入形状后前一格变化的结果，区分候选概率变化与最终字形选择变化；不预设上下文效应。",
       "guide": "提示：\"徳\"在唐代写本碑刻中常见，\"断\"\"当\"同大陆简化字。",
       "mechanism": "\"为日本资料训练、日本新字体更易胜出\"是推断（NDL 未公开字形分布）。"
     },
@@ -1567,7 +1608,183 @@
       "local": "shide",
       "record": "latest matching image; otherwise public saved real run / local NDL XML",
       "public_record": "shide-1926-default-record.json.gz（2026-10-21 Chrome 真实 PP-OCRv6 运行；保存结果回放）"
-    }
+    },
+    "controlled_experiments": [
+      {
+        "id": "body",
+        "label": "正文：德格不变，只替换前一格",
+        "sourceBox": [
+          585,
+          225,
+          50,
+          825
+        ],
+        "targetCell": [
+          7,
+          146,
+          33,
+          29
+        ],
+        "comparison": [
+          "body-de",
+          "body-context"
+        ],
+        "conditions": [
+          {
+            "id": "body-original",
+            "label": "原正文行",
+            "edits": []
+          },
+          {
+            "id": "body-de",
+            "label": "得格替换为标题德字；前文保持原样",
+            "edits": [
+              {
+                "cell": [
+                  7,
+                  146,
+                  33,
+                  29
+                ],
+                "donorBox": [
+                  694,
+                  371,
+                  33,
+                  34
+                ],
+                "label": "得 → 德"
+              }
+            ]
+          },
+          {
+            "id": "body-context",
+            "label": "德格完全不变；前一格者替换为同页文",
+            "edits": [
+              {
+                "cell": [
+                  7,
+                  146,
+                  33,
+                  29
+                ],
+                "donorBox": [
+                  694,
+                  371,
+                  33,
+                  34
+                ],
+                "label": "得 → 德"
+              },
+              {
+                "cell": [
+                  7,
+                  117,
+                  33,
+                  29
+                ],
+                "donorBox": [
+                  493,
+                  171,
+                  32,
+                  30
+                ],
+                "label": "者 → 文"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "title",
+        "label": "标题：德格不变，只把史换为才",
+        "sourceBox": [
+          685,
+          230,
+          50,
+          190
+        ],
+        "targetCell": [
+          7,
+          141,
+          36,
+          35
+        ],
+        "comparison": [
+          "title-original",
+          "title-cai"
+        ],
+        "conditions": [
+          {
+            "id": "title-original",
+            "label": "原标题史德",
+            "edits": []
+          },
+          {
+            "id": "title-cai",
+            "label": "史格替换为正文才字；德格保持原样",
+            "edits": [
+              {
+                "cell": [
+                  7,
+                  7,
+                  36,
+                  37
+                ],
+                "donorBox": [
+                  593,
+                  229,
+                  32,
+                  28
+                ],
+                "label": "史 → 才"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mask",
+        "label": "原位遮字：标题尺寸保持50×190",
+        "sourceBox": [
+          685,
+          230,
+          50,
+          190
+        ],
+        "targetCell": [
+          7,
+          141,
+          36,
+          35
+        ],
+        "conditions": [
+          {
+            "id": "mask-original",
+            "label": "原标题（本组基准）",
+            "edits": []
+          },
+          {
+            "id": "mask-de",
+            "label": "原位遮住德格；其余像素不变",
+            "edits": [
+              {
+                "cell": [
+                  7,
+                  141,
+                  36,
+                  35
+                ],
+                "label": "德格遮盖"
+              }
+            ]
+          }
+        ],
+        "verification_pair": [
+          "mask-original",
+          "mask-de"
+        ]
+      }
+    ]
   },
   {
     "id": "D09",
