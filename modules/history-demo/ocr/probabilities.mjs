@@ -7,7 +7,8 @@ export function probabilityTrace(rows,labels,{blank=0,topK=5,probes=[]}={}){
  if(!rows.length)return {positions:[],heatmap:{labels:[],values:[]}};
  const peaks=new Map(),best=[];
  for(const row of rows){if(row.length!==labels.length||Array.from(row).some(x=>!Number.isFinite(x)||x<0||x>1.00001))throw Error('概率表维度或取值错误');let id=0;for(let k=0;k<row.length;k++){if(row[k]>row[id])id=k;if(row[k]>(peaks.get(k)||0))peaks.set(k,row[k]);}best.push(id);}
- const heatIds=[blank,...[...peaks].filter(([k])=>k!==blank).sort((a,b)=>b[1]-a[1]).slice(0,20).map(([k])=>k)];
+ const occurring=[...new Set(best)].filter(k=>k!==blank);
+ const heatIds=[blank,...occurring,...[...peaks].filter(([k])=>k!==blank&&!occurring.includes(k)).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k])=>k)];
  const positions=rows.map((row,t)=>{const ids=Array.from(row,(_,i)=>i).sort((a,b)=>row[b]-row[a]).slice(0,topK);return {step:t,id:best[t],text:labels[best[t]],prob:Number(row[best[t]]),candidates:ids.map(id=>({id,text:labels[id],prob:Number(row[id])})),probes:Object.fromEntries(probes.map(c=>[c,labels.indexOf(c)]).filter(([,i])=>i>=0).map(([c,i])=>[c,Number(row[i])]))};});
  return {positions,heatmap:{ids:heatIds,labels:heatIds.map(k=>labels[k]),values:heatIds.map(k=>rows.map(r=>Number(r[k])))} };
 }

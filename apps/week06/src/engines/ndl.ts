@@ -1,3 +1,4 @@
+import {serializable} from '../../../../modules/history-demo/ocr/serializable.mjs';
 // Shared importer implementation; course runtime only uses verified cached models.
 import {LayoutDetector} from '../../../material-importer/src/ndl/layout-detector';
 import {TextRecognizer} from '../../../material-importer/src/ndl/text-recognizer';
@@ -18,7 +19,7 @@ export async function ndlLine(imageData:ImageData,progress:(s:string)=>void,opti
  const size=options.size||100;await initNDL(`parseq-ndl-${size}.onnx`,progress);return recognizers.get(size)!.recognizeCropped(imageData,{autoRotate:options.autoRotate});
 }
 export async function ndl(imageData:ImageData,progress:(s:string)=>void,options:{detectOnly?:boolean;autoRotate?:boolean}={}){
- await initNDL('deim-s-1024x1024.onnx',progress);progress('NDL：检测全部17类版面区域');const detection=await detector.detect(imageData);
+ await initNDL('deim-s-1024x1024.onnx',progress);progress('NDL：检测全部17类版面区域');const detection=serializable(await detector.detect(imageData));
  const crops=TextRecognizer.cropImageDataBatch(imageData,detection.lines),blocks=[];
  for(let i=0;i<detection.lines.length;i++){
   const r=detection.lines[i],size=r.charCountCategory===3?30:r.charCountCategory===2?50:100;
@@ -27,5 +28,5 @@ export async function ndl(imageData:ImageData,progress:(s:string)=>void,options:
   blocks.push({...r,text:v.text,recognitionScore:v.rec_score,recognitionScoreSource:v.rec_score_source,chars:v.chars,recognitionTrace:{positions:v.positions,heatmap:v.heatmap,stop:v.stop,input:v.input},readingOrder:i});
  }
  const ordered=options.detectOnly?blocks:new ReadingOrderProcessor().process(blocks,detection.blocks);
- return {blocks:ordered,detection,crops:crops.map(c=>({width:c.width,height:c.height})),modelManifest:models};
+ return serializable({blocks:ordered,detection,crops:crops.map(c=>({width:c.width,height:c.height})),modelManifest:models});
 }

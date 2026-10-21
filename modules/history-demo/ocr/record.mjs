@@ -1,4 +1,5 @@
 // 候选，未经教师确认。Pure adapters: immutable source + explicit provenance.
+import {serializable} from './serializable.mjs';
 import schema from './ocr-record.schema.json' with { type: 'json' };
 import { normalizeClass } from './class-map.mjs';
 import { parseXML, descendants } from './xml.mjs';
@@ -39,7 +40,7 @@ export function validateRecord(value) {
 const numberOrNull = x => x===undefined||x===null||x===''?null:Number(x);
 export function makeRecord(raw,regions,meta) {
   if(!meta?.image||!meta?.engine)throw Error('须提供图像身份与引擎元数据');
-  return validateRecord({record_version:RECORD_VERSION,image:clone(meta.image),engine:clone(meta.engine),regions:regions.map((r,i)=>({...r,id:r.id||'r'+i,det_score:r.det_score??null,det_score_source:r.det_score_source??null,rec_score:r.rec_score??null,rec_score_source:r.rec_score_source??null,chars:r.chars||[],class_norm:normalizeClass(r.class)})),raw:clone(raw),...(meta.errors?{errors:clone(meta.errors)}:{})});
+  return validateRecord(serializable({record_version:RECORD_VERSION,image:clone(meta.image),engine:clone(meta.engine),regions:regions.map((r,i)=>({...r,id:r.id||'r'+i,det_score:r.det_score??null,det_score_source:r.det_score_source??null,rec_score:r.rec_score??null,rec_score_source:r.rec_score_source??null,chars:r.chars||[],class_norm:r.class_norm??normalizeClass(r.class)})),raw:clone(raw),...(meta.errors?{errors:clone(meta.errors)}:{})}));
 }
 export function fromNDLXML(xml,meta) {
   const tree=parseXML(xml);if(tree.name!=='OCRDATASET')throw Error('需要 NDL OCRDATASET');
@@ -65,7 +66,7 @@ export function fromNDLLite(output,meta,classNames=[]) {
 }
 export function fromPPOCR(output,meta) {
   const data=output.res||output,boxes=data.rec_polys||data.dt_polys||data.boxes||[];
-  return makeRecord(output,boxes.map((box,i)=>({id:'line-'+i,...(box.length===4&&typeof box[0]==='number'?{bbox:box}:{polygon:box}),class:'Text',order:i,text:data.rec_texts?.[i]??data.texts?.[i]??null,det_score:data.detection_scores?.[i]??null,det_score_source:'引擎原值：DB检测框内概率均值',rec_score:data.rec_scores?.[i]??data.scores?.[i]??null,rec_score_source:'引擎原值：CTC保留字符最大概率的平均',chars:data.rec_chars?.[i]||[],recognition_trace:data.rec_traces?.[i]??null,raw_fragment:{box,text:data.rec_texts?.[i],rec_score:data.rec_scores?.[i],det_score:data.detection_scores?.[i]}})),meta);
+  return makeRecord(output,boxes.map((box,i)=>({id:'line-'+i,...(box.length===4&&typeof box[0]==='number'?{bbox:box}:{polygon:box}),class:'（检测不分类）',class_norm:'',order:i,text:data.rec_texts?.[i]??data.texts?.[i]??null,det_score:data.detection_scores?.[i]??null,det_score_source:'引擎原值：DB检测框内概率均值',rec_score:data.rec_scores?.[i]??data.scores?.[i]??null,rec_score_source:'引擎原值：CTC保留字符最大概率的平均',chars:data.rec_chars?.[i]||[],recognition_trace:data.rec_traces?.[i]??null,raw_fragment:{box,text:data.rec_texts?.[i],rec_score:data.rec_scores?.[i],det_score:data.detection_scores?.[i]}})),meta);
 }
 export function fromFlorence(output,meta) {
   const data=output['<OCR_WITH_REGION>']||output;
@@ -118,7 +119,8 @@ export function iou(a,b) {
 export function overlapMatch(region,candidates){const a=regionBBox(region);return candidates.map(r=>({region:r,iou:iou(a,regionBBox(r))})).filter(x=>x.iou>0).sort((a,b)=>b.iou-a.iou)[0]?.region||null;}
 // Upgrade only display/session copies. Never rewrite a locked through-record or its raw output.
 export function upgradeScores(record){
- const result=clone(record);for(const r of result.regions){
+ const result=serializable(record);for(const r of result.regions){
+  if(result.engine.name==='pp-ocrv6'){r.class='（检测不分类）';r.class_norm='';delete r.class_id;}
   if(!Object.hasOwn(r,'det_score')){r.det_score=record.engine.name.startsWith('ndl')?(r.detection_conf??r.conf??null):null;r.det_score_source=r.det_score===null?null:'引擎原值：旧NDL记录检测分数';}
   if(!Object.hasOwn(r,'rec_score')){r.rec_score=record.engine.name.startsWith('ndl')?null:r.conf??null;r.rec_score_source=r.rec_score===null?null:'旧记录原值；具体分数定义须回查生成工具';}
   r.chars=(r.chars||[]).map(c=>({...c,prob:c.prob??c.conf,source:c.source||'旧记录：来源待核'}));delete r.conf;delete r.detection_conf;

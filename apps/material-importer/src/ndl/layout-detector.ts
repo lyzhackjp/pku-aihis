@@ -218,7 +218,7 @@ export class LayoutDetector {
           const width = finalX2 - finalX1
           const height = finalY2 - finalY1
           if (width >= 10 && height >= 10) {
-            const charCountCategory = charCountsData ? charCountsData[i] : 100
+            const charCountCategory = charCountsData ? Number(charCountsData[i]) : 100
             lineDetections.push({ detectionId:'deim-'+i, x: finalX1, y: finalY1, width, height, confidence: score, classId, charCountCategory })
           }
         }
