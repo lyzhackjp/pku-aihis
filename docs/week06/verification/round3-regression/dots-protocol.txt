@@ -1,0 +1,13 @@
+test_hash_mismatch_and_unloaded (__main__.Protocol.test_hash_mismatch_and_unloaded) ... ok
+test_http_unloaded_and_cors (__main__.Protocol.test_http_unloaded_and_cors) ... ok
+test_logs_exclude_image (__main__.Protocol.test_logs_exclude_image) ... ok
+test_malformed_json_is_preserved (__main__.Protocol.test_malformed_json_is_preserved) ... ok
+test_ocr_only_plaintext (__main__.Protocol.test_ocr_only_plaintext) ... ok
+test_pinned_source_and_loopback_contract (__main__.Protocol.test_pinned_source_and_loopback_contract) ... ok
+test_reject_invalid_category (__main__.Protocol.test_reject_invalid_category) ... ok
+test_success_coordinate_restoration_and_prompt (__main__.Protocol.test_success_coordinate_restoration_and_prompt) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.524s
+
+OK

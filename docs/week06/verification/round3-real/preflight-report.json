@@ -1,0 +1,1948 @@
+{
+  "date": "2026-10-21T12:43:29.845Z",
+  "browser": "155.0.8059.85",
+  "profile": "local-only/week06-round3-chrome",
+  "actualModelInference": true,
+  "material": "shide_public",
+  "preflight": [
+    {
+      "id": "deim-s-1024x1024.onnx",
+      "date": "2026-10-21T12:43:42.185Z",
+      "action": "inspect",
+      "status": "文件已核验",
+      "cache": {
+        "name": "deim-s-1024x1024.onnx",
+        "cached": true,
+        "bytes": 40256763,
+        "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+        "expected": {
+          "bytes": 40256763,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+          "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+        },
+        "verified": true
+      },
+      "session": null,
+      "warmup": null,
+      "load_run": "未运行",
+      "comparison": "未对照",
+      "action_elapsed_ms": 12032.199999809265,
+      "history": [
+        {
+          "id": "deim-s-1024x1024.onnx",
+          "date": "2026-10-21T12:43:42.185Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "deim-s-1024x1024.onnx",
+            "cached": true,
+            "bytes": 40256763,
+            "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+            "expected": {
+              "bytes": 40256763,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+              "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 12032.199999809265
+        }
+      ]
+    },
+    {
+      "id": "deim-s-1024x1024.onnx",
+      "date": "2026-10-21T12:43:42.271Z",
+      "action": "session",
+      "status": "会话已建立",
+      "cache": {
+        "name": "deim-s-1024x1024.onnx",
+        "cached": true,
+        "bytes": 40256763,
+        "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+        "expected": {
+          "bytes": 40256763,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+          "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 543
+      },
+      "warmup": null,
+      "load_run": "会话成功",
+      "comparison": "未对照",
+      "action_elapsed_ms": 580.7000000476837,
+      "history": [
+        {
+          "id": "deim-s-1024x1024.onnx",
+          "date": "2026-10-21T12:43:42.185Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "deim-s-1024x1024.onnx",
+            "cached": true,
+            "bytes": 40256763,
+            "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+            "expected": {
+              "bytes": 40256763,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+              "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 12032.199999809265
+        },
+        {
+          "id": "deim-s-1024x1024.onnx",
+          "date": "2026-10-21T12:43:42.271Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "deim-s-1024x1024.onnx",
+            "cached": true,
+            "bytes": 40256763,
+            "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+            "expected": {
+              "bytes": 40256763,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+              "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 543
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "action_elapsed_ms": 580.7000000476837
+        }
+      ]
+    },
+    {
+      "id": "deim-s-1024x1024.onnx",
+      "date": "2026-10-21T12:43:42.913Z",
+      "action": "warmup",
+      "status": "运行成功",
+      "cache": {
+        "name": "deim-s-1024x1024.onnx",
+        "cached": true,
+        "bytes": 40256763,
+        "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+        "expected": {
+          "bytes": 40256763,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+          "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 0
+      },
+      "warmup": {
+        "text": "",
+        "boxes": 6,
+        "output": {
+          "lines": [
+            {
+              "detectionId": "deim-0",
+              "x": 114,
+              "y": 15,
+              "width": 34,
+              "height": 172,
+              "confidence": 0.9284071326255798,
+              "classId": 16,
+              "charCountCategory": 3
+            },
+            {
+              "detectionId": "deim-3",
+              "x": 13,
+              "y": 0,
+              "width": 31,
+              "height": 849,
+              "confidence": 0.7496339082717896,
+              "classId": 16,
+              "charCountCategory": 2
+            }
+          ],
+          "blocks": [
+            {
+              "x": 114,
+              "y": 19,
+              "width": 34,
+              "height": 165
+            },
+            {
+              "x": 13,
+              "y": 11,
+              "width": 31,
+              "height": 822
+            }
+          ],
+          "regions": [
+            {
+              "id": "deim-0",
+              "x": 114,
+              "y": 18,
+              "width": 34,
+              "height": 166,
+              "confidence": 0.9284071326255798,
+              "classId": 16
+            },
+            {
+              "id": "deim-1",
+              "x": 114,
+              "y": 19,
+              "width": 34,
+              "height": 165,
+              "confidence": 0.8990403413772583,
+              "classId": 0
+            },
+            {
+              "id": "deim-2",
+              "x": 13,
+              "y": 11,
+              "width": 31,
+              "height": 822,
+              "confidence": 0.8476864099502563,
+              "classId": 0
+            },
+            {
+              "id": "deim-3",
+              "x": 13,
+              "y": 11,
+              "width": 31,
+              "height": 822,
+              "confidence": 0.7496339082717896,
+              "classId": 16
+            },
+            {
+              "id": "deim-4",
+              "x": 42,
+              "y": 26,
+              "width": 11,
+              "height": 751,
+              "confidence": 0.7300728559494019,
+              "classId": 10
+            },
+            {
+              "id": "deim-5",
+              "x": 13,
+              "y": 11,
+              "width": 31,
+              "height": 822,
+              "confidence": 0.4425481855869293,
+              "classId": 1
+            }
+          ]
+        },
+        "elapsed_ms": 2174.7999999523163,
+        "expected": [],
+        "contains": []
+      },
+      "load_run": "成功",
+      "comparison": "检测器不输出文字",
+      "action_elapsed_ms": 2221.7999999523163,
+      "history": [
+        {
+          "id": "deim-s-1024x1024.onnx",
+          "date": "2026-10-21T12:43:42.185Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "deim-s-1024x1024.onnx",
+            "cached": true,
+            "bytes": 40256763,
+            "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+            "expected": {
+              "bytes": 40256763,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+              "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 12032.199999809265
+        },
+        {
+          "id": "deim-s-1024x1024.onnx",
+          "date": "2026-10-21T12:43:42.271Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "deim-s-1024x1024.onnx",
+            "cached": true,
+            "bytes": 40256763,
+            "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+            "expected": {
+              "bytes": 40256763,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+              "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 543
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "action_elapsed_ms": 580.7000000476837
+        },
+        {
+          "id": "deim-s-1024x1024.onnx",
+          "date": "2026-10-21T12:43:42.913Z",
+          "action": "warmup",
+          "status": "运行成功",
+          "cache": {
+            "name": "deim-s-1024x1024.onnx",
+            "cached": true,
+            "bytes": 40256763,
+            "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+            "expected": {
+              "bytes": 40256763,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+              "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 0
+          },
+          "warmup": {
+            "text": "",
+            "boxes": 6,
+            "output": {
+              "lines": [
+                {
+                  "detectionId": "deim-0",
+                  "x": 114,
+                  "y": 15,
+                  "width": 34,
+                  "height": 172,
+                  "confidence": 0.9284071326255798,
+                  "classId": 16,
+                  "charCountCategory": 3
+                },
+                {
+                  "detectionId": "deim-3",
+                  "x": 13,
+                  "y": 0,
+                  "width": 31,
+                  "height": 849,
+                  "confidence": 0.7496339082717896,
+                  "classId": 16,
+                  "charCountCategory": 2
+                }
+              ],
+              "blocks": [
+                {
+                  "x": 114,
+                  "y": 19,
+                  "width": 34,
+                  "height": 165
+                },
+                {
+                  "x": 13,
+                  "y": 11,
+                  "width": 31,
+                  "height": 822
+                }
+              ],
+              "regions": [
+                {
+                  "id": "deim-0",
+                  "x": 114,
+                  "y": 18,
+                  "width": 34,
+                  "height": 166,
+                  "confidence": 0.9284071326255798,
+                  "classId": 16
+                },
+                {
+                  "id": "deim-1",
+                  "x": 114,
+                  "y": 19,
+                  "width": 34,
+                  "height": 165,
+                  "confidence": 0.8990403413772583,
+                  "classId": 0
+                },
+                {
+                  "id": "deim-2",
+                  "x": 13,
+                  "y": 11,
+                  "width": 31,
+                  "height": 822,
+                  "confidence": 0.8476864099502563,
+                  "classId": 0
+                },
+                {
+                  "id": "deim-3",
+                  "x": 13,
+                  "y": 11,
+                  "width": 31,
+                  "height": 822,
+                  "confidence": 0.7496339082717896,
+                  "classId": 16
+                },
+                {
+                  "id": "deim-4",
+                  "x": 42,
+                  "y": 26,
+                  "width": 11,
+                  "height": 751,
+                  "confidence": 0.7300728559494019,
+                  "classId": 10
+                },
+                {
+                  "id": "deim-5",
+                  "x": 13,
+                  "y": 11,
+                  "width": 31,
+                  "height": 822,
+                  "confidence": 0.4425481855869293,
+                  "classId": 1
+                }
+              ]
+            },
+            "elapsed_ms": 2174.7999999523163,
+            "expected": [],
+            "contains": []
+          },
+          "load_run": "成功",
+          "comparison": "检测器不输出文字",
+          "action_elapsed_ms": 2221.7999999523163
+        }
+      ]
+    },
+    {
+      "id": "parseq-ndl-30.onnx",
+      "date": "2026-10-21T12:43:53.857Z",
+      "action": "inspect",
+      "status": "文件已核验",
+      "cache": {
+        "name": "parseq-ndl-30.onnx",
+        "cached": true,
+        "bytes": 35848117,
+        "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+        "expected": {
+          "bytes": 35848117,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+          "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+        },
+        "verified": true
+      },
+      "session": null,
+      "warmup": null,
+      "load_run": "未运行",
+      "comparison": "未对照",
+      "action_elapsed_ms": 8710.700000047684,
+      "history": [
+        {
+          "id": "parseq-ndl-30.onnx",
+          "date": "2026-10-21T12:43:53.857Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-30.onnx",
+            "cached": true,
+            "bytes": 35848117,
+            "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+            "expected": {
+              "bytes": 35848117,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+              "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 8710.700000047684
+        }
+      ]
+    },
+    {
+      "id": "parseq-ndl-30.onnx",
+      "date": "2026-10-21T12:43:53.938Z",
+      "action": "session",
+      "status": "会话已建立",
+      "cache": {
+        "name": "parseq-ndl-30.onnx",
+        "cached": true,
+        "bytes": 35848117,
+        "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+        "expected": {
+          "bytes": 35848117,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+          "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 171.20000004768372
+      },
+      "warmup": null,
+      "load_run": "会话成功",
+      "comparison": "未对照",
+      "action_elapsed_ms": 205.20000004768372,
+      "history": [
+        {
+          "id": "parseq-ndl-30.onnx",
+          "date": "2026-10-21T12:43:53.857Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-30.onnx",
+            "cached": true,
+            "bytes": 35848117,
+            "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+            "expected": {
+              "bytes": 35848117,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+              "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 8710.700000047684
+        },
+        {
+          "id": "parseq-ndl-30.onnx",
+          "date": "2026-10-21T12:43:53.938Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "parseq-ndl-30.onnx",
+            "cached": true,
+            "bytes": 35848117,
+            "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+            "expected": {
+              "bytes": 35848117,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+              "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 171.20000004768372
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "action_elapsed_ms": 205.20000004768372
+        }
+      ]
+    },
+    {
+      "id": "parseq-ndl-30.onnx",
+      "date": "2026-10-21T12:43:54.203Z",
+      "action": "warmup",
+      "status": "运行成功",
+      "cache": {
+        "name": "parseq-ndl-30.onnx",
+        "cached": true,
+        "bytes": 35848117,
+        "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+        "expected": {
+          "bytes": 35848117,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+          "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 0.09999990463256836
+      },
+      "warmup": {
+        "text": "史徳",
+        "rec_score": 0.8664610314830808,
+        "source": "本课计算：逐字softmax概率平均；NDL工具不输出",
+        "elapsed_ms": 89.90000009536743,
+        "expected": [
+          "史德"
+        ],
+        "contains": [
+          false
+        ]
+      },
+      "load_run": "成功",
+      "comparison": "有预期子串未出现（仅供参考）",
+      "body_line": {
+        "elapsed_ms": 85.79999995231628,
+        "text": "水學識三者得一不易而兼三尤難。千古多文人而少良史。権是故也。",
+        "expected": "才學識",
+        "contains": false
+      },
+      "action_elapsed_ms": 224.29999995231628,
+      "history": [
+        {
+          "id": "parseq-ndl-30.onnx",
+          "date": "2026-10-21T12:43:53.857Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-30.onnx",
+            "cached": true,
+            "bytes": 35848117,
+            "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+            "expected": {
+              "bytes": 35848117,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+              "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 8710.700000047684
+        },
+        {
+          "id": "parseq-ndl-30.onnx",
+          "date": "2026-10-21T12:43:53.938Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "parseq-ndl-30.onnx",
+            "cached": true,
+            "bytes": 35848117,
+            "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+            "expected": {
+              "bytes": 35848117,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+              "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 171.20000004768372
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "action_elapsed_ms": 205.20000004768372
+        },
+        {
+          "id": "parseq-ndl-30.onnx",
+          "date": "2026-10-21T12:43:54.203Z",
+          "action": "warmup",
+          "status": "运行成功",
+          "cache": {
+            "name": "parseq-ndl-30.onnx",
+            "cached": true,
+            "bytes": 35848117,
+            "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+            "expected": {
+              "bytes": 35848117,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+              "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 0.09999990463256836
+          },
+          "warmup": {
+            "text": "史徳",
+            "rec_score": 0.8664610314830808,
+            "source": "本课计算：逐字softmax概率平均；NDL工具不输出",
+            "elapsed_ms": 89.90000009536743,
+            "expected": [
+              "史德"
+            ],
+            "contains": [
+              false
+            ]
+          },
+          "load_run": "成功",
+          "comparison": "有预期子串未出现（仅供参考）",
+          "body_line": {
+            "elapsed_ms": 85.79999995231628,
+            "text": "水學識三者得一不易而兼三尤難。千古多文人而少良史。権是故也。",
+            "expected": "才學識",
+            "contains": false
+          },
+          "action_elapsed_ms": 224.29999995231628
+        }
+      ]
+    },
+    {
+      "id": "parseq-ndl-50.onnx",
+      "date": "2026-10-21T12:44:04.335Z",
+      "action": "inspect",
+      "status": "文件已核验",
+      "cache": {
+        "name": "parseq-ndl-50.onnx",
+        "cached": true,
+        "bytes": 36920058,
+        "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+        "expected": {
+          "bytes": 36920058,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+          "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+        },
+        "verified": true
+      },
+      "session": null,
+      "warmup": null,
+      "load_run": "未运行",
+      "comparison": "未对照",
+      "action_elapsed_ms": 9889.100000143051,
+      "history": [
+        {
+          "id": "parseq-ndl-50.onnx",
+          "date": "2026-10-21T12:44:04.335Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-50.onnx",
+            "cached": true,
+            "bytes": 36920058,
+            "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+            "expected": {
+              "bytes": 36920058,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+              "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 9889.100000143051
+        }
+      ]
+    },
+    {
+      "id": "parseq-ndl-50.onnx",
+      "date": "2026-10-21T12:44:04.425Z",
+      "action": "session",
+      "status": "会话已建立",
+      "cache": {
+        "name": "parseq-ndl-50.onnx",
+        "cached": true,
+        "bytes": 36920058,
+        "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+        "expected": {
+          "bytes": 36920058,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+          "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 258.2999999523163
+      },
+      "warmup": null,
+      "load_run": "会话成功",
+      "comparison": "未对照",
+      "action_elapsed_ms": 292.2000000476837,
+      "history": [
+        {
+          "id": "parseq-ndl-50.onnx",
+          "date": "2026-10-21T12:44:04.335Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-50.onnx",
+            "cached": true,
+            "bytes": 36920058,
+            "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+            "expected": {
+              "bytes": 36920058,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+              "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 9889.100000143051
+        },
+        {
+          "id": "parseq-ndl-50.onnx",
+          "date": "2026-10-21T12:44:04.425Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "parseq-ndl-50.onnx",
+            "cached": true,
+            "bytes": 36920058,
+            "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+            "expected": {
+              "bytes": 36920058,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+              "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 258.2999999523163
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "action_elapsed_ms": 292.2000000476837
+        }
+      ]
+    },
+    {
+      "id": "parseq-ndl-50.onnx",
+      "date": "2026-10-21T12:44:04.773Z",
+      "action": "warmup",
+      "status": "运行成功",
+      "cache": {
+        "name": "parseq-ndl-50.onnx",
+        "cached": true,
+        "bytes": 36920058,
+        "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+        "expected": {
+          "bytes": 36920058,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+          "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 0
+      },
+      "warmup": {
+        "text": "史 德",
+        "rec_score": 0.9731858295712491,
+        "source": "本课计算：逐字softmax概率平均；NDL工具不输出",
+        "elapsed_ms": 139.20000004768372,
+        "expected": [
+          "史德"
+        ],
+        "contains": [
+          true
+        ]
+      },
+      "load_run": "成功",
+      "comparison": "有预期子串未出现（仅供参考）",
+      "body_line": {
+        "elapsed_ms": 136.20000004768372,
+        "text": "才。學￣ノ議。三者。得一不易。而兼三尤難。千古多文人而少良史。職是故也。昔者",
+        "expected": "才學識",
+        "contains": false
+      },
+      "action_elapsed_ms": 320.39999985694885,
+      "history": [
+        {
+          "id": "parseq-ndl-50.onnx",
+          "date": "2026-10-21T12:44:04.335Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-50.onnx",
+            "cached": true,
+            "bytes": 36920058,
+            "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+            "expected": {
+              "bytes": 36920058,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+              "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 9889.100000143051
+        },
+        {
+          "id": "parseq-ndl-50.onnx",
+          "date": "2026-10-21T12:44:04.425Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "parseq-ndl-50.onnx",
+            "cached": true,
+            "bytes": 36920058,
+            "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+            "expected": {
+              "bytes": 36920058,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+              "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 258.2999999523163
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "action_elapsed_ms": 292.2000000476837
+        },
+        {
+          "id": "parseq-ndl-50.onnx",
+          "date": "2026-10-21T12:44:04.773Z",
+          "action": "warmup",
+          "status": "运行成功",
+          "cache": {
+            "name": "parseq-ndl-50.onnx",
+            "cached": true,
+            "bytes": 36920058,
+            "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+            "expected": {
+              "bytes": 36920058,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+              "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 0
+          },
+          "warmup": {
+            "text": "史 德",
+            "rec_score": 0.9731858295712491,
+            "source": "本课计算：逐字softmax概率平均；NDL工具不输出",
+            "elapsed_ms": 139.20000004768372,
+            "expected": [
+              "史德"
+            ],
+            "contains": [
+              true
+            ]
+          },
+          "load_run": "成功",
+          "comparison": "有预期子串未出现（仅供参考）",
+          "body_line": {
+            "elapsed_ms": 136.20000004768372,
+            "text": "才。學￣ノ議。三者。得一不易。而兼三尤難。千古多文人而少良史。職是故也。昔者",
+            "expected": "才學識",
+            "contains": false
+          },
+          "action_elapsed_ms": 320.39999985694885
+        }
+      ]
+    },
+    {
+      "id": "parseq-ndl-100.onnx",
+      "date": "2026-10-21T12:44:14.995Z",
+      "action": "inspect",
+      "status": "文件已核验",
+      "cache": {
+        "name": "parseq-ndl-100.onnx",
+        "cached": true,
+        "bytes": 40984184,
+        "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+        "expected": {
+          "bytes": 40984184,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+          "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+        },
+        "verified": true
+      },
+      "session": null,
+      "warmup": null,
+      "load_run": "未运行",
+      "comparison": "未对照",
+      "action_elapsed_ms": 9880.799999952316,
+      "history": [
+        {
+          "id": "parseq-ndl-100.onnx",
+          "date": "2026-10-21T12:44:14.995Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-100.onnx",
+            "cached": true,
+            "bytes": 40984184,
+            "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+            "expected": {
+              "bytes": 40984184,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+              "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 9880.799999952316
+        }
+      ]
+    },
+    {
+      "id": "parseq-ndl-100.onnx",
+      "date": "2026-10-21T12:44:15.084Z",
+      "action": "session",
+      "status": "会话已建立",
+      "cache": {
+        "name": "parseq-ndl-100.onnx",
+        "cached": true,
+        "bytes": 40984184,
+        "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+        "expected": {
+          "bytes": 40984184,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+          "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 534.0999999046326
+      },
+      "warmup": null,
+      "load_run": "会话成功",
+      "comparison": "未对照",
+      "action_elapsed_ms": 571.0999999046326,
+      "history": [
+        {
+          "id": "parseq-ndl-100.onnx",
+          "date": "2026-10-21T12:44:14.995Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-100.onnx",
+            "cached": true,
+            "bytes": 40984184,
+            "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+            "expected": {
+              "bytes": 40984184,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+              "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 9880.799999952316
+        },
+        {
+          "id": "parseq-ndl-100.onnx",
+          "date": "2026-10-21T12:44:15.084Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "parseq-ndl-100.onnx",
+            "cached": true,
+            "bytes": 40984184,
+            "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+            "expected": {
+              "bytes": 40984184,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+              "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 534.0999999046326
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "action_elapsed_ms": 571.0999999046326
+        }
+      ]
+    },
+    {
+      "id": "parseq-ndl-100.onnx",
+      "date": "2026-10-21T12:44:15.714Z",
+      "action": "warmup",
+      "status": "运行成功",
+      "cache": {
+        "name": "parseq-ndl-100.onnx",
+        "cached": true,
+        "bytes": 40984184,
+        "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+        "expected": {
+          "bytes": 40984184,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+          "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 0
+      },
+      "warmup": {
+        "text": "史徳",
+        "rec_score": 0.9535814261967537,
+        "source": "本课计算：逐字softmax概率平均；NDL工具不输出",
+        "elapsed_ms": 284.7999999523163,
+        "expected": [
+          "史德"
+        ],
+        "contains": [
+          false
+        ]
+      },
+      "load_run": "成功",
+      "comparison": "有预期子串未出现（仅供参考）",
+      "body_line": {
+        "elapsed_ms": 283.7000000476837,
+        "text": "才￣ヲ挙￣テ識￣ヲ得一不易。而兼三尤難。千古多文人而少良史。職是故也。昔者",
+        "expected": "才學識",
+        "contains": false
+      },
+      "action_elapsed_ms": 618.0999999046326,
+      "history": [
+        {
+          "id": "parseq-ndl-100.onnx",
+          "date": "2026-10-21T12:44:14.995Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-100.onnx",
+            "cached": true,
+            "bytes": 40984184,
+            "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+            "expected": {
+              "bytes": 40984184,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+              "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 9880.799999952316
+        },
+        {
+          "id": "parseq-ndl-100.onnx",
+          "date": "2026-10-21T12:44:15.084Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "parseq-ndl-100.onnx",
+            "cached": true,
+            "bytes": 40984184,
+            "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+            "expected": {
+              "bytes": 40984184,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+              "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 534.0999999046326
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "action_elapsed_ms": 571.0999999046326
+        },
+        {
+          "id": "parseq-ndl-100.onnx",
+          "date": "2026-10-21T12:44:15.714Z",
+          "action": "warmup",
+          "status": "运行成功",
+          "cache": {
+            "name": "parseq-ndl-100.onnx",
+            "cached": true,
+            "bytes": 40984184,
+            "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+            "expected": {
+              "bytes": 40984184,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+              "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 0
+          },
+          "warmup": {
+            "text": "史徳",
+            "rec_score": 0.9535814261967537,
+            "source": "本课计算：逐字softmax概率平均；NDL工具不输出",
+            "elapsed_ms": 284.7999999523163,
+            "expected": [
+              "史德"
+            ],
+            "contains": [
+              false
+            ]
+          },
+          "load_run": "成功",
+          "comparison": "有预期子串未出现（仅供参考）",
+          "body_line": {
+            "elapsed_ms": 283.7000000476837,
+            "text": "才￣ヲ挙￣テ識￣ヲ得一不易。而兼三尤難。千古多文人而少良史。職是故也。昔者",
+            "expected": "才學識",
+            "contains": false
+          },
+          "action_elapsed_ms": 618.0999999046326
+        }
+      ]
+    },
+    {
+      "id": "pp-det",
+      "date": "2026-10-21T12:44:25.681Z",
+      "action": "inspect",
+      "status": "文件已核验",
+      "cache": {
+        "cached": true,
+        "verified": true,
+        "bytes": 9880512,
+        "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+        "expected": {
+          "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+          "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+          "path": "inference.onnx",
+          "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+          "bytes": 9880512,
+          "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+        }
+      },
+      "session": null,
+      "warmup": null,
+      "load_run": "未运行",
+      "comparison": "未对照",
+      "action_elapsed_ms": 9305.5,
+      "history": [
+        {
+          "id": "pp-det",
+          "date": "2026-10-21T12:44:25.681Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 9880512,
+            "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+              "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+              "bytes": 9880512,
+              "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+            }
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 9305.5
+        }
+      ]
+    },
+    {
+      "id": "pp-det",
+      "date": "2026-10-21T12:44:25.759Z",
+      "action": "session",
+      "status": "会话已建立",
+      "cache": {
+        "cached": true,
+        "verified": true,
+        "bytes": 9880512,
+        "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+        "expected": {
+          "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+          "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+          "path": "inference.onnx",
+          "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+          "bytes": 9880512,
+          "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+        }
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 53.40000009536743
+      },
+      "warmup": null,
+      "load_run": "会话成功",
+      "comparison": "未对照",
+      "action_elapsed_ms": 70,
+      "history": [
+        {
+          "id": "pp-det",
+          "date": "2026-10-21T12:44:25.681Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 9880512,
+            "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+              "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+              "bytes": 9880512,
+              "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+            }
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 9305.5
+        },
+        {
+          "id": "pp-det",
+          "date": "2026-10-21T12:44:25.759Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 9880512,
+            "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+              "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+              "bytes": 9880512,
+              "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+            }
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 53.40000009536743
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "action_elapsed_ms": 70
+        }
+      ]
+    },
+    {
+      "id": "pp-det",
+      "date": "2026-10-21T12:44:25.890Z",
+      "action": "warmup",
+      "status": "运行成功",
+      "cache": {
+        "cached": true,
+        "verified": true,
+        "bytes": 9880512,
+        "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+        "expected": {
+          "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+          "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+          "path": "inference.onnx",
+          "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+          "bytes": 9880512,
+          "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+        }
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 0
+      },
+      "warmup": {
+        "text": "",
+        "boxes": 3,
+        "output": {
+          "boxes": [
+            [
+              [
+                11,
+                4
+              ],
+              [
+                49,
+                4
+              ],
+              [
+                49,
+                836
+              ],
+              [
+                11,
+                836
+              ]
+            ],
+            [
+              [
+                108,
+                10
+              ],
+              [
+                151,
+                10
+              ],
+              [
+                151,
+                56
+              ],
+              [
+                108,
+                56
+              ]
+            ],
+            [
+              [
+                109,
+                146
+              ],
+              [
+                152,
+                146
+              ],
+              [
+                152,
+                189
+              ],
+              [
+                109,
+                189
+              ]
+            ]
+          ],
+          "scores": [
+            0.8165322065247147,
+            0.8220412047627644,
+            0.8715796488472539
+          ]
+        },
+        "elapsed_ms": 87.89999985694885,
+        "expected": [],
+        "contains": []
+      },
+      "load_run": "成功",
+      "comparison": "检测器不输出文字",
+      "action_elapsed_ms": 110.5,
+      "history": [
+        {
+          "id": "pp-det",
+          "date": "2026-10-21T12:44:25.681Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 9880512,
+            "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+              "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+              "bytes": 9880512,
+              "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+            }
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 9305.5
+        },
+        {
+          "id": "pp-det",
+          "date": "2026-10-21T12:44:25.759Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 9880512,
+            "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+              "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+              "bytes": 9880512,
+              "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+            }
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 53.40000009536743
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "action_elapsed_ms": 70
+        },
+        {
+          "id": "pp-det",
+          "date": "2026-10-21T12:44:25.890Z",
+          "action": "warmup",
+          "status": "运行成功",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 9880512,
+            "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+              "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+              "bytes": 9880512,
+              "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+            }
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 0
+          },
+          "warmup": {
+            "text": "",
+            "boxes": 3,
+            "output": {
+              "boxes": [
+                [
+                  [
+                    11,
+                    4
+                  ],
+                  [
+                    49,
+                    4
+                  ],
+                  [
+                    49,
+                    836
+                  ],
+                  [
+                    11,
+                    836
+                  ]
+                ],
+                [
+                  [
+                    108,
+                    10
+                  ],
+                  [
+                    151,
+                    10
+                  ],
+                  [
+                    151,
+                    56
+                  ],
+                  [
+                    108,
+                    56
+                  ]
+                ],
+                [
+                  [
+                    109,
+                    146
+                  ],
+                  [
+                    152,
+                    146
+                  ],
+                  [
+                    152,
+                    189
+                  ],
+                  [
+                    109,
+                    189
+                  ]
+                ]
+              ],
+              "scores": [
+                0.8165322065247147,
+                0.8220412047627644,
+                0.8715796488472539
+              ]
+            },
+            "elapsed_ms": 87.89999985694885,
+            "expected": [],
+            "contains": []
+          },
+          "load_run": "成功",
+          "comparison": "检测器不输出文字",
+          "action_elapsed_ms": 110.5
+        }
+      ]
+    },
+    {
+      "id": "pp-rec",
+      "date": "2026-10-21T12:44:31.889Z",
+      "action": "inspect",
+      "status": "文件已核验",
+      "cache": {
+        "cached": true,
+        "verified": true,
+        "bytes": 21159378,
+        "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+        "expected": {
+          "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+          "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+          "path": "inference.onnx",
+          "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+          "bytes": 21159378,
+          "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+        }
+      },
+      "session": null,
+      "warmup": null,
+      "load_run": "未运行",
+      "comparison": "未对照",
+      "action_elapsed_ms": 5864.100000143051,
+      "history": [
+        {
+          "id": "pp-rec",
+          "date": "2026-10-21T12:44:31.889Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 21159378,
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+              "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+              "bytes": 21159378,
+              "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+            }
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 5864.100000143051
+        }
+      ]
+    },
+    {
+      "id": "pp-rec",
+      "date": "2026-10-21T12:44:31.975Z",
+      "action": "session",
+      "status": "会话已建立",
+      "cache": {
+        "cached": true,
+        "verified": true,
+        "bytes": 21159378,
+        "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+        "expected": {
+          "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+          "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+          "path": "inference.onnx",
+          "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+          "bytes": 21159378,
+          "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+        }
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 43.59999990463257
+      },
+      "warmup": null,
+      "load_run": "会话成功",
+      "comparison": "未对照",
+      "action_elapsed_ms": 68.59999990463257,
+      "history": [
+        {
+          "id": "pp-rec",
+          "date": "2026-10-21T12:44:31.889Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 21159378,
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+              "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+              "bytes": 21159378,
+              "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+            }
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 5864.100000143051
+        },
+        {
+          "id": "pp-rec",
+          "date": "2026-10-21T12:44:31.975Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 21159378,
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+              "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+              "bytes": 21159378,
+              "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+            }
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 43.59999990463257
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "action_elapsed_ms": 68.59999990463257
+        }
+      ]
+    },
+    {
+      "id": "pp-rec",
+      "date": "2026-10-21T12:44:32.107Z",
+      "action": "warmup",
+      "status": "运行成功",
+      "cache": {
+        "cached": true,
+        "verified": true,
+        "bytes": 21159378,
+        "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+        "expected": {
+          "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+          "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+          "path": "inference.onnx",
+          "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+          "bytes": 21159378,
+          "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+        }
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 0
+      },
+      "warmup": {
+        "text": "史德",
+        "rec_score": 0.9999333024024963,
+        "elapsed_ms": 179.60000014305115,
+        "expected": [
+          "史德"
+        ],
+        "contains": [
+          true
+        ]
+      },
+      "load_run": "成功",
+      "comparison": "标题与正文包含预期子串",
+      "body_line": {
+        "elapsed_ms": 421,
+        "text": "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者",
+        "expected": "才學識",
+        "contains": true
+      },
+      "action_elapsed_ms": 636.3999998569489,
+      "history": [
+        {
+          "id": "pp-rec",
+          "date": "2026-10-21T12:44:31.889Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 21159378,
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+              "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+              "bytes": 21159378,
+              "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+            }
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "action_elapsed_ms": 5864.100000143051
+        },
+        {
+          "id": "pp-rec",
+          "date": "2026-10-21T12:44:31.975Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 21159378,
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+              "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+              "bytes": 21159378,
+              "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+            }
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 43.59999990463257
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "action_elapsed_ms": 68.59999990463257
+        },
+        {
+          "id": "pp-rec",
+          "date": "2026-10-21T12:44:32.107Z",
+          "action": "warmup",
+          "status": "运行成功",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 21159378,
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+              "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+              "bytes": 21159378,
+              "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+            }
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 0
+          },
+          "warmup": {
+            "text": "史德",
+            "rec_score": 0.9999333024024963,
+            "elapsed_ms": 179.60000014305115,
+            "expected": [
+              "史德"
+            ],
+            "contains": [
+              true
+            ]
+          },
+          "load_run": "成功",
+          "comparison": "标题与正文包含预期子串",
+          "body_line": {
+            "elapsed_ms": 421,
+            "text": "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者",
+            "expected": "才學識",
+            "contains": true
+          },
+          "action_elapsed_ms": 636.3999998569489
+        }
+      ]
+    }
+  ],
+  "runs": [],
+  "checks": [],
+  "errors": []
+}
