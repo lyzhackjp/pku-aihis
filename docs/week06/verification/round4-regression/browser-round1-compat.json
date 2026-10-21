@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-21T14:13:42.769Z",
+  "checks": [
+    {
+      "name": "R1 explicit public material, through toggle return and first-page concept backlink",
+      "result": "passed"
+    },
+    {
+      "name": "R1 CER mappings preserve raw typed inputs; whole-page and reversed order recalculate",
+      "result": "passed"
+    },
+    {
+      "name": "R1 geometric transform and binarization preserve immutable parent image identity",
+      "result": "passed"
+    },
+    {
+      "name": "R1 offline dots, import entry, explicit unused flag; cached-only PP/Florence failures",
+      "result": "passed"
+    },
+    {
+      "name": "R1 overlay keyboard and three-view selection synchronization",
+      "result": "passed"
+    },
+    {
+      "name": "R1 valid restoration and invalid restoration retain original seven-stage contract",
+      "result": "passed"
+    },
+    {
+      "name": "R3 local default XML and 足盡其理 line choice, without screenshots or inference",
+      "result": "passed"
+    }
+  ],
+  "errors": [],
+  "actualModelInference": false
+}

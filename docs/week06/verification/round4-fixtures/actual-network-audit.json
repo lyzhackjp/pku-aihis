@@ -1,0 +1,164 @@
+[
+  {
+    "group": "body",
+    "engine": "ndlocr-lite",
+    "shape1": [
+      768,
+      16
+    ],
+    "shape2": [
+      768,
+      16
+    ],
+    "allowed": [
+      106,
+      1,
+      32,
+      15
+    ],
+    "changedPixels": 196,
+    "outsidePixels": 0,
+    "changedBounds": [
+      109,
+      3,
+      27,
+      11
+    ],
+    "fingerprintsMatch": true
+  },
+  {
+    "group": "body",
+    "engine": "pp-ocrv6",
+    "shape1": [
+      792,
+      48
+    ],
+    "shape2": [
+      792,
+      48
+    ],
+    "allowed": [
+      110,
+      7,
+      33,
+      37
+    ],
+    "changedPixels": 607,
+    "outsidePixels": 0,
+    "changedBounds": [
+      113,
+      9,
+      28,
+      32
+    ],
+    "fingerprintsMatch": true
+  },
+  {
+    "group": "title",
+    "engine": "ndlocr-lite",
+    "shape1": [
+      768,
+      16
+    ],
+    "shape2": [
+      768,
+      16
+    ],
+    "allowed": [
+      26,
+      0,
+      154,
+      16
+    ],
+    "changedPixels": 1271,
+    "outsidePixels": 0,
+    "changedBounds": [
+      30,
+      2,
+      149,
+      12
+    ],
+    "fingerprintsMatch": true
+  },
+  {
+    "group": "title",
+    "engine": "pp-ocrv6",
+    "shape1": [
+      320,
+      48
+    ],
+    "shape2": [
+      320,
+      48
+    ],
+    "allowed": [
+      4,
+      4,
+      41,
+      40
+    ],
+    "changedPixels": 907,
+    "outsidePixels": 0,
+    "changedBounds": [
+      7,
+      6,
+      36,
+      36
+    ],
+    "fingerprintsMatch": true
+  },
+  {
+    "group": "mask",
+    "engine": "ndlocr-lite",
+    "shape1": [
+      768,
+      16
+    ],
+    "shape2": [
+      768,
+      16
+    ],
+    "allowed": [
+      567,
+      0,
+      147,
+      16
+    ],
+    "changedPixels": 1314,
+    "outsidePixels": 0,
+    "changedBounds": [
+      568,
+      2,
+      141,
+      12
+    ],
+    "fingerprintsMatch": true
+  },
+  {
+    "group": "mask",
+    "engine": "pp-ocrv6",
+    "shape1": [
+      320,
+      48
+    ],
+    "shape2": [
+      320,
+      48
+    ],
+    "allowed": [
+      133,
+      4,
+      39,
+      40
+    ],
+    "changedPixels": 943,
+    "outsidePixels": 0,
+    "changedBounds": [
+      135,
+      6,
+      34,
+      35
+    ],
+    "fingerprintsMatch": true
+  }
+]

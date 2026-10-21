@@ -1,0 +1,53 @@
+{
+  "candidate": true,
+  "source_base": "dfda6ff",
+  "browser_regressions": [
+    {
+      "path": "round4-regression/browser-round2.json",
+      "date": "2026-10-21T14:13:48.650Z",
+      "passed": 15
+    },
+    {
+      "path": "round4-regression/browser-round1-compat.json",
+      "date": "2026-10-21T14:13:42.769Z",
+      "passed": 7
+    },
+    {
+      "path": "round4-regression/browser-round2-extra.json",
+      "date": "2026-10-21T14:13:43.327Z",
+      "passed": 6
+    },
+    {
+      "path": "round4-third-fixtures/report.json",
+      "date": "2026-10-21T14:13:43.015Z",
+      "passed": 8
+    },
+    {
+      "path": "round4-fixtures/report.json",
+      "date": "2026-10-21T14:16:44.669Z",
+      "passed": 7
+    }
+  ],
+  "unit": {
+    "public_pass": 64,
+    "public_skip_private_xml": 8,
+    "local_pass": 72,
+    "importer_pass": 13
+  },
+  "protocol": {
+    "dots_surrogate": 8,
+    "proxy_surrogate": 2,
+    "api_presets": 12,
+    "real_api_calls": 0
+  },
+  "real_public_evidence": {
+    "browser": "155.0.8059.85",
+    "pngs": 90,
+    "complete_archives": 9,
+    "refresh_pass": 26,
+    "path": "round4-real"
+  },
+  "models_downloaded_this_round": 0,
+  "pinned_cache_files_reverified": 6,
+  "model_preprocessing_changed": false
+}

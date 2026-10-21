@@ -79,7 +79,7 @@ class Week06Lab extends HTMLElement {
   if(act==='public'){this.v.material='shide_public';await S.selectMaterial('shide_public');}
   if(act==='model')window.dispatchEvent(new Event('open-model-settings'));
   if(act==='health'){this.health=await S.dotsHealth();this.status=this.health.loaded?T('D00.c025')+this.health.backend:this.health.error||(this.health.loading?T('D00.c026'):T('D00.c027'));}
-  if(act.startsWith('run:')){const name=act.split(':')[1];const progress=s=>{this.status=s;this.renderStatus();};await S.runEngine(name,progress,{detectOnly:this.p.id==='D15',task:this.v.florenceTask||'<OCR_WITH_REGION>'});this.status=T('D00.c028');}
+  if(act.startsWith('run:')){const name=act.split(':')[1];const progress=s=>{this.status=s;this.renderStatus();};await S.runEngine(name,progress,{detectOnly:this.p.id==='D15',task:this.v.florenceTask||'<OCR_WITH_REGION>',pageId:this.p.id});this.status=T('D00.c028');}
   if(act==='dots'&&this.v.dotsUnused)throw Error(T('D00.c029'));
   if(act==='dots')await S.runDots(this.v.dotsMode||'layout_all',Number(this.v.timeout)||180);
   if(act==='cloud')await S.cloudOCR({consent:this.v.consent,bbox:this.v.crop?JSON.parse(this.v.crop):null,provider:this.v.provider||'ChatGPT'});

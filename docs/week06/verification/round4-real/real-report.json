@@ -1,0 +1,5337 @@
+{
+  "candidate": true,
+  "date": "2026-10-21T13:49:54.336Z",
+  "browser": "155.0.8059.85",
+  "actualModelInference": true,
+  "material": "shide_public",
+  "preflight": [
+    {
+      "id": "deim-s-1024x1024.onnx",
+      "date": "2026-10-21T13:49:54.678Z",
+      "action": "inspect",
+      "status": "文件已核验",
+      "cache": {
+        "name": "deim-s-1024x1024.onnx",
+        "cached": true,
+        "bytes": 40256763,
+        "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+        "expected": {
+          "bytes": 40256763,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+          "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+        },
+        "verified": true
+      },
+      "session": null,
+      "warmup": null,
+      "load_run": "未运行",
+      "comparison": "未对照",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "full",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+        }
+      },
+      "action_elapsed_ms": 254.79999995231628,
+      "history": [
+        {
+          "id": "deim-s-1024x1024.onnx",
+          "date": "2026-10-21T13:49:54.678Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "deim-s-1024x1024.onnx",
+            "cached": true,
+            "bytes": 40256763,
+            "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+            "expected": {
+              "bytes": 40256763,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+              "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "full",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+            }
+          },
+          "action_elapsed_ms": 254.79999995231628
+        }
+      ],
+      "requested_action": "download"
+    },
+    {
+      "id": "deim-s-1024x1024.onnx",
+      "date": "2026-10-21T13:49:54.773Z",
+      "action": "session",
+      "status": "会话已建立",
+      "cache": {
+        "name": "deim-s-1024x1024.onnx",
+        "cached": true,
+        "bytes": 40256763,
+        "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+        "expected": {
+          "bytes": 40256763,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+          "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 552.5
+      },
+      "warmup": null,
+      "load_run": "会话成功",
+      "comparison": "未对照",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "full",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+        }
+      },
+      "action_elapsed_ms": 587.5999999046326,
+      "history": [
+        {
+          "id": "deim-s-1024x1024.onnx",
+          "date": "2026-10-21T13:49:54.678Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "deim-s-1024x1024.onnx",
+            "cached": true,
+            "bytes": 40256763,
+            "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+            "expected": {
+              "bytes": 40256763,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+              "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "full",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+            }
+          },
+          "action_elapsed_ms": 254.79999995231628
+        },
+        {
+          "id": "deim-s-1024x1024.onnx",
+          "date": "2026-10-21T13:49:54.773Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "deim-s-1024x1024.onnx",
+            "cached": true,
+            "bytes": 40256763,
+            "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+            "expected": {
+              "bytes": 40256763,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+              "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 552.5
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "full",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+            }
+          },
+          "action_elapsed_ms": 587.5999999046326
+        }
+      ],
+      "requested_action": "session"
+    },
+    {
+      "id": "deim-s-1024x1024.onnx",
+      "date": "2026-10-21T13:49:55.431Z",
+      "action": "warmup",
+      "status": "运行成功",
+      "cache": {
+        "name": "deim-s-1024x1024.onnx",
+        "cached": true,
+        "bytes": 40256763,
+        "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+        "expected": {
+          "bytes": 40256763,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+          "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 0
+      },
+      "warmup": {
+        "text": "",
+        "boxes": 6,
+        "output": {
+          "lines": [
+            {
+              "detectionId": "deim-0",
+              "x": 114,
+              "y": 15,
+              "width": 34,
+              "height": 172,
+              "confidence": 0.9284071326255798,
+              "classId": 16,
+              "charCountCategory": 3
+            },
+            {
+              "detectionId": "deim-3",
+              "x": 13,
+              "y": 0,
+              "width": 31,
+              "height": 849,
+              "confidence": 0.7496339082717896,
+              "classId": 16,
+              "charCountCategory": 2
+            }
+          ],
+          "blocks": [
+            {
+              "x": 114,
+              "y": 19,
+              "width": 34,
+              "height": 165
+            },
+            {
+              "x": 13,
+              "y": 11,
+              "width": 31,
+              "height": 822
+            }
+          ],
+          "regions": [
+            {
+              "id": "deim-0",
+              "x": 114,
+              "y": 18,
+              "width": 34,
+              "height": 166,
+              "confidence": 0.9284071326255798,
+              "classId": 16
+            },
+            {
+              "id": "deim-1",
+              "x": 114,
+              "y": 19,
+              "width": 34,
+              "height": 165,
+              "confidence": 0.8990403413772583,
+              "classId": 0
+            },
+            {
+              "id": "deim-2",
+              "x": 13,
+              "y": 11,
+              "width": 31,
+              "height": 822,
+              "confidence": 0.8476864099502563,
+              "classId": 0
+            },
+            {
+              "id": "deim-3",
+              "x": 13,
+              "y": 11,
+              "width": 31,
+              "height": 822,
+              "confidence": 0.7496339082717896,
+              "classId": 16
+            },
+            {
+              "id": "deim-4",
+              "x": 42,
+              "y": 26,
+              "width": 11,
+              "height": 751,
+              "confidence": 0.7300728559494019,
+              "classId": 10
+            },
+            {
+              "id": "deim-5",
+              "x": 13,
+              "y": 11,
+              "width": 31,
+              "height": 822,
+              "confidence": 0.4425481855869293,
+              "classId": 1
+            }
+          ]
+        },
+        "elapsed_ms": 2214.7000000476837,
+        "expected": [],
+        "contains": []
+      },
+      "load_run": "成功",
+      "comparison": "检测器不输出文字",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "full",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+        }
+      },
+      "action_elapsed_ms": 2255.100000143051,
+      "history": [
+        {
+          "id": "deim-s-1024x1024.onnx",
+          "date": "2026-10-21T13:49:54.678Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "deim-s-1024x1024.onnx",
+            "cached": true,
+            "bytes": 40256763,
+            "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+            "expected": {
+              "bytes": 40256763,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+              "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "full",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+            }
+          },
+          "action_elapsed_ms": 254.79999995231628
+        },
+        {
+          "id": "deim-s-1024x1024.onnx",
+          "date": "2026-10-21T13:49:54.773Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "deim-s-1024x1024.onnx",
+            "cached": true,
+            "bytes": 40256763,
+            "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+            "expected": {
+              "bytes": 40256763,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+              "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 552.5
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "full",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+            }
+          },
+          "action_elapsed_ms": 587.5999999046326
+        },
+        {
+          "id": "deim-s-1024x1024.onnx",
+          "date": "2026-10-21T13:49:55.431Z",
+          "action": "warmup",
+          "status": "运行成功",
+          "cache": {
+            "name": "deim-s-1024x1024.onnx",
+            "cached": true,
+            "bytes": 40256763,
+            "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373",
+            "expected": {
+              "bytes": 40256763,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/deim-s-1024x1024.onnx",
+              "sha256": "c156ce0c4e704bc3bf7e4016d0a87b949cffa8b3724f4b4cc696b8284c3c7373"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 0
+          },
+          "warmup": {
+            "text": "",
+            "boxes": 6,
+            "output": {
+              "lines": [
+                {
+                  "detectionId": "deim-0",
+                  "x": 114,
+                  "y": 15,
+                  "width": 34,
+                  "height": 172,
+                  "confidence": 0.9284071326255798,
+                  "classId": 16,
+                  "charCountCategory": 3
+                },
+                {
+                  "detectionId": "deim-3",
+                  "x": 13,
+                  "y": 0,
+                  "width": 31,
+                  "height": 849,
+                  "confidence": 0.7496339082717896,
+                  "classId": 16,
+                  "charCountCategory": 2
+                }
+              ],
+              "blocks": [
+                {
+                  "x": 114,
+                  "y": 19,
+                  "width": 34,
+                  "height": 165
+                },
+                {
+                  "x": 13,
+                  "y": 11,
+                  "width": 31,
+                  "height": 822
+                }
+              ],
+              "regions": [
+                {
+                  "id": "deim-0",
+                  "x": 114,
+                  "y": 18,
+                  "width": 34,
+                  "height": 166,
+                  "confidence": 0.9284071326255798,
+                  "classId": 16
+                },
+                {
+                  "id": "deim-1",
+                  "x": 114,
+                  "y": 19,
+                  "width": 34,
+                  "height": 165,
+                  "confidence": 0.8990403413772583,
+                  "classId": 0
+                },
+                {
+                  "id": "deim-2",
+                  "x": 13,
+                  "y": 11,
+                  "width": 31,
+                  "height": 822,
+                  "confidence": 0.8476864099502563,
+                  "classId": 0
+                },
+                {
+                  "id": "deim-3",
+                  "x": 13,
+                  "y": 11,
+                  "width": 31,
+                  "height": 822,
+                  "confidence": 0.7496339082717896,
+                  "classId": 16
+                },
+                {
+                  "id": "deim-4",
+                  "x": 42,
+                  "y": 26,
+                  "width": 11,
+                  "height": 751,
+                  "confidence": 0.7300728559494019,
+                  "classId": 10
+                },
+                {
+                  "id": "deim-5",
+                  "x": 13,
+                  "y": 11,
+                  "width": 31,
+                  "height": 822,
+                  "confidence": 0.4425481855869293,
+                  "classId": 1
+                }
+              ]
+            },
+            "elapsed_ms": 2214.7000000476837,
+            "expected": [],
+            "contains": []
+          },
+          "load_run": "成功",
+          "comparison": "检测器不输出文字",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "full",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+            }
+          },
+          "action_elapsed_ms": 2255.100000143051
+        }
+      ],
+      "requested_action": "warmup"
+    },
+    {
+      "id": "parseq-ndl-30.onnx",
+      "date": "2026-10-21T13:49:57.766Z",
+      "action": "inspect",
+      "status": "文件已核验",
+      "cache": {
+        "name": "parseq-ndl-30.onnx",
+        "cached": true,
+        "bytes": 35848117,
+        "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+        "expected": {
+          "bytes": 35848117,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+          "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+        },
+        "verified": true
+      },
+      "session": null,
+      "warmup": null,
+      "load_run": "未运行",
+      "comparison": "未对照",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "line",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "TextRecognizer.recognizeCropped → preprocess"
+        }
+      },
+      "action_elapsed_ms": 57.59999990463257,
+      "history": [
+        {
+          "id": "parseq-ndl-30.onnx",
+          "date": "2026-10-21T13:49:57.766Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-30.onnx",
+            "cached": true,
+            "bytes": 35848117,
+            "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+            "expected": {
+              "bytes": 35848117,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+              "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 57.59999990463257
+        }
+      ],
+      "requested_action": "download"
+    },
+    {
+      "id": "parseq-ndl-30.onnx",
+      "date": "2026-10-21T13:49:57.856Z",
+      "action": "session",
+      "status": "会话已建立",
+      "cache": {
+        "name": "parseq-ndl-30.onnx",
+        "cached": true,
+        "bytes": 35848117,
+        "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+        "expected": {
+          "bytes": 35848117,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+          "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 172.09999990463257
+      },
+      "warmup": null,
+      "load_run": "会话成功",
+      "comparison": "未对照",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "line",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "TextRecognizer.recognizeCropped → preprocess"
+        }
+      },
+      "action_elapsed_ms": 204.79999995231628,
+      "history": [
+        {
+          "id": "parseq-ndl-30.onnx",
+          "date": "2026-10-21T13:49:57.766Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-30.onnx",
+            "cached": true,
+            "bytes": 35848117,
+            "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+            "expected": {
+              "bytes": 35848117,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+              "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 57.59999990463257
+        },
+        {
+          "id": "parseq-ndl-30.onnx",
+          "date": "2026-10-21T13:49:57.856Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "parseq-ndl-30.onnx",
+            "cached": true,
+            "bytes": 35848117,
+            "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+            "expected": {
+              "bytes": 35848117,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+              "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 172.09999990463257
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 204.79999995231628
+        }
+      ],
+      "requested_action": "session"
+    },
+    {
+      "id": "parseq-ndl-30.onnx",
+      "date": "2026-10-21T13:49:58.129Z",
+      "action": "warmup",
+      "status": "运行成功",
+      "cache": {
+        "name": "parseq-ndl-30.onnx",
+        "cached": true,
+        "bytes": 35848117,
+        "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+        "expected": {
+          "bytes": 35848117,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+          "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 0
+      },
+      "warmup": {
+        "text": "史徳",
+        "rec_score": 0.8664610314830808,
+        "source": "本课计算：逐字softmax概率平均；NDL工具不输出",
+        "elapsed_ms": 92.10000014305115,
+        "expected": [
+          "史德"
+        ],
+        "contains": [
+          false
+        ]
+      },
+      "load_run": "成功",
+      "comparison": "有预期子串未出现（仅供参考）",
+      "body_line": {
+        "elapsed_ms": 87.19999980926514,
+        "text": "水學識三者得一不易而兼三尤難。千古多文人而少良史。権是故也。",
+        "expected": "才學識",
+        "contains": false
+      },
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "line",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "TextRecognizer.recognizeCropped → preprocess"
+        }
+      },
+      "action_elapsed_ms": 224.70000004768372,
+      "history": [
+        {
+          "id": "parseq-ndl-30.onnx",
+          "date": "2026-10-21T13:49:57.766Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-30.onnx",
+            "cached": true,
+            "bytes": 35848117,
+            "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+            "expected": {
+              "bytes": 35848117,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+              "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 57.59999990463257
+        },
+        {
+          "id": "parseq-ndl-30.onnx",
+          "date": "2026-10-21T13:49:57.856Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "parseq-ndl-30.onnx",
+            "cached": true,
+            "bytes": 35848117,
+            "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+            "expected": {
+              "bytes": 35848117,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+              "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 172.09999990463257
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 204.79999995231628
+        },
+        {
+          "id": "parseq-ndl-30.onnx",
+          "date": "2026-10-21T13:49:58.129Z",
+          "action": "warmup",
+          "status": "运行成功",
+          "cache": {
+            "name": "parseq-ndl-30.onnx",
+            "cached": true,
+            "bytes": 35848117,
+            "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54",
+            "expected": {
+              "bytes": 35848117,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-30.onnx",
+              "sha256": "0bc344b883cfb11f61e15bd02044dcf92997aef1f7dce84419c3aa3c3c677d54"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 0
+          },
+          "warmup": {
+            "text": "史徳",
+            "rec_score": 0.8664610314830808,
+            "source": "本课计算：逐字softmax概率平均；NDL工具不输出",
+            "elapsed_ms": 92.10000014305115,
+            "expected": [
+              "史德"
+            ],
+            "contains": [
+              false
+            ]
+          },
+          "load_run": "成功",
+          "comparison": "有预期子串未出现（仅供参考）",
+          "body_line": {
+            "elapsed_ms": 87.19999980926514,
+            "text": "水學識三者得一不易而兼三尤難。千古多文人而少良史。権是故也。",
+            "expected": "才學識",
+            "contains": false
+          },
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 224.70000004768372
+        }
+      ],
+      "requested_action": "warmup"
+    },
+    {
+      "id": "parseq-ndl-50.onnx",
+      "date": "2026-10-21T13:49:58.440Z",
+      "action": "inspect",
+      "status": "文件已核验",
+      "cache": {
+        "name": "parseq-ndl-50.onnx",
+        "cached": true,
+        "bytes": 36920058,
+        "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+        "expected": {
+          "bytes": 36920058,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+          "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+        },
+        "verified": true
+      },
+      "session": null,
+      "warmup": null,
+      "load_run": "未运行",
+      "comparison": "未对照",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "line",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "TextRecognizer.recognizeCropped → preprocess"
+        }
+      },
+      "action_elapsed_ms": 58.59999990463257,
+      "history": [
+        {
+          "id": "parseq-ndl-50.onnx",
+          "date": "2026-10-21T13:49:58.440Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-50.onnx",
+            "cached": true,
+            "bytes": 36920058,
+            "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+            "expected": {
+              "bytes": 36920058,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+              "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 58.59999990463257
+        }
+      ],
+      "requested_action": "download"
+    },
+    {
+      "id": "parseq-ndl-50.onnx",
+      "date": "2026-10-21T13:49:58.531Z",
+      "action": "session",
+      "status": "会话已建立",
+      "cache": {
+        "name": "parseq-ndl-50.onnx",
+        "cached": true,
+        "bytes": 36920058,
+        "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+        "expected": {
+          "bytes": 36920058,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+          "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 255.89999985694885
+      },
+      "warmup": null,
+      "load_run": "会话成功",
+      "comparison": "未对照",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "line",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "TextRecognizer.recognizeCropped → preprocess"
+        }
+      },
+      "action_elapsed_ms": 287.59999990463257,
+      "history": [
+        {
+          "id": "parseq-ndl-50.onnx",
+          "date": "2026-10-21T13:49:58.440Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-50.onnx",
+            "cached": true,
+            "bytes": 36920058,
+            "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+            "expected": {
+              "bytes": 36920058,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+              "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 58.59999990463257
+        },
+        {
+          "id": "parseq-ndl-50.onnx",
+          "date": "2026-10-21T13:49:58.531Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "parseq-ndl-50.onnx",
+            "cached": true,
+            "bytes": 36920058,
+            "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+            "expected": {
+              "bytes": 36920058,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+              "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 255.89999985694885
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 287.59999990463257
+        }
+      ],
+      "requested_action": "session"
+    },
+    {
+      "id": "parseq-ndl-50.onnx",
+      "date": "2026-10-21T13:49:58.878Z",
+      "action": "warmup",
+      "status": "运行成功",
+      "cache": {
+        "name": "parseq-ndl-50.onnx",
+        "cached": true,
+        "bytes": 36920058,
+        "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+        "expected": {
+          "bytes": 36920058,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+          "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 0
+      },
+      "warmup": {
+        "text": "史 德",
+        "rec_score": 0.9731858295712491,
+        "source": "本课计算：逐字softmax概率平均；NDL工具不输出",
+        "elapsed_ms": 141.40000009536743,
+        "expected": [
+          "史德"
+        ],
+        "contains": [
+          true
+        ]
+      },
+      "load_run": "成功",
+      "comparison": "有预期子串未出现（仅供参考）",
+      "body_line": {
+        "elapsed_ms": 137.90000009536743,
+        "text": "才。學￣ノ議。三者。得一不易。而兼三尤難。千古多文人而少良史。職是故也。昔者",
+        "expected": "才學識",
+        "contains": false
+      },
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "line",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "TextRecognizer.recognizeCropped → preprocess"
+        }
+      },
+      "action_elapsed_ms": 329.2000000476837,
+      "history": [
+        {
+          "id": "parseq-ndl-50.onnx",
+          "date": "2026-10-21T13:49:58.440Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-50.onnx",
+            "cached": true,
+            "bytes": 36920058,
+            "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+            "expected": {
+              "bytes": 36920058,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+              "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 58.59999990463257
+        },
+        {
+          "id": "parseq-ndl-50.onnx",
+          "date": "2026-10-21T13:49:58.531Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "parseq-ndl-50.onnx",
+            "cached": true,
+            "bytes": 36920058,
+            "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+            "expected": {
+              "bytes": 36920058,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+              "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 255.89999985694885
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 287.59999990463257
+        },
+        {
+          "id": "parseq-ndl-50.onnx",
+          "date": "2026-10-21T13:49:58.878Z",
+          "action": "warmup",
+          "status": "运行成功",
+          "cache": {
+            "name": "parseq-ndl-50.onnx",
+            "cached": true,
+            "bytes": 36920058,
+            "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08",
+            "expected": {
+              "bytes": 36920058,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-50.onnx",
+              "sha256": "1a60e88c9ffeaefdfe286677146f39fdeb4d0e1acd94ccd974c8943f761d9a08"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 0
+          },
+          "warmup": {
+            "text": "史 德",
+            "rec_score": 0.9731858295712491,
+            "source": "本课计算：逐字softmax概率平均；NDL工具不输出",
+            "elapsed_ms": 141.40000009536743,
+            "expected": [
+              "史德"
+            ],
+            "contains": [
+              true
+            ]
+          },
+          "load_run": "成功",
+          "comparison": "有预期子串未出现（仅供参考）",
+          "body_line": {
+            "elapsed_ms": 137.90000009536743,
+            "text": "才。學￣ノ議。三者。得一不易。而兼三尤難。千古多文人而少良史。職是故也。昔者",
+            "expected": "才學識",
+            "contains": false
+          },
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 329.2000000476837
+        }
+      ],
+      "requested_action": "warmup"
+    },
+    {
+      "id": "parseq-ndl-100.onnx",
+      "date": "2026-10-21T13:49:59.294Z",
+      "action": "inspect",
+      "status": "文件已核验",
+      "cache": {
+        "name": "parseq-ndl-100.onnx",
+        "cached": true,
+        "bytes": 40984184,
+        "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+        "expected": {
+          "bytes": 40984184,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+          "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+        },
+        "verified": true
+      },
+      "session": null,
+      "warmup": null,
+      "load_run": "未运行",
+      "comparison": "未对照",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "line",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "TextRecognizer.recognizeCropped → preprocess"
+        }
+      },
+      "action_elapsed_ms": 64.20000004768372,
+      "history": [
+        {
+          "id": "parseq-ndl-100.onnx",
+          "date": "2026-10-21T13:49:59.294Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-100.onnx",
+            "cached": true,
+            "bytes": 40984184,
+            "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+            "expected": {
+              "bytes": 40984184,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+              "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 64.20000004768372
+        }
+      ],
+      "requested_action": "download"
+    },
+    {
+      "id": "parseq-ndl-100.onnx",
+      "date": "2026-10-21T13:49:59.390Z",
+      "action": "session",
+      "status": "会话已建立",
+      "cache": {
+        "name": "parseq-ndl-100.onnx",
+        "cached": true,
+        "bytes": 40984184,
+        "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+        "expected": {
+          "bytes": 40984184,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+          "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 558.0999999046326
+      },
+      "warmup": null,
+      "load_run": "会话成功",
+      "comparison": "未对照",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "line",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "TextRecognizer.recognizeCropped → preprocess"
+        }
+      },
+      "action_elapsed_ms": 596.7000000476837,
+      "history": [
+        {
+          "id": "parseq-ndl-100.onnx",
+          "date": "2026-10-21T13:49:59.294Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-100.onnx",
+            "cached": true,
+            "bytes": 40984184,
+            "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+            "expected": {
+              "bytes": 40984184,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+              "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 64.20000004768372
+        },
+        {
+          "id": "parseq-ndl-100.onnx",
+          "date": "2026-10-21T13:49:59.390Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "parseq-ndl-100.onnx",
+            "cached": true,
+            "bytes": 40984184,
+            "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+            "expected": {
+              "bytes": 40984184,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+              "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 558.0999999046326
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 596.7000000476837
+        }
+      ],
+      "requested_action": "session"
+    },
+    {
+      "id": "parseq-ndl-100.onnx",
+      "date": "2026-10-21T13:50:00.045Z",
+      "action": "warmup",
+      "status": "运行成功",
+      "cache": {
+        "name": "parseq-ndl-100.onnx",
+        "cached": true,
+        "bytes": 40984184,
+        "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+        "expected": {
+          "bytes": 40984184,
+          "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+          "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+        },
+        "verified": true
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 0
+      },
+      "warmup": {
+        "text": "史徳",
+        "rec_score": 0.9535814261967537,
+        "source": "本课计算：逐字softmax概率平均；NDL工具不输出",
+        "elapsed_ms": 288.40000009536743,
+        "expected": [
+          "史德"
+        ],
+        "contains": [
+          false
+        ]
+      },
+      "load_run": "成功",
+      "comparison": "有预期子串未出现（仅供参考）",
+      "body_line": {
+        "elapsed_ms": 297.60000014305115,
+        "text": "才￣ヲ挙￣テ識￣ヲ得一不易。而兼三尤難。千古多文人而少良史。職是故也。昔者",
+        "expected": "才學識",
+        "contains": false
+      },
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "line",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "TextRecognizer.recognizeCropped → preprocess"
+        }
+      },
+      "action_elapsed_ms": 636.2999999523163,
+      "history": [
+        {
+          "id": "parseq-ndl-100.onnx",
+          "date": "2026-10-21T13:49:59.294Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "name": "parseq-ndl-100.onnx",
+            "cached": true,
+            "bytes": 40984184,
+            "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+            "expected": {
+              "bytes": 40984184,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+              "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+            },
+            "verified": true
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 64.20000004768372
+        },
+        {
+          "id": "parseq-ndl-100.onnx",
+          "date": "2026-10-21T13:49:59.390Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "name": "parseq-ndl-100.onnx",
+            "cached": true,
+            "bytes": 40984184,
+            "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+            "expected": {
+              "bytes": 40984184,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+              "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 558.0999999046326
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 596.7000000476837
+        },
+        {
+          "id": "parseq-ndl-100.onnx",
+          "date": "2026-10-21T13:50:00.045Z",
+          "action": "warmup",
+          "status": "运行成功",
+          "cache": {
+            "name": "parseq-ndl-100.onnx",
+            "cached": true,
+            "bytes": 40984184,
+            "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd",
+            "expected": {
+              "bytes": 40984184,
+              "source_url": "https://raw.githubusercontent.com/yuta1984/ndlocrlite-web/50216ccc3e600f6d0d152862c5a201fdade78112/public/models/parseq-ndl-100.onnx",
+              "sha256": "712c7184a0a80a9048a5aefbfacd63876bacfb1c8d4d2f5c252dc39ad12bc3dd"
+            },
+            "verified": true
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 0
+          },
+          "warmup": {
+            "text": "史徳",
+            "rec_score": 0.9535814261967537,
+            "source": "本课计算：逐字softmax概率平均；NDL工具不输出",
+            "elapsed_ms": 288.40000009536743,
+            "expected": [
+              "史德"
+            ],
+            "contains": [
+              false
+            ]
+          },
+          "load_run": "成功",
+          "comparison": "有预期子串未出现（仅供参考）",
+          "body_line": {
+            "elapsed_ms": 297.60000014305115,
+            "text": "才￣ヲ挙￣テ識￣ヲ得一不易。而兼三尤難。千古多文人而少良史。職是故也。昔者",
+            "expected": "才學識",
+            "contains": false
+          },
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+              "code_path": "TextRecognizer.recognizeCropped → preprocess"
+            }
+          },
+          "action_elapsed_ms": 636.2999999523163
+        }
+      ],
+      "requested_action": "warmup"
+    },
+    {
+      "id": "pp-det",
+      "date": "2026-10-21T13:50:00.747Z",
+      "action": "inspect",
+      "status": "文件已核验",
+      "cache": {
+        "cached": true,
+        "verified": true,
+        "bytes": 9880512,
+        "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+        "expected": {
+          "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+          "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+          "path": "inference.onnx",
+          "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+          "bytes": 9880512,
+          "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+        }
+      },
+      "session": null,
+      "warmup": null,
+      "load_run": "未运行",
+      "comparison": "未对照",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "full",
+          "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+          "code_path": "paddle → cropByPoly → rec.preprocessSample"
+        }
+      },
+      "action_elapsed_ms": 21.700000047683716,
+      "history": [
+        {
+          "id": "pp-det",
+          "date": "2026-10-21T13:50:00.747Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 9880512,
+            "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+              "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+              "bytes": 9880512,
+              "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+            }
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "full",
+              "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+              "code_path": "paddle → cropByPoly → rec.preprocessSample"
+            }
+          },
+          "action_elapsed_ms": 21.700000047683716
+        }
+      ],
+      "requested_action": "download"
+    },
+    {
+      "id": "pp-det",
+      "date": "2026-10-21T13:50:00.823Z",
+      "action": "session",
+      "status": "会话已建立",
+      "cache": {
+        "cached": true,
+        "verified": true,
+        "bytes": 9880512,
+        "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+        "expected": {
+          "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+          "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+          "path": "inference.onnx",
+          "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+          "bytes": 9880512,
+          "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+        }
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 49.200000047683716
+      },
+      "warmup": null,
+      "load_run": "会话成功",
+      "comparison": "未对照",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "full",
+          "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+          "code_path": "paddle → cropByPoly → rec.preprocessSample"
+        }
+      },
+      "action_elapsed_ms": 64,
+      "history": [
+        {
+          "id": "pp-det",
+          "date": "2026-10-21T13:50:00.747Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 9880512,
+            "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+              "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+              "bytes": 9880512,
+              "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+            }
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "full",
+              "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+              "code_path": "paddle → cropByPoly → rec.preprocessSample"
+            }
+          },
+          "action_elapsed_ms": 21.700000047683716
+        },
+        {
+          "id": "pp-det",
+          "date": "2026-10-21T13:50:00.823Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 9880512,
+            "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+              "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+              "bytes": 9880512,
+              "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+            }
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 49.200000047683716
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "full",
+              "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+              "code_path": "paddle → cropByPoly → rec.preprocessSample"
+            }
+          },
+          "action_elapsed_ms": 64
+        }
+      ],
+      "requested_action": "session"
+    },
+    {
+      "id": "pp-det",
+      "date": "2026-10-21T13:50:00.955Z",
+      "action": "warmup",
+      "status": "运行成功",
+      "cache": {
+        "cached": true,
+        "verified": true,
+        "bytes": 9880512,
+        "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+        "expected": {
+          "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+          "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+          "path": "inference.onnx",
+          "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+          "bytes": 9880512,
+          "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+        }
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 0
+      },
+      "warmup": {
+        "text": "",
+        "boxes": 3,
+        "output": {
+          "boxes": [
+            [
+              [
+                11,
+                4
+              ],
+              [
+                49,
+                4
+              ],
+              [
+                49,
+                836
+              ],
+              [
+                11,
+                836
+              ]
+            ],
+            [
+              [
+                108,
+                10
+              ],
+              [
+                151,
+                10
+              ],
+              [
+                151,
+                56
+              ],
+              [
+                108,
+                56
+              ]
+            ],
+            [
+              [
+                109,
+                146
+              ],
+              [
+                152,
+                146
+              ],
+              [
+                152,
+                189
+              ],
+              [
+                109,
+                189
+              ]
+            ]
+          ],
+          "scores": [
+            0.8165322065247147,
+            0.8220412047627644,
+            0.8715796488472539
+          ]
+        },
+        "elapsed_ms": 89.10000014305115,
+        "expected": [],
+        "contains": []
+      },
+      "load_run": "成功",
+      "comparison": "检测器不输出文字",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "full",
+          "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+          "code_path": "paddle → cropByPoly → rec.preprocessSample"
+        }
+      },
+      "action_elapsed_ms": 111.30000019073486,
+      "history": [
+        {
+          "id": "pp-det",
+          "date": "2026-10-21T13:50:00.747Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 9880512,
+            "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+              "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+              "bytes": 9880512,
+              "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+            }
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "full",
+              "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+              "code_path": "paddle → cropByPoly → rec.preprocessSample"
+            }
+          },
+          "action_elapsed_ms": 21.700000047683716
+        },
+        {
+          "id": "pp-det",
+          "date": "2026-10-21T13:50:00.823Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 9880512,
+            "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+              "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+              "bytes": 9880512,
+              "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+            }
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 49.200000047683716
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "full",
+              "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+              "code_path": "paddle → cropByPoly → rec.preprocessSample"
+            }
+          },
+          "action_elapsed_ms": 64
+        },
+        {
+          "id": "pp-det",
+          "date": "2026-10-21T13:50:00.955Z",
+          "action": "warmup",
+          "status": "运行成功",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 9880512,
+            "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_det_onnx",
+              "revision": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/28fe5895c24fd108c19eb3e8479f4ab385fbfc62/inference.onnx",
+              "bytes": 9880512,
+              "sha256": "d73e0058b7a8086bbd57f3d10b8bcd4ff95363f67e06e2762b5e814fe9c9410e"
+            }
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 0
+          },
+          "warmup": {
+            "text": "",
+            "boxes": 3,
+            "output": {
+              "boxes": [
+                [
+                  [
+                    11,
+                    4
+                  ],
+                  [
+                    49,
+                    4
+                  ],
+                  [
+                    49,
+                    836
+                  ],
+                  [
+                    11,
+                    836
+                  ]
+                ],
+                [
+                  [
+                    108,
+                    10
+                  ],
+                  [
+                    151,
+                    10
+                  ],
+                  [
+                    151,
+                    56
+                  ],
+                  [
+                    108,
+                    56
+                  ]
+                ],
+                [
+                  [
+                    109,
+                    146
+                  ],
+                  [
+                    152,
+                    146
+                  ],
+                  [
+                    152,
+                    189
+                  ],
+                  [
+                    109,
+                    189
+                  ]
+                ]
+              ],
+              "scores": [
+                0.8165322065247147,
+                0.8220412047627644,
+                0.8715796488472539
+              ]
+            },
+            "elapsed_ms": 89.10000014305115,
+            "expected": [],
+            "contains": []
+          },
+          "load_run": "成功",
+          "comparison": "检测器不输出文字",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "full",
+              "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+              "code_path": "paddle → cropByPoly → rec.preprocessSample"
+            }
+          },
+          "action_elapsed_ms": 111.30000019073486
+        }
+      ],
+      "requested_action": "warmup"
+    },
+    {
+      "id": "pp-rec",
+      "date": "2026-10-21T13:50:01.140Z",
+      "action": "inspect",
+      "status": "文件已核验",
+      "cache": {
+        "cached": true,
+        "verified": true,
+        "bytes": 21159378,
+        "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+        "expected": {
+          "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+          "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+          "path": "inference.onnx",
+          "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+          "bytes": 21159378,
+          "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+        }
+      },
+      "session": null,
+      "warmup": null,
+      "load_run": "未运行",
+      "comparison": "未对照",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "line",
+          "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+          "code_path": "paddleLine → rec.preprocessSample"
+        }
+      },
+      "action_elapsed_ms": 39.700000047683716,
+      "history": [
+        {
+          "id": "pp-rec",
+          "date": "2026-10-21T13:50:01.140Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 21159378,
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+              "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+              "bytes": 21159378,
+              "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+            }
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+              "code_path": "paddleLine → rec.preprocessSample"
+            }
+          },
+          "action_elapsed_ms": 39.700000047683716
+        }
+      ],
+      "requested_action": "download"
+    },
+    {
+      "id": "pp-rec",
+      "date": "2026-10-21T13:50:01.223Z",
+      "action": "session",
+      "status": "会话已建立",
+      "cache": {
+        "cached": true,
+        "verified": true,
+        "bytes": 21159378,
+        "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+        "expected": {
+          "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+          "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+          "path": "inference.onnx",
+          "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+          "bytes": 21159378,
+          "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+        }
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 43.80000019073486
+      },
+      "warmup": null,
+      "load_run": "会话成功",
+      "comparison": "未对照",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "line",
+          "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+          "code_path": "paddleLine → rec.preprocessSample"
+        }
+      },
+      "action_elapsed_ms": 65.10000014305115,
+      "history": [
+        {
+          "id": "pp-rec",
+          "date": "2026-10-21T13:50:01.140Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 21159378,
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+              "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+              "bytes": 21159378,
+              "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+            }
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+              "code_path": "paddleLine → rec.preprocessSample"
+            }
+          },
+          "action_elapsed_ms": 39.700000047683716
+        },
+        {
+          "id": "pp-rec",
+          "date": "2026-10-21T13:50:01.223Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 21159378,
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+              "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+              "bytes": 21159378,
+              "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+            }
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 43.80000019073486
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+              "code_path": "paddleLine → rec.preprocessSample"
+            }
+          },
+          "action_elapsed_ms": 65.10000014305115
+        }
+      ],
+      "requested_action": "session"
+    },
+    {
+      "id": "pp-rec",
+      "date": "2026-10-21T13:50:01.353Z",
+      "action": "warmup",
+      "status": "运行成功",
+      "cache": {
+        "cached": true,
+        "verified": true,
+        "bytes": 21159378,
+        "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+        "expected": {
+          "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+          "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+          "path": "inference.onnx",
+          "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+          "bytes": 21159378,
+          "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+        }
+      },
+      "session": {
+        "backend": "wasm",
+        "threads": 1,
+        "webgpu": false,
+        "elapsed_ms": 0
+      },
+      "warmup": {
+        "text": "史德",
+        "rec_score": 0.9999333024024963,
+        "elapsed_ms": 182.90000009536743,
+        "expected": [
+          "史德"
+        ],
+        "contains": [
+          true
+        ]
+      },
+      "load_run": "成功",
+      "comparison": "标题与正文包含预期子串",
+      "body_line": {
+        "elapsed_ms": 434.30000019073486,
+        "text": "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者",
+        "expected": "才學識",
+        "contains": true
+      },
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "line",
+          "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+          "code_path": "paddleLine → rec.preprocessSample"
+        }
+      },
+      "action_elapsed_ms": 651.3000001907349,
+      "history": [
+        {
+          "id": "pp-rec",
+          "date": "2026-10-21T13:50:01.140Z",
+          "action": "inspect",
+          "status": "文件已核验",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 21159378,
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+              "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+              "bytes": 21159378,
+              "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+            }
+          },
+          "session": null,
+          "warmup": null,
+          "load_run": "未运行",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+              "code_path": "paddleLine → rec.preprocessSample"
+            }
+          },
+          "action_elapsed_ms": 39.700000047683716
+        },
+        {
+          "id": "pp-rec",
+          "date": "2026-10-21T13:50:01.223Z",
+          "action": "session",
+          "status": "会话已建立",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 21159378,
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+              "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+              "bytes": 21159378,
+              "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+            }
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 43.80000019073486
+          },
+          "warmup": null,
+          "load_run": "会话成功",
+          "comparison": "未对照",
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+              "code_path": "paddleLine → rec.preprocessSample"
+            }
+          },
+          "action_elapsed_ms": 65.10000014305115
+        },
+        {
+          "id": "pp-rec",
+          "date": "2026-10-21T13:50:01.353Z",
+          "action": "warmup",
+          "status": "运行成功",
+          "cache": {
+            "cached": true,
+            "verified": true,
+            "bytes": 21159378,
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+            "expected": {
+              "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+              "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+              "path": "inference.onnx",
+              "url": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/b8f84f0b80c529de40b4fbb3544b84fa7233a513/inference.onnx",
+              "bytes": 21159378,
+              "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+            }
+          },
+          "session": {
+            "backend": "wasm",
+            "threads": 1,
+            "webgpu": false,
+            "elapsed_ms": 0
+          },
+          "warmup": {
+            "text": "史德",
+            "rec_score": 0.9999333024024963,
+            "elapsed_ms": 182.90000009536743,
+            "expected": [
+              "史德"
+            ],
+            "contains": [
+              true
+            ]
+          },
+          "load_run": "成功",
+          "comparison": "标题与正文包含预期子串",
+          "body_line": {
+            "elapsed_ms": 434.30000019073486,
+            "text": "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者",
+            "expected": "才學識",
+            "contains": true
+          },
+          "runtime": {
+            "browser": {
+              "name": "Google Chrome",
+              "version": "155.0.8059.85",
+              "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+              "version_source": "userAgentData.fullVersionList"
+            },
+            "preprocessing": {
+              "scope": "line",
+              "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+              "code_path": "paddleLine → rec.preprocessSample"
+            }
+          },
+          "action_elapsed_ms": 651.3000001907349
+        }
+      ],
+      "requested_action": "warmup"
+    }
+  ],
+  "runs": [
+    {
+      "name": "D02-NDL",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "NDLOCR-Lite / DEIM + PARSeq16; importer pin 50216ccc",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:50:09.406Z",
+        "params": {
+          "detectOnly": false
+        },
+        "model_id": "ndlocr-lite:50216ccc3e600f6d0d152862c5a201fdade78112",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "full",
+            "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+            "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+          }
+        },
+        "elapsed_ms": 5814.099999904633,
+        "page_id": "D02"
+      },
+      "regions": 28
+    },
+    {
+      "name": "D02-PP",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62 / b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:50:18.382Z",
+        "params": {
+          "detectOnly": false
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "full",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddle → cropByPoly → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 6596.200000047684,
+        "page_id": "D02"
+      },
+      "regions": 13
+    },
+    {
+      "name": "D03-NDL",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "NDLOCR-Lite / DEIM + PARSeq16; importer pin 50216ccc",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:50:30.337Z",
+        "params": {
+          "detectOnly": false
+        },
+        "model_id": "ndlocr-lite:50216ccc3e600f6d0d152862c5a201fdade78112",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "full",
+            "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+            "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+          }
+        },
+        "elapsed_ms": 4207.600000143051,
+        "page_id": "D03"
+      },
+      "regions": 28
+    },
+    {
+      "name": "D07-first",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:50:33.532Z",
+        "params": {
+          "experiment": "原图行"
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 453,
+        "page_id": "D07"
+      },
+      "text": "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者"
+    },
+    {
+      "name": "D07-other",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:50:35.235Z",
+        "params": {
+          "experiment": "原图行"
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 597.5,
+        "page_id": "D07"
+      },
+      "text": "死節而飾主闕亦曰一家之道然也此猶文士之識非史識也能具史識者必知"
+    },
+    {
+      "name": "D09-public",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62 / b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:51:02.593Z",
+        "params": {
+          "detectOnly": false
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "full",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddle → cropByPoly → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 6459.799999952316,
+        "page_id": "D09"
+      },
+      "regions": 13
+    },
+    {
+      "name": "D08-body-original",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:02.725Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            585,
+            225,
+            50,
+            825
+          ],
+          "controlled_group": "body",
+          "condition_id": "body-original",
+          "condition_label": "原正文行",
+          "targetCell": [
+            7,
+            146,
+            33,
+            29
+          ],
+          "edits": [],
+          "input_shape": [
+            50,
+            825
+          ],
+          "autoRotate": true,
+          "input_sha256": "b30aeac60144b847afb66e670f33dd0aa60b00c28325cfa4d2d1de218fd1d838",
+          "network_input_sha256": "624b7531482607976c6e107c509a84b6d0b29b96fa762319ee0f988046765a6d"
+        },
+        "model_id": "ndlocr-lite:50216ccc3e600f6d0d152862c5a201fdade78112",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+            "code_path": "TextRecognizer.recognizeCropped → preprocess"
+          }
+        },
+        "elapsed_ms": 1008.6999998092651,
+        "page_id": "D08"
+      },
+      "text": "才￣ヲ挙￣テ識￣ヲ得一不易。而兼三尤難。千古多文人而少良史。職是故也。昔者",
+      "target": {
+        "method": "NDL 只列有效序列中前5含德或徳的位置，不将输出位置冒称图像定位",
+        "positions": [],
+        "choice": null
+      }
+    },
+    {
+      "name": "D08-body-original",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:04.471Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            585,
+            225,
+            50,
+            825
+          ],
+          "controlled_group": "body",
+          "condition_id": "body-original",
+          "condition_label": "原正文行",
+          "targetCell": [
+            7,
+            146,
+            33,
+            29
+          ],
+          "edits": [],
+          "input_shape": [
+            50,
+            825
+          ],
+          "autoRotate": true,
+          "input_sha256": "b30aeac60144b847afb66e670f33dd0aa60b00c28325cfa4d2d1de218fd1d838",
+          "network_input_sha256": "c74ea9b68a423bd6d5e3b423a00cd7f4c9d1ebf6a8754d0c58e30a7830ca1702"
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 676.8999998569489,
+        "page_id": "D08"
+      },
+      "text": "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者",
+      "target": {
+        "method": "按目标格几何范围映射 CTC 窄条；不是字符定位真值",
+        "stepRange": [
+          17.52,
+          21
+        ],
+        "positions": [
+          {
+            "step": 18,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9992190599441528,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9992190599441528
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 0.0007039927877485752
+              },
+              {
+                "id": 5382,
+                "text": "得",
+                "prob": 3.310561805847101e-05
+              },
+              {
+                "id": 6648,
+                "text": "是",
+                "prob": 1.8446667127136607e-06
+              },
+              {
+                "id": 5394,
+                "text": "復",
+                "prob": 1.5156617791944882e-06
+              }
+            ],
+            "probes": {
+              "德": 3.024101999926643e-07,
+              "徳": 1.1523652865275125e-10
+            }
+          },
+          {
+            "step": 19,
+            "id": 5382,
+            "text": "得",
+            "prob": 0.9999737739562988,
+            "candidates": [
+              {
+                "id": 5382,
+                "text": "得",
+                "prob": 0.9999737739562988
+              },
+              {
+                "id": 5370,
+                "text": "待",
+                "prob": 1.8434622688801028e-05
+              },
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 3.5388129617786035e-06
+              },
+              {
+                "id": 10463,
+                "text": "符",
+                "prob": 1.6303670236084145e-06
+              },
+              {
+                "id": 5393,
+                "text": "徨",
+                "prob": 3.252820022225933e-07
+              }
+            ],
+            "probes": {
+              "德": 8.418103902840812e-08,
+              "徳": 1.1252978800516122e-12
+            }
+          },
+          {
+            "step": 20,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9993547797203064,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9993547797203064
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 0.0006097463774494827
+              },
+              {
+                "id": 1751,
+                "text": "。",
+                "prob": 4.1210978451999836e-06
+              },
+              {
+                "id": 2094,
+                "text": "一",
+                "prob": 2.1181569991313154e-06
+              },
+              {
+                "id": 704,
+                "text": "“",
+                "prob": 1.3975725323689403e-06
+              }
+            ],
+            "probes": {
+              "德": 1.0655848114993205e-07,
+              "徳": 7.235913951353368e-11
+            }
+          }
+        ],
+        "kept": [
+          {
+            "text": "得",
+            "prob": 0.9999737739562988,
+            "step": 19,
+            "source": "引擎原值：CTC输出概率"
+          }
+        ],
+        "choice": null
+      }
+    },
+    {
+      "name": "D08-body-de",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:05.829Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            585,
+            225,
+            50,
+            825
+          ],
+          "controlled_group": "body",
+          "condition_id": "body-de",
+          "condition_label": "得格替换为标题德字；前文保持原样",
+          "targetCell": [
+            7,
+            146,
+            33,
+            29
+          ],
+          "edits": [
+            {
+              "cell": [
+                7,
+                146,
+                33,
+                29
+              ],
+              "donorBox": [
+                694,
+                371,
+                33,
+                34
+              ],
+              "label": "得 → 德",
+              "background": 255,
+              "donorBackground": 251,
+              "changedPixels": 812,
+              "outsidePixels": 0,
+              "changedBounds": [
+                7,
+                146,
+                33,
+                29
+              ]
+            }
+          ],
+          "input_shape": [
+            50,
+            825
+          ],
+          "autoRotate": true,
+          "input_sha256": "c596c0e47213c1d9d2b0a0ff26d9b7feaa835e9633c2aada714a37d67b59d624",
+          "network_input_sha256": "f18a49f72595903c57483ade291a9798fe5d06470ad4ab925b47f0d210d4db25"
+        },
+        "model_id": "ndlocr-lite:50216ccc3e600f6d0d152862c5a201fdade78112",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+            "code_path": "TextRecognizer.recognizeCropped → preprocess"
+          }
+        },
+        "elapsed_ms": 303.7999999523163,
+        "page_id": "D08"
+      },
+      "text": "オ。學￣テ識￣リ三者￣ヲ德一不易。而兼三尤難。千古多文人而少良史。昔者",
+      "target": {
+        "method": "NDL 只列有效序列中前5含德或徳的位置，不将输出位置冒称图像定位",
+        "positions": [
+          {
+            "step": 12,
+            "id": 2047,
+            "text": "德",
+            "prob": 0.7847359586242064,
+            "candidates": [
+              {
+                "id": 2047,
+                "text": "德",
+                "prob": 0.7847359586242064
+              },
+              {
+                "id": 2044,
+                "text": "徳",
+                "prob": 0.21387137193412273
+              },
+              {
+                "id": 4758,
+                "text": "聽",
+                "prob": 0.0001699320235203276
+              },
+              {
+                "id": 4228,
+                "text": "穂",
+                "prob": 0.0001361635981967195
+              },
+              {
+                "id": 4236,
+                "text": "穗",
+                "prob": 0.00013443344875718678
+              }
+            ],
+            "probes": {
+              "德": 0.7847359586242064,
+              "徳": 0.21387137193412273
+            }
+          }
+        ],
+        "choice": "德"
+      }
+    },
+    {
+      "name": "D08-body-de",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:07.338Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            585,
+            225,
+            50,
+            825
+          ],
+          "controlled_group": "body",
+          "condition_id": "body-de",
+          "condition_label": "得格替换为标题德字；前文保持原样",
+          "targetCell": [
+            7,
+            146,
+            33,
+            29
+          ],
+          "edits": [
+            {
+              "cell": [
+                7,
+                146,
+                33,
+                29
+              ],
+              "donorBox": [
+                694,
+                371,
+                33,
+                34
+              ],
+              "label": "得 → 德",
+              "background": 255,
+              "donorBackground": 251,
+              "changedPixels": 812,
+              "outsidePixels": 0,
+              "changedBounds": [
+                7,
+                146,
+                33,
+                29
+              ]
+            }
+          ],
+          "input_shape": [
+            50,
+            825
+          ],
+          "autoRotate": true,
+          "input_sha256": "c596c0e47213c1d9d2b0a0ff26d9b7feaa835e9633c2aada714a37d67b59d624",
+          "network_input_sha256": "a0d2c1555823c1432c742c3dcb4823963eb5d16146b5ea99c51881e0cf8a3c54"
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 456.2000000476837,
+        "page_id": "D08"
+      },
+      "text": "才學識三者德一不易而兼三尤難千古多文人而少良史職是故也昔者",
+      "target": {
+        "method": "按目标格几何范围映射 CTC 窄条；不是字符定位真值",
+        "stepRange": [
+          17.52,
+          21
+        ],
+        "positions": [
+          {
+            "step": 18,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9988309741020203,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9988309741020203
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 0.0010020934278145432
+              },
+              {
+                "id": 5405,
+                "text": "德",
+                "prob": 8.443620754405856e-05
+              },
+              {
+                "id": 1297,
+                "text": "○",
+                "prob": 4.789196282217745e-06
+              },
+              {
+                "id": 9640,
+                "text": "的",
+                "prob": 4.265859843144426e-06
+              }
+            ],
+            "probes": {
+              "德": 8.443620754405856e-05,
+              "徳": 9.342773665821369e-08
+            }
+          },
+          {
+            "step": 19,
+            "id": 5405,
+            "text": "德",
+            "prob": 0.9999769926071167,
+            "candidates": [
+              {
+                "id": 5405,
+                "text": "德",
+                "prob": 0.9999769926071167
+              },
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 7.5640059549186844e-06
+              },
+              {
+                "id": 5402,
+                "text": "徳",
+                "prob": 6.582372861885233e-06
+              },
+              {
+                "id": 11022,
+                "text": "總",
+                "prob": 1.6901594790397212e-06
+              },
+              {
+                "id": 10323,
+                "text": "穗",
+                "prob": 1.2115897334297188e-06
+              }
+            ],
+            "probes": {
+              "德": 0.9999769926071167,
+              "徳": 6.582372861885233e-06
+            }
+          },
+          {
+            "step": 20,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9988667964935303,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9988667964935303
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 0.0010866171214729548
+              },
+              {
+                "id": 5405,
+                "text": "德",
+                "prob": 2.589745054137893e-05
+              },
+              {
+                "id": 2094,
+                "text": "一",
+                "prob": 1.6056792446761392e-06
+              },
+              {
+                "id": 45,
+                "text": "C",
+                "prob": 1.0719310239437618e-06
+              }
+            ],
+            "probes": {
+              "德": 2.589745054137893e-05,
+              "徳": 4.7241492495686543e-08
+            }
+          }
+        ],
+        "kept": [
+          {
+            "text": "德",
+            "prob": 0.9999769926071167,
+            "step": 19,
+            "source": "引擎原值：CTC输出概率"
+          }
+        ],
+        "choice": "德"
+      }
+    },
+    {
+      "name": "D08-body-context",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:08.690Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            585,
+            225,
+            50,
+            825
+          ],
+          "controlled_group": "body",
+          "condition_id": "body-context",
+          "condition_label": "德格完全不变；前一格者替换为同页文",
+          "targetCell": [
+            7,
+            146,
+            33,
+            29
+          ],
+          "edits": [
+            {
+              "cell": [
+                7,
+                146,
+                33,
+                29
+              ],
+              "donorBox": [
+                694,
+                371,
+                33,
+                34
+              ],
+              "label": "得 → 德",
+              "background": 255,
+              "donorBackground": 251,
+              "changedPixels": 812,
+              "outsidePixels": 0,
+              "changedBounds": [
+                7,
+                146,
+                33,
+                29
+              ]
+            },
+            {
+              "cell": [
+                7,
+                117,
+                33,
+                29
+              ],
+              "donorBox": [
+                493,
+                171,
+                32,
+                30
+              ],
+              "label": "者 → 文",
+              "background": 255,
+              "donorBackground": 255,
+              "changedPixels": 578,
+              "outsidePixels": 0,
+              "changedBounds": [
+                8,
+                118,
+                32,
+                28
+              ]
+            }
+          ],
+          "input_shape": [
+            50,
+            825
+          ],
+          "autoRotate": true,
+          "input_sha256": "1b3a5a1d00005f1da45e922f07342569b16b5c9bf0febd3738ad6141a3bb0c6f",
+          "network_input_sha256": "e440e1dba5a35dcc3551dd216896a955a0875f5cd26f73d649f39812a07984a9"
+        },
+        "model_id": "ndlocr-lite:50216ccc3e600f6d0d152862c5a201fdade78112",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+            "code_path": "TextRecognizer.recognizeCropped → preprocess"
+          }
+        },
+        "elapsed_ms": 292.90000009536743,
+        "page_id": "D08"
+      },
+      "text": "オ。學￣テ識￣リ三文￣ヲ德一不易。而兼三尤難。千古多文人而少良史。職是故也。昔者",
+      "target": {
+        "method": "NDL 只列有效序列中前5含德或徳的位置，不将输出位置冒称图像定位",
+        "positions": [
+          {
+            "step": 12,
+            "id": 2047,
+            "text": "德",
+            "prob": 0.831220191499327,
+            "candidates": [
+              {
+                "id": 2047,
+                "text": "德",
+                "prob": 0.831220191499327
+              },
+              {
+                "id": 2044,
+                "text": "徳",
+                "prob": 0.16699404143415458
+              },
+              {
+                "id": 4236,
+                "text": "穗",
+                "prob": 0.00022763520181290814
+              },
+              {
+                "id": 7117,
+                "text": "〓",
+                "prob": 0.00021057694029100353
+              },
+              {
+                "id": 4758,
+                "text": "聽",
+                "prob": 0.0001586687476808776
+              }
+            ],
+            "probes": {
+              "德": 0.831220191499327,
+              "徳": 0.16699404143415458
+            }
+          }
+        ],
+        "choice": "德"
+      }
+    },
+    {
+      "name": "D08-body-context",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:10.157Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            585,
+            225,
+            50,
+            825
+          ],
+          "controlled_group": "body",
+          "condition_id": "body-context",
+          "condition_label": "德格完全不变；前一格者替换为同页文",
+          "targetCell": [
+            7,
+            146,
+            33,
+            29
+          ],
+          "edits": [
+            {
+              "cell": [
+                7,
+                146,
+                33,
+                29
+              ],
+              "donorBox": [
+                694,
+                371,
+                33,
+                34
+              ],
+              "label": "得 → 德",
+              "background": 255,
+              "donorBackground": 251,
+              "changedPixels": 812,
+              "outsidePixels": 0,
+              "changedBounds": [
+                7,
+                146,
+                33,
+                29
+              ]
+            },
+            {
+              "cell": [
+                7,
+                117,
+                33,
+                29
+              ],
+              "donorBox": [
+                493,
+                171,
+                32,
+                30
+              ],
+              "label": "者 → 文",
+              "background": 255,
+              "donorBackground": 255,
+              "changedPixels": 578,
+              "outsidePixels": 0,
+              "changedBounds": [
+                8,
+                118,
+                32,
+                28
+              ]
+            }
+          ],
+          "input_shape": [
+            50,
+            825
+          ],
+          "autoRotate": true,
+          "input_sha256": "1b3a5a1d00005f1da45e922f07342569b16b5c9bf0febd3738ad6141a3bb0c6f",
+          "network_input_sha256": "21d3b9565547329a8966b86943906712135d927ef0e814a4693f3618d7bf0906"
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 447.39999985694885,
+        "page_id": "D08"
+      },
+      "text": "才學識三文德一不易而兼三尤難千古多文人而少良史職是故也昔者",
+      "target": {
+        "method": "按目标格几何范围映射 CTC 窄条；不是字符定位真值",
+        "stepRange": [
+          17.52,
+          21
+        ],
+        "positions": [
+          {
+            "step": 18,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9977869987487793,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9977869987487793
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 0.002004506066441536
+              },
+              {
+                "id": 5405,
+                "text": "德",
+                "prob": 0.00010150948219234124
+              },
+              {
+                "id": 1297,
+                "text": "○",
+                "prob": 8.354215424333233e-06
+              },
+              {
+                "id": 9640,
+                "text": "的",
+                "prob": 6.0723168644472025e-06
+              }
+            ],
+            "probes": {
+              "德": 0.00010150948219234124,
+              "徳": 9.588985250275073e-08
+            }
+          },
+          {
+            "step": 19,
+            "id": 5405,
+            "text": "德",
+            "prob": 0.9999836683273315,
+            "candidates": [
+              {
+                "id": 5405,
+                "text": "德",
+                "prob": 0.9999836683273315
+              },
+              {
+                "id": 5402,
+                "text": "徳",
+                "prob": 4.725315193354618e-06
+              },
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 4.230739250488114e-06
+              },
+              {
+                "id": 11496,
+                "text": "聽",
+                "prob": 1.7950246729014907e-06
+              },
+              {
+                "id": 11022,
+                "text": "總",
+                "prob": 1.1374584119039355e-06
+              }
+            ],
+            "probes": {
+              "德": 0.9999836683273315,
+              "徳": 4.725315193354618e-06
+            }
+          },
+          {
+            "step": 20,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9986862540245056,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9986862540245056
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 0.001268633990548551
+              },
+              {
+                "id": 5405,
+                "text": "德",
+                "prob": 2.5743314836290665e-05
+              },
+              {
+                "id": 2094,
+                "text": "一",
+                "prob": 1.4885758901073132e-06
+              },
+              {
+                "id": 45,
+                "text": "C",
+                "prob": 1.0832087582457461e-06
+              }
+            ],
+            "probes": {
+              "德": 2.5743314836290665e-05,
+              "徳": 4.835572298134139e-08
+            }
+          }
+        ],
+        "kept": [
+          {
+            "text": "德",
+            "prob": 0.9999836683273315,
+            "step": 19,
+            "source": "引擎原值：CTC输出概率"
+          }
+        ],
+        "choice": "德"
+      }
+    },
+    {
+      "name": "D08-title-original",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:15.071Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            685,
+            230,
+            50,
+            190
+          ],
+          "controlled_group": "title",
+          "condition_id": "title-original",
+          "condition_label": "原标题史德",
+          "targetCell": [
+            7,
+            141,
+            36,
+            35
+          ],
+          "edits": [],
+          "input_shape": [
+            50,
+            190
+          ],
+          "autoRotate": true,
+          "input_sha256": "6beef803c0e05cdfa80d823eb499c5e7d8a6c02c9b749e83418abac5f99bf286",
+          "network_input_sha256": "1f57bf72f4a152e8701c92e2bd81739a533cf53f3eb9e2a761c42ebd24b4c3d3"
+        },
+        "model_id": "ndlocr-lite:50216ccc3e600f6d0d152862c5a201fdade78112",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+            "code_path": "TextRecognizer.recognizeCropped → preprocess"
+          }
+        },
+        "elapsed_ms": 305.2000000476837,
+        "page_id": "D08"
+      },
+      "text": "史徳",
+      "target": {
+        "method": "NDL 只列有效序列中前5含德或徳的位置，不将输出位置冒称图像定位",
+        "positions": [
+          {
+            "step": 1,
+            "id": 2044,
+            "text": "徳",
+            "prob": 0.9073545807217295,
+            "candidates": [
+              {
+                "id": 2044,
+                "text": "徳",
+                "prob": 0.9073545807217295
+              },
+              {
+                "id": 2047,
+                "text": "德",
+                "prob": 0.09046384892304886
+              },
+              {
+                "id": 4228,
+                "text": "穂",
+                "prob": 0.0002567212762019005
+              },
+              {
+                "id": 0,
+                "text": "<eos>",
+                "prob": 0.00014780581766240484
+              },
+              {
+                "id": 736,
+                "text": "億",
+                "prob": 0.00014587430695066141
+              }
+            ],
+            "probes": {
+              "德": 0.09046384892304886,
+              "徳": 0.9073545807217295
+            }
+          }
+        ],
+        "choice": "徳"
+      }
+    },
+    {
+      "name": "D08-title-original",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:16.337Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            685,
+            230,
+            50,
+            190
+          ],
+          "controlled_group": "title",
+          "condition_id": "title-original",
+          "condition_label": "原标题史德",
+          "targetCell": [
+            7,
+            141,
+            36,
+            35
+          ],
+          "edits": [],
+          "input_shape": [
+            50,
+            190
+          ],
+          "autoRotate": true,
+          "input_sha256": "6beef803c0e05cdfa80d823eb499c5e7d8a6c02c9b749e83418abac5f99bf286",
+          "network_input_sha256": "6c8a1657cf8efbafd25e201c65e493bd4061d28776c811311691c9cef71285e3"
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 190.89999985694885,
+        "page_id": "D08"
+      },
+      "text": "史德",
+      "target": {
+        "method": "按目标格几何范围映射 CTC 窄条；不是字符定位真值",
+        "stepRange": [
+          16.97565789473684,
+          21.189473684210526
+        ],
+        "positions": [
+          {
+            "step": 17,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9998282194137573,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9998282194137573
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 0.00016973297169897705
+              },
+              {
+                "id": 704,
+                "text": "“",
+                "prob": 1.4539720893935737e-07
+              },
+              {
+                "id": 115,
+                "text": "·",
+                "prob": 1.139409846473427e-07
+              },
+              {
+                "id": 1757,
+                "text": "《",
+                "prob": 1.1292799229067896e-07
+              }
+            ],
+            "probes": {
+              "德": 2.074952121233764e-08,
+              "徳": 9.1736333807102e-11
+            }
+          },
+          {
+            "step": 18,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9999163150787354,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9999163150787354
+              },
+              {
+                "id": 5405,
+                "text": "德",
+                "prob": 7.922233635326847e-05
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 3.7997172057657735e-06
+              },
+              {
+                "id": 73,
+                "text": "e",
+                "prob": 1.426010669547395e-07
+              },
+              {
+                "id": 5402,
+                "text": "徳",
+                "prob": 1.287383213366411e-07
+              }
+            ],
+            "probes": {
+              "德": 7.922233635326847e-05,
+              "徳": 1.287383213366411e-07
+            }
+          },
+          {
+            "step": 19,
+            "id": 5405,
+            "text": "德",
+            "prob": 0.9999833106994629,
+            "candidates": [
+              {
+                "id": 5405,
+                "text": "德",
+                "prob": 0.9999833106994629
+              },
+              {
+                "id": 5402,
+                "text": "徳",
+                "prob": 1.5033394447527826e-05
+              },
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 1.0651762067936943e-06
+              },
+              {
+                "id": 10323,
+                "text": "穗",
+                "prob": 4.844986847274413e-07
+              },
+              {
+                "id": 11496,
+                "text": "聽",
+                "prob": 1.0814441964157595e-07
+              }
+            ],
+            "probes": {
+              "德": 0.9999833106994629,
+              "徳": 1.5033394447527826e-05
+            }
+          },
+          {
+            "step": 20,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.999998927116394,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.999998927116394
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 1.112028257921338e-06
+              },
+              {
+                "id": 14,
+                "text": ".",
+                "prob": 4.953185861467091e-09
+              },
+              {
+                "id": 17687,
+                "text": "：",
+                "prob": 2.1165440511339284e-09
+              },
+              {
+                "id": 7,
+                "text": "'",
+                "prob": 1.623773338010892e-09
+              }
+            ],
+            "probes": {
+              "德": 1.0342615652803033e-09,
+              "徳": 3.3864957279389207e-12
+            }
+          }
+        ],
+        "kept": [
+          {
+            "text": "德",
+            "prob": 0.9999833106994629,
+            "step": 19,
+            "source": "引擎原值：CTC输出概率"
+          }
+        ],
+        "choice": "德"
+      }
+    },
+    {
+      "name": "D08-title-cai",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:17.737Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            685,
+            230,
+            50,
+            190
+          ],
+          "controlled_group": "title",
+          "condition_id": "title-cai",
+          "condition_label": "史格替换为正文才字；德格保持原样",
+          "targetCell": [
+            7,
+            141,
+            36,
+            35
+          ],
+          "edits": [
+            {
+              "cell": [
+                7,
+                7,
+                36,
+                37
+              ],
+              "donorBox": [
+                593,
+                229,
+                32,
+                28
+              ],
+              "label": "史 → 才",
+              "background": 255,
+              "donorBackground": 255,
+              "changedPixels": 874,
+              "outsidePixels": 0,
+              "changedBounds": [
+                7,
+                8,
+                36,
+                36
+              ]
+            }
+          ],
+          "input_shape": [
+            50,
+            190
+          ],
+          "autoRotate": true,
+          "input_sha256": "c084e619aa17cd56e376fa2ccf7c7cf9f31b79a9451e1880fa0fe0d5e485dd72",
+          "network_input_sha256": "e3af301e63439fae11afa442d7f2beda24410509c295c121d16ea8bde5055df1"
+        },
+        "model_id": "ndlocr-lite:50216ccc3e600f6d0d152862c5a201fdade78112",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+            "code_path": "TextRecognizer.recognizeCropped → preprocess"
+          }
+        },
+        "elapsed_ms": 293.2999999523163,
+        "page_id": "D08"
+      },
+      "text": "オ徳",
+      "target": {
+        "method": "NDL 只列有效序列中前5含德或徳的位置，不将输出位置冒称图像定位",
+        "positions": [
+          {
+            "step": 1,
+            "id": 2044,
+            "text": "徳",
+            "prob": 0.8788691965428712,
+            "candidates": [
+              {
+                "id": 2044,
+                "text": "徳",
+                "prob": 0.8788691965428712
+              },
+              {
+                "id": 2047,
+                "text": "德",
+                "prob": 0.11720378909657074
+              },
+              {
+                "id": 4228,
+                "text": "穂",
+                "prob": 0.0005587532234997534
+              },
+              {
+                "id": 736,
+                "text": "億",
+                "prob": 0.00025596350814227663
+              },
+              {
+                "id": 4375,
+                "text": "篠",
+                "prob": 0.00022070147820584004
+              }
+            ],
+            "probes": {
+              "德": 0.11720378909657074,
+              "徳": 0.8788691965428712
+            }
+          }
+        ],
+        "choice": "徳"
+      }
+    },
+    {
+      "name": "D08-title-cai",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:19.046Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            685,
+            230,
+            50,
+            190
+          ],
+          "controlled_group": "title",
+          "condition_id": "title-cai",
+          "condition_label": "史格替换为正文才字；德格保持原样",
+          "targetCell": [
+            7,
+            141,
+            36,
+            35
+          ],
+          "edits": [
+            {
+              "cell": [
+                7,
+                7,
+                36,
+                37
+              ],
+              "donorBox": [
+                593,
+                229,
+                32,
+                28
+              ],
+              "label": "史 → 才",
+              "background": 255,
+              "donorBackground": 255,
+              "changedPixels": 874,
+              "outsidePixels": 0,
+              "changedBounds": [
+                7,
+                8,
+                36,
+                36
+              ]
+            }
+          ],
+          "input_shape": [
+            50,
+            190
+          ],
+          "autoRotate": true,
+          "input_sha256": "c084e619aa17cd56e376fa2ccf7c7cf9f31b79a9451e1880fa0fe0d5e485dd72",
+          "network_input_sha256": "8f0c2fa2266fe84ce45fb6c1c6589ad9340e31d33c04486f6ff49498415f1c48"
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 188.29999995231628,
+        "page_id": "D08"
+      },
+      "text": "才德",
+      "target": {
+        "method": "按目标格几何范围映射 CTC 窄条；不是字符定位真值",
+        "stepRange": [
+          16.97565789473684,
+          21.189473684210526
+        ],
+        "positions": [
+          {
+            "step": 17,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9997881054878235,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9997881054878235
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 0.00020843213133048266
+              },
+              {
+                "id": 1749,
+                "text": "　",
+                "prob": 3.2274209615934524e-07
+              },
+              {
+                "id": 3,
+                "text": "#",
+                "prob": 2.531963900764822e-07
+              },
+              {
+                "id": 704,
+                "text": "“",
+                "prob": 1.5003176656591677e-07
+              }
+            ],
+            "probes": {
+              "德": 3.136058523978136e-08,
+              "徳": 1.0084689749945142e-09
+            }
+          },
+          {
+            "step": 18,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9999533891677856,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9999533891677856
+              },
+              {
+                "id": 5405,
+                "text": "德",
+                "prob": 4.2311701690778136e-05
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 3.211047896911623e-06
+              },
+              {
+                "id": 77,
+                "text": "i",
+                "prob": 2.8837180821028596e-07
+              },
+              {
+                "id": 5402,
+                "text": "徳",
+                "prob": 2.8703860266432457e-07
+              }
+            ],
+            "probes": {
+              "德": 4.2311701690778136e-05,
+              "徳": 2.8703860266432457e-07
+            }
+          },
+          {
+            "step": 19,
+            "id": 5405,
+            "text": "德",
+            "prob": 0.9999600648880005,
+            "candidates": [
+              {
+                "id": 5405,
+                "text": "德",
+                "prob": 0.9999600648880005
+              },
+              {
+                "id": 5402,
+                "text": "徳",
+                "prob": 3.059335722355172e-05
+              },
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 6.282598860707367e-06
+              },
+              {
+                "id": 10323,
+                "text": "穗",
+                "prob": 1.3644466889672913e-06
+              },
+              {
+                "id": 11496,
+                "text": "聽",
+                "prob": 1.241102950189088e-06
+              }
+            ],
+            "probes": {
+              "德": 0.9999600648880005,
+              "徳": 3.059335722355172e-05
+            }
+          },
+          {
+            "step": 20,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9999982118606567,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9999982118606567
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 1.7862953427538741e-06
+              },
+              {
+                "id": 14,
+                "text": ".",
+                "prob": 5.586492157760858e-09
+              },
+              {
+                "id": 3,
+                "text": "#",
+                "prob": 4.5555199612579145e-09
+              },
+              {
+                "id": 17687,
+                "text": "：",
+                "prob": 3.077484267421937e-09
+              }
+            ],
+            "probes": {
+              "德": 1.2048614328463714e-09,
+              "徳": 7.925363490479675e-12
+            }
+          }
+        ],
+        "kept": [
+          {
+            "text": "德",
+            "prob": 0.9999600648880005,
+            "step": 19,
+            "source": "引擎原值：CTC输出概率"
+          }
+        ],
+        "choice": "德"
+      }
+    },
+    {
+      "name": "D08-mask-original",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:22.795Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            685,
+            230,
+            50,
+            190
+          ],
+          "controlled_group": "mask",
+          "condition_id": "mask-original",
+          "condition_label": "原标题（本组基准）",
+          "targetCell": [
+            7,
+            141,
+            36,
+            35
+          ],
+          "edits": [],
+          "input_shape": [
+            50,
+            190
+          ],
+          "autoRotate": true,
+          "input_sha256": "6beef803c0e05cdfa80d823eb499c5e7d8a6c02c9b749e83418abac5f99bf286",
+          "network_input_sha256": "1f57bf72f4a152e8701c92e2bd81739a533cf53f3eb9e2a761c42ebd24b4c3d3"
+        },
+        "model_id": "ndlocr-lite:50216ccc3e600f6d0d152862c5a201fdade78112",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+            "code_path": "TextRecognizer.recognizeCropped → preprocess"
+          }
+        },
+        "elapsed_ms": 294.59999990463257,
+        "page_id": "D08"
+      },
+      "text": "史徳",
+      "target": {
+        "method": "NDL 只列有效序列中前5含德或徳的位置，不将输出位置冒称图像定位",
+        "positions": [
+          {
+            "step": 1,
+            "id": 2044,
+            "text": "徳",
+            "prob": 0.9073545807217295,
+            "candidates": [
+              {
+                "id": 2044,
+                "text": "徳",
+                "prob": 0.9073545807217295
+              },
+              {
+                "id": 2047,
+                "text": "德",
+                "prob": 0.09046384892304886
+              },
+              {
+                "id": 4228,
+                "text": "穂",
+                "prob": 0.0002567212762019005
+              },
+              {
+                "id": 0,
+                "text": "<eos>",
+                "prob": 0.00014780581766240484
+              },
+              {
+                "id": 736,
+                "text": "億",
+                "prob": 0.00014587430695066141
+              }
+            ],
+            "probes": {
+              "德": 0.09046384892304886,
+              "徳": 0.9073545807217295
+            }
+          }
+        ],
+        "choice": "徳"
+      }
+    },
+    {
+      "name": "D08-mask-original",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:24.084Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            685,
+            230,
+            50,
+            190
+          ],
+          "controlled_group": "mask",
+          "condition_id": "mask-original",
+          "condition_label": "原标题（本组基准）",
+          "targetCell": [
+            7,
+            141,
+            36,
+            35
+          ],
+          "edits": [],
+          "input_shape": [
+            50,
+            190
+          ],
+          "autoRotate": true,
+          "input_sha256": "6beef803c0e05cdfa80d823eb499c5e7d8a6c02c9b749e83418abac5f99bf286",
+          "network_input_sha256": "6c8a1657cf8efbafd25e201c65e493bd4061d28776c811311691c9cef71285e3"
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 181,
+        "page_id": "D08"
+      },
+      "text": "史德",
+      "target": {
+        "method": "按目标格几何范围映射 CTC 窄条；不是字符定位真值",
+        "stepRange": [
+          16.97565789473684,
+          21.189473684210526
+        ],
+        "positions": [
+          {
+            "step": 17,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9998282194137573,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9998282194137573
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 0.00016973297169897705
+              },
+              {
+                "id": 704,
+                "text": "“",
+                "prob": 1.4539720893935737e-07
+              },
+              {
+                "id": 115,
+                "text": "·",
+                "prob": 1.139409846473427e-07
+              },
+              {
+                "id": 1757,
+                "text": "《",
+                "prob": 1.1292799229067896e-07
+              }
+            ],
+            "probes": {
+              "德": 2.074952121233764e-08,
+              "徳": 9.1736333807102e-11
+            }
+          },
+          {
+            "step": 18,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9999163150787354,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9999163150787354
+              },
+              {
+                "id": 5405,
+                "text": "德",
+                "prob": 7.922233635326847e-05
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 3.7997172057657735e-06
+              },
+              {
+                "id": 73,
+                "text": "e",
+                "prob": 1.426010669547395e-07
+              },
+              {
+                "id": 5402,
+                "text": "徳",
+                "prob": 1.287383213366411e-07
+              }
+            ],
+            "probes": {
+              "德": 7.922233635326847e-05,
+              "徳": 1.287383213366411e-07
+            }
+          },
+          {
+            "step": 19,
+            "id": 5405,
+            "text": "德",
+            "prob": 0.9999833106994629,
+            "candidates": [
+              {
+                "id": 5405,
+                "text": "德",
+                "prob": 0.9999833106994629
+              },
+              {
+                "id": 5402,
+                "text": "徳",
+                "prob": 1.5033394447527826e-05
+              },
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 1.0651762067936943e-06
+              },
+              {
+                "id": 10323,
+                "text": "穗",
+                "prob": 4.844986847274413e-07
+              },
+              {
+                "id": 11496,
+                "text": "聽",
+                "prob": 1.0814441964157595e-07
+              }
+            ],
+            "probes": {
+              "德": 0.9999833106994629,
+              "徳": 1.5033394447527826e-05
+            }
+          },
+          {
+            "step": 20,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.999998927116394,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.999998927116394
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 1.112028257921338e-06
+              },
+              {
+                "id": 14,
+                "text": ".",
+                "prob": 4.953185861467091e-09
+              },
+              {
+                "id": 17687,
+                "text": "：",
+                "prob": 2.1165440511339284e-09
+              },
+              {
+                "id": 7,
+                "text": "'",
+                "prob": 1.623773338010892e-09
+              }
+            ],
+            "probes": {
+              "德": 1.0342615652803033e-09,
+              "徳": 3.3864957279389207e-12
+            }
+          }
+        ],
+        "kept": [
+          {
+            "text": "德",
+            "prob": 0.9999833106994629,
+            "step": 19,
+            "source": "引擎原值：CTC输出概率"
+          }
+        ],
+        "choice": "德"
+      }
+    },
+    {
+      "name": "D08-mask-de",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:25.496Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            685,
+            230,
+            50,
+            190
+          ],
+          "controlled_group": "mask",
+          "condition_id": "mask-de",
+          "condition_label": "原位遮住德格；其余像素不变",
+          "targetCell": [
+            7,
+            141,
+            36,
+            35
+          ],
+          "edits": [
+            {
+              "cell": [
+                7,
+                141,
+                36,
+                35
+              ],
+              "label": "德格遮盖",
+              "background": 255,
+              "donorBackground": 255,
+              "changedPixels": 900,
+              "outsidePixels": 0,
+              "changedBounds": [
+                8,
+                141,
+                35,
+                34
+              ]
+            }
+          ],
+          "input_shape": [
+            50,
+            190
+          ],
+          "autoRotate": true,
+          "input_sha256": "feaacba86b5644987d5c9a0b091fa1de7184340c044a5ae6c74626adb76b2072",
+          "network_input_sha256": "f7abe24d38ee419ef261682c49b7bcd2e5fc4236cceb88c539179f71aa8bda30"
+        },
+        "model_id": "ndlocr-lite:50216ccc3e600f6d0d152862c5a201fdade78112",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+            "code_path": "TextRecognizer.recognizeCropped → preprocess"
+          }
+        },
+        "elapsed_ms": 292.2000000476837,
+        "page_id": "D08"
+      },
+      "text": "(198",
+      "target": {
+        "method": "NDL 只列有效序列中前5含德或徳的位置，不将输出位置冒称图像定位",
+        "positions": [],
+        "choice": null
+      }
+    },
+    {
+      "name": "D08-mask-de",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:55:26.772Z",
+        "params": {
+          "experiment": "教学构造的输入，实际运行的输出",
+          "sourceBox": [
+            685,
+            230,
+            50,
+            190
+          ],
+          "controlled_group": "mask",
+          "condition_id": "mask-de",
+          "condition_label": "原位遮住德格；其余像素不变",
+          "targetCell": [
+            7,
+            141,
+            36,
+            35
+          ],
+          "edits": [
+            {
+              "cell": [
+                7,
+                141,
+                36,
+                35
+              ],
+              "label": "德格遮盖",
+              "background": 255,
+              "donorBackground": 255,
+              "changedPixels": 900,
+              "outsidePixels": 0,
+              "changedBounds": [
+                8,
+                141,
+                35,
+                34
+              ]
+            }
+          ],
+          "input_shape": [
+            50,
+            190
+          ],
+          "autoRotate": true,
+          "input_sha256": "feaacba86b5644987d5c9a0b091fa1de7184340c044a5ae6c74626adb76b2072",
+          "network_input_sha256": "79ca99a6ebf5fcc27a9aafb8c847b51f2022ad0319d1e95b054c95620aff1ef1"
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 179.10000014305115,
+        "page_id": "D08"
+      },
+      "text": "史",
+      "target": {
+        "method": "按目标格几何范围映射 CTC 窄条；不是字符定位真值",
+        "stepRange": [
+          16.97565789473684,
+          21.189473684210526
+        ],
+        "positions": [
+          {
+            "step": 17,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9999514818191528,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9999514818191528
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 2.4680128262843937e-05
+              },
+              {
+                "id": 1749,
+                "text": "　",
+                "prob": 4.160095159022603e-06
+              },
+              {
+                "id": 1323,
+                "text": "☑",
+                "prob": 2.2952197014092235e-06
+              },
+              {
+                "id": 27,
+                "text": "_",
+                "prob": 2.190162149418029e-06
+              }
+            ],
+            "probes": {
+              "德": 2.175813557103723e-10,
+              "徳": 1.1572356267697259e-10
+            }
+          },
+          {
+            "step": 18,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9999699592590332,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9999699592590332
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 1.5711890227976255e-05
+              },
+              {
+                "id": 1749,
+                "text": "　",
+                "prob": 2.140244077963871e-06
+              },
+              {
+                "id": 27,
+                "text": "_",
+                "prob": 1.471335735914181e-06
+              },
+              {
+                "id": 1323,
+                "text": "☑",
+                "prob": 1.3874985143047525e-06
+              }
+            ],
+            "probes": {
+              "德": 1.2571205187938972e-10,
+              "徳": 3.740617537939528e-11
+            }
+          },
+          {
+            "step": 19,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9999902248382568,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9999902248382568
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 5.625692665489623e-06
+              },
+              {
+                "id": 27,
+                "text": "_",
+                "prob": 1.126547090279928e-06
+              },
+              {
+                "id": 17746,
+                "text": "･",
+                "prob": 4.795699055648583e-07
+              },
+              {
+                "id": 14,
+                "text": ".",
+                "prob": 3.4771596801874693e-07
+              }
+            ],
+            "probes": {
+              "德": 4.1612182449801693e-11,
+              "徳": 8.338722073952809e-12
+            }
+          },
+          {
+            "step": 20,
+            "id": 0,
+            "text": "<blank>",
+            "prob": 0.9999942779541016,
+            "candidates": [
+              {
+                "id": 0,
+                "text": "<blank>",
+                "prob": 0.9999942779541016
+              },
+              {
+                "id": 18709,
+                "text": " ",
+                "prob": 2.1702803678635973e-06
+              },
+              {
+                "id": 27,
+                "text": "_",
+                "prob": 1.2004198879367323e-06
+              },
+              {
+                "id": 14,
+                "text": ".",
+                "prob": 6.107562171564496e-07
+              },
+              {
+                "id": 17746,
+                "text": "･",
+                "prob": 2.967506702589162e-07
+              }
+            ],
+            "probes": {
+              "德": 3.376014398592808e-11,
+              "徳": 4.315022297807225e-12
+            }
+          }
+        ],
+        "kept": [],
+        "choice": null
+      }
+    },
+    {
+      "name": "D09-public",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62 / b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:58:52.948Z",
+        "params": {
+          "detectOnly": false
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "full",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddle → cropByPoly → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 7094.800000190735,
+        "page_id": "D09"
+      },
+      "regions": 13
+    }
+  ],
+  "checks": [
+    {
+      "id": "D00",
+      "refresh": "passed"
+    },
+    {
+      "id": "D01",
+      "refresh": "passed"
+    },
+    {
+      "id": "D02",
+      "refresh": "passed"
+    },
+    {
+      "id": "D03",
+      "refresh": "passed"
+    },
+    {
+      "id": "D04",
+      "refresh": "passed"
+    },
+    {
+      "id": "D05",
+      "refresh": "passed"
+    },
+    {
+      "id": "D06",
+      "refresh": "passed"
+    },
+    {
+      "id": "D07",
+      "refresh": "passed"
+    },
+    {
+      "id": "D08",
+      "refresh": "passed"
+    },
+    {
+      "id": "D09",
+      "refresh": "passed"
+    },
+    {
+      "id": "D10",
+      "refresh": "passed"
+    },
+    {
+      "id": "D11",
+      "refresh": "passed"
+    },
+    {
+      "id": "D12",
+      "refresh": "passed"
+    },
+    {
+      "id": "D13",
+      "refresh": "passed"
+    },
+    {
+      "id": "D14",
+      "refresh": "passed"
+    },
+    {
+      "id": "D15",
+      "refresh": "passed"
+    },
+    {
+      "id": "D16",
+      "refresh": "passed"
+    },
+    {
+      "id": "D17",
+      "refresh": "passed"
+    },
+    {
+      "id": "D18",
+      "refresh": "passed"
+    },
+    {
+      "id": "D19",
+      "refresh": "passed"
+    },
+    {
+      "id": "D20",
+      "refresh": "passed"
+    },
+    {
+      "id": "D21",
+      "refresh": "passed"
+    },
+    {
+      "id": "D22",
+      "refresh": "passed"
+    },
+    {
+      "id": "D23",
+      "refresh": "passed"
+    },
+    {
+      "id": "D24",
+      "refresh": "passed"
+    },
+    {
+      "id": "D25",
+      "refresh": "passed"
+    }
+  ],
+  "errors": [],
+  "comparison": {
+    "comparable": true,
+    "identical": true,
+    "changed": 0,
+    "rows": [
+      {
+        "saved_id": "line-0",
+        "live_id": "line-0",
+        "saved": "史徳",
+        "live": "史徳",
+        "same": true
+      },
+      {
+        "saved_id": "line-1",
+        "live_id": "line-1",
+        "saved": "第一才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者",
+        "live": "第一才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者",
+        "same": true
+      },
+      {
+        "saved_id": "line-2",
+        "live_id": "line-2",
+        "saved": "劉氏子元蓋以是説謂足盡其理矣雖然史所貴者義也而所具者事也所憑者",
+        "live": "劉氏子元蓋以是説謂足盡其理矣雖然史所貴者義也而所具者事也所憑者",
+        "same": true
+      },
+      {
+        "saved_id": "line-3",
+        "live_id": "line-3",
+        "saved": "文也孟子曰『其事則齊桓晉文其文則史義則夫子自謂竊取之矣』非識無",
+        "live": "文也孟子曰『其事則齊桓晉文其文則史義則夫子自謂竊取之矣』非識無",
+        "same": true
+      },
+      {
+        "saved_id": "line-4",
+        "live_id": "line-4",
+        "saved": "以斷其義非オ無以善其文非學無以練其事三者固各有所近也其中固有似",
+        "live": "以斷其義非オ無以善其文非學無以練其事三者固各有所近也其中固有似",
+        "same": true
+      },
+      {
+        "saved_id": "line-5",
+        "live_id": "line-5",
+        "saved": "之而非者也記誦以爲學也辭采以爲才也撃斷以爲識也非良史之才學識也",
+        "live": "之而非者也記誦以爲學也辭采以爲才也撃斷以爲識也非良史之才學識也",
+        "same": true
+      },
+      {
+        "saved_id": "line-6",
+        "live_id": "line-6",
+        "saved": "雖劉氏之所謂才學識猶未足以盡其理也",
+        "live": "雖劉氏之所謂才學識猶未足以盡其理也",
+        "same": true
+      },
+      {
+        "saved_id": "line-7",
+        "live_id": "line-7",
+        "saved": "一夫劉氏以謂有學無識如愚估操金不解實化推此説以證劉氏之指不過",
+        "live": "一夫劉氏以謂有學無識如愚估操金不解實化推此説以證劉氏之指不過",
+        "same": true
+      },
+      {
+        "saved_id": "line-8",
+        "live_id": "line-8",
+        "saved": "一欲於記誦之間知所扶擇以成文理耳故曰古人史取成家退處士而進奸雄排",
+        "live": "一欲於記誦之間知所扶擇以成文理耳故曰古人史取成家退處士而進奸雄排",
+        "same": true
+      },
+      {
+        "saved_id": "line-9",
+        "live_id": "line-9",
+        "saved": "死節而飾主國亦曰一家之道然也此猶文士之織非史識也能具史識者必知",
+        "live": "死節而飾主國亦曰一家之道然也此猶文士之織非史識也能具史識者必知",
+        "same": true
+      },
+      {
+        "saved_id": "line-10",
+        "live_id": "line-10",
+        "saved": "文史通義史徳一百四十一",
+        "live": "文史通義史徳一百四十一",
+        "same": true
+      },
+      {
+        "saved_id": "line-11",
+        "live_id": "line-11",
+        "saved": "一百四十一",
+        "live": "一百四十一",
+        "same": true
+      }
+    ],
+    "matching": "按原图框 IoU≥0.5 一对一匹配；不作字形或空白归一化",
+    "record_date": "2026-10-21T13:50:09.406Z",
+    "live": {
+      "browser": {
+        "name": "Google Chrome",
+        "version": "155.0.8059.85",
+        "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "version_source": "userAgentData.fullVersionList"
+      },
+      "preprocessing": {
+        "scope": "full",
+        "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+        "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+      }
+    },
+    "saved": {
+      "browser": {
+        "name": "Google Chrome",
+        "version": "155.0.8059.85",
+        "version_source": "第三轮 real-report.json 实际浏览器版本"
+      },
+      "preprocessing": {
+        "implementation": "Canvas / OffscreenCanvas drawImage",
+        "scope": "full"
+      }
+    }
+  }
+}

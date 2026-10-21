@@ -1,0 +1,22 @@
+$ node --test tests/*.test.mjs
+✔ complete archive restores attachment bytes, individual locators and personal writing (7.60275ms)
+✔ corrupted original is rejected before a project can be installed (3.2275ms)
+✔ metadata-only archives explicitly report missing originals (1.041292ms)
+✔ new attachments of an existing record append while handwritten notes survive reimport (1.114916ms)
+✔ vault links resolve to individual exported notes and sources (1.449625ms)
+✔ missing subpath and HTML fallback download fixed remote bytes, then reuse verified cache (14.778916ms)
+✔ legacy root cache is verified and migrated without downloading (0.897958ms)
+✔ corrupt cache is discarded; incorrect remote hash never becomes configured (1.136209ms)
+✔ truncated or oversized downloads are rejected and not saved (0.647583ms)
+✔ cache denial permits OCR but cannot claim persistent model preparation (1.7415ms)
+✔ cancelling preparation keeps completed models and resume downloads only missing ones (0.906042ms)
+✔ an already aborted job makes no network request (0.191875ms)
+✔ course cache-only load never downloads; inspection hashes bytes rather than trusting headers (0.5355ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 99.604833

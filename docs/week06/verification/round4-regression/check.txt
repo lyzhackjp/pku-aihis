@@ -1,0 +1,2 @@
+$ tsc --noEmit && tsc -p tsconfig.engines.json && node scripts/check-delivery.mjs
+{"date":"2026-10-21T14:16:37.645Z","pages":26,"publicFiles":325,"privateScan":"passed","weights":"none","credentials":"none detected","sourceFingerprints":"passed"}

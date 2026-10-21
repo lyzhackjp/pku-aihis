@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-21T14:13:49.451Z",
+  "presets": 12,
+  "syntheticRequests": 2,
+  "keyPersistence": "none",
+  "reloadClearsVision": true,
+  "configurationChangeClearsConsent": true,
+  "actualAPI": false,
+  "status": "passed"
+}

@@ -1,0 +1,166 @@
+{
+  "candidate": true,
+  "date": "2026-10-21T14:16:39.719Z",
+  "browser": "155.0.8059.85",
+  "newInference": false,
+  "source": "本机第四轮已保存的实际运行，非测试替身",
+  "checks": [
+    {
+      "id": "D00",
+      "refresh": "passed"
+    },
+    {
+      "id": "D01",
+      "refresh": "passed"
+    },
+    {
+      "id": "D02",
+      "refresh": "passed"
+    },
+    {
+      "id": "D03",
+      "refresh": "passed"
+    },
+    {
+      "id": "D04",
+      "refresh": "passed"
+    },
+    {
+      "id": "D05",
+      "refresh": "passed"
+    },
+    {
+      "id": "D06",
+      "refresh": "passed"
+    },
+    {
+      "id": "D07",
+      "refresh": "passed"
+    },
+    {
+      "id": "D08",
+      "refresh": "passed"
+    },
+    {
+      "id": "D09",
+      "refresh": "passed"
+    },
+    {
+      "id": "D10",
+      "refresh": "passed"
+    },
+    {
+      "id": "D11",
+      "refresh": "passed"
+    },
+    {
+      "id": "D12",
+      "refresh": "passed"
+    },
+    {
+      "id": "D13",
+      "refresh": "passed"
+    },
+    {
+      "id": "D14",
+      "refresh": "passed"
+    },
+    {
+      "id": "D15",
+      "refresh": "passed"
+    },
+    {
+      "id": "D16",
+      "refresh": "passed"
+    },
+    {
+      "id": "D17",
+      "refresh": "passed"
+    },
+    {
+      "id": "D18",
+      "refresh": "passed"
+    },
+    {
+      "id": "D19",
+      "refresh": "passed"
+    },
+    {
+      "id": "D20",
+      "refresh": "passed"
+    },
+    {
+      "id": "D21",
+      "refresh": "passed"
+    },
+    {
+      "id": "D22",
+      "refresh": "passed"
+    },
+    {
+      "id": "D23",
+      "refresh": "passed"
+    },
+    {
+      "id": "D24",
+      "refresh": "passed"
+    },
+    {
+      "id": "D25",
+      "refresh": "passed"
+    }
+  ],
+  "records": [
+    {
+      "name": "ndlocr-lite",
+      "version": "NDLOCR-Lite / DEIM + PARSeq16; importer pin 50216ccc",
+      "run_mode": "浏览器实时",
+      "date": "2026-10-21T13:50:09.406Z",
+      "params": {
+        "detectOnly": false
+      },
+      "model_id": "ndlocr-lite:50216ccc3e600f6d0d152862c5a201fdade78112",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "full",
+          "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+          "code_path": "LayoutDetector → cropImageDataBatch → TextRecognizer.preprocess"
+        }
+      },
+      "elapsed_ms": 5814.099999904633,
+      "page_id": "D02"
+    },
+    {
+      "name": "pp-ocrv6",
+      "version": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62 / b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+      "run_mode": "浏览器实时",
+      "date": "2026-10-21T13:50:18.382Z",
+      "params": {
+        "detectOnly": false
+      },
+      "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+      "runtime": {
+        "browser": {
+          "name": "Google Chrome",
+          "version": "155.0.8059.85",
+          "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "version_source": "userAgentData.fullVersionList"
+        },
+        "preprocessing": {
+          "scope": "full",
+          "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+          "code_path": "paddle → cropByPoly → rec.preprocessSample"
+        }
+      },
+      "elapsed_ms": 6596.200000047684,
+      "page_id": "D02"
+    }
+  ],
+  "errors": []
+}

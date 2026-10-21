@@ -1,0 +1,9 @@
+{
+  "candidate": true,
+  "actualInference": false,
+  "syntax": "passed",
+  "files": [
+    "tools/kraken-trace/trace.py",
+    "tools/ocr-trace/pp_rec_trace.py"
+  ]
+}

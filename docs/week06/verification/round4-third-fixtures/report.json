@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-21T14:13:43.015Z",
+  "checks": [
+    {
+      "name": "R3-4 default public material and collapsed runtime/import panels",
+      "result": "passed"
+    },
+    {
+      "name": "R3-3/5 public replay: unclassified PP, first nonblank, exact score tooltip, explicit order toggle",
+      "result": "passed"
+    },
+    {
+      "name": "R3-4/7 default replay identity and populated public D09, without a model session",
+      "result": "passed"
+    },
+    {
+      "name": "R3-1 legacy indexedDB BigInt read migration and damaged sibling; 26 pages after refresh",
+      "result": "passed"
+    },
+    {
+      "name": "R3-2 D02 D03 D07 screenshot aspect ratios equal actual line bbox",
+      "result": "passed"
+    },
+    {
+      "name": "R3-6 certainty note and first-occurrence heatmap order",
+      "result": "passed"
+    },
+    {
+      "name": "R3-1 clear confirmation cancel/accept, records removed and model cache survives",
+      "result": "passed"
+    },
+    {
+      "name": "R3-8 preflight render handles BigInt and restores buttons after thrown error",
+      "result": "passed"
+    }
+  ],
+  "errors": [],
+  "fixture": true
+}

@@ -1,0 +1,499 @@
+{
+  "date": "2026-10-21T14:13:48.650Z",
+  "checks": [
+    {
+      "name": "26 pages and independent preflight at desktop and narrow widths",
+      "result": "passed"
+    },
+    {
+      "name": "D03 selection updates right fields and enlarged crop; all actual classes",
+      "result": "passed"
+    },
+    {
+      "name": "D02 pointer mouse + keyboard classification shows assigned output",
+      "result": "passed"
+    },
+    {
+      "name": "D02 touch pointer classification",
+      "result": "passed"
+    },
+    {
+      "name": "D06 / D07 / D11 tabs preserve selected region and real trace displays",
+      "result": "passed"
+    },
+    {
+      "name": "D15 each checked category changes example, map and severity chart (screenshots)",
+      "result": "passed"
+    },
+    {
+      "name": "D16 every effect produces changed pixels and comparison; editable registration",
+      "result": "passed"
+    },
+    {
+      "name": "D17 actual manual annotation and three reading order modes",
+      "result": "passed"
+    },
+    {
+      "name": "D20 default F09, Unicode CER and failed import preserves old data; D21 per-edit candidates",
+      "result": "passed"
+    },
+    {
+      "name": "D22 all four required provenance choices; machine draft blocked",
+      "result": "passed"
+    },
+    {
+      "name": "model cache missing redirects to preflight without downloading",
+      "result": "passed"
+    },
+    {
+      "name": "shared checklist/conventions survive refresh and concepts return",
+      "result": "passed"
+    },
+    {
+      "name": "presenter bidirectional sync",
+      "result": "passed"
+    },
+    {
+      "name": "exports and bad restore preserve complete through record",
+      "result": "passed"
+    },
+    {
+      "name": "G1 four browser UI states via engine test route",
+      "result": "passed"
+    }
+  ],
+  "pages": [
+    {
+      "id": "D00",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 69
+    },
+    {
+      "id": "D01",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 746
+    },
+    {
+      "id": "D02",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 3523
+    },
+    {
+      "id": "D03",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 667
+    },
+    {
+      "id": "D04",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 1277
+    },
+    {
+      "id": "D05",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 674
+    },
+    {
+      "id": "D06",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 1551
+    },
+    {
+      "id": "D07",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 757
+    },
+    {
+      "id": "D08",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 16773
+    },
+    {
+      "id": "D09",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 1318
+    },
+    {
+      "id": "D10",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 395
+    },
+    {
+      "id": "D11",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 780
+    },
+    {
+      "id": "D12",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 502
+    },
+    {
+      "id": "D13",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 708
+    },
+    {
+      "id": "D14",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 1268
+    },
+    {
+      "id": "D15",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 490
+    },
+    {
+      "id": "D16",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 559
+    },
+    {
+      "id": "D17",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 810
+    },
+    {
+      "id": "D18",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 817
+    },
+    {
+      "id": "D19",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 393
+    },
+    {
+      "id": "D20",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 1327
+    },
+    {
+      "id": "D21",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 770
+    },
+    {
+      "id": "D22",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 464
+    },
+    {
+      "id": "D23",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 72
+    },
+    {
+      "id": "D24",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 635
+    },
+    {
+      "id": "D25",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 0
+    },
+    {
+      "id": "preflight",
+      "width": 1440,
+      "height": 900,
+      "overflow": false
+    },
+    {
+      "id": "D00",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 69
+    },
+    {
+      "id": "D01",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 746
+    },
+    {
+      "id": "D02",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 2435
+    },
+    {
+      "id": "D03",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 667
+    },
+    {
+      "id": "D04",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 1277
+    },
+    {
+      "id": "D05",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 674
+    },
+    {
+      "id": "D06",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 1551
+    },
+    {
+      "id": "D07",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 757
+    },
+    {
+      "id": "D08",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 16773
+    },
+    {
+      "id": "D09",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 1318
+    },
+    {
+      "id": "D10",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 395
+    },
+    {
+      "id": "D11",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 403
+    },
+    {
+      "id": "D12",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 502
+    },
+    {
+      "id": "D13",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 708
+    },
+    {
+      "id": "D14",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 1268
+    },
+    {
+      "id": "D15",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 490
+    },
+    {
+      "id": "D16",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 559
+    },
+    {
+      "id": "D17",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 810
+    },
+    {
+      "id": "D18",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 817
+    },
+    {
+      "id": "D19",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 393
+    },
+    {
+      "id": "D20",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 1327
+    },
+    {
+      "id": "D21",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 770
+    },
+    {
+      "id": "D22",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 464
+    },
+    {
+      "id": "D23",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 72
+    },
+    {
+      "id": "D24",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 635
+    },
+    {
+      "id": "D25",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "renderError": false,
+      "labContent": 0
+    },
+    {
+      "id": "preflight",
+      "width": 390,
+      "height": 844,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "fixture": "synthetic records explicitly injected by tests; no model inference",
+  "actualModelInference": false,
+  "browser": "155.0.8059.85"
+}

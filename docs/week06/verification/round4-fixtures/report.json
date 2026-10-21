@@ -1,0 +1,37 @@
+{
+  "candidate": true,
+  "date": "2026-10-21T14:16:44.669Z",
+  "actualModelInference": false,
+  "checks": [
+    {
+      "name": "R4-1 public PP columns/default recognition sorting/both halves",
+      "result": "passed"
+    },
+    {
+      "name": "R4-4 D03/D06 NDL28 default; D01 stays PP until explicit default-off toggle",
+      "result": "passed"
+    },
+    {
+      "name": "R4-2 conditional variant probabilities and jump/no match in shared component",
+      "result": "passed"
+    },
+    {
+      "name": "R4-3 all planned public pixel replacements preserve original dimensions/outside cells",
+      "result": "passed"
+    },
+    {
+      "name": "R4-3 actual saved network inputs: same shape; only target cell plus interpolation margin changes",
+      "result": "passed"
+    },
+    {
+      "name": "R4-5 comparison UI identical and changed raw texts; image mismatch refused",
+      "result": "passed"
+    },
+    {
+      "name": "R4-1 local-mode XML CONF separated, recognition sort explicit, using synthetic public-only fixture",
+      "result": "passed"
+    }
+  ],
+  "errors": [],
+  "browser": "155.0.8059.85"
+}
