@@ -1,18 +1,21 @@
 import {environmentReady,runtimeEnvironment,modelIdentity} from '../modules/ocr/run-environment.mjs';
 import {candidateEdits,applyCandidateEdits} from '../modules/ocr/candidate-edits.mjs';
-import {state,ready,save,addRecord,put} from './storage.js';
+import {state,ready,save,addRecord} from './storage.js';
+import {materialsReady,materialSources,importedMaterial,receiveProject} from './material-import.js';
+import {appendPackRecords} from '../modules/ocr/material-pack.mjs';
+export {materialSources,materialsReady};
 import {validateRecord,fromNDLXML,fromPageXML,fromPPOCR,fromNDLLite,fromFlorence,fromDots,fromMLLM,makeRecord,deriveRecord} from '../modules/ocr/record.mjs';
 import {coordinatePrompt,normalizeRegions} from '../modules/ocr/api.mjs';
-import {validateProject} from '../modules/project.mjs';
 const DATA=window.DECK_DATA;export const digest=async bytes=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');
 export const blobDataURL=blob=>new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(blob);});
-export async function materialFromBlob(blob,source,name){const bytes=await blob.arrayBuffer(),image=await createImageBitmap(blob);const material={image:{name,sha256:await digest(bytes),width:image.width,height:image.height,source:{material_id:source.id,identity:source.identity||source.title,page_systems:source.page_systems||{'位置':'用户导入，待填写'}},local_only:source.public!==true},dataUrl:await blobDataURL(blob)};image.close();return material;}
+export async function materialFromBlob(blob,source,name){const bytes=await blob.arrayBuffer(),image=await createImageBitmap(blob);const material={image:{name,sha256:await digest(bytes),width:image.width,height:image.height,source:{material_id:source.id,identity:source.identity||source.title,page_systems:source.page_systems||{'位置':'用户导入，待填写'},...(source.provenance?{provenance:source.provenance}:{}),...(source.pack?{pack:source.pack}:{})},local_only:source.public!==true},dataUrl:await blobDataURL(blob)};image.close();return material;}
 export function currentRecords(){return state.records.filter(r=>r.image.sha256===state.material?.image.sha256).sort((a,b)=>Date.parse(a.engine.date)-Date.parse(b.engine.date));}
 export function lastRecord(name){return currentRecords().filter(r=>!name||r.engine.name===name).at(-1);}
 export const environmentReadyForRun=()=>environmentReady;
 export function meta(name,run_mode='浏览器实时',version='待登记',params={},image=state.material?.image){if(!image)throw Error('先选择页影');return {image:structuredClone(image),engine:{name,version,run_mode,date:new Date().toISOString(),params,model_id:modelIdentity(name),runtime:runtimeEnvironment(name,params.experiment?'line':'full')}};}
 export async function pixels(material=state.material){if(!material?.dataUrl)throw Error('需本机材料或导入公开页影');const image=await createImageBitmap(await (await fetch(material.dataUrl)).blob());const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(image,0,0);image.close();return {canvas,imageData:c.getImageData(0,0,canvas.width,canvas.height)};}
 export async function selectMaterial(id){
+ await materialsReady;const cached=await importedMaterial(id,materialFromBlob);if(cached){state.material=cached.material;state.records=appendPackRecords(state.records,cached.records);await save();return state.material;}
  const source=DATA.sources.find(s=>s.id===id);if(!source)throw Error('材料未登记');
  if(source.public===false){
   if(!['localhost','127.0.0.1'].includes(location.hostname)||!new URLSearchParams(location.search).has('local'))throw Error('需本机材料；用本机启动器打开');
@@ -75,7 +78,7 @@ export function revisedRecord(kind){const c=state.through.draft.candidates?.[kin
 
 let importer;
 export function openImporter(){importer=window.open(new URL('assets/importer/?receiver='+encodeURIComponent(location.origin),document.baseURI),'week06-material-importer');}
-window.addEventListener('message',async e=>{if(e.origin!==location.origin||e.source!==importer)return;if(e.data?.type==='PKU_IMPORT_READY')importer.postMessage({type:'PKU_IMPORT_HELLO'},location.origin);if(e.data?.type==='PKU_PROJECT'){try{const project=validateProject(e.data.project),files=e.data.files||[];await put('imported-project',project);let count=0;for(const file of files){if(!(file.blob instanceof Blob))throw Error('附件格式错误');await put('attachment/'+file.id,file.blob);if(file.blob.type.startsWith('image/')&&count===0){state.material=await materialFromBlob(file.blob,{id:'imported',public:false,title:'从导入页接收；请填写页码'},file.id);count++;}}await save();importer.postMessage({type:'PKU_IMPORT_ACCEPTED'},location.origin);window.dispatchEvent(new CustomEvent('week06-notice',{detail:count?'已接收图像与项目；请核对材料身份':'项目已接收；请选择其中一页导出为 PNG/JPEG 后在本课导入'}));}catch(error){importer.postMessage({type:'PKU_IMPORT_REJECTED',message:error.message},location.origin);}}});
+window.addEventListener('message',async e=>{if(e.origin!==location.origin||e.source!==importer)return;if(e.data?.type==='PKU_IMPORT_READY')importer.postMessage({type:'PKU_IMPORT_HELLO'},location.origin);if(e.data?.type==='PKU_PROJECT'){try{const result=await receiveProject(e.data.project,e.data.files||[],{digest,readImage:materialFromBlob});importer.postMessage({type:'PKU_IMPORT_ACCEPTED',message:result.message},location.origin);window.dispatchEvent(new CustomEvent('week06-notice',{detail:result.message}));}catch(error){importer.postMessage({type:'PKU_IMPORT_REJECTED',message:error.message},location.origin);window.dispatchEvent(new CustomEvent('week06-notice',{detail:'导入失败，旧材料保留：'+error.message}));}}});
 window.W6ServicesReady=ready.then(()=>({openImporter}));
 
 export const materialMode=()=>['localhost','127.0.0.1'].includes(location.hostname)&&new URLSearchParams(location.search).get('local')==='1'?'local':'public';
@@ -94,7 +97,7 @@ export function recordForPage(id,view={}){
 }
 let defaultQueue=Promise.resolve();
 export async function ensurePageMaterial(page,view){
- await environmentReady;if(!page.material_defaults)return;
+ await Promise.all([environmentReady,materialsReady]);if(!page.material_defaults)return;
  const mode=materialMode(),id=view['chosenMaterial_'+mode]||page.material_defaults[mode];
  defaultQueue=defaultQueue.catch(()=>{}).then(async()=>{
   if(state.material?.image.source.material_id!==id)await selectMaterial(id);

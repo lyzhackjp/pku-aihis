@@ -540,30 +540,44 @@ async function exportZIP() {
   }
 }
 async function transfer() {
+  if (busy) return;
   if (!connected || !window.opener || !receiver)
     throw Error("没有已连接的课件窗口。可下载 ZIP，再在课件中恢复／追加。");
-  const files = [];
-  for (const s of project.sources)
-    for (const a of s.attachments) {
-      const b = await getAttachment(db, a.id);
-      if (b && !files.some((x) => x.id === a.id))
-        files.push({ id: a.id, blob: b });
-    }
-  window.opener.postMessage(
-    { type: "PKU_PROJECT", project: validateProject(project), files },
-    receiver,
-  );
-  status = "已发送，正在等待课件接收结果…";
+  busy = true;
+  status = "正在读取本机附件并发送到课件…";
+  render();
+  try {
+    const files = [];
+    for (const s of project.sources)
+      for (const a of s.attachments) {
+        const b = await getAttachment(db, a.id);
+        if (b && !files.some((x) => x.id === a.id)) files.push({ id: a.id, blob: b });
+      }
+    window.opener.postMessage(
+      { type: "PKU_PROJECT", project: validateProject(project), files }, receiver,
+    );
+    status = "已发送，正在等待课件接收结果…";
+  } catch (error) {
+    busy = false;
+    status = "发送失败：" + error.message;
+  }
   render();
 }
+
 window.addEventListener("message", (e) => {
   if (e.source !== window.opener || e.origin !== receiver) return;
   if (e.data?.type === "PKU_IMPORT_HELLO") {
     connected = true;
     render();
   }
+  if (e.data?.type === "PKU_IMPORT_REJECTED") {
+    busy = false;
+    status = "课件未接收，原数据保留：" + (e.data.message || "请检查材料格式");
+    render();
+  }
   if (e.data?.type === "PKU_IMPORT_ACCEPTED") {
-    status = "课件已接收；返回课件查看材料、阅读队列和笔记。";
+    busy = false;
+    status = e.data.message || "课件已接收；返回课件查看材料、阅读队列和笔记。";
     render();
   }
 });
