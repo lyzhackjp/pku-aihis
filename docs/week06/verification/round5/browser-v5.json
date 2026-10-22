@@ -1,0 +1,1493 @@
+{
+  "date": "2026-10-22T04:30:17.459Z",
+  "checks": [
+    {
+      "name": "D01 defaults to the complete NDL public replay",
+      "result": "passed",
+      "detail": {
+        "preview": true
+      }
+    },
+    {
+      "name": "Seven public pages: desktop, two projector sizes and single-column breakpoints",
+      "result": "passed"
+    },
+    {
+      "name": "D11 to D02: loading the dots default must not replace pipeline candidates",
+      "result": "passed",
+      "detail": {
+        "engine": "ndlocr-lite",
+        "positions": true
+      }
+    },
+    {
+      "name": "keepScroll: changing a D02 parameter preserves the scrolled task pane",
+      "result": "passed",
+      "detail": {
+        "before": [
+          0,
+          120
+        ],
+        "changedLine": "det-27"
+      }
+    },
+    {
+      "name": "keepScroll: keyed pane and nested horizontal scroll survive reconstruction",
+      "result": "passed"
+    },
+    {
+      "name": "D06: click then Up/Down moves and keeps focus; boundary does not flip slides",
+      "result": "passed"
+    },
+    {
+      "name": "D04: served index, three real traces, three thresholds, heat scores and five stages",
+      "result": "passed"
+    },
+    {
+      "name": "Column divider: drag changes widths, double-click restores them",
+      "result": "passed"
+    },
+    {
+      "name": "D11 Florence: no-coordinate output has an explicit reason and preserved raw prefix",
+      "result": "passed"
+    },
+    {
+      "name": "D12/D13: Kimi preset, disabled run before vision check, in-place explanation",
+      "result": "passed"
+    },
+    {
+      "name": "Refresh and revisit all 26 pages",
+      "result": "passed"
+    }
+  ],
+  "layouts": [
+    {
+      "id": "D01",
+      "width": 1512,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 637,
+      "bodyScrollHeight": 637,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 244.4375,
+          "width": 532.828125,
+          "height": 543.5625,
+          "viewportHeight": 503,
+          "scrollHeight": 503,
+          "overflowY": "auto"
+        },
+        {
+          "key": "compare",
+          "x": 574.828125,
+          "y": 244.4375,
+          "width": 468.8984375,
+          "height": 543.5625,
+          "viewportHeight": 503,
+          "scrollHeight": 503,
+          "overflowY": "auto"
+        },
+        {
+          "key": "issues",
+          "x": 1051.7265625,
+          "y": 244.4375,
+          "width": 426.2734375,
+          "height": 543.5625,
+          "viewportHeight": 503,
+          "scrollHeight": 503,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D02",
+      "width": 1512,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 637,
+      "bodyScrollHeight": 637,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 244.4375,
+          "width": 611.0625,
+          "height": 543.5625,
+          "viewportHeight": 503,
+          "scrollHeight": 503,
+          "overflowY": "auto"
+        },
+        {
+          "key": "tasks",
+          "x": 653.0625,
+          "y": 244.4375,
+          "width": 824.9375,
+          "height": 543.5625,
+          "viewportHeight": 503,
+          "scrollHeight": 735,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D04",
+      "width": 1512,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 637,
+      "bodyScrollHeight": 637,
+      "error": false,
+      "panes": [
+        {
+          "key": "steps",
+          "x": 34,
+          "y": 244.4375,
+          "width": 332.0859375,
+          "height": 543.5625,
+          "viewportHeight": 503,
+          "scrollHeight": 776,
+          "overflowY": "auto"
+        },
+        {
+          "key": "page",
+          "x": 374.0859375,
+          "y": 244.4375,
+          "width": 697.3984375,
+          "height": 543.5625,
+          "viewportHeight": 503,
+          "scrollHeight": 529,
+          "overflowY": "auto"
+        },
+        {
+          "key": "detail",
+          "x": 1079.484375,
+          "y": 244.4375,
+          "width": 398.5078125,
+          "height": 543.5625,
+          "viewportHeight": 503,
+          "scrollHeight": 503,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D06",
+      "width": 1512,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 637,
+      "bodyScrollHeight": 637,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 277.3359375,
+          "width": 621.8671875,
+          "height": 510.6640625,
+          "viewportHeight": 470,
+          "scrollHeight": 470,
+          "overflowY": "auto"
+        },
+        {
+          "key": "manual",
+          "x": 663.8671875,
+          "y": 277.3359375,
+          "width": 460.6484375,
+          "height": 510.6640625,
+          "viewportHeight": 470,
+          "scrollHeight": 1070,
+          "overflowY": "auto"
+        },
+        {
+          "key": "auto",
+          "x": 1132.515625,
+          "y": 277.3359375,
+          "width": 345.484375,
+          "height": 510.6640625,
+          "viewportHeight": 470,
+          "scrollHeight": 1153,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D08",
+      "width": 1512,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 637,
+      "bodyScrollHeight": 637,
+      "error": false,
+      "panes": [
+        {
+          "key": "design",
+          "x": 34,
+          "y": 277.3359375,
+          "width": 426.265625,
+          "height": 510.6640625,
+          "viewportHeight": 470,
+          "scrollHeight": 633,
+          "overflowY": "auto"
+        },
+        {
+          "key": "result",
+          "x": 468.265625,
+          "y": 277.3359375,
+          "width": 575.4609375,
+          "height": 510.6640625,
+          "viewportHeight": 470,
+          "scrollHeight": 786,
+          "overflowY": "auto"
+        },
+        {
+          "key": "compare",
+          "x": 1051.7265625,
+          "y": 277.3359375,
+          "width": 426.2734375,
+          "height": 510.6640625,
+          "viewportHeight": 470,
+          "scrollHeight": 513,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D11",
+      "width": 1512,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 637,
+      "bodyScrollHeight": 637,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 277.3359375,
+          "width": 535.5,
+          "height": 510.6640625,
+          "viewportHeight": 470,
+          "scrollHeight": 470,
+          "overflowY": "auto"
+        },
+        {
+          "key": "same",
+          "x": 577.5,
+          "y": 277.3359375,
+          "width": 446.25,
+          "height": 510.6640625,
+          "viewportHeight": 470,
+          "scrollHeight": 1009,
+          "overflowY": "auto"
+        },
+        {
+          "key": "run",
+          "x": 1031.75,
+          "y": 277.3359375,
+          "width": 446.25,
+          "height": 510.6640625,
+          "viewportHeight": 470,
+          "scrollHeight": 470,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D15",
+      "width": 1512,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 637,
+      "bodyScrollHeight": 637,
+      "error": false,
+      "panes": [
+        {
+          "key": "gallery",
+          "x": 34,
+          "y": 277.3359375,
+          "width": 513.1875,
+          "height": 510.6640625,
+          "viewportHeight": 470,
+          "scrollHeight": 652,
+          "overflowY": "auto"
+        },
+        {
+          "key": "detail",
+          "x": 555.1875,
+          "y": 277.3359375,
+          "width": 557.8125,
+          "height": 510.6640625,
+          "viewportHeight": 470,
+          "scrollHeight": 849,
+          "overflowY": "auto"
+        },
+        {
+          "key": "check",
+          "x": 1121,
+          "y": 277.3359375,
+          "width": 357,
+          "height": 510.6640625,
+          "viewportHeight": 470,
+          "scrollHeight": 729,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D01",
+      "width": 1280,
+      "height": 720,
+      "overflow": false,
+      "bodyHeight": 502,
+      "bodyScrollHeight": 502,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 272.71875,
+          "width": 446.265625,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 402,
+          "overflowY": "auto"
+        },
+        {
+          "key": "compare",
+          "x": 488.265625,
+          "y": 272.71875,
+          "width": 392.71875,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 540,
+          "overflowY": "auto"
+        },
+        {
+          "key": "issues",
+          "x": 888.984375,
+          "y": 272.71875,
+          "width": 357.015625,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 335,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D02",
+      "width": 1280,
+      "height": 720,
+      "overflow": false,
+      "bodyHeight": 502,
+      "bodyScrollHeight": 502,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 272.71875,
+          "width": 512.3359375,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 441,
+          "overflowY": "auto"
+        },
+        {
+          "key": "tasks",
+          "x": 554.3359375,
+          "y": 272.71875,
+          "width": 691.6640625,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 859,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D04",
+      "width": 1280,
+      "height": 720,
+      "overflow": false,
+      "bodyHeight": 502,
+      "bodyScrollHeight": 502,
+      "error": false,
+      "panes": [
+        {
+          "key": "steps",
+          "x": 34,
+          "y": 239.8203125,
+          "width": 278.1328125,
+          "height": 408.1796875,
+          "viewportHeight": 367,
+          "scrollHeight": 804,
+          "overflowY": "auto"
+        },
+        {
+          "key": "page",
+          "x": 320.1328125,
+          "y": 239.8203125,
+          "width": 584.09375,
+          "height": 408.1796875,
+          "viewportHeight": 367,
+          "scrollHeight": 555,
+          "overflowY": "auto"
+        },
+        {
+          "key": "detail",
+          "x": 912.2265625,
+          "y": 239.8203125,
+          "width": 333.765625,
+          "height": 408.1796875,
+          "viewportHeight": 367,
+          "scrollHeight": 367,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D06",
+      "width": 1280,
+      "height": 720,
+      "overflow": false,
+      "bodyHeight": 502,
+      "bodyScrollHeight": 502,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 272.71875,
+          "width": 520.8359375,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 449,
+          "overflowY": "auto"
+        },
+        {
+          "key": "manual",
+          "x": 562.8359375,
+          "y": 272.71875,
+          "width": 385.8046875,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 1070,
+          "overflowY": "auto"
+        },
+        {
+          "key": "auto",
+          "x": 956.640625,
+          "y": 272.71875,
+          "width": 289.359375,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 1153,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D08",
+      "width": 1280,
+      "height": 720,
+      "overflow": false,
+      "bodyHeight": 502,
+      "bodyScrollHeight": 502,
+      "error": false,
+      "panes": [
+        {
+          "key": "design",
+          "x": 34,
+          "y": 272.71875,
+          "width": 357.0078125,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 657,
+          "overflowY": "auto"
+        },
+        {
+          "key": "result",
+          "x": 399.0078125,
+          "y": 272.71875,
+          "width": 481.9765625,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 808,
+          "overflowY": "auto"
+        },
+        {
+          "key": "compare",
+          "x": 888.984375,
+          "y": 272.71875,
+          "width": 357.015625,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 612,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D11",
+      "width": 1280,
+      "height": 720,
+      "overflow": false,
+      "bodyHeight": 502,
+      "bodyScrollHeight": 502,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 300.515625,
+          "width": 448.5,
+          "height": 347.484375,
+          "viewportHeight": 307,
+          "scrollHeight": 414,
+          "overflowY": "auto"
+        },
+        {
+          "key": "same",
+          "x": 490.5,
+          "y": 300.515625,
+          "width": 373.75,
+          "height": 347.484375,
+          "viewportHeight": 307,
+          "scrollHeight": 1038,
+          "overflowY": "auto"
+        },
+        {
+          "key": "run",
+          "x": 872.25,
+          "y": 300.515625,
+          "width": 373.75,
+          "height": 347.484375,
+          "viewportHeight": 307,
+          "scrollHeight": 336,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D15",
+      "width": 1280,
+      "height": 720,
+      "overflow": false,
+      "bodyHeight": 502,
+      "bodyScrollHeight": 502,
+      "error": false,
+      "panes": [
+        {
+          "key": "gallery",
+          "x": 34,
+          "y": 272.71875,
+          "width": 429.8125,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 652,
+          "overflowY": "auto"
+        },
+        {
+          "key": "detail",
+          "x": 471.8125,
+          "y": 272.71875,
+          "width": 467.1875,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 834,
+          "overflowY": "auto"
+        },
+        {
+          "key": "check",
+          "x": 947,
+          "y": 272.71875,
+          "width": 299,
+          "height": 375.28125,
+          "viewportHeight": 335,
+          "scrollHeight": 729,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D01",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "bodyHeight": 556,
+      "bodyScrollHeight": 556,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 265.96875,
+          "width": 350.7421875,
+          "height": 430.03125,
+          "viewportHeight": 389,
+          "scrollHeight": 436,
+          "overflowY": "auto"
+        },
+        {
+          "key": "compare",
+          "x": 392.7421875,
+          "y": 265.96875,
+          "width": 308.65625,
+          "height": 430.03125,
+          "viewportHeight": 389,
+          "scrollHeight": 584,
+          "overflowY": "auto"
+        },
+        {
+          "key": "issues",
+          "x": 709.3984375,
+          "y": 265.96875,
+          "width": 280.6015625,
+          "height": 430.03125,
+          "viewportHeight": 389,
+          "scrollHeight": 389,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D02",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "bodyHeight": 556,
+      "bodyScrollHeight": 556,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 265.96875,
+          "width": 403.3984375,
+          "height": 430.03125,
+          "viewportHeight": 389,
+          "scrollHeight": 460,
+          "overflowY": "auto"
+        },
+        {
+          "key": "tasks",
+          "x": 445.3984375,
+          "y": 265.96875,
+          "width": 544.6015625,
+          "height": 430.03125,
+          "viewportHeight": 389,
+          "scrollHeight": 884,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D04",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "bodyHeight": 556,
+      "bodyScrollHeight": 556,
+      "error": false,
+      "panes": [
+        {
+          "key": "steps",
+          "x": 34,
+          "y": 233.0703125,
+          "width": 218.6015625,
+          "height": 462.9296875,
+          "viewportHeight": 422,
+          "scrollHeight": 900,
+          "overflowY": "auto"
+        },
+        {
+          "key": "page",
+          "x": 260.6015625,
+          "y": 233.0703125,
+          "width": 459.0703125,
+          "height": 462.9296875,
+          "viewportHeight": 422,
+          "scrollHeight": 555,
+          "overflowY": "auto"
+        },
+        {
+          "key": "detail",
+          "x": 727.671875,
+          "y": 233.0703125,
+          "width": 262.3203125,
+          "height": 462.9296875,
+          "viewportHeight": 422,
+          "scrollHeight": 422,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D06",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "bodyHeight": 556,
+      "bodyScrollHeight": 556,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 265.96875,
+          "width": 409.3515625,
+          "height": 430.03125,
+          "viewportHeight": 389,
+          "scrollHeight": 445,
+          "overflowY": "auto"
+        },
+        {
+          "key": "manual",
+          "x": 451.3515625,
+          "y": 265.96875,
+          "width": 303.2265625,
+          "height": 430.03125,
+          "viewportHeight": 389,
+          "scrollHeight": 1070,
+          "overflowY": "auto"
+        },
+        {
+          "key": "auto",
+          "x": 762.578125,
+          "y": 265.96875,
+          "width": 227.421875,
+          "height": 430.03125,
+          "viewportHeight": 389,
+          "scrollHeight": 1153,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D08",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "bodyHeight": 556,
+      "bodyScrollHeight": 556,
+      "error": false,
+      "panes": [
+        {
+          "key": "design",
+          "x": 34,
+          "y": 293.765625,
+          "width": 280.59375,
+          "height": 402.234375,
+          "viewportHeight": 361,
+          "scrollHeight": 730,
+          "overflowY": "auto"
+        },
+        {
+          "key": "result",
+          "x": 322.59375,
+          "y": 293.765625,
+          "width": 378.8046875,
+          "height": 402.234375,
+          "viewportHeight": 361,
+          "scrollHeight": 867,
+          "overflowY": "auto"
+        },
+        {
+          "key": "compare",
+          "x": 709.3984375,
+          "y": 293.765625,
+          "width": 280.6015625,
+          "height": 402.234375,
+          "viewportHeight": 361,
+          "scrollHeight": 683,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D11",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "bodyHeight": 556,
+      "bodyScrollHeight": 556,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 293.765625,
+          "width": 352.5,
+          "height": 402.234375,
+          "viewportHeight": 361,
+          "scrollHeight": 449,
+          "overflowY": "auto"
+        },
+        {
+          "key": "same",
+          "x": 394.5,
+          "y": 293.765625,
+          "width": 293.75,
+          "height": 402.234375,
+          "viewportHeight": 361,
+          "scrollHeight": 1124,
+          "overflowY": "auto"
+        },
+        {
+          "key": "run",
+          "x": 696.25,
+          "y": 293.765625,
+          "width": 293.75,
+          "height": 402.234375,
+          "viewportHeight": 361,
+          "scrollHeight": 380,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D15",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "bodyHeight": 556,
+      "bodyScrollHeight": 556,
+      "error": false,
+      "panes": [
+        {
+          "key": "gallery",
+          "x": 34,
+          "y": 293.765625,
+          "width": 337.8125,
+          "height": 402.234375,
+          "viewportHeight": 361,
+          "scrollHeight": 1291,
+          "overflowY": "auto"
+        },
+        {
+          "key": "detail",
+          "x": 379.8125,
+          "y": 293.765625,
+          "width": 367.1875,
+          "height": 402.234375,
+          "viewportHeight": 361,
+          "scrollHeight": 814,
+          "overflowY": "auto"
+        },
+        {
+          "key": "check",
+          "x": 755,
+          "y": 293.765625,
+          "width": 235,
+          "height": 402.234375,
+          "viewportHeight": 361,
+          "scrollHeight": 872,
+          "overflowY": "auto"
+        }
+      ]
+    },
+    {
+      "id": "D01",
+      "width": 899,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 649,
+      "bodyScrollHeight": 1498,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 293.1328125,
+          "width": 831,
+          "height": 627.640625,
+          "viewportHeight": 587,
+          "scrollHeight": 587,
+          "overflowY": "visible"
+        },
+        {
+          "key": "compare",
+          "x": 34,
+          "y": 930.7734375,
+          "width": 831,
+          "height": 521.125,
+          "viewportHeight": 480,
+          "scrollHeight": 480,
+          "overflowY": "visible"
+        },
+        {
+          "key": "issues",
+          "x": 34,
+          "y": 1461.8984375,
+          "width": 831,
+          "height": 174.7421875,
+          "viewportHeight": 134,
+          "scrollHeight": 134,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D02",
+      "width": 899,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 649,
+      "bodyScrollHeight": 1575,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 265.3359375,
+          "width": 831,
+          "height": 663.140625,
+          "viewportHeight": 622,
+          "scrollHeight": 622,
+          "overflowY": "visible"
+        },
+        {
+          "key": "tasks",
+          "x": 34,
+          "y": 938.4765625,
+          "width": 831,
+          "height": 775.7890625,
+          "viewportHeight": 735,
+          "scrollHeight": 735,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D04",
+      "width": 899,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 649,
+      "bodyScrollHeight": 1933,
+      "error": false,
+      "panes": [
+        {
+          "key": "steps",
+          "x": 34,
+          "y": 265.3359375,
+          "width": 831,
+          "height": 833.7890625,
+          "viewportHeight": 793,
+          "scrollHeight": 793,
+          "overflowY": "visible"
+        },
+        {
+          "key": "page",
+          "x": 34,
+          "y": 1109.125,
+          "width": 831,
+          "height": 756.03125,
+          "viewportHeight": 715,
+          "scrollHeight": 715,
+          "overflowY": "visible"
+        },
+        {
+          "key": "detail",
+          "x": 34,
+          "y": 1875.15625,
+          "width": 831,
+          "height": 196.9375,
+          "viewportHeight": 156,
+          "scrollHeight": 156,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D06",
+      "width": 899,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 649,
+      "bodyScrollHeight": 3150,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 293.1328125,
+          "width": 831,
+          "height": 670.734375,
+          "viewportHeight": 630,
+          "scrollHeight": 630,
+          "overflowY": "visible"
+        },
+        {
+          "key": "manual",
+          "x": 34,
+          "y": 973.8671875,
+          "width": 831,
+          "height": 1110.8125,
+          "viewportHeight": 1070,
+          "scrollHeight": 1070,
+          "overflowY": "visible"
+        },
+        {
+          "key": "auto",
+          "x": 34,
+          "y": 2094.6796875,
+          "width": 831,
+          "height": 1193.859375,
+          "viewportHeight": 1153,
+          "scrollHeight": 1153,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D08",
+      "width": 899,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 649,
+      "bodyScrollHeight": 2159,
+      "error": false,
+      "panes": [
+        {
+          "key": "design",
+          "x": 34,
+          "y": 293.1328125,
+          "width": 831,
+          "height": 628.328125,
+          "viewportHeight": 588,
+          "scrollHeight": 588,
+          "overflowY": "visible"
+        },
+        {
+          "key": "result",
+          "x": 34,
+          "y": 931.4609375,
+          "width": 831,
+          "height": 826.84375,
+          "viewportHeight": 786,
+          "scrollHeight": 786,
+          "overflowY": "visible"
+        },
+        {
+          "key": "compare",
+          "x": 34,
+          "y": 1768.3046875,
+          "width": 831,
+          "height": 529.6796875,
+          "viewportHeight": 489,
+          "scrollHeight": 489,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D11",
+      "width": 899,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 649,
+      "bodyScrollHeight": 2164,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 34,
+          "y": 316.9296875,
+          "width": 831,
+          "height": 670.734375,
+          "viewportHeight": 630,
+          "scrollHeight": 630,
+          "overflowY": "visible"
+        },
+        {
+          "key": "same",
+          "x": 34,
+          "y": 997.6640625,
+          "width": 831,
+          "height": 962.6796875,
+          "viewportHeight": 922,
+          "scrollHeight": 922,
+          "overflowY": "visible"
+        },
+        {
+          "key": "run",
+          "x": 34,
+          "y": 1970.34375,
+          "width": 831,
+          "height": 332.4765625,
+          "viewportHeight": 292,
+          "scrollHeight": 292,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D15",
+      "width": 899,
+      "height": 860,
+      "overflow": false,
+      "bodyHeight": 649,
+      "bodyScrollHeight": 2244,
+      "error": false,
+      "panes": [
+        {
+          "key": "gallery",
+          "x": 34,
+          "y": 293.1328125,
+          "width": 831,
+          "height": 372.59375,
+          "viewportHeight": 332,
+          "scrollHeight": 332,
+          "overflowY": "visible"
+        },
+        {
+          "key": "detail",
+          "x": 34,
+          "y": 675.7265625,
+          "width": 831,
+          "height": 975.390625,
+          "viewportHeight": 935,
+          "scrollHeight": 935,
+          "overflowY": "visible"
+        },
+        {
+          "key": "check",
+          "x": 34,
+          "y": 1661.1171875,
+          "width": 831,
+          "height": 722.0625,
+          "viewportHeight": 681,
+          "scrollHeight": 681,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D01",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "bodyHeight": 1692,
+      "bodyScrollHeight": 1692,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 16,
+          "y": 373.7265625,
+          "width": 358,
+          "height": 713.375,
+          "viewportHeight": 673,
+          "scrollHeight": 673,
+          "overflowY": "visible"
+        },
+        {
+          "key": "compare",
+          "x": 16,
+          "y": 1097.1015625,
+          "width": 358,
+          "height": 580.3125,
+          "viewportHeight": 540,
+          "scrollHeight": 540,
+          "overflowY": "visible"
+        },
+        {
+          "key": "issues",
+          "x": 16,
+          "y": 1687.4140625,
+          "width": 358,
+          "height": 200.2421875,
+          "viewportHeight": 159,
+          "scrollHeight": 159,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D02",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "bodyHeight": 2169,
+      "bodyScrollHeight": 2169,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 16,
+          "y": -743.2734375,
+          "width": 358,
+          "height": 771.96875,
+          "viewportHeight": 731,
+          "scrollHeight": 731,
+          "overflowY": "visible"
+        },
+        {
+          "key": "tasks",
+          "x": 16,
+          "y": 38.6953125,
+          "width": 358,
+          "height": 1208.9609375,
+          "viewportHeight": 1168,
+          "scrollHeight": 1168,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D04",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "bodyHeight": 2137,
+      "bodyScrollHeight": 2137,
+      "error": false,
+      "panes": [
+        {
+          "key": "steps",
+          "x": 16,
+          "y": -781.7734375,
+          "width": 358,
+          "height": 777.1015625,
+          "viewportHeight": 736,
+          "scrollHeight": 736,
+          "overflowY": "visible"
+        },
+        {
+          "key": "page",
+          "x": 16,
+          "y": 5.328125,
+          "width": 358,
+          "height": 832.5234375,
+          "viewportHeight": 792,
+          "scrollHeight": 792,
+          "overflowY": "visible"
+        },
+        {
+          "key": "detail",
+          "x": 16,
+          "y": 847.8515625,
+          "width": 358,
+          "height": 329.21875,
+          "viewportHeight": 288,
+          "scrollHeight": 288,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D06",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "bodyHeight": 3259,
+      "bodyScrollHeight": 3259,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 16,
+          "y": -1213.0703125,
+          "width": 358,
+          "height": 756.46875,
+          "viewportHeight": 716,
+          "scrollHeight": 716,
+          "overflowY": "visible"
+        },
+        {
+          "key": "manual",
+          "x": 16,
+          "y": -446.6015625,
+          "width": 358,
+          "height": 1110.8125,
+          "viewportHeight": 1070,
+          "scrollHeight": 1070,
+          "overflowY": "visible"
+        },
+        {
+          "key": "auto",
+          "x": 16,
+          "y": 674.2109375,
+          "width": 358,
+          "height": 1193.859375,
+          "viewportHeight": 1153,
+          "scrollHeight": 1153,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D08",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "bodyHeight": 2430,
+      "bodyScrollHeight": 2430,
+      "error": false,
+      "panes": [
+        {
+          "key": "design",
+          "x": 16,
+          "y": -1481.7734375,
+          "width": 358,
+          "height": 698.015625,
+          "viewportHeight": 657,
+          "scrollHeight": 657,
+          "overflowY": "visible"
+        },
+        {
+          "key": "result",
+          "x": 16,
+          "y": -773.7578125,
+          "width": 358,
+          "height": 907.328125,
+          "viewportHeight": 867,
+          "scrollHeight": 867,
+          "overflowY": "visible"
+        },
+        {
+          "key": "compare",
+          "x": 16,
+          "y": 143.5703125,
+          "width": 358,
+          "height": 626.7421875,
+          "viewportHeight": 586,
+          "scrollHeight": 586,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D11",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "bodyHeight": 2403,
+      "bodyScrollHeight": 2403,
+      "error": false,
+      "panes": [
+        {
+          "key": "page",
+          "x": 16,
+          "y": -1430.2734375,
+          "width": 358,
+          "height": 726.0234375,
+          "viewportHeight": 685,
+          "scrollHeight": 685,
+          "overflowY": "visible"
+        },
+        {
+          "key": "same",
+          "x": 16,
+          "y": -694.25,
+          "width": 358,
+          "height": 1078.2734375,
+          "viewportHeight": 1038,
+          "scrollHeight": 1038,
+          "overflowY": "visible"
+        },
+        {
+          "key": "run",
+          "x": 16,
+          "y": 394.0234375,
+          "width": 358,
+          "height": 376.6640625,
+          "viewportHeight": 336,
+          "scrollHeight": 336,
+          "overflowY": "visible"
+        }
+      ]
+    },
+    {
+      "id": "D15",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "bodyHeight": 4661,
+      "bodyScrollHeight": 4661,
+      "error": false,
+      "panes": [
+        {
+          "key": "gallery",
+          "x": 16,
+          "y": -1429.2734375,
+          "width": 358,
+          "height": 1332.125,
+          "viewportHeight": 1291,
+          "scrollHeight": 1291,
+          "overflowY": "visible"
+        },
+        {
+          "key": "detail",
+          "x": 16,
+          "y": -87.1484375,
+          "width": 358,
+          "height": 2169.5546875,
+          "viewportHeight": 2129,
+          "scrollHeight": 2129,
+          "overflowY": "visible"
+        },
+        {
+          "key": "check",
+          "x": 16,
+          "y": 2092.40625,
+          "width": 358,
+          "height": 961.03125,
+          "viewportHeight": 920,
+          "scrollHeight": 920,
+          "overflowY": "visible"
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "localResourceErrors": [],
+  "actualModelInference": false,
+  "mode": "Public saved replay in a fresh local Chrome context; synthetic Florence output only in its named regression.",
+  "browser": "155.0.8059.85",
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "platform": "MacIntel",
+    "full": {
+      "architecture": "arm",
+      "brands": [
+        {
+          "brand": "Google Chrome",
+          "version": "155"
+        },
+        {
+          "brand": "Chromium",
+          "version": "155"
+        },
+        {
+          "brand": "Not(A:Brand",
+          "version": "24"
+        }
+      ],
+      "fullVersionList": [
+        {
+          "brand": "Google Chrome",
+          "version": "155.0.8059.85"
+        },
+        {
+          "brand": "Chromium",
+          "version": "155.0.8059.85"
+        },
+        {
+          "brand": "Not(A:Brand",
+          "version": "24.0.0.0"
+        }
+      ],
+      "mobile": false,
+      "platform": "macOS",
+      "platformVersion": "26.6.2"
+    }
+  }
+}

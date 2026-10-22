@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-21T14:16:37.645Z",
+  "date": "2026-10-22T04:30:16.433Z",
   "pages": 26,
-  "publicFiles": 325,
-  "privateScan": "passed",
+  "publicFiles": 358,
+  "privateScan": "skipped: WEEK06_LOCAL_MATERIALS not set",
   "weights": "none",
   "credentials": "none detected",
   "sourceFingerprints": "passed"

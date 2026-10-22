@@ -7,6 +7,7 @@
     "check": "tsc --noEmit && tsc -p tsconfig.engines.json && node scripts/check-delivery.mjs",
     "test": "node --test tests/*.test.mjs",
     "check:browser": "node scripts/check-browser.mjs",
+    "check:browser:v5": "node scripts/check-round5-browser.mjs",
     "preview": "python3 scripts/serve-preview.py"
   },
   "devDependencies": {

@@ -88,7 +88,9 @@ export async function loadDefaultRecord(name){
 export function recordForPage(id,view={}){
  const rs=currentRecords(),full=rs.filter(r=>!r.engine.params?.experiment),pub=state.material?.image.source.material_id==='shide_public';
  if(pub&&id==='D01')return full.filter(r=>r.engine.name===(view.ndlPreview?'ndlocr-lite':'pp-ocrv6')).at(-1);
- return full.filter(r=>r.engine.page_id===id&&!r.default_replay).at(-1)||(pub&&['D03','D05','D06'].includes(id)?full.filter(r=>r.engine.name==='ndlocr-lite').at(-1):null)||rs.at(-1);
+ // The D06/D11 dots replay has no per-position probabilities. Loading it must not
+ // replace the default pipeline record on other pages; explicit pool selection still works.
+ return full.filter(r=>r.engine.page_id===id&&!r.default_replay).at(-1)||(pub&&['D03','D05','D06'].includes(id)?full.filter(r=>r.engine.name==='ndlocr-lite').at(-1):null)||rs.filter(r=>!(r.default_replay&&r.engine.name==='dots.ocr')).at(-1);
 }
 let defaultQueue=Promise.resolve();
 export async function ensurePageMaterial(page,view){
