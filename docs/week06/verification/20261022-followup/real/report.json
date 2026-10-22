@@ -1,0 +1,325 @@
+{
+  "candidate": true,
+  "date": "2026-10-22T05:15:08.708Z",
+  "browser": "155.0.8059.85",
+  "actualModelInference": true,
+  "material": "shide_public",
+  "runs": [
+    {
+      "name": "D17-PP-0",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-22T05:15:12.243Z",
+        "params": {
+          "experiment": "原样，不自动旋转",
+          "autoRotate": false,
+          "manualRotation": 0
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 508.89999985694885,
+        "page_id": "D17"
+      },
+      "text": [
+        ""
+      ],
+      "regions": 1,
+      "input": {
+        "width": 320,
+        "height": 48,
+        "rotation": 0
+      }
+    },
+    {
+      "name": "D17-PP-1",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-22T05:15:14.403Z",
+        "params": {
+          "experiment": "手动逆时针转90°",
+          "autoRotate": false,
+          "manualRotation": -90
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 437.5,
+        "page_id": "D17"
+      },
+      "text": [
+        "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者"
+      ],
+      "regions": 1,
+      "input": {
+        "width": 792,
+        "height": 48,
+        "rotation": 0
+      }
+    },
+    {
+      "name": "D17-PP-2",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-22T05:15:16.726Z",
+        "params": {
+          "experiment": "PP-OCRv6自带竖排处理",
+          "autoRotate": true,
+          "manualRotation": 0
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 439.39999985694885,
+        "page_id": "D17"
+      },
+      "text": [
+        "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者"
+      ],
+      "regions": 1,
+      "input": {
+        "width": 792,
+        "height": 48,
+        "rotation": -90
+      }
+    },
+    {
+      "name": "D17-PP-full",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62 / b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-22T05:15:25.767Z",
+        "params": {
+          "detectOnly": false
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "full",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddle → cropByPoly → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 6355.100000143051,
+        "page_id": "D17"
+      },
+      "text": [
+        "死節而飾主闕亦曰一家之道然也此猶文士之識非史識也能具史識者必知",
+        "欲於記誦之間知所抉擇以成文理耳故曰古人史取成家退處士而進奸雄排",
+        "雖劉氏之所謂才學識猶未足以盡其理也",
+        "之而非者也記誦以爲學也辭采以爲才也擊斷以爲識也非良史之才學識也",
+        "以斷其義非才無以善其文非學無以練其事三者固各有所近也其中固有似",
+        "文也孟子曰其事則齊桓晉文其文則史義則夫子自謂竊取之矣非識無",
+        "劉氏子元蓋以是說謂足盡其理矣雖然史所貴者義也而所具者事也所憑者",
+        "文史通發史德",
+        "夫劉氏以謂有學無識如愚估操金不解貿化推此說以證劉氏之指不過",
+        "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者",
+        "史",
+        "德",
+        "一百四十一"
+      ],
+      "regions": 13,
+      "input": {
+        "width": 1152,
+        "height": 48
+      }
+    },
+    {
+      "name": "D18-1-ndlocr-lite",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-22T05:15:35.638Z",
+        "params": {
+          "experiment": "同一书体／混排行",
+          "autoRotate": true
+        },
+        "model_id": "ndlocr-lite:50216ccc3e600f6d0d152862c5a201fdade78112",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+            "code_path": "TextRecognizer.recognizeCropped → preprocess"
+          }
+        },
+        "elapsed_ms": 1073.5,
+        "page_id": "D18"
+      },
+      "text": [
+        "才￣ヲ挙￣テ識￣ヲ得一不易。而兼三尤難。千古多文人而少良史。職是故也。昔者"
+      ],
+      "regions": 1,
+      "input": {
+        "width": 768,
+        "height": 16
+      }
+    },
+    {
+      "name": "D18-1-pp-ocrv6",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-22T05:15:38.334Z",
+        "params": {
+          "experiment": "同一书体／混排行",
+          "autoRotate": true
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 461,
+        "page_id": "D18"
+      },
+      "text": [
+        "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者"
+      ],
+      "regions": 1,
+      "input": {
+        "width": 792,
+        "height": 48,
+        "rotation": -90
+      }
+    },
+    {
+      "name": "D18-2-ndlocr-lite",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-22T05:15:43.506Z",
+        "params": {
+          "experiment": "同一书体／混排行",
+          "autoRotate": true
+        },
+        "model_id": "ndlocr-lite:50216ccc3e600f6d0d152862c5a201fdade78112",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas / OffscreenCanvas drawImage；浏览器默认平滑缩放；PARSeq 高>宽×0.8 时逆时针旋转90°",
+            "code_path": "TextRecognizer.recognizeCropped → preprocess"
+          }
+        },
+        "elapsed_ms": 308.2000000476837,
+        "page_id": "D18"
+      },
+      "text": [
+        "才￣ヲ挙￣テ識￣ヲ得一不易。而兼三尤難。千古多文人而少良史。職是故也。昔者"
+      ],
+      "regions": 1,
+      "input": {
+        "width": 768,
+        "height": 16
+      }
+    },
+    {
+      "name": "D18-2-pp-ocrv6",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-22T05:15:46.009Z",
+        "params": {
+          "experiment": "同一书体／混排行",
+          "autoRotate": true
+        },
+        "model_id": "pp-ocrv6:28fe5895c24fd108c19eb3e8479f4ab385fbfc62+b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "runtime": {
+          "browser": {
+            "name": "Google Chrome",
+            "version": "155.0.8059.85",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+            "version_source": "userAgentData.fullVersionList"
+          },
+          "preprocessing": {
+            "scope": "line",
+            "implementation": "Canvas 裁切；OpenCV.js 4.10.0 INTER_LINEAR 缩放；竖行按上游规则旋转；全页检测框另经 warpPerspective",
+            "code_path": "paddleLine → rec.preprocessSample"
+          }
+        },
+        "elapsed_ms": 448.39999985694885,
+        "page_id": "D18"
+      },
+      "text": [
+        "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者"
+      ],
+      "regions": 1,
+      "input": {
+        "width": 792,
+        "height": 48,
+        "rotation": -90
+      }
+    }
+  ],
+  "errors": []
+}

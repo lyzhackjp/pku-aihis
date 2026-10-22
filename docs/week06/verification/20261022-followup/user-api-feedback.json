@@ -1,0 +1,15 @@
+{
+  "candidate": true,
+  "date": "2026-10-22",
+  "source": "教师在本对话反馈",
+  "kimi_vision_test": {
+    "status": "passed",
+    "user_message": "看图测试：已通过",
+    "raw_response_collected": false,
+    "credentials_collected": false,
+    "browser_version_collected": false,
+    "elapsed_ms": null
+  },
+  "kimi_course_page_ocr": "尚无实际调用反馈",
+  "deepseek_postprocessing": "尚无真实接口反馈"
+}
