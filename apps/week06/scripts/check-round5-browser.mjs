@@ -34,7 +34,7 @@ async function settle() {
 }
 async function go(id) {
   await page.evaluate(id => document.querySelector('deck-container').go(id), id);
-  await page.locator(`deck-slide.current[slide-id="${id}"]`).waitFor();
+  await page.locator(`deck-slide.current[slide-id="${id==='D13'?'D12':id}"]`).waitFor();
   await page.waitForFunction(() => document.querySelector('deck-slide.current week06-lab')?.materialReady);
   await settle();
   if (id === 'D04') await page.waitForFunction(() => !!document.querySelector('deck-slide.current week06-lab')?.d04?.traces);

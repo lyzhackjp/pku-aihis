@@ -65,7 +65,8 @@ class Week06Lab extends HTMLElement {
  if(k.startsWith('decision-')){const [_,kind,...id]=k.split('-');draft.candidates[kind].decisions[id.join('-')]=value;save().catch(e=>this.status=e.message);}
  if(k.startsWith('task-')){draft.tasks[k.slice(5)]=value;focusTask(this,k.slice(5));save().catch(e=>this.status=e.message);}
  if(['rotation','perspective','threshold'].includes(k)){this.paint().catch(e=>{this.status=e.message;this.renderStatus();});return;}
- if(k==='material'||k==='consent'||k==='crop'||k==='provider'||k==='candidateConsent'||k==='meaningnote')return;
+ if(k==='consent'){this.render();return;}
+ if(k==='material'||k==='crop'||k==='provider'||k==='candidateConsent'||k==='meaningnote')return;
  this.render();
  }
  renderStatus(){const el=this.querySelector('.lab-status');if(el)el.textContent=this.status;}

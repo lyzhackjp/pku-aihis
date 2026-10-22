@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';import assert from 'node:assert/strict';
 const app=path.resolve(import.meta.dirname,'..'),root=path.resolve(app,'../..'),built=app+'/www/pku-aihis/week06';
-const pages=JSON.parse(await fs.readFile(root+'/docs/week06/page-map.json','utf8'));assert.equal(pages.length,26);assert.ok(pages.every(x=>x.component&&x.status==='implemented'));
+const pages=JSON.parse(await fs.readFile(root+'/docs/week06/page-map.json','utf8'));assert.equal(pages.length,25);assert.deepEqual(pages.find(x=>x.id==='D12').aliases,['D13']);assert.ok(pages.every(x=>x.component&&x.status==='implemented'));
 const html=await fs.readFile(built+'/index.html','utf8');for(const p of pages)assert.ok(html.includes(`slide-id="${p.id}"`),p.id);
 const sources=JSON.parse(await fs.readFile(app+'/src/assets/materials/sources.json','utf8'));for(const s of sources){if(s.public===false)assert.ok(!s.file&&!s.sha256);if(s.file){const bytes=await fs.readFile(app+'/src/assets/materials/'+s.file);assert.equal(createHash('sha256').update(bytes).digest('hex'),s.sha256);}}
 const walk=async p=>(await Promise.all((await fs.readdir(p,{withFileTypes:true})).map(x=>x.isDirectory()?walk(path.join(p,x.name)):[path.join(p,x.name)]))).flat();
@@ -10,4 +10,4 @@ let privateScan='skipped: WEEK06_LOCAL_MATERIALS not set';if(process.env.WEEK06_
  for(const f of files){assert.ok(!privateNames.includes(path.basename(f)),'私有文件名进入构建');const bytes=await fs.readFile(f),hash=createHash('sha256').update(bytes).digest('hex');assert.ok(!fingerprints.includes(hash),'私有文件被复制');if(/\.(m?js|json|html|css|txt|md|xml)$/.test(f)){const text=bytes.toString();for(const h of fingerprints)assert.ok(!text.includes(h),'私有指纹进入构建');for(const raw of privateBuffers)if(raw.length>1000)assert.ok(!bytes.includes(raw.subarray(100,1000)),'私有材料内容进入构建');}}
  privateScan='passed';}
 // The source release allowlists have intentionally not been edited. Git diff is documented separately.
-const report={date:new Date().toISOString(),pages:26,publicFiles:files.length,privateScan,weights:'none',credentials:'none detected',sourceFingerprints:'passed'};await fs.writeFile(root+'/docs/week06/verification/public-build.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+const report={date:new Date().toISOString(),pages:pages.length,aliases:{D13:'D12'},publicFiles:files.length,privateScan,weights:'none',credentials:'none detected',sourceFingerprints:'passed'};await fs.writeFile(root+'/docs/week06/verification/public-build.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));

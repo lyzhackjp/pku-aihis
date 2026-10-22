@@ -2038,23 +2038,23 @@
   },
   {
     "id": "D12",
-    "section": "3.2",
+    "section": "3.2—3.3",
     "anchor": "通用多模态大模型",
-    "title": "通用多模态大模型：认得字，指不准",
+    "title": "通用多模态模型：识读、对照与差异",
     "layout": "diagram",
-    "minutes": 5,
+    "minutes": 14,
     "transition": "Gemini、ChatGPT、Kimi 一类通用大模型也能读图。",
-    "question": "通用大模型读文书，长处和短处在哪里？",
-    "student_operation": "为 Kimi K3 填 Key、做一次看图测试，再对同一范围识读；把 Gemini、ChatGPT 网页版的回答粘贴进来对照。",
-    "observable_output": "PureDocBench 原话与数字（Digital −3.34、Real −11.61）；检测得分只及专用中型模型一半左右（厂商自建基准）；Chronicles-OCR 甲骨金文定位近零；现场或保存的框叠在原图上。",
-    "lesson_evidence": "讲义 3.2；PureDocBench（arXiv:2605.07492，结果节）；PP-OCRv6 论文；Chronicles-OCR（arXiv:2605.11960，结果节）。",
+    "question": "认出的文字和位置，怎样与原页和参照核对？",
+    "student_operation": "一次接入 Kimi K3 并识读；中栏切换回答与逐字差异，C栏切换网页版对照、导入参照与研究证据。D13旧链接转到本页。",
+    "observable_output": "PureDocBench 原话与数字（Digital −3.34、Real −11.61）；检测得分只及专用中型模型一半左右（厂商自建基准）；Chronicles-OCR 甲骨金文定位近零；现场或保存的框叠在原图上。 原始回复全文、与参照的逐字差异及分类导出；换识读或参照时清空旧差异分类。",
+    "lesson_evidence": "讲义 3.2；PureDocBench（arXiv:2605.07492，结果节）；PP-OCRv6 论文；Chronicles-OCR（arXiv:2605.11960，结果节）。 讲义 3.3；Gardella et al. 2026（第 4—5 节）；Levchenko 2025（方法与结果）；HisDoc-OCR（全文）。",
     "mode": "浏览器实时调用API／保存结果回放；实际API本轮未调用",
     "notes": {
       "purpose": "\"认得出字、指不准位置\"及其分工含义。",
-      "guide": "课件内只接入 Kimi K3（API，教师 2026-10-22 决定）；Gemini 与 ChatGPT 用网页版，把回答粘贴到右栏对照。不排名次，记录上课当周的型号与版本。",
-      "mechanism": "Chronicles-OCR 是字形最陌生材料上的极端例子，不直接推到一般古籍。"
+      "guide": "课件内只接入 Kimi K3（API，教师 2026-10-22 决定）；Gemini 与 ChatGPT 用网页版，把回答粘贴到右栏对照。不排名次，记录上课当周的型号与版本。 中栏以标签切换原始回答和差异，右栏导入参照、选来源层级并逐行对齐。",
+      "mechanism": "Chronicles-OCR 是字形最陌生材料上的极端例子，不直接推到一般古籍。 原书错字与时代写法本身是证据。"
     },
-    "footer": "D12 / 讲义 3.2；候选，未经教师确认。",
+    "footer": "D12（合并原D13） / 讲义3.2—3.3；候选，未经教师确认。",
     "concepts": [],
     "theme": "light",
     "status": "implemented",
@@ -2079,53 +2079,7 @@
           "text": "选择图像范围，为 Kimi K3 填入 Key 并做看图测试，再明确同意发送。实际返回的坐标画回原图；保存回复和错误。",
           "source": "实际请求入口；本课输出待课前运行。"
         }
-      ]
-    },
-    "ui_copy": {
-      "c001": "识字",
-      "c002": " · 流水线 −",
-      "c003": "现场试一页"
-    },
-    "ui_round2": {
-      "prompt": "逐字照录，不改字，不补字；看不清的字写［？］"
-    },
-    "material_defaults": {
-      "public": "shide_public",
-      "local": "shide",
-      "record": "latest matching image; otherwise public saved real run / local NDL XML",
-      "public_record": "shide-1926-default-record.json.gz（2026-10-21 Chrome 真实 PP-OCRv6 运行；保存结果回放）"
-    }
-  },
-  {
-    "id": "D13",
-    "section": "3.3",
-    "anchor": "另一种错误",
-    "title": "另一种错误：通顺而错误",
-    "layout": "flow4",
-    "minutes": 9,
-    "transition": "视觉语言模型的错误，常常读起来不像错误。",
-    "question": "哪些错误不会在错误率里显出来？",
-    "steps": [
-      "四类错误",
-      "中位数与平均数",
-      "改对与古化",
-      "本课输出"
-    ],
-    "student_operation": "为 Kimi K3 填 Key、做一次看图测试（内置测试图\"史德 7141\"），编辑提示词后识读；导入参照、逐行对齐并为每处差异选六类标签。",
-    "observable_output": "原始回复全文、与参照的逐字差异及分类导出；换识读或参照时清空旧差异分类。",
-    "lesson_evidence": "讲义 3.3；Gardella et al. 2026（第 4—5 节）；Levchenko 2025（方法与结果）；HisDoc-OCR（全文）。",
-    "mode": "浏览器实时调用API／保存结果回放；实际API本轮未调用",
-    "notes": {
-      "purpose": "原书错字与时代写法本身是证据。",
-      "guide": "为 Kimi K3 填 Key、做一次看图测试（内置测试图\"史德 7141\"），编辑提示词后识读；导入参照、逐行对齐并为每处差异选六类标签。",
-      "mechanism": "原始回复全文、与参照的逐字差异及分类导出；换识读或参照时清空旧差异分类。"
-    },
-    "footer": "D13 / 讲义 3.3；候选，未经教师确认。",
-    "concepts": [],
-    "theme": "light",
-    "status": "implemented",
-    "component": "week06-lab",
-    "ui": {
+      ],
       "evidence": [
         {
           "text": "Levchenko：GPT-4o 在其 18 世纪俄文印本样本的 59% 文件中出现过度古化。",
@@ -2141,15 +2095,9 @@
       ]
     },
     "ui_copy": {
-      "c001": "</p><p class=\"metrics\">CER 中位数 ",
-      "c002": "% · 平均数 ",
-      "c003": "漏读／循环重复",
-      "c004": "统一拼写与标点",
-      "c005": "看不清处补写",
-      "c006": "替换同类人名或国名",
-      "c007": "待课前运行：需要同页的原始识读与 MLLM 实际输出",
-      "c008": "本组最容易被改写的一类字词",
-      "c009": "另一类字词"
+      "c001": "识字",
+      "c002": " · 流水线 −",
+      "c003": "现场试一页"
     },
     "ui_round2": {
       "prompt": "逐字照录，不改字，不补字；看不清的字写［？］",
@@ -2167,7 +2115,10 @@
       "local": "shide",
       "record": "latest matching image; otherwise public saved real run / local NDL XML",
       "public_record": "shide-1926-default-record.json.gz（2026-10-21 Chrome 真实 PP-OCRv6 运行；保存结果回放）"
-    }
+    },
+    "aliases": [
+      "D13"
+    ]
   },
   {
     "id": "D14",

@@ -68,10 +68,10 @@
   },
   {
     "id": "deepseek",
-    "label": "DeepSeek",
+    "label": "DeepSeek V4.1 Flash",
     "baseUrl": "https://api.deepseek.com",
     "protocol": "openai",
-    "model": "",
+    "model": "deepseek-flash",
     "image_format": "content[].image_url.url = data:image/png;base64,…",
     "coordinates": "pixel-xywh",
     "coordinate_status": "课件提示词约定；所选具体模型的官方坐标默认值待核",
@@ -80,10 +80,21 @@
         "url": "https://api-docs.deepseek.com/guides/vision/",
         "read_date": "2026-10-20",
         "read_depth": "接口与图像传入示例"
+      },
+      {
+        "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+        "read_date": "2026-10-22",
+        "read_depth": "API型号 deepseek-flash 与当前版本 V4.1-Flash-1017 的对应"
+      },
+      {
+        "url": "https://api-docs.deepseek.com/guides/thinking_mode/",
+        "read_date": "2026-10-22",
+        "read_depth": "默认思考模式，reasoning_effort 支持 low/high/max"
       }
     ],
-    "verified_date": "2026-10-20",
-    "notes": "填写有权调用的实际视觉模型名，并通过公开图测试。"
+    "verified_date": "2026-10-22",
+    "notes": "V4.1 Flash 的官方 API 型号为 deepseek-flash；2026-10-22 文档对应 V4.1-Flash-1017。后处理默认低推理强度，输出预算至少32768；真实权限与效果须用本人的 Key 检验。",
+    "reasoning_effort": "low"
   },
   {
     "id": "qwen",

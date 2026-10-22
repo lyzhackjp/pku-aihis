@@ -7,7 +7,6 @@ import { renderD07, hydrateD07 } from './d07.js';
 import { renderD08, hydrateD08 } from './d08.js';
 import { renderD11, hydrateD11 } from './d11.js';
 import { renderD12, hydrateD12 } from './d12.js';
-import { renderD13, hydrateD13 } from './d13.js';
 import { renderD15, hydrateD15 } from './d15.js';
 
 const PAGES = {
@@ -19,7 +18,6 @@ const PAGES = {
   D08: { render: renderD08, hydrate: hydrateD08 },
   D11: { render: renderD11, hydrate: hydrateD11 },
   D12: { render: renderD12, hydrate: hydrateD12 },
-  D13: { render: renderD13, hydrate: hydrateD13 },
   D15: { render: renderD15, hydrate: hydrateD15 },
 };
 

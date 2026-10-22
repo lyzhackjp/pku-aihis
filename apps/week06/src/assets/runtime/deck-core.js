@@ -15,10 +15,10 @@
     set(k, v) { try { localStorage.setItem(STORE + k, JSON.stringify(v)); } catch { /* 浏览器不允许存储时只保留内存状态 */ } },
     del(k) { try { localStorage.removeItem(STORE + k); } catch { /* ignore */ } },
   };
-  const pageById = (id) => DATA.pages.find((p) => p.id === id);
+  const pageById = (id) => DATA.pages.find((p) => p.id === id || p.aliases?.includes(id));
   const pageLink = (id, label) => {
     const p = pageById(id);
-    const candidate=document.querySelector(`deck-slide[slide-id="${id}"]`);const built=candidate&&['implemented','prototype'].includes(candidate.dataset.status);
+    const candidate=document.querySelector(`deck-slide[slide-id="${p?.id||id}"]`);const built=candidate&&['implemented','prototype'].includes(candidate.dataset.status);
     return `<a href="#${id}" class="${built ? '' : 'planned-link'}" title="${esc(p ? p.title : id)}">${esc(label || id)}${built ? '' : '（规划页）'}</a>`;
   };
   const download = (name, text, type = 'text/markdown') => {
@@ -123,7 +123,7 @@
       this.returnTo[kind] = here; this.go(target);
     }
     go(id, fromHash) {
-      let i = typeof id === 'number' ? id : this.ids.indexOf(id);
+      let i = typeof id === 'number' ? id : this.ids.indexOf(pageById(id)?.id||id);
       if (i < 0) i = 0;
       if (i >= this.slides.length) return;
       // 放大图、原页阅读等弹窗只属于当前页；翻页时一并关闭，避免遮住下一页。

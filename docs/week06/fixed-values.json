@@ -294,7 +294,7 @@
       "what": "页表分钟合计",
       "expect": {
         "minutes": 160,
-        "pages": 26,
+        "pages": 25,
         "concepts": 34
       }
     },
