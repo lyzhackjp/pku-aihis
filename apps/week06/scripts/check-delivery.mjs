@@ -9,5 +9,5 @@ let privateScan='skipped: WEEK06_LOCAL_MATERIALS not set';if(process.env.WEEK06_
  const privateBuffers=await Promise.all(Object.values(config.files).filter(x=>x.local_only&&x.sha256).map(x=>fs.readFile(path.join(course,x.path))));
  for(const f of files){assert.ok(!privateNames.includes(path.basename(f)),'私有文件名进入构建');const bytes=await fs.readFile(f),hash=createHash('sha256').update(bytes).digest('hex');assert.ok(!fingerprints.includes(hash),'私有文件被复制');if(/\.(m?js|json|html|css|txt|md|xml)$/.test(f)){const text=bytes.toString();for(const h of fingerprints)assert.ok(!text.includes(h),'私有指纹进入构建');for(const raw of privateBuffers)if(raw.length>1000)assert.ok(!bytes.includes(raw.subarray(100,1000)),'私有材料内容进入构建');}}
  privateScan='passed';}
-// The source release allowlists have intentionally not been edited. Git diff is documented separately.
+// The full-site release allowlist is checked separately by scripts/check-public.mjs.
 const report={date:new Date().toISOString(),pages:pages.length,aliases:{D13:'D12'},publicFiles:files.length,privateScan,weights:'none',credentials:'none detected',sourceFingerprints:'passed'};await fs.writeFile(root+'/docs/week06/verification/public-build.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));

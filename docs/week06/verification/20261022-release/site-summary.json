@@ -1,0 +1,18 @@
+{
+  "candidate": true,
+  "phase": "local-preview-before-push",
+  "weeks": [
+    "week03",
+    "week04",
+    "week05",
+    "week06"
+  ],
+  "tools": [
+    "material-importer"
+  ],
+  "files": 4059,
+  "bytes": 491212145,
+  "week06_files": 361,
+  "modelInference": false,
+  "apiCalls": false
+}
