@@ -1,6 +1,14 @@
 # 第六周 dots.ocr 本机服务
 
-候选，未经教师确认。只实现接口与离线加载代码；本次未下载权重、未加载真实模型、未作 CPU/MPS 推理。
+候选，未经教师确认。
+
+## 在教师 Mac 上配置（2026-10-22 起）
+
+双击 `第六周/demo/配置dots.ocr.command`，它调用本目录的 `setup-mac.sh`：检查系统、内存与磁盘；在 `第六周/demo/.venv-dots` 安装 `requirements.txt` 的固定版本；按 `model-manifest.json` 从 Hugging Face 固定 revision 下载 16 个文件（约 6.1 GB，`curl -C -` 续传），逐个核对 SHA-256；然后启动服务、加载模型，用公开的 1926 年本《史德》一块做 `ocr_only` 试跑，报告写入 `第六周/demo/运行记录/dots/配置报告-*.md`。之后上课前双击 `启动dots服务.command` 即加载模型（默认 MPS）。
+
+数据类型改为 bfloat16：模型的视觉部分在 `forward(bf16=True)` 里把输入转成 bfloat16（`modeling_dots_vision.py` 第 492—494 行，固定 revision），以 float32 加载时第一层卷积就会因类型不符报错。`--dtype float32` 仅保留作对照。
+
+以下为第一版说明。
 
 服务仅绑定 127.0.0.1:8786。默认启动不加载模型，`GET /health` 返回 `loaded:false`；`POST /parse` 返回真实的 `not_loaded`。通过前端“读取保存记录”回放统一 JSON 或服务日志。D11 勾选“不用 dots.ocr”后，按钮禁用，只显示官方图及“本课未运行”。
 

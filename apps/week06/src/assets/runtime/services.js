@@ -79,7 +79,7 @@ window.addEventListener('message',async e=>{if(e.origin!==location.origin||e.sou
 window.W6ServicesReady=ready.then(()=>({openImporter}));
 
 export const materialMode=()=>['localhost','127.0.0.1'].includes(location.hostname)&&new URLSearchParams(location.search).get('local')==='1'?'local':'public';
-const defaultFiles={'ndlocr-lite':'shide-1926-ndl-default-record.json.gz','pp-ocrv6':'shide-1926-default-record.json.gz'},defaultRecords=new Map();
+const defaultFiles={'ndlocr-lite':'shide-1926-ndl-default-record.json.gz','pp-ocrv6':'shide-1926-default-record.json.gz','dots.ocr':'shide-1926-dots-default-record.json.gz'},defaultRecords=new Map();
 export async function loadDefaultRecord(name){
  if(!defaultFiles[name])return null;
  if(!defaultRecords.has(name))defaultRecords.set(name,(async()=>{const response=await fetch('assets/materials/'+defaultFiles[name]);if(!response.ok)throw Error('默认记录未取得：'+name);const record=validateRecord(await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).json());record.original_run_mode=record.engine.run_mode;record.engine.run_mode='保存结果回放';record.default_replay=defaultFiles[name];return record;})().catch(e=>{defaultRecords.delete(name);throw e;}));
@@ -98,7 +98,7 @@ export async function ensurePageMaterial(page,view){
   if(state.material?.image.source.material_id!==id)await selectMaterial(id);
   if(mode==='public'&&id==='shide_public'){
    if(page.id==='D08'&&!state.controlled_experiments){const response=await fetch('assets/materials/d08-round4-controlled.json.gz');if(response.ok){state.controlled_experiments=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).json();await save();}}
-   const names=['D03','D05','D06'].includes(page.id)||page.id==='D01'&&view.ndlPreview?['ndlocr-lite']:['pp-ocrv6'];
+   const names=['D03','D05','D06'].includes(page.id)||page.id==='D01'&&view.ndlPreview?['ndlocr-lite']:page.id==='D11'?['pp-ocrv6','dots.ocr']:['pp-ocrv6'];if(page.id==='D06')names.push('dots.ocr');
    for(const name of names)if(!currentRecords().some(r=>r.engine.name===name&&!r.engine.params?.experiment)){
     const record=await loadDefaultRecord(name);if(record.image.sha256!==state.material.image.sha256)throw Error('默认记录与页影指纹不符');await addRecord(record);
    }

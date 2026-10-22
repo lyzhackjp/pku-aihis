@@ -1,9 +1,9 @@
 import {Component,h,State,Listen} from '@stencil/core';
-import {getModelSettings,setModelSettings,isModelReady,chatCompletions,chatEndpoint,presets,COORDINATES,getProfiles,selectProfile,addProfile,visionReady,testVision} from '../shared/model-settings';
+import {getModelSettings,setModelSettings,isModelReady,chatCompletions,chatEndpoint,presets,COORDINATES,getProfiles,selectProfile,addProfile,visionReady,testVision,ensurePreset,openModelSettings} from '../shared/model-settings';
 @Component({tag:'model-connection',shadow:false})
 export class ModelConnection {
  @State() open=false;@State() c=getModelSettings();@State() status='';@State() busy=false;
- componentWillLoad(){(window as any).W6Chat={settings:getModelSettings,ready:isModelReady,chat:chatCompletions,endpoint:chatEndpoint,profiles:getProfiles,visionReady,presets,coordinates:COORDINATES};}
+ componentWillLoad(){(window as any).W6Chat={ensurePreset,testVision,open:openModelSettings,settings:getModelSettings,ready:isModelReady,chat:chatCompletions,endpoint:chatEndpoint,profiles:getProfiles,visionReady,presets,coordinates:COORDINATES};}
  @Listen('open-model-settings',{target:'window'}) show(){this.c=getModelSettings();this.open=true;}
  @Listen('model-settings-change',{target:'window'}) refresh(){this.c=getModelSettings();}
  update(p:any){setModelSettings(p);this.c=getModelSettings();}

@@ -29,7 +29,7 @@ def verify_model(path):
     if any(str(f.relative_to(path)) not in pinned for f in path.rglob('*.py')):
         raise ValueError('unverified Python source in model directory')
 
-def model_worker(path, device, commands, replies):
+def model_worker(path, device, commands, replies, dtype_name='bfloat16'):
     os.environ.update(HF_HUB_OFFLINE='1', TRANSFORMERS_OFFLINE='1')
     try:
         verify_model(Path(path))
@@ -37,11 +37,13 @@ def model_worker(path, device, commands, replies):
         from PIL import Image
         from transformers import AutoModelForCausalLM, AutoProcessor
         if device == 'mps' and not torch.backends.mps.is_available(): raise RuntimeError('MPS unavailable')
-        dtype = torch.float32  # Conservative candidate; no untested bfloat16 claim.
+        # The vision tower casts its input to bfloat16 (modeling_dots_vision.py, forward(bf16=True)),
+        # so float32 weights fail at the first convolution. bfloat16 works on CPU and on Apple MPS (macOS 14+).
+        dtype = {'bfloat16': torch.bfloat16, 'float32': torch.float32}[dtype_name]
         model = AutoModelForCausalLM.from_pretrained(path, local_files_only=True, trust_remote_code=True,
                 torch_dtype=dtype, attn_implementation='eager').to(device).eval()
         processor = AutoProcessor.from_pretrained(path, local_files_only=True, trust_remote_code=True)
-        replies.put({'ready':True, 'backend':'transformers-'+device, 'device':device, 'dtype':'float32'})
+        replies.put({'ready':True, 'backend':'transformers-'+device, 'device':device, 'dtype':dtype_name})
     except Exception as exc:
         replies.put({'ready':False,'error':str(exc)}); return
     while True:
@@ -60,14 +62,14 @@ def model_worker(path, device, commands, replies):
             replies.put({'error':'oom' if 'out of memory' in str(exc).lower() else 'inference_error','detail':str(exc)})
 
 class Engine:
-    def __init__(self, model_dir, device, load=False, timeout=180):
+    def __init__(self, model_dir, device, load=False, timeout=180, dtype='bfloat16'):
         self.loaded=False; self.loading=False; self.error=None; self.backend='not_loaded'
         self.device='none'; self.dtype='none'; self.started_at=now(); self.timeout=timeout
         self.lock=threading.Lock(); self.process=None
         if load:
             self.loading=True
             self.commands=mp.Queue(); self.replies=mp.Queue()
-            self.process=mp.Process(target=model_worker,args=(str(model_dir),device,self.commands,self.replies),daemon=True)
+            self.process=mp.Process(target=model_worker,args=(str(model_dir),device,self.commands,self.replies,dtype),daemon=True)
             self.process.start(); threading.Thread(target=self._watch_load,daemon=True).start()
     def _watch_load(self):
         try:
@@ -179,9 +181,9 @@ def make_handler(engine,log_root):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--port',type=int,default=int(os.getenv('WEEK06_DOTS_PORT','8786')))
-    p.add_argument('--model-dir',type=Path,default=COURSE/'第六周/demo/模型/dots.ocr');p.add_argument('--device',choices=['cpu','mps'],default='cpu')
+    p.add_argument('--model-dir',type=Path,default=COURSE/'第六周/demo/模型/dots.ocr');p.add_argument('--device',choices=['cpu','mps'],default='cpu');p.add_argument('--dtype',choices=['bfloat16','float32'],default='bfloat16')
     p.add_argument('--load',action='store_true',help='Load already present, verified files; never download')
     p.add_argument('--log-dir',type=Path,default=COURSE/'第六周/demo/运行记录/dots');p.add_argument('--timeout',type=int,default=180);a=p.parse_args()
-    engine=Engine(a.model_dir,a.device,a.load,a.timeout)
+    engine=Engine(a.model_dir,a.device,a.load,a.timeout,a.dtype)
     print(f'dots.ocr service http://127.0.0.1:{a.port}; model loading requested: {a.load}',flush=True)
     ThreadingHTTPServer(('127.0.0.1',a.port),make_handler(engine,a.log_dir)).serve_forever()
