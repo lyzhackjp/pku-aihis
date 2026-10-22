@@ -1,0 +1,54 @@
+$ node --test tests/*.test.mjs
+﹣ F01 saved NDL line counts and original TYPE (0.350166ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F02 column label and page number remain original OCR (0.036917ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F03 confidence and bbox of semantic error (0.029625ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F04 lowest-confidence lines (0.033375ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F05 same-page variant outputs (0.039ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F06 text vs unrecognized blocks are not conflated (0.026291ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F07 saved 良/艮 example (0.025875ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+✖ F08 actual shared NDL character inventory (3.956083ms)
+﹣ F09 115-character alignment with editable mapping (0.273459ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+✔ F10 CTC merge before blank deletion (0.37275ms)
+✔ F11 Gardella quoted median and mean (0.048583ms)
+✔ F12 PureDocBench reported changes (0.032375ms)
+✔ F13 Sasagawa synthetic orientation comparison (0.024875ms)
+✔ F14 HIPE source figures (0.02225ms)
+✔ F15 eight interference groups cover each original number exactly once (0.046541ms)
+✔ F16 page map minutes, pages, concepts (1.687042ms)
+✔ adapters preserve null text, XML hierarchy and Unicode entities (0.774833ms)
+✔ NDLLite must not label detector score as recognition confidence (0.134ms)
+✔ PP, Florence, dots and invalid MLLM retain raw output (0.223166ms)
+✔ PAGE-XML preserves polygon baseline text and confidence (0.222583ms)
+✔ XY cutting uses actual whitespace and direction (0.177833ms)
+✔ CER codepoints, NFC, S/D/I, denominator, line order (0.313667ms)
+✔ Otsu, manual threshold and geometry are immutable (0.164583ms)
+✔ schema validation and max IoU matching (0.844708ms)
+✔ seven dependent stages reject mutation and corrupt restore (2.844167ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 16
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 8
+ℹ todo 0
+ℹ duration_ms 51.098167
+
+✖ failing tests:
+
+test at tests/ocr.test.mjs:16:1
+✖ F08 actual shared NDL character inventory (3.956083ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  7141 !== 7143
+
+      at TestContext.<anonymous> (file:///Users/liyuanzhen/Desktop/2026%E5%B9%B4%E7%A7%8B%E5%AD%A3%E5%AD%A6%E6%9C%9F/%E3%80%8A%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E8%B5%8B%E8%83%BD%E5%8E%86%E5%8F%B2%E7%A0%94%E7%A9%B6%E4%B8%8E%E5%86%99%E4%BD%9C%E3%80%8B%E8%AF%BE%E7%A8%8B%E6%9D%90%E6%96%99/pku-aihis/apps/week06/tests/ocr.test.mjs:16:284)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 7141,
+    expected: 7143,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+[ELIFECYCLE] Test failed. See above for more details.

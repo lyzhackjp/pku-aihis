@@ -50,6 +50,13 @@ export class NDLModelStore {
     }));
   }
 
+  async inspect(name: string) {
+    const spec=this.models[name];if(!spec)throw Error('模型未登记');const cache=await this.cache();
+    const keys=[this.key(name),new URL(`/models/${name}?sha256=${spec.sha256}`,this.baseURL).href];
+    for(const key of new Set(keys)){const r=await cache?.match(key);if(!r)continue;const b=await r.arrayBuffer(),hash=await sha256(b);return {name,cached:true,bytes:b.byteLength,sha256:hash,expected:spec,verified:b.byteLength===spec.bytes&&hash===spec.sha256};}
+    return {name,cached:false,bytes:null,sha256:null,expected:spec,verified:false};
+  }
+
   async clear() {
     const cache = await this.openCache();
     for (const name of Object.keys(this.models)) {
@@ -59,7 +66,7 @@ export class NDLModelStore {
     }
   }
 
-  async load(name: string, progress: (text: string) => void = () => {}, signal?: AbortSignal) {
+  async load(name: string, progress: (text: string) => void = () => {}, signal?: AbortSignal, allowDownload = true) {
     checkAbort(signal);
     const spec = this.models[name];
     if (!spec) throw Error(`模型未登记：${name}`);
@@ -84,6 +91,7 @@ export class NDLModelStore {
       progress(`缓存校验失败，重新取得：${name}`);
     }
 
+    if(!allowDownload)throw Error(`未缓存或校验失败：${name}。请到“课前检查”下载并校验。`);
     const urls = new Set([
       new URL(`models/${name}`, this.baseURL).href,
       new URL(`/models/${name}`, this.baseURL).href,

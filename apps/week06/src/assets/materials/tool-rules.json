@@ -1,0 +1,144 @@
+[
+  {
+    "id": "R1",
+    "when": {
+      "script": [
+        "ja"
+      ],
+      "hand": [
+        false
+      ]
+    },
+    "tool": "NDLOCR-Lite",
+    "reason": "日文近代印刷物，含柱、页码、振假名类别",
+    "coordinates": "有，检测框",
+    "offline": "缓存模型后可本机运行",
+    "reproducible": "固定模型修订、参数、输入指纹",
+    "source": "讲义 @fig-tools；R8为本课比较流程，未经教师确认"
+  },
+  {
+    "id": "R2",
+    "when": {
+      "script": [
+        "ja"
+      ],
+      "hand": [
+        true
+      ]
+    },
+    "tool": "NDL古典籍OCR-Lite（需课前另备）",
+    "reason": "くずし字候选起点；浏览器此页NDL模型不能冒充古典籍专用模型",
+    "coordinates": "有",
+    "offline": "本机",
+    "reproducible": "保存版本与翻刻小样本",
+    "source": "讲义 @fig-tools；R8为本课比较流程，未经教师确认"
+  },
+  {
+    "id": "R3",
+    "when": {
+      "script": [
+        "zh",
+        "ja",
+        "latin"
+      ],
+      "hand": [
+        false
+      ]
+    },
+    "tool": "PaddleOCR / PP-OCRv6",
+    "reason": "中文古籍、中英日及多种拉丁文字的候选起点",
+    "coordinates": "有，DB框",
+    "offline": "缓存后可本机",
+    "reproducible": "固定ONNX与字典；保存参数",
+    "source": "讲义 @fig-tools；R8为本课比较流程，未经教师确认"
+  },
+  {
+    "id": "R4",
+    "when": {
+      "script": [
+        "latin"
+      ],
+      "hand": [
+        true
+      ]
+    },
+    "tool": "Kraken／eScriptorium；MEDUSA",
+    "reason": "欧洲中世纪与近代早期手稿；需匹配模型和录文规范",
+    "coordinates": "Kraken分割提供坐标；MEDUSA逐行输入",
+    "offline": "本机配置后可用",
+    "reproducible": "记录模型DOI、训练范围及规范",
+    "source": "讲义 @fig-tools；R8为本课比较流程，未经教师确认"
+  },
+  {
+    "id": "R5",
+    "when": {
+      "hand": [
+        true
+      ],
+      "private": [
+        false
+      ],
+      "offline": [
+        false
+      ]
+    },
+    "tool": "Transkribus",
+    "reason": "各类手写档案；根据书体选择公开模型",
+    "coordinates": "平台保留行与区域",
+    "offline": "在线平台",
+    "reproducible": "保存模型ID、版本、导出PAGE/ALTO",
+    "source": "讲义 @fig-tools；R8为本课比较流程，未经教师确认"
+  },
+  {
+    "id": "R6",
+    "when": {
+      "script": [
+        "zh",
+        "other"
+      ],
+      "hand": [
+        true
+      ]
+    },
+    "tool": "人工转录＋Kraken训练候选",
+    "reason": "敦煌汉文写本与胡语文书没有本课已验证的成熟专用模型",
+    "coordinates": "人工框选／训练分割模型",
+    "offline": "可以本机",
+    "reproducible": "保存人工小样本与训练记录",
+    "source": "讲义 @fig-tools；R8为本课比较流程，未经教师确认"
+  },
+  {
+    "id": "R7",
+    "when": {
+      "coords": [
+        false
+      ],
+      "private": [
+        false
+      ],
+      "offline": [
+        false
+      ]
+    },
+    "tool": "通用多模态模型初读",
+    "reason": "需要快速初读，必须逐字回查",
+    "coordinates": "不保证可靠",
+    "offline": "本页云端接口需联网",
+    "reproducible": "记录完整请求／回复／usage／版本",
+    "source": "讲义 @fig-tools；R8为本课比较流程，未经教师确认"
+  },
+  {
+    "id": "R8",
+    "when": {
+      "complex": [
+        true
+      ]
+    },
+    "tool": "版面小样本比较：NDL / PP / dots.ocr",
+    "reason": "复杂版面先看框、类别与读序；不要只比较串行文字",
+    "coordinates": "分别检验",
+    "offline": "dots需本机服务与硬件；浏览器用NDL/PP",
+    "reproducible": "保留每种引擎中间结果",
+    "source": "讲义 @fig-tools；R8为本课比较流程，未经教师确认"
+  }
+]

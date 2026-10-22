@@ -1,0 +1,2 @@
+$ tsc --noEmit && tsc -p tsconfig.engines.json && node scripts/check-delivery.mjs
+{"date":"2026-10-22T04:30:16.433Z","pages":26,"publicFiles":358,"privateScan":"skipped: WEEK06_LOCAL_MATERIALS not set","weights":"none","credentials":"none detected","sourceFingerprints":"passed"}

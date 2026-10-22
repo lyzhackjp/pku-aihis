@@ -1,0 +1,1 @@
+{"compilerOptions": {"module": "ESNext", "target": "ES2022", "moduleResolution": "bundler", "lib": ["ES2022", "DOM", "DOM.Iterable"], "types": ["vite/client", "node"], "skipLibCheck": true, "resolveJsonModule": true, "allowSyntheticDefaultImports": true, "noEmit": true}, "include": ["src/engines/index.ts", "src/engines/paddle-upstream/types/*.d.ts"]}

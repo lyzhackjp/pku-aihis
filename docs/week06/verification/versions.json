@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-18",
+  "candidate": true,
+  "os": "macOS 26.6.2 arm64",
+  "node": "24.19.0",
+  "pnpm": "11.25.0",
+  "python": "3.12.1",
+  "Pillow_protocol_test": "12.3.0",
+  "stencil": "4.45.0",
+  "typescript": "5.9.3",
+  "vite": "7.3.1",
+  "playwright": "1.63.0",
+  "chrome": "155.0.8059.80",
+  "transformers_js": "3.8.1",
+  "onnxruntime_web": "1.24.3",
+  "opencv_js": "4.10.0-release.1",
+  "actual_model_inference": false,
+  "formal_preclass_trial": false
+}

@@ -1,0 +1,242 @@
+[
+  {
+    "group": "body",
+    "id": "body-original",
+    "shape": [
+      50,
+      825
+    ],
+    "expected": [
+      50,
+      825
+    ],
+    "audits": []
+  },
+  {
+    "group": "body",
+    "id": "body-de",
+    "shape": [
+      50,
+      825
+    ],
+    "expected": [
+      50,
+      825
+    ],
+    "audits": [
+      {
+        "cell": [
+          7,
+          146,
+          33,
+          29
+        ],
+        "donorBox": [
+          694,
+          371,
+          33,
+          34
+        ],
+        "label": "得 → 德",
+        "background": 255,
+        "donorBackground": 251,
+        "changedPixels": 812,
+        "outsidePixels": 0,
+        "changedBounds": [
+          7,
+          146,
+          33,
+          29
+        ]
+      }
+    ]
+  },
+  {
+    "group": "body",
+    "id": "body-context",
+    "shape": [
+      50,
+      825
+    ],
+    "expected": [
+      50,
+      825
+    ],
+    "audits": [
+      {
+        "cell": [
+          7,
+          146,
+          33,
+          29
+        ],
+        "donorBox": [
+          694,
+          371,
+          33,
+          34
+        ],
+        "label": "得 → 德",
+        "background": 255,
+        "donorBackground": 251,
+        "changedPixels": 812,
+        "outsidePixels": 0,
+        "changedBounds": [
+          7,
+          146,
+          33,
+          29
+        ]
+      },
+      {
+        "cell": [
+          7,
+          117,
+          33,
+          29
+        ],
+        "donorBox": [
+          493,
+          171,
+          32,
+          30
+        ],
+        "label": "者 → 文",
+        "background": 255,
+        "donorBackground": 255,
+        "changedPixels": 578,
+        "outsidePixels": 0,
+        "changedBounds": [
+          8,
+          118,
+          32,
+          28
+        ]
+      }
+    ]
+  },
+  {
+    "group": "body",
+    "comparison": {
+      "changedPixels": 578,
+      "outsidePixels": 0,
+      "changedBounds": [
+        8,
+        118,
+        32,
+        28
+      ]
+    }
+  },
+  {
+    "group": "title",
+    "id": "title-original",
+    "shape": [
+      50,
+      190
+    ],
+    "expected": [
+      50,
+      190
+    ],
+    "audits": []
+  },
+  {
+    "group": "title",
+    "id": "title-cai",
+    "shape": [
+      50,
+      190
+    ],
+    "expected": [
+      50,
+      190
+    ],
+    "audits": [
+      {
+        "cell": [
+          7,
+          7,
+          36,
+          37
+        ],
+        "donorBox": [
+          593,
+          229,
+          32,
+          28
+        ],
+        "label": "史 → 才",
+        "background": 255,
+        "donorBackground": 255,
+        "changedPixels": 874,
+        "outsidePixels": 0,
+        "changedBounds": [
+          7,
+          8,
+          36,
+          36
+        ]
+      }
+    ]
+  },
+  {
+    "group": "title",
+    "comparison": {
+      "changedPixels": 874,
+      "outsidePixels": 0,
+      "changedBounds": [
+        7,
+        8,
+        36,
+        36
+      ]
+    }
+  },
+  {
+    "group": "mask",
+    "id": "mask-original",
+    "shape": [
+      50,
+      190
+    ],
+    "expected": [
+      50,
+      190
+    ],
+    "audits": []
+  },
+  {
+    "group": "mask",
+    "id": "mask-de",
+    "shape": [
+      50,
+      190
+    ],
+    "expected": [
+      50,
+      190
+    ],
+    "audits": [
+      {
+        "cell": [
+          7,
+          141,
+          36,
+          35
+        ],
+        "label": "德格遮盖",
+        "background": 255,
+        "donorBackground": 255,
+        "changedPixels": 900,
+        "outsidePixels": 0,
+        "changedBounds": [
+          8,
+          141,
+          35,
+          34
+        ]
+      }
+    ]
+  }
+]

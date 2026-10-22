@@ -1,0 +1,9 @@
+{
+  "date": "2026-10-22",
+  "browser_surface": "ChatGPT in-app browser",
+  "browser_row": "✓\t浏览器\tGoogle Chrome 155.0.8059.80\t",
+  "system_row": "·\t系统\tmacOS 26.6.2 arm\t",
+  "source": "同一浏览器的课前检查页自动环境检测",
+  "model_endpoint": "https://api.deepseek.com/chat/completions",
+  "via_proxy": false
+}

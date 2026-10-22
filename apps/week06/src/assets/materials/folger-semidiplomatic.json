@@ -1,0 +1,52 @@
+{
+  "source_url": "https://emmo.folger.edu/view/La2/semidiplomatic/",
+  "source_tier": "公开转录",
+  "edition": "semidiplomatic",
+  "page": "leaf 1 recto",
+  "lines": [
+    {
+      "id": "1",
+      "html": "<span style=\"left: 75px;\"><span style=\"left: 75px;\">After most harty com<span style=\"font-style:italic;\">m</span>endac<span style=\"font-style:italic;\">i</span>ons Righte worshipfull evon So I Shalbe glad",
+      "text": "After most harty commendacions Righte worshipfull evon So I Shalbe glad"
+    },
+    {
+      "id": "2",
+      "html": "to here of your yealthe and well doyng as your Brother S<span style=\"font-style:italic;\">i</span>r Rauff was",
+      "text": "to here of your yealthe and well doyng as your Brother Sir Rauff was"
+    },
+    {
+      "id": "3",
+      "html": "vppon Wensdaie last att Stafford castill and where as my Brother",
+      "text": "vppon Wensdaie last att Stafford castill and where as my Brother"
+    },
+    {
+      "id": "4",
+      "html": "in lawe the Brynger hereof Iohn Bagott haithe a vnconstant hedd",
+      "text": "in lawe the Brynger hereof Iohn Bagott haithe a vnconstant hedd"
+    },
+    {
+      "id": "5",
+      "html": "and is more youthfull and wilfull then Sober wittyd haithe vowed",
+      "text": "and is more youthfull and wilfull then Sober wittyd haithe vowed"
+    },
+    {
+      "id": "6",
+      "html": "a voyage into Ireland to go Sowe his wild oot<span style=\"font-style:italic;\">es</span> god Send them",
+      "text": "a voyage into Ireland to go Sowe his wild ootes god Send them"
+    },
+    {
+      "id": "7",
+      "html": "good Reypinge / in dede he haithe witt ynoughe Butt a foole haithe",
+      "text": "good Reypinge / in dede he haithe witt ynoughe Butt a foole haithe"
+    },
+    {
+      "id": "8",
+      "html": "the kepynge therof / albeit I do assure you he is vnsusspected of",
+      "text": "the kepynge therof / albeit I do assure you he is vnsusspected of"
+    }
+  ],
+  "note": "纯文本去除了上划线、上标、斜体等排版；比对时先约定转换规则。html 字段保留公开转录的原始标记。",
+  "sha256_html": "41494f8221f7503bd93c3ed1ceb057b432de07ab2728649248bd742841b51ede",
+  "license": "CC BY-SA 4.0",
+  "date": "2026-10-18"
+}

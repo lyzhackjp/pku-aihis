@@ -1,0 +1,81 @@
+$ node --test tests/*.test.mjs
+✔ API protocol fixture: openai (0.620792ms)
+✔ API protocol fixture: gemini (0.089541ms)
+✔ API protocol fixture: claude (0.127417ms)
+✔ API protocol fixture: deepseek (0.05ms)
+✔ API protocol fixture: qwen (0.052334ms)
+✔ API protocol fixture: glm (0.041209ms)
+✔ API protocol fixture: kimi (0.0405ms)
+✔ API protocol fixture: doubao (0.04325ms)
+✔ API protocol fixture: siliconflow (0.051625ms)
+✔ API protocol fixture: openrouter (0.094209ms)
+✔ API protocol fixture: local (0.058458ms)
+✔ API protocol fixture: custom (0.046333ms)
+✔ coordinates use explicit format, preserve bounds, and strip only JSON fences (0.50175ms)
+✔ NDL and ALTO scores remain different and text import preserves blank lines (1.766417ms)
+✔ TEI mixed content and choices preserve sequence; untrusted text remains literal (0.640791ms)
+✔ manual mapping, empty matches, provenance gate and failed import are transactional (0.518333ms)
+✔ source label alone is not sufficient evidence for evaluation (0.165333ms)
+﹣ F01 saved NDL line counts and original TYPE (0.54775ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F02 column label and page number remain original OCR (0.063791ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F03 confidence and bbox of semantic error (0.035875ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F04 lowest-confidence lines (0.040583ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F05 same-page variant outputs (0.037125ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F06 text vs unrecognized blocks are not conflated (0.030292ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+﹣ F07 saved 良/艮 example (0.030959ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+✔ F08 actual shared NDL character inventory (3.53475ms)
+﹣ F09 115-character alignment with editable mapping (0.098708ms) # 未设置 WEEK06_LOCAL_MATERIALS；本机材料不进仓库
+✔ F10 CTC merge before blank deletion (0.39875ms)
+✔ F11 Gardella quoted median and mean (0.053709ms)
+✔ F12 PureDocBench reported changes (0.036834ms)
+✔ F13 Sasagawa synthetic orientation comparison (0.026291ms)
+✔ F14 HIPE source figures (0.019167ms)
+✔ F15 eight interference groups cover each original number exactly once (0.043666ms)
+✔ F16 page map minutes, pages, concepts (2.251875ms)
+✔ adapters preserve null text, XML hierarchy and Unicode entities (0.9295ms)
+✔ NDLLite must not label detector score as recognition confidence (0.183041ms)
+✔ PP, Florence, dots and invalid MLLM retain raw output (0.312625ms)
+✔ PAGE-XML preserves polygon baseline text and confidence (0.255916ms)
+✔ XY cutting uses actual whitespace and direction (0.187625ms)
+✔ CER codepoints, NFC, S/D/I, denominator, line order (0.298083ms)
+✔ Otsu, manual threshold and geometry are immutable (0.155375ms)
+✔ schema validation and max IoU matching (0.822333ms)
+✔ seven dependent stages reject mutation and corrupt restore (3.155ms)
+✔ F20 PARSeq agrees with upstream Python: repeats (0.685083ms)
+✔ F20 PARSeq agrees with upstream Python: low-ids (0.106292ms)
+✔ F20 PARSeq agrees with upstream Python: no-eos (0.07975ms)
+✔ F20 PARSeq agrees with upstream Python: immediate-eos (0.054125ms)
+✔ PARSeq rejects dimension drift and non-finite logits; stable softmax (0.10425ms)
+✔ F17 CTC paper paths retain blank-separated repeats (0.07275ms)
+✔ F18 eight-step probabilities, CTC score and path products (0.49975ms)
+✔ F19 all 17 categories and original names match pinned extraction (2.633042ms)
+✔ preflight without models: missing (0.868416ms)
+✔ preflight without models: sha (0.095958ms)
+✔ preflight without models: session-error (0.533625ms)
+✔ preflight without models: warmup (0.141334ms)
+✔ CTC instruction playback matches retained tokens including blank-separated repeats (0.638291ms)
+✔ pixel effects preserve source and deterministically change pixels (0.252709ms)
+✔ all NDL actual variable names use same mapping as source labels (0.282542ms)
+✔ PP metadata is fixed-model static shape inference with no weights (1.011583ms)
+✔ candidate decisions apply each edit independently without altering original (0.427042ms)
+✔ R3-1 NDL int64 normalized at record exit; unsafe integers retained with annotations (1.010916ms)
+✔ R3-1 actual structuredClone legacy BigInt record and a corrupt sibling recover separately (0.503417ms)
+✔ R3-3 PP current and old records carry no inferred classification (0.545584ms)
+✔ R3-8 output mismatch is successful inference; errors retain original message (1.596416ms)
+✔ R3-6 heatmap includes all recognized characters in first occurrence order, blank first (0.587125ms)
+✔ R4-1 PP detection/recognition own scores, lowest recognition default, local XML columns remain separate (13.545375ms)
+✔ R4-2 hint only for top5, jump first valid position, never post-EOS (0.091583ms)
+✔ R4-3 replacement and mask preserve dimensions, all changed pixels inside cell, baseline immutable (12.718917ms)
+✔ R4-3 actual network pixels reconstructed without changing dimensions; no-effect and unlocated distinguished (0.145792ms)
+✔ R4-4 complete actual NDL28 replay preserves all categories and raw text without normalization (0.164416ms)
+✔ R4-5 comparison: identical, changed, missing line, changed image/model/scope (48.155334ms)
+✔ R4-5 browser parsing records full observed version when available (0.226416ms)
+✔ R4-3 packaged actual conditions retain all 14 outputs, dimensions, target-contained source edits and matching network shapes (17.461375ms)
+ℹ tests 72
+ℹ suites 0
+ℹ pass 64
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 8
+ℹ todo 0
+ℹ duration_ms 192.98425

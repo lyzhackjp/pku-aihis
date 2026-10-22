@@ -6,12 +6,17 @@ export interface BoundingBox {
 }
 
 export interface TextRegion extends BoundingBox {
+  id?: string
+  detectionId?: string
   confidence: number
   classId: number
-  charCountCategory?: number // DEIMモデルが出力する文字数カテゴリ (1, 2, 3)
+  charCountCategory?: number|string // DEIM category; unsafe int64 is retained as a decimal string.
+  serialization_notes?: Array<{path:string;value:string;reason:string}>
 }
 
 export interface TextBlock extends TextRegion {
+  recognitionScore?: number | null
+  recognitionScoreSource?: string
   text: string
   readingOrder: number
 }
@@ -24,6 +29,7 @@ export interface PageBlock {
 }
 
 export interface LayoutDetectionResult {
+  regions: TextRegion[]
   lines: TextRegion[]
   blocks: PageBlock[]
 }

@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-21T13:08:43.414Z",
+  "actualInference": false,
+  "checks": [
+    {
+      "name": "D10 structure dialog stays open and closes",
+      "result": "passed"
+    },
+    {
+      "name": "D04 ALTO import uses real adapter; trace channels and stage overlays",
+      "result": "passed"
+    },
+    {
+      "name": "D07 trace JSON/PNG visual import; wrong model preserves previous trace",
+      "result": "passed"
+    },
+    {
+      "name": "D22 source declaration incomplete is blocked until citation, conventions and verification are complete",
+      "result": "passed"
+    },
+    {
+      "name": "D13 imported readings classify differences without a new API call; replacing reference resets annotations",
+      "result": "passed"
+    },
+    {
+      "name": "first-round local XML, private material identity, seven-stage record and per-edit decisions survive validation",
+      "result": "passed"
+    }
+  ],
+  "errors": []
+}

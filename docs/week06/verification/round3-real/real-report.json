@@ -1,0 +1,414 @@
+{
+  "date": "2026-10-21T13:08:36.955Z",
+  "browser": "155.0.8059.85",
+  "profile": "local-only/week06-round3-chrome",
+  "actualModelInference": true,
+  "material": "shide_public",
+  "preflight": [],
+  "runs": [
+    {
+      "page": "D02",
+      "name": "D02-NDL",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "NDLOCR-Lite / DEIM + PARSeq16; importer pin 50216ccc",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:08:44.750Z",
+        "params": {},
+        "elapsed_ms": 5925.200000047684
+      },
+      "lines": 28
+    },
+    {
+      "page": "D02",
+      "name": "D02-PP",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62 / b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:08:54.040Z",
+        "params": {
+          "detectOnly": false
+        },
+        "elapsed_ms": 6566.799999952316
+      },
+      "lines": 13
+    },
+    {
+      "page": "D03",
+      "name": "D03-NDL",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "NDLOCR-Lite / DEIM + PARSeq16; importer pin 50216ccc",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:09:07.517Z",
+        "params": {},
+        "elapsed_ms": 5667
+      },
+      "lines": 28
+    },
+    {
+      "name": "D07-first",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:09:10.777Z",
+        "params": {
+          "experiment": "原图行"
+        },
+        "elapsed_ms": 472.60000014305115
+      },
+      "text": "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者",
+      "bbox": [
+        585,
+        225,
+        50,
+        825
+      ]
+    },
+    {
+      "name": "D07-other",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:09:12.526Z",
+        "params": {
+          "experiment": "原图行"
+        },
+        "elapsed_ms": 587
+      },
+      "text": "死節而飾主闕亦曰一家之道然也此猶文士之識非史識也能具史識者必知",
+      "bbox": [
+        185,
+        168,
+        40,
+        888
+      ]
+    },
+    {
+      "name": "D08-title",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:09:14.129Z",
+        "params": {
+          "experiment": "原图行"
+        },
+        "elapsed_ms": 298.5
+      },
+      "text": "史徳"
+    },
+    {
+      "name": "D08-stitch",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:09:15.302Z",
+        "params": {
+          "experiment": "教学构造输入：目标字块",
+          "autoRotate": true,
+          "sourceBox": [
+            685,
+            325,
+            50,
+            90
+          ],
+          "sourceBoxes": [
+            [
+              685,
+              230,
+              50,
+              90
+            ],
+            [
+              685,
+              325,
+              50,
+              90
+            ]
+          ]
+        },
+        "elapsed_ms": 297.39999985694885
+      },
+      "text": "0,,,0"
+    },
+    {
+      "name": "D08-stitch",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:09:15.989Z",
+        "params": {
+          "experiment": "教学构造输入：目标字块",
+          "autoRotate": true,
+          "sourceBox": [
+            685,
+            325,
+            50,
+            90
+          ],
+          "sourceBoxes": [
+            [
+              685,
+              230,
+              50,
+              90
+            ],
+            [
+              685,
+              325,
+              50,
+              90
+            ]
+          ]
+        },
+        "elapsed_ms": 182.70000004768372
+      },
+      "text": "德"
+    },
+    {
+      "name": "D08-stitch",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:09:16.812Z",
+        "params": {
+          "experiment": "教学构造输入：真实图块拼行",
+          "autoRotate": true,
+          "sourceBoxes": [
+            [
+              685,
+              230,
+              50,
+              90
+            ],
+            [
+              685,
+              325,
+              50,
+              90
+            ]
+          ]
+        },
+        "elapsed_ms": 300
+      },
+      "text": "1,,,0"
+    },
+    {
+      "name": "D08-stitch",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:09:17.557Z",
+        "params": {
+          "experiment": "教学构造输入：真实图块拼行",
+          "autoRotate": true,
+          "sourceBoxes": [
+            [
+              685,
+              230,
+              50,
+              90
+            ],
+            [
+              685,
+              325,
+              50,
+              90
+            ]
+          ]
+        },
+        "elapsed_ms": 181.40000009536743
+      },
+      "text": "史德"
+    },
+    {
+      "name": "D08-mask",
+      "engine": {
+        "name": "ndlocr-lite",
+        "version": "PARSeq（固定模型）",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:09:19.113Z",
+        "params": {
+          "experiment": "教学构造输入：遮字",
+          "autoRotate": true,
+          "sourceBoxes": [
+            [
+              685,
+              230,
+              50,
+              190
+            ]
+          ],
+          "maskBox": [
+            0,
+            142.5,
+            50,
+            28.5
+          ],
+          "changedPixels": 807
+        },
+        "elapsed_ms": 294.5
+      },
+      "text": "$1,00,,,,00"
+    },
+    {
+      "name": "D08-mask",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:09:19.814Z",
+        "params": {
+          "experiment": "教学构造输入：遮字",
+          "autoRotate": true,
+          "sourceBoxes": [
+            [
+              685,
+              230,
+              50,
+              190
+            ]
+          ],
+          "maskBox": [
+            0,
+            142.5,
+            50,
+            28.5
+          ],
+          "changedPixels": 807
+        },
+        "elapsed_ms": 183.29999995231628
+      },
+      "text": "史"
+    },
+    {
+      "name": "D09-public",
+      "engine": {
+        "name": "pp-ocrv6",
+        "version": "28fe5895c24fd108c19eb3e8479f4ab385fbfc62 / b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+        "run_mode": "浏览器实时",
+        "date": "2026-10-21T13:09:27.128Z",
+        "params": {
+          "detectOnly": false
+        },
+        "elapsed_ms": 6464.799999952316
+      },
+      "lines": 13
+    }
+  ],
+  "checks": [
+    {
+      "id": "D00",
+      "refresh": "passed"
+    },
+    {
+      "id": "D01",
+      "refresh": "passed"
+    },
+    {
+      "id": "D02",
+      "refresh": "passed"
+    },
+    {
+      "id": "D03",
+      "refresh": "passed"
+    },
+    {
+      "id": "D04",
+      "refresh": "passed"
+    },
+    {
+      "id": "D05",
+      "refresh": "passed"
+    },
+    {
+      "id": "D06",
+      "refresh": "passed"
+    },
+    {
+      "id": "D07",
+      "refresh": "passed"
+    },
+    {
+      "id": "D08",
+      "refresh": "passed"
+    },
+    {
+      "id": "D09",
+      "refresh": "passed"
+    },
+    {
+      "id": "D10",
+      "refresh": "passed"
+    },
+    {
+      "id": "D11",
+      "refresh": "passed"
+    },
+    {
+      "id": "D12",
+      "refresh": "passed"
+    },
+    {
+      "id": "D13",
+      "refresh": "passed"
+    },
+    {
+      "id": "D14",
+      "refresh": "passed"
+    },
+    {
+      "id": "D15",
+      "refresh": "passed"
+    },
+    {
+      "id": "D16",
+      "refresh": "passed"
+    },
+    {
+      "id": "D17",
+      "refresh": "passed"
+    },
+    {
+      "id": "D18",
+      "refresh": "passed"
+    },
+    {
+      "id": "D19",
+      "refresh": "passed"
+    },
+    {
+      "id": "D20",
+      "refresh": "passed"
+    },
+    {
+      "id": "D21",
+      "refresh": "passed"
+    },
+    {
+      "id": "D22",
+      "refresh": "passed"
+    },
+    {
+      "id": "D23",
+      "refresh": "passed"
+    },
+    {
+      "id": "D24",
+      "refresh": "passed"
+    },
+    {
+      "id": "D25",
+      "refresh": "passed"
+    }
+  ],
+  "errors": []
+}

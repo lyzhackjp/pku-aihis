@@ -1,0 +1,80 @@
+{
+  "candidate": true,
+  "date": "2026-10-22T05:17:09.460Z",
+  "browser": "155.0.8059.85",
+  "fixture": true,
+  "actualModelInference": false,
+  "checks": [
+    {
+      "name": "D12/D13 one page, preserved alias, result and C tabs",
+      "result": "passed"
+    },
+    {
+      "name": "Kimi legacy display name, 404 diagnostic and successful vision fixture",
+      "result": "passed"
+    },
+    {
+      "name": "D21 DeepSeek preset and actual postprocess request path via protocol fixture",
+      "result": "passed"
+    },
+    {
+      "name": "D22 session list excludes other images; selected matching record imports",
+      "result": "passed"
+    },
+    {
+      "name": "D18 two runs show only the latest pair, preserve saved history",
+      "result": "passed"
+    },
+    {
+      "name": "D17 PP vertical treatments select correct engine and rotation; whole-page action",
+      "result": "passed",
+      "detail": [
+        {
+          "w": 50,
+          "h": 825,
+          "auto": false,
+          "manual": 0
+        },
+        {
+          "w": 825,
+          "h": 50,
+          "auto": false,
+          "manual": -90
+        },
+        {
+          "w": 50,
+          "h": 825,
+          "auto": true,
+          "manual": 0
+        }
+      ]
+    },
+    {
+      "name": "Refresh and all original 26 links (25 pages plus D13 alias)",
+      "result": "passed"
+    }
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "model": "kimi-k3",
+      "max_completion_tokens": 32768,
+      "reasoning_effort": "low"
+    },
+    {
+      "model": "kimi-k3",
+      "max_completion_tokens": 32768,
+      "reasoning_effort": "low"
+    },
+    {
+      "model": "kimi-k3",
+      "max_completion_tokens": 32768,
+      "reasoning_effort": "low"
+    },
+    {
+      "model": "deepseek-flash",
+      "max_tokens": 32768,
+      "reasoning_effort": "low"
+    }
+  ]
+}

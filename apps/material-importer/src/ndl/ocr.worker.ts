@@ -32,7 +32,7 @@ self.onmessage = async (e: MessageEvent) => {
       }
       progress(`识读第 ${i + 1} / ${regions.length} 行`);
       const r = await recognizers.get(size).recognizeCropped(crops[i]);
-      blocks.push({ ...regions[i], text: r.text, readingOrder: i + 1 });
+      blocks.push({ ...regions[i], text: r.text, recognitionScore:r.rec_score, recognitionScoreSource:r.rec_score_source, readingOrder: i + 1 });
     }
     const ordered = new ReadingOrderProcessor().process(
       blocks,

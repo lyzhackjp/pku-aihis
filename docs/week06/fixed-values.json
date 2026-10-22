@@ -1,0 +1,569 @@
+{
+  "_说明": "候选，未经教师确认。验收断言据课程开发包；私有原件位置与指纹只在外部开发包读取，不进入仓库或构建。",
+  "checks": [
+    {
+      "id": "F01",
+      "page": [
+        "D01",
+        "D03",
+        "D09"
+      ],
+      "what": "《史德》XML 的 LINE 数与类型",
+      "expect": {
+        "lines": 16,
+        "types": {
+          "本文": 16
+        }
+      }
+    },
+    {
+      "id": "F02",
+      "page": [
+        "D03"
+      ],
+      "what": "被误归为正文的书口与页码",
+      "expect": {
+        "ORDER": {
+          "14": "文史通義卷三内篇三",
+          "15": "六十三"
+        }
+      }
+    },
+    {
+      "id": "F03",
+      "page": [
+        "D09",
+        "D22"
+      ],
+      "what": "含'謂足姦'的行及其检测置信度 CONF",
+      "expect": {
+        "ORDER": "3",
+        "CONF": 0.856,
+        "X": 689,
+        "Y": 132,
+        "WIDTH": 38,
+        "HEIGHT": 1116
+      }
+    },
+    {
+      "id": "F04",
+      "page": [
+        "D09"
+      ],
+      "what": "检测置信度 CONF 最低两行",
+      "expect": [
+        {
+          "ORDER": "15",
+          "CONF": 0.567,
+          "STRING": "六十三"
+        },
+        {
+          "ORDER": "0",
+          "CONF": 0.624,
+          "STRING": "巻三"
+        }
+      ]
+    },
+    {
+      "id": "F05",
+      "page": [
+        "D08"
+      ],
+      "what": "同页'斷'输出不一致",
+      "expect": {
+        "ORDER5_contains": "断其義",
+        "ORDER6_contains": "撃斷以為識"
+      }
+    },
+    {
+      "id": "F06",
+      "page": [
+        "D03",
+        "D05"
+      ],
+      "what": "鷗外 ogai.xml 区块统计",
+      "expect": {
+        "text_lines": 83,
+        "line_types": {
+          "本文": 82,
+          "タイトル本文": 1
+        },
+        "blocks_without_text": 32,
+        "block_types": {
+          "ルビ": 28,
+          "柱": 2,
+          "ノンブル": 2
+        }
+      }
+    },
+    {
+      "id": "F07",
+      "page": [
+        "D03"
+      ],
+      "what": "'良'读作'艮'",
+      "expect": {
+        "line_contains": "左右艮の城"
+      }
+    },
+    {
+      "id": "F08",
+      "page": [
+        "D08"
+      ],
+      "what": "NDLOCR-Lite 字表",
+      "source": "教师2026-10-20修正：ndlocr-lite d001dad与ndlkotenocr-lite 3c62c34字表均7141，实际导入器字表核对。",
+      "expect": {
+        "size": 7141,
+        "contains": [
+          "德",
+          "徳",
+          "斷",
+          "断",
+          "當",
+          "当",
+          "卷",
+          "巻"
+        ]
+      }
+    },
+    {
+      "id": "F09",
+      "page": [
+        "D20"
+      ],
+      "what": "《史德》开篇 115 字 CER",
+      "reference": "才學識三者得一不易而兼三尤難千古多文人而少良史職是故也昔者劉氏子元蓋以是說謂足盡其理矣雖然史所貴者義也而所具者事也所憑者文也孟子曰其事則齊桓晉文其文則史義則夫子自謂竊取之矣非識無以斷其義非才無以善其文非學無以練其事三者固各有所近也",
+      "reference_note": "第五周课件中的局部工作转写（去掉后加句号），不是正式校本",
+      "hypothesis_rule": "ORDER 3、4、5 三行 STRING 相连，截到第一个'近也'（含）",
+      "expect": {
+        "N": 115,
+        "S": 3,
+        "D": 0,
+        "I": 0,
+        "cer": "3/115",
+        "cer_pct_1dp": 2.6,
+        "substitutions": [
+          [
+            "說",
+            "説"
+          ],
+          [
+            "斷",
+            "断"
+          ],
+          [
+            "盡",
+            "姦"
+          ]
+        ],
+        "with_mapping": {
+          "map": {
+            "説": "說",
+            "断": "斷"
+          },
+          "S": 1,
+          "cer": "1/115",
+          "cer_pct_2dp": 0.87
+        }
+      }
+    },
+    {
+      "id": "F10",
+      "page": [
+        "D07"
+      ],
+      "what": "CTC 合并规则",
+      "expect": [
+        {
+          "in": [
+            "盡",
+            "盡",
+            "－",
+            "其",
+            "其",
+            "－",
+            "－",
+            "理",
+            "理",
+            "－"
+          ],
+          "out": "盡其理"
+        },
+        {
+          "in": [
+            "盡",
+            "盡",
+            "盡"
+          ],
+          "out": "盡"
+        },
+        {
+          "in": [
+            "盡",
+            "－",
+            "盡"
+          ],
+          "out": "盡盡"
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "page": [
+        "D13"
+      ],
+      "what": "Gardella 等最好通用模型 CER",
+      "expect": {
+        "median_pct": 1.72,
+        "mean_pct": 11.17
+      },
+      "kind": "论文数字，照录"
+    },
+    {
+      "id": "F12",
+      "page": [
+        "D12"
+      ],
+      "what": "PureDocBench 平均下降",
+      "expect": {
+        "digital": 3.34,
+        "real": 11.61,
+        "vlm_real": 9.3,
+        "pipeline_real": 14.23
+      },
+      "kind": "论文数字，照录"
+    },
+    {
+      "id": "F13",
+      "page": [
+        "D17"
+      ],
+      "what": "Sasagawa 等 GPT-4.1 单栏合成页",
+      "expect": {
+        "horizontal_cer_pct": 1.88,
+        "vertical_cer_pct": 18.2
+      },
+      "kind": "论文数字，照录"
+    },
+    {
+      "id": "F14",
+      "page": [
+        "D21"
+      ],
+      "what": "HIPE-OCRepair 2026",
+      "expect": {
+        "no_correction_pct": 2.26,
+        "best_pct": 0.5
+      },
+      "kind": "论文数字，照录"
+    },
+    {
+      "id": "F15",
+      "page": [
+        "D15"
+      ],
+      "what": "八类干扰总数与分组",
+      "expect": {
+        "count": 8,
+        "groups": {
+          "4.1": [
+            1,
+            2
+          ],
+          "4.2": [
+            4,
+            5
+          ],
+          "4.3": [
+            3,
+            7
+          ],
+          "4.4": [
+            6,
+            8
+          ]
+        }
+      }
+    },
+    {
+      "id": "F16",
+      "page": [
+        "D00-D25"
+      ],
+      "what": "页表分钟合计",
+      "expect": {
+        "minutes": 160,
+        "pages": 25,
+        "concepts": 34
+      }
+    },
+    {
+      "id": "F17",
+      "page": [
+        "D07"
+      ],
+      "what": "论文CTC映射",
+      "expect": [
+        {
+          "in": [
+            "a",
+            "－",
+            "a",
+            "b",
+            "－"
+          ],
+          "out": "aab"
+        },
+        {
+          "in": [
+            "－",
+            "a",
+            "a",
+            "－",
+            "－",
+            "a",
+            "b",
+            "b"
+          ],
+          "out": "aab"
+        }
+      ]
+    },
+    {
+      "id": "F18",
+      "page": [
+        "D07"
+      ],
+      "what": "讲义教学概率表最佳路径（其余概率保留为其他候选）",
+      "probabilities": [
+        [
+          {
+            "text": "盡",
+            "prob": 0.62
+          },
+          {
+            "text": "姦",
+            "prob": 0.31
+          },
+          {
+            "text": "其他",
+            "prob": 0.07
+          }
+        ],
+        [
+          {
+            "text": "盡",
+            "prob": 0.55
+          },
+          {
+            "text": "姦",
+            "prob": 0.4
+          },
+          {
+            "text": "其他",
+            "prob": 0.05
+          }
+        ],
+        [
+          {
+            "text": "－",
+            "prob": 0.7
+          },
+          {
+            "text": "盡",
+            "prob": 0.2
+          },
+          {
+            "text": "其他",
+            "prob": 0.1
+          }
+        ],
+        [
+          {
+            "text": "其",
+            "prob": 0.81
+          },
+          {
+            "text": "－",
+            "prob": 0.15
+          },
+          {
+            "text": "其他",
+            "prob": 0.04
+          }
+        ],
+        [
+          {
+            "text": "－",
+            "prob": 0.66
+          },
+          {
+            "text": "其",
+            "prob": 0.3
+          },
+          {
+            "text": "其他",
+            "prob": 0.04
+          }
+        ],
+        [
+          {
+            "text": "理",
+            "prob": 0.58
+          },
+          {
+            "text": "埋",
+            "prob": 0.27
+          },
+          {
+            "text": "其他",
+            "prob": 0.15
+          }
+        ],
+        [
+          {
+            "text": "理",
+            "prob": 0.74
+          },
+          {
+            "text": "－",
+            "prob": 0.2
+          },
+          {
+            "text": "其他",
+            "prob": 0.06
+          }
+        ],
+        [
+          {
+            "text": "－",
+            "prob": 0.9
+          },
+          {
+            "text": "理",
+            "prob": 0.08
+          },
+          {
+            "text": "其他",
+            "prob": 0.02
+          }
+        ]
+      ],
+      "expect": {
+        "text": "盡其理",
+        "score": 0.67,
+        "best_path_probability_3dp": 0.049,
+        "alternate_path_probability_3dp": 0.014
+      }
+    },
+    {
+      "id": "F19",
+      "page": [
+        "D03"
+      ],
+      "what": "NDL17类，变量名、id、原名与原文件逐项核对",
+      "expect": {
+        "count": 17,
+        "categories": [
+          {
+            "id": 0,
+            "name": "text_block",
+            "org_name": "本文ブロック"
+          },
+          {
+            "id": 1,
+            "name": "line_main",
+            "org_name": "本文"
+          },
+          {
+            "id": 2,
+            "name": "line_caption",
+            "org_name": "キャプション"
+          },
+          {
+            "id": 3,
+            "name": "line_ad",
+            "org_name": "広告文字"
+          },
+          {
+            "id": 4,
+            "name": "line_note",
+            "org_name": "割注"
+          },
+          {
+            "id": 5,
+            "name": "line_note_tochu",
+            "org_name": "頭注"
+          },
+          {
+            "id": 6,
+            "name": "block_fig",
+            "org_name": "図版"
+          },
+          {
+            "id": 7,
+            "name": "block_ad",
+            "org_name": "広告"
+          },
+          {
+            "id": 8,
+            "name": "block_pillar",
+            "org_name": "柱"
+          },
+          {
+            "id": 9,
+            "name": "block_folio",
+            "org_name": "ノンブル"
+          },
+          {
+            "id": 10,
+            "name": "block_rubi",
+            "org_name": "ルビ"
+          },
+          {
+            "id": 11,
+            "name": "block_chart",
+            "org_name": "組織図"
+          },
+          {
+            "id": 12,
+            "name": "block_eqn",
+            "org_name": "数式"
+          },
+          {
+            "id": 13,
+            "name": "block_cfm",
+            "org_name": "化学式"
+          },
+          {
+            "id": 14,
+            "name": "block_eng",
+            "org_name": "欧文"
+          },
+          {
+            "id": 15,
+            "name": "block_table",
+            "org_name": "表組"
+          },
+          {
+            "id": 16,
+            "name": "line_title",
+            "org_name": "タイトル本文"
+          }
+        ]
+      }
+    },
+    {
+      "id": "F20",
+      "page": [
+        "D08"
+      ],
+      "what": "PARSeq保留叠字，与上游Python argmax/首0截断对照",
+      "expect": {
+        "text": "人人時時",
+        "stop": 4
+      }
+    }
+  ]
+}

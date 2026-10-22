@@ -1,0 +1,60 @@
+$ node scripts/assemble.mjs && vite build --config vite.engines.ts && stencil build
+$ node scripts/prepare-vendor.mjs && tsc --noEmit && vite build
+vite v7.3.1 building client environment for production...
+transforming...
+✓ 473 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                        0.37 kB │ gzip:     0.30 kB
+dist/assets/NDLmoji-CyMzvh-u.yaml                     42.43 kB
+dist/assets/ocr.worker-BSPy3jCJ.js                   123.44 kB
+dist/assets/pdf.worker.min-FHbmGBN0.mjs            1,244.25 kB
+dist/assets/ort-wasm-simd-threaded-1QYQn1Hs.wasm  12,361.75 kB │ gzip: 3,165.12 kB
+dist/assets/index-4A0AQqYS.css                         2.62 kB │ gzip:     1.02 kB
+dist/assets/index-B-7Y1UYG.js                        972.10 kB │ gzip:   299.80 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.21s
+Assembled 26 pages; actual NDL charset 7141; category lists 17/11
+vite v7.3.1 building client environment for production...
+transforming...
+Module "src/engines/ndl.ts" tried to import "../material-importer/src/ndl/models.json" with "type": "json" attributes, but it was already imported elsewhere with no attributes. Please ensure that import attributes for the same module are always consistent.
+Module "../material-importer/src/ndl/model-loader.ts" tried to import "../material-importer/src/ndl/models.json" with "type": "json" attributes, but it was already imported elsewhere with no attributes. Please ensure that import attributes for the same module are always consistent.
+[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/Users/liyuanzhen/Desktop/2026年秋季学期/《人工智能赋能历史研究与写作》课程材料/pku-aihis/apps/week06/node_modules/.pnpm/@techstark+opencv-js@4.10.0-release.1/node_modules/@techstark/opencv-js/dist/opencv.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/Users/liyuanzhen/Desktop/2026年秋季学期/《人工智能赋能历史研究与写作》课程材料/pku-aihis/apps/week06/node_modules/.pnpm/@techstark+opencv-js@4.10.0-release.1/node_modules/@techstark/opencv-js/dist/opencv.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Users/liyuanzhen/Desktop/2026年秋季学期/《人工智能赋能历史研究与写作》课程材料/pku-aihis/apps/week06/node_modules/.pnpm/@techstark+opencv-js@4.10.0-release.1/node_modules/@techstark/opencv-js/dist/opencv.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+✓ 67 modules transformed.
+rendering chunks...
+computing gzip size...
+src/assets/ocr/NDLmoji-CyMzvh-u.yaml                          42.43 kB
+src/assets/ocr/ort-wasm-simd-threaded-1QYQn1Hs.wasm       12,361.75 kB │ gzip: 3,165.12 kB
+src/assets/ocr/ort-wasm-simd-threaded.jsep-B0T3yYHD.wasm  21,596.02 kB │ gzip: 5,087.10 kB
+src/assets/ocr/ort-wasm-simd-threaded.jsep-C887KxcQ.wasm  25,014.75 kB │ gzip: 5,855.26 kB
+src/assets/ocr/engines.js                                      0.20 kB │ gzip:     0.15 kB
+src/assets/ocr/probabilities-D7h4fujy.js                       1.56 kB │ gzip:     0.93 kB
+src/assets/ocr/verified-DJ82bqZg.js                            1.64 kB │ gzip:     0.98 kB
+src/assets/ocr/preflight-DjOZCQzi.js                           3.22 kB │ gzip:     1.62 kB
+src/assets/ocr/index-BXAcSdRD.js                               6.29 kB │ gzip:     2.22 kB
+src/assets/ocr/ndl-CIgJIuFb.js                               122.94 kB │ gzip:    42.49 kB
+src/assets/ocr/florence-Cjvfxr_f.js                          868.76 kB │ gzip:   228.69 kB
+src/assets/ocr/paddle-gKJJFb4f.js                         10,678.26 kB │ gzip: 3,477.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.75s
+[2m[10:19.7][22m  [36m@stencil/core[39m
+[2m[10:19.8][22m  [36mv4.45.0[39m 🎱
+[2m[10:20.2][22m  build, week06, prod mode, started [2m...[22m
+[2m[10:20.2][22m  transpile started [2m...[22m
+[2m[10:20.5][22m  transpile finished [2min 276 ms[22m
+[2m[10:20.5][22m  generate lazy started [2m...[22m
+[2m[10:20.6][22m  generate lazy finished [2min 84 ms[22m
+[2m[10:20.6][22m  copy started [2m...[22m
+[2m[10:20.6][22m  copy finished (307 files) [2min 49 ms[22m
+[2m[10:20.6][22m  [1m[32mbuild finished[39m[22m [2min 445 ms[22m
+

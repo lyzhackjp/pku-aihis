@@ -93,3 +93,11 @@ test("an already aborted job makes no network request", async () => {
   await assert.rejects(()=>store.load("test.onnx",()=>{},controller.signal),/abort/i);
   assert.equal(requests.length,0);
 });
+test('course cache-only load never downloads; inspection hashes bytes rather than trusting headers', async () => {
+  const {store,entries,requests}=harness();
+  await assert.rejects(store.load('test.onnx',()=>{},undefined,false),/课前检查/);
+  assert.equal(requests.length,0);
+  const key='https://course.example/pku-aihis/material-importer/models/test.onnx?sha256='+spec.sha256;
+  entries.set(key,new Response(new Uint8Array([1,2,3]),{headers:{'X-PKU-SHA256':spec.sha256,'Content-Length':String(spec.bytes)}}));
+  const inspection=await store.inspect('test.onnx');assert.equal(inspection.cached,true);assert.equal(inspection.verified,false);assert.equal(inspection.bytes,3);
+});

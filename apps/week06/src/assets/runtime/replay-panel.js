@@ -1,0 +1,8 @@
+import {compareReplay} from '../modules/ocr/replay-compare.mjs';
+import * as S from './services.js';
+const E=s=>window.Deck.esc(s),Q=k=>window.Deck.pageById('D00').ui_round4[k];
+export async function compareWithDefault(l){const live=l.displayedRecord,saved=await S.loadDefaultRecord(live?.engine.name);l.replayComparison={...compareReplay(live,saved),record_date:live?.engine.date,live:live?.engine.runtime,saved:saved?.engine.runtime};}
+export function runProvenance(l,record){
+ l.displayedRecord=record;if(!record)return '';const e=record.engine,env=e.runtime,eligible=record.image.source.material_id==='shide_public'&&['ndlocr-lite','pp-ocrv6'].includes(e.name)&&!e.params?.experiment,c=l.replayComparison?.record_date===e.date?l.replayComparison:null;
+ return `<p class="run-provenance">${E(Q('run_once'))} · ${E(e.version)} · ${E(env?env.browser.name+' '+env.browser.version:Q('old_environment'))}</p>${env?`<details><summary>浏览器与缩放实现</summary><p>${E(env.preprocessing.implementation)}</p><pre>${E(JSON.stringify(env,null,2))}</pre></details>`:''}${eligible?`<button data-act="compare-replay">${E(Q('compare'))}</button>`:''}${c?`<section class="replay-comparison"><p>${E(Q('difference_note'))}</p>${c.comparable?`<p>${E(Q(c.identical?'compare_same':'compare_changed'))} · ${c.changed} 行</p><p>${E(c.matching)}</p><table><thead><tr><th>保存／现场行号</th><th>保存记录文字</th><th>现场文字</th><th>差异</th></tr></thead><tbody>${c.rows.map(x=>`<tr><td>${E(x.saved_id||'∅')} / ${E(x.live_id||'∅')}</td><td>${E(x.saved??'∅')}</td><td>${E(x.live??'∅')}</td><td>${x.same?'相同':'不同'}</td></tr>`).join('')}</tbody></table>`:`<p>${E(c.reason)}</p>`}<details><summary>两份记录的运行环境</summary><pre>${E(JSON.stringify({live:c.live,saved:c.saved},null,2))}</pre></details></section>`:''}`;
+}

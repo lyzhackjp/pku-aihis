@@ -73,3 +73,18 @@ __pycache__/
 /apps/week05/src/assets/revision/sqlite-read.mjs
 /apps/week05/src/assets/revision/week04-backup.mjs
 /apps/week05/artifacts-revision/
+
+# Week06 generated bundles; no model weights or local originals.
+/apps/week06/src/assets/vendor/
+/apps/week06/src/assets/importer/
+/apps/week06/src/assets/ocr/
+/apps/week06/src/assets/data/
+/apps/week06/src/assets/runtime/math.js
+/apps/week06/src/index.html
+/apps/week06/artifacts/
+
+apps/week06/src/assets/modules/
+
+# macOS/sync duplicate suffixes are not source files.
+/apps/week06/**/** 2.*
+/apps/week06/**/** 4.*

@@ -42,7 +42,7 @@ assert(
   ),
 );
 for (const row of manifest.files) {
-  if (/\.(json|html|md|mjs|ts|tsx)$/.test(row.path)) {
+  if (/\.(json|html|md|m?js|ts|tsx)$/.test(row.path)) {
     const s = await fs.readFile(path.join(site, row.path), "utf8");
     assert(!s.includes("/Users/"), `private path in ${row.path}`);
   }
@@ -153,4 +153,42 @@ if (manifest4.weeks?.includes('week05')) {
   const home = await fs.readFile(path.join(site,'index.html'),'utf8');
   assert(home.includes('href="week05/"') && home.includes('第五周 · 知识库检索与有依据的生成'));
   console.log('Week05: 24 pages (D05, D07 merged), public excerpt identities, embedded importer, WASM and figure hashes; no teacher originals or model weights');
+}
+
+if (manifest4.weeks?.includes('week06')) {
+  const week = path.join(site, 'week06');
+  const html6 = await fs.readFile(path.join(week, 'index.html'), 'utf8');
+  const map6 = JSON.parse(await fs.readFile(path.join(root, 'docs/week06/page-map.json'), 'utf8'));
+  assert.deepEqual([...html6.matchAll(/slide-id="([^"]+)"/g)].map(m => m[1]), map6.map(p => p.id));
+  assert.equal(map6.length, 25);
+  assert.deepEqual(map6.find(p => p.id === 'D12').aliases, ['D13']);
+  const files6 = manifest4.files.filter(f => f.path.startsWith('week06/'));
+  assert(!files6.some(f => /\.(pdf|zip|sqlite|db|onnx|safetensors|pt|pth|ckpt|bin|typ)$/i.test(f.path)));
+  const {createHash} = await import('node:crypto');
+  const sources6 = JSON.parse(await fs.readFile(path.join(week, 'assets/materials/sources.json'), 'utf8'));
+  for (const source of sources6) {
+    if (source.public === false) assert(!source.file && !source.sha256, `Private source ${source.id}`);
+    if (source.file) {
+      assert.equal(source.public, true);
+      assert.equal(createHash('sha256').update(await fs.readFile(path.join(week, 'assets/materials', source.file))).digest('hex'), source.sha256);
+    }
+  }
+  const importer6 = await fs.readFile(path.join(week, 'assets/importer/index.html'), 'utf8');
+  assert(importer6.includes('./assets/'));
+  assert(!importer6.includes('/pku-aihis/material-importer/assets/'));
+  for (const required of ['preflight.html', 'assets/runtime/v5/index.js', 'assets/runtime/material-import.js',
+    'assets/materials/kraken-d04/index.json', 'assets/materials/shide-1926-ndl-default-record.json.gz',
+    'assets/materials/shide-1926-default-record.json.gz', 'assets/materials/shide-1926-dots-default-record.json.gz'])
+    await fs.access(path.join(week, required));
+  const {gunzipSync} = await import('node:zlib');
+  const publicPage = sources6.find(s => s.id === 'shide_public');
+  for (const file of ['shide-1926-ndl-default-record.json.gz', 'shide-1926-default-record.json.gz', 'shide-1926-dots-default-record.json.gz']) {
+    const record = JSON.parse(gunzipSync(await fs.readFile(path.join(week, 'assets/materials', file))));
+    assert.equal(record.image.sha256, publicPage.sha256);
+    assert.equal(record.image.local_only, false);
+    assert(record.engine.version && record.engine.date && record.regions.length > 0);
+  }
+  const home = await fs.readFile(path.join(site, 'index.html'), 'utf8');
+  assert(home.includes('href="week06/"') && home.includes('第六周 · 文从何来'));
+  console.log('Week06: 25 pages and D13 alias, public source hashes, saved replays, embedded importer and preflight; no teacher originals, ZIPs or model weights');
 }

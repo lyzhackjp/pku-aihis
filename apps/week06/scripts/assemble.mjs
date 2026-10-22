@@ -1,0 +1,27 @@
+import ts from 'typescript';import fs from 'node:fs/promises';import path from 'node:path';import {execFileSync} from 'node:child_process';import yaml from 'js-yaml';import {createHash} from 'node:crypto';
+const app=path.resolve(import.meta.dirname,'..'),root=path.resolve(app,'../..');const read=p=>fs.readFile(p,'utf8');
+for(const file of await fs.readdir(app+'/src/assets/runtime'))if(file.endsWith('.js')){const source=await read(app+'/src/assets/runtime/'+file),parsed=ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS);if(parsed.parseDiagnostics.length)throw Error(file+': '+parsed.parseDiagnostics.map(d=>ts.flattenDiagnosticMessageText(d.messageText,' ')).join('; '));}
+const pages=JSON.parse(await read(root+'/docs/week06/page-map.json')),glossary=JSON.parse(await read(root+'/docs/week06/glossary.json')),sources=JSON.parse(await read(app+'/src/assets/materials/sources.json'));
+const charsetPath=root+'/apps/material-importer/src/assets/NDLmoji.yaml',charsetSource=await read(charsetPath),charset=yaml.load(charsetSource).model.charset_test;
+const ndl=yaml.load(await read(app+'/src/assets/materials/ndl.yaml')),dotsDoc=await read(app+'/src/assets/materials/dots-README.md'),dotsMatch=dotsDoc.match(/Layout Categories:[^\n]*\[([^\]]+)\]/);if(!dotsMatch)throw Error('dots README 类别清单未找到');
+const ndlCatalog=JSON.parse(await read(app+'/src/assets/materials/ndl-categories.json'));if(JSON.stringify(Object.values(ndl.names))!==JSON.stringify(ndlCatalog.categories.map(c=>c.name)))throw Error('NDL类别来源不一致');
+const categories={ndlCatalog,ndl:Object.values(ndl.names),dots:[...dotsMatch[1].matchAll(/'([^']+)'/g)].map(x=>x[1])};
+const apiPresets=JSON.parse(await read(root+'/modules/history-demo/ocr/api-presets.json'));
+const ppCharset=yaml.load(await read(app+'/src/engines/pp-rec.yml')).PostProcess.character_dict.join('')+' ';
+const transcriptionExamples=JSON.parse(await read(app+'/src/assets/materials/transcription-examples.json'));
+const toolRules=JSON.parse(await read(app+'/src/assets/materials/tool-rules.json')),competition=JSON.parse(await read(app+'/src/assets/materials/cmmhwr-results.json'));
+const ppGraph=JSON.parse(await read(app+'/src/assets/materials/pp-rec-graph.json'));
+const fixed=JSON.parse(await read(root+'/docs/week06/fixed-values.json'));
+const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const deck={name:'第六周 · 文从何来',channel:'pku-aihis-week06-20261018',store:'week06/v1/',entries:{through:{label:'贯穿记录',page:'D24'},concepts:{label:'概念表',page:'D25'}}};
+await fs.mkdir(app+'/src/assets/data',{recursive:true});
+const folger={diplomatic:JSON.parse(await read(app+'/src/assets/materials/folger-diplomatic.json')),semidiplomatic:JSON.parse(await read(app+'/src/assets/materials/folger-semidiplomatic.json'))};
+await fs.writeFile(app+'/src/assets/data/data.js','window.DECK_DATA = '+JSON.stringify({pages,glossary,deck,sources,categories,apiPresets,toolRules,competition,ppCharset,transcriptionExamples,ppGraph,charset,charset_sha256:createHash('sha256').update(charsetSource).digest('hex'),fixed,folger})+';\n');
+await fs.rm(app+'/src/assets/modules/ocr',{recursive:true,force:true});await fs.mkdir(app+'/src/assets/modules/ocr',{recursive:true});await fs.cp(root+'/modules/history-demo/ocr',app+'/src/assets/modules/ocr',{recursive:true});await fs.copyFile(root+'/modules/history-demo/math.js',app+'/src/assets/modules/math.js');
+await fs.copyFile(root+'/packages/course-project/project.mjs',app+'/src/assets/modules/project.mjs');
+const slides=pages.map(p=>`<deck-slide slide-id="${p.id}" data-status="implemented" kicker="${E(p.id+' / '+p.section)}" header-title="${E(p.title)}" transition="${E(p.transition)}" theme="${E(p.theme||'light')}" layout="${E(p.layout)}" mode="${E(p.mode)}" notes="${E('目的：'+p.notes.purpose+'\n范例引导：'+p.notes.guide+'\n机制背景：'+p.notes.mechanism)}"><${p.component}${p.component==='week06-lab'?` page-id="${p.id}"`:''}></${p.component}><div slot="footer">${E(p.footer)}</div></deck-slide>`).join('\n');
+await fs.writeFile(app+'/src/index.html',`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>第六周 · 文从何来</title><link rel="stylesheet" href="assets/runtime/deck.css"><link rel="stylesheet" href="assets/runtime/week06.css"><script type="module" src="build/week06.esm.js"></script><script src="assets/data/data.js"></script><script src="assets/runtime/deck-core.js"></script><script type="module" src="assets/runtime/week06-labs.js"></script></head><body><div id="app"></div><courseware-status></courseware-status><model-connection></model-connection><template id="deck-template"><deck-container>${slides}</deck-container></template></body></html>`);
+// Build the shared importer, without model downloads or model execution.
+execFileSync('pnpm',['build'],{cwd:root+'/apps/material-importer',env:{...process.env,PKU_IMPORTER_BASE:'./'},stdio:'inherit'});
+await fs.rm(app+'/src/assets/importer',{recursive:true,force:true});await fs.cp(root+'/apps/material-importer/dist',app+'/src/assets/importer',{recursive:true,filter:p=>!p.endsWith('.map')});
+console.log(`Assembled ${pages.length} pages; actual NDL charset ${[...charset].length}; category lists ${categories.ndl.length}/${categories.dots.length}`);

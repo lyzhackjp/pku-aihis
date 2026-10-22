@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-22T05:21:00.734Z",
+  "pages": 25,
+  "aliases": {
+    "D13": "D12"
+  },
+  "publicFiles": 359,
+  "privateScan": "skipped: WEEK06_LOCAL_MATERIALS not set",
+  "weights": "none",
+  "credentials": "none detected",
+  "sourceFingerprints": "passed"
+}

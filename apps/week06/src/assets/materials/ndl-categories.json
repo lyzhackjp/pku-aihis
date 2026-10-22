@@ -1,0 +1,98 @@
+{
+  "revision": "d001dad2013ceabb5736ff8d637474e443eb73c2",
+  "path": "src/ndl_parser.py",
+  "read_depth": "完整读取 categories 与 Category 枚举；并对照 config/ndl.yaml names",
+  "license": "CC BY 4.0",
+  "categories": [
+    {
+      "id": 0,
+      "name": "text_block",
+      "org_name": "本文ブロック"
+    },
+    {
+      "id": 1,
+      "name": "line_main",
+      "org_name": "本文"
+    },
+    {
+      "id": 2,
+      "name": "line_caption",
+      "org_name": "キャプション"
+    },
+    {
+      "id": 3,
+      "name": "line_ad",
+      "org_name": "広告文字"
+    },
+    {
+      "id": 4,
+      "name": "line_note",
+      "org_name": "割注"
+    },
+    {
+      "id": 5,
+      "name": "line_note_tochu",
+      "org_name": "頭注"
+    },
+    {
+      "id": 6,
+      "name": "block_fig",
+      "org_name": "図版"
+    },
+    {
+      "id": 7,
+      "name": "block_ad",
+      "org_name": "広告"
+    },
+    {
+      "id": 8,
+      "name": "block_pillar",
+      "org_name": "柱"
+    },
+    {
+      "id": 9,
+      "name": "block_folio",
+      "org_name": "ノンブル"
+    },
+    {
+      "id": 10,
+      "name": "block_rubi",
+      "org_name": "ルビ"
+    },
+    {
+      "id": 11,
+      "name": "block_chart",
+      "org_name": "組織図"
+    },
+    {
+      "id": 12,
+      "name": "block_eqn",
+      "org_name": "数式"
+    },
+    {
+      "id": 13,
+      "name": "block_cfm",
+      "org_name": "化学式"
+    },
+    {
+      "id": 14,
+      "name": "block_eng",
+      "org_name": "欧文"
+    },
+    {
+      "id": 15,
+      "name": "block_table",
+      "org_name": "表組"
+    },
+    {
+      "id": 16,
+      "name": "line_title",
+      "org_name": "タイトル本文"
+    }
+  ],
+  "comparison": {
+    "ndlkotenocr-lite": "3c62c34",
+    "category_count": 15,
+    "note": "旧古典籍解析器是15类，line_note=注，line_note_dummy=注（ダミー）；不与NDL17类混称"
+  }
+}

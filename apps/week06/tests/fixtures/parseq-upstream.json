@@ -1,0 +1,121 @@
+{
+  "kind": "测试夹具：人工构造logits，不是模型实跑",
+  "upstream": "https://github.com/ndl-lab/ndlocr-lite/blob/d001dad/src/parseq.py",
+  "source_sha256": "638066d19ded10e63046e7448fe956ba25a97d0d143f9ba6f1bbaaea0c3ba6a7",
+  "python_oracle": "仅执行 read() 中 indices=np.argmax 起至 return resstr 的原始 AST；无模型导入或推理",
+  "charlist": [
+    "人",
+    "時",
+    "甲"
+  ],
+  "cases": [
+    {
+      "name": "repeats",
+      "dims": [
+        1,
+        6,
+        4
+      ],
+      "logits": [
+        -4,
+        4,
+        -4,
+        -4,
+        -4,
+        4,
+        -4,
+        -4,
+        -4,
+        -4,
+        4,
+        -4,
+        -4,
+        -4,
+        4,
+        -4,
+        4,
+        -4,
+        -4,
+        -4,
+        -4,
+        -4,
+        -4,
+        4
+      ],
+      "python_result": "人人時時"
+    },
+    {
+      "name": "low-ids",
+      "dims": [
+        1,
+        5,
+        4
+      ],
+      "logits": [
+        -4,
+        4,
+        -4,
+        -4,
+        -4,
+        -4,
+        4,
+        -4,
+        -4,
+        -4,
+        -4,
+        4,
+        4,
+        -4,
+        -4,
+        -4,
+        -4,
+        4,
+        -4,
+        -4
+      ],
+      "python_result": "人時甲"
+    },
+    {
+      "name": "no-eos",
+      "dims": [
+        1,
+        3,
+        4
+      ],
+      "logits": [
+        -4,
+        -4,
+        -4,
+        4,
+        -4,
+        -4,
+        -4,
+        4,
+        -4,
+        4,
+        -4,
+        -4
+      ],
+      "python_result": "甲甲人"
+    },
+    {
+      "name": "immediate-eos",
+      "dims": [
+        1,
+        2,
+        4
+      ],
+      "logits": [
+        4,
+        -4,
+        -4,
+        -4,
+        -4,
+        4,
+        -4,
+        -4
+      ],
+      "python_result": ""
+    }
+  ]
+}

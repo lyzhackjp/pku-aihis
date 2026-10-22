@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-22T06:06:19.929Z",
+  "browser": "155.0.8059.85",
+  "checks": [
+    {
+      "name": "Shared importer receives ZIP and exposes all pages with saved OCR",
+      "result": "passed",
+      "detail": {
+        "pages": 2
+      }
+    },
+    {
+      "name": "Repeated ZIP transfer leaves records and through-work unchanged",
+      "result": "passed",
+      "detail": "No duplicate records"
+    },
+    {
+      "name": "Chosen imported page survives refresh and private server absence",
+      "result": "passed",
+      "detail": {
+        "material": "fixture-page-two"
+      }
+    },
+    {
+      "name": "Corrupt ZIP preserves the course material and records",
+      "result": "passed",
+      "detail": "SHA-256 rejection"
+    },
+    {
+      "name": "Valid archive with wrong image dimensions is rejected by receiver, visibly",
+      "result": "passed",
+      "detail": "No partial writes"
+    },
+    {
+      "name": "A reused attachment id cannot overwrite previously imported bytes",
+      "result": "passed",
+      "detail": "Previous originals retained"
+    },
+    {
+      "name": "Interrupted storage transaction preserves all previous classroom state",
+      "result": "passed",
+      "detail": "Transaction abort preserved classroom and catalog"
+    },
+    {
+      "name": "Clear classroom keeps imported page resources available",
+      "result": "passed",
+      "detail": "Imported pages remain selectable"
+    },
+    {
+      "name": "All 26 original page links open after importing and refreshing",
+      "result": "passed",
+      "detail": "25 pages and D13 → D12 alias"
+    },
+    {
+      "name": "Actual private package: 16 selectable images, 3 saved records; refresh without source server",
+      "result": "passed",
+      "detail": {
+        "pages": 16,
+        "savedRecords": 3,
+        "refreshed": true,
+        "localModeDefaults": true,
+        "privateScreenshots": 0
+      }
+    }
+  ],
+  "errors": [],
+  "network": "Only same-origin GET; private server endpoints blocked; no model/API calls",
+  "screenshots": "Public fixture only"
+}

@@ -1,0 +1,30 @@
+{
+  "observed_at": "2026-10-22T05:37:56.283Z",
+  "decisions": [
+    {
+      "field": "edit:text:line-3:3",
+      "label": "待裁定",
+      "value": ""
+    },
+    {
+      "field": "edit:image:line-4:5",
+      "label": "待裁定",
+      "value": ""
+    },
+    {
+      "field": "edit:image:line-4:6",
+      "label": "待裁定",
+      "value": ""
+    },
+    {
+      "field": "edit:image:line-4:28",
+      "label": "待裁定",
+      "value": ""
+    },
+    {
+      "field": "edit:image:line-11:4",
+      "label": "待裁定",
+      "value": ""
+    }
+  ]
+}

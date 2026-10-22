@@ -1,0 +1,12 @@
+[
+  {
+    "path": "tools/kraken-trace/trace.py",
+    "syntax": "passed",
+    "executed": false
+  },
+  {
+    "path": "tools/ocr-trace/pp_rec_trace.py",
+    "syntax": "passed",
+    "executed": false
+  }
+]
