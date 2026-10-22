@@ -1,0 +1,120 @@
+{
+  "candidate": true,
+  "date": "2026-10-22",
+  "code_commit": "909e38f",
+  "actual_api_calls": 3,
+  "fixture": false,
+  "environment": {
+    "date": "2026-10-22",
+    "browser_surface": "ChatGPT in-app browser",
+    "browser_row": "✓\t浏览器\tGoogle Chrome 155.0.8059.80\t",
+    "system_row": "·\t系统\tmacOS 26.6.2 arm\t",
+    "source": "同一浏览器的课前检查页自动环境检测",
+    "model_endpoint": "https://api.deepseek.com/chat/completions",
+    "via_proxy": false
+  },
+  "material": {
+    "id": "shide_public",
+    "identity": "章學誠《文史通義》，商務印書館1926年本，《史德》首页",
+    "printed_page": 141,
+    "pdf_page_sequence": 161,
+    "image_sha256": "d0fc3a060a8869d6c3e6e624f540819b27233291ff2905a6c46ffa4a3e579a93",
+    "original_region_count": 12
+  },
+  "checks": {
+    "text_and_image_prompts_identical": true,
+    "text_request_has_no_image": true,
+    "image_bytes_match_public_asset": true,
+    "all_edits_pending": true,
+    "no_key_or_auth_header_fields": true
+  },
+  "runs": [
+    {
+      "kind": "text",
+      "date": "2026-10-22T05:29:20.625Z",
+      "model": "deepseek-flash",
+      "elapsed_ms": 18462.799999952316,
+      "usage": {
+        "prompt_tokens": 496,
+        "completion_tokens": 3696,
+        "total_tokens": 4192,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 3612
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 496
+      },
+      "finish_reason": "stop",
+      "changes": [
+        {
+          "id": "line-3",
+          "text": "劉氏子玄蓋以是說謂足盡其理矣雖然史所貴者義也而所具者事也所憑者",
+          "reason": "“子元”當作“子玄”：劉知幾字子玄，識讀“元”與“玄”形近致誤；改從原字形。"
+        }
+      ]
+    },
+    {
+      "kind": "vision",
+      "date": "2026-10-22T05:30:46.696Z",
+      "model": "deepseek-flash",
+      "elapsed_ms": 1314.0999999046326,
+      "usage": {
+        "prompt_tokens": 233,
+        "completion_tokens": 123,
+        "total_tokens": 356,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 117
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 233
+      },
+      "finish_reason": "stop",
+      "text": "史德 7141",
+      "passed": true
+    },
+    {
+      "kind": "image",
+      "date": "2026-10-22T05:31:36.127Z",
+      "model": "deepseek-flash",
+      "elapsed_ms": 30810.5,
+      "usage": {
+        "prompt_tokens": 1211,
+        "completion_tokens": 5751,
+        "total_tokens": 6962,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 5613
+        },
+        "prompt_cache_hit_tokens": 384,
+        "prompt_cache_miss_tokens": 827
+      },
+      "finish_reason": "stop",
+      "changes": [
+        {
+          "id": "line-4",
+          "text": "文也孟子曰『其事則齊桓晉文其文則史義則夫子自謂竊取之矣』非識無",
+          "reason": "图版“孟子曰”下无冒号，引文用直角单引号『』；原识读多出冒号并用「」，据原字形改。"
+        },
+        {
+          "id": "line-11",
+          "text": "文史通義　史德",
+          "reason": "图版版心题名为“文史通義”“史德”双列小字，原识读连写；加全角空格标示分栏，不增字。"
+        }
+      ]
+    }
+  ],
+  "caveats": [
+    "模型响应仅提供deepseek-flash别名，未返回精确修订号",
+    "原页目验印作子元；所有候选由教师裁定，不自动采纳",
+    "后处理导出没有单列发送时的预算和推理强度；视觉测试元数据包含实际请求体",
+    "单页各一次，不构成通用准确率评测"
+  ]
+}

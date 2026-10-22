@@ -36,7 +36,7 @@ pnpm preview
 
 课件NDL／PP运行按钮只读取已校验的缓存，缺失时引导去检查页主动下载。共享导入器的既有下载入口仍可用。Florence可选，约262.2MiB；dots权重本轮未下载。模型没有结果时显示待运行，官方图与构造输入分别标注。
 
-共用API预设及依据见 `modules/history-demo/ocr/api-presets.json`。D12固定选择Kimi K3，官方API型号为 `kimi-k3`；先填Key，做内置“史德 7141”看图测试，再勾选发送范围。官方地址下的旧显示名称“Kimi K3”会规范为API型号，404保留原文并提示检查实际型号与账号权限。Gemini／ChatGPT栏由教师粘贴网页版回答。D21新增“接入 DeepSeek V4.1 Flash”，官方API型号为 `deepseek-flash`。材料／配置改变后重新同意；Key只在内存，刷新清除。请求、回复、usage、耗时与错误保存在本机，导出剔除Key。2026-10-22教师反馈Kimi“看图测试：已通过”；这不代表已经验证课程整页调用。DeepSeek本轮只验证请求构造与替身协议，尚无真实接口反馈。
+共用API预设及依据见 `modules/history-demo/ocr/api-presets.json`。D12固定选择Kimi K3，官方API型号为 `kimi-k3`；先填Key，做内置“史德 7141”看图测试，再勾选发送范围。官方地址下的旧显示名称“Kimi K3”会规范为API型号，404保留原文并提示检查实际型号与账号权限。Gemini／ChatGPT栏由教师粘贴网页版回答。D21新增“接入 DeepSeek V4.1 Flash”，官方API型号为 `deepseek-flash`。材料／配置改变后重新同意；Key只在内存，刷新清除。请求、回复、usage、耗时与错误保存在本机，导出剔除Key。2026-10-22教师反馈Kimi“看图测试：已通过”；这不代表已经验证课程整页调用。DeepSeek随后在教师填入Key后完成真实文本／带图后处理及公开图测试，分别18.463／30.811／1.314秒；候选全部待裁定。完整记录见 `docs/week06/verification/20261022-deepseek-real/`，与此前协议替身分开。
 
 D22会话下拉框只列当前页影指纹相同的记录，默认选最近加入的整页记录；换用另一页记录须先切材料。文件导入继续保留指纹核对，避免把异页文字贴到当前页。
 
