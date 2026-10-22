@@ -1,0 +1,20 @@
+{
+  "status": "候选，未经教师确认",
+  "week06": {
+    "tests": 85,
+    "passed": 85,
+    "skipped": 0,
+    "failed": 0,
+    "localMaterialsEnabled": true
+  },
+  "sharedImporter": {
+    "tests": 13,
+    "passed": 13,
+    "failed": 0
+  },
+  "build": "passed",
+  "typeCheck": "passed",
+  "actualModelCalls": 0,
+  "actualApiCalls": 0,
+  "implementationCommit": "0f8e94e"
+}
