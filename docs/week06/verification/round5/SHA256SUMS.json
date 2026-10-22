@@ -3,12 +3,12 @@
   "date": "2026-10-22",
   "screenshots": 132,
   "files": {
-    "README.md": "8be7be23c003c5f4172304b632ab938f81e845c00ed6e2971ba6d08d87fb49b9",
+    "README.md": "7fb175ef598d0146145da55eb168509809d2220900bbf6819d3f8e3b760ccfe5",
     "browser-round2.json": "65cd7f5af982cf8785fed248af112a1cc0ec3dd99cbe1526cd17b52482c3053a",
     "browser-v5.json": "73eeac8b334dc9a2436edf21209708b8450b82960c54194215121a033a10b971",
-    "build.log": "710db6b727183eece3f06868168e1200eac19dacb54dee9cbcb9c6faff9920b9",
-    "check.log": "6036382cfd687c39653bc328bb942600a77deac38271299fa6ec91581a20d78c",
-    "dots-protocol.log": "4059c21a4feefeb2a13a52e3baa29f9f0aae74dc93f63512496a39f068e9ec8b",
+    "build.txt": "8c463b76ed347f26aedcf98a52903d35a2aff890a8d4c1a666ec7891b090ff8f",
+    "check.txt": "6036382cfd687c39653bc328bb942600a77deac38271299fa6ec91581a20d78c",
+    "dots-protocol.txt": "4059c21a4feefeb2a13a52e3baa29f9f0aae74dc93f63512496a39f068e9ec8b",
     "layout/1024x768-D01.png": "f2cdc090ac945405671719c92ff34541c7d1ea1db98790187a60e59aa4b11b45",
     "layout/1024x768-D02.png": "0abda149cbd60730a8fabb7f10d170e6c80b34050fb87af15e2e6b6fd408ec98",
     "layout/1024x768-D04.png": "783e74d95962bbd6098194347298bdd5a31069a6d53c6b3adb29aab1cc0c5f77",
@@ -141,7 +141,7 @@
     "screenshots/v5-D15-category-6.png": "2af2f74ca4c6c06c99469be6a03be9e905acf22cfe978bc3d40a14d349e1c462",
     "screenshots/v5-D15-category-7.png": "27f93c0ba12465b5e10cc39d437fe835192e161672bf12f9afd0a35c969c2f51",
     "screenshots/v5-D15-category-8.png": "1ddee5dea0a6a1a30fe7f99bd7b47fbadff893ca4becfd6d0e933691131c076b",
-    "unit-tests.log": "ba1991d46a381b88c2b6503727d26c76c1e06c18dcd7d474b7ee632c2f0d068e"
+    "unit-tests.txt": "ba1991d46a381b88c2b6503727d26c76c1e06c18dcd7d474b7ee632c2f0d068e"
   },
   "source_sha256": {
     "apps/week06/src/assets/runtime/services.js": "61d1fa758f1a11d14724a5a04cd951bb5682a71cb3a962e54a795047a9bbf9eb",
