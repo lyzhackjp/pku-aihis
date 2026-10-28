@@ -45,6 +45,34 @@ async def main():
         await aud.evaluate("location.hash='#D08'"); await aud.wait_for_timeout(300)
         await aud.locator('deck-slide[slide-id="D08"] input[data-k="add"]').click(); await aud.keyboard.type("ArrowLeft"); await aud.keyboard.press("ArrowLeft"); await aud.wait_for_timeout(300)
         check("输入框内打字与方向键不翻页（停在 D08）", await aud.evaluate("location.hash") == "#D08")
+        # 3b 2026-10-28 晚教师意见：D05 新增一行只加一行；D04 填写示例；输入法组字（CDP 模拟拼音“wang”→“王珪”）不被重绘打断
+        await aud.evaluate("location.hash='#D05'"); await aud.wait_for_timeout(400)
+        rows = 'deck-slide[slide-id="D05"] .evtable tbody tr'
+        n0 = await aud.locator(rows).count(); await aud.locator('deck-slide[slide-id="D05"] [data-ev="add"]').click(); await aud.wait_for_timeout(300)
+        n1 = await aud.locator(rows).count()
+        check("D05 点一次“新增一行”只增加一行", n1 == n0 + 1, (n0, n1))
+        await aud.locator(f'deck-slide[slide-id="D05"] [data-ev="del:{n1 - 1}"]').click(); await aud.wait_for_timeout(200)
+        await aud.evaluate("location.hash='#D04'"); await aud.wait_for_timeout(400)
+        await aud.locator('deck-slide[slide-id="D04"] [data-fx="example"]').click(); await aud.wait_for_timeout(300)
+        vals = await aud.evaluate("[...document.querySelectorAll('deck-slide[slide-id=D04] input[data-arr]')].map(n=>n.value)")
+        check("D04“填入示例”填满五个字段与五个用途", len(vals) == 10 and all(vals), vals[:3])
+        cdp = await aud.context.new_cdp_session(aud); ime = []
+        ids = await aud.evaluate("[...document.querySelectorAll('deck-slide')].map(s=>s.getAttribute('slide-id'))")
+        for pid in ids:
+            await aud.evaluate(f"location.hash='#{pid}'"); await aud.wait_for_timeout(350)
+            n = await aud.evaluate(f"""[...document.querySelectorAll('deck-slide[slide-id={pid}] input:not([type]), deck-slide[slide-id={pid}] input[type=text], deck-slide[slide-id={pid}] textarea')].filter(n=>n.offsetParent&&!n.disabled&&!n.readOnly).map((n,i)=>(n.dataset.imetest=i,i))""")
+            for i in n:
+                sel = f'deck-slide[slide-id="{pid}"] [data-imetest="{i}"]'
+                if not await aud.locator(sel).count(): continue
+                await aud.locator(sel).focus(); await aud.evaluate(f"(()=>{{const n=document.querySelector('{sel}');n.value='';n.dispatchEvent(new Event('input',{{bubbles:true}}))}})()")
+                for t in ["w", "wa", "wang", "王"]:
+                    await cdp.send("Input.imeSetComposition", {"text": t, "selectionStart": len(t), "selectionEnd": len(t)}); await aud.wait_for_timeout(25)
+                await cdp.send("Input.insertText", {"text": "王珪"}); await aud.wait_for_timeout(120)
+                v = await aud.evaluate("(()=>{const a=document.activeElement;return a&&('value' in a)?a.value:null})()")
+                ime.append((pid, i, v))
+        bad = [x for x in ime if not (x[2] or "").endswith("王珪") or "王王" in (x[2] or "") or "w" in (x[2] or "")]
+        check(f"输入法组字：{len(ime)} 个文字输入框均得到“王珪”、焦点不丢", not bad and len(ime) >= 20, bad[:5])
+        await aud.evaluate("localStorage.clear()")
         check("交互检查中无脚本错误", not errs, errs[:3])
         # 4 五种尺寸 × 30 页
         for w, h in SIZES:
