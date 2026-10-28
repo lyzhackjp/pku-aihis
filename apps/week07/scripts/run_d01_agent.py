@@ -8,13 +8,17 @@
       预存范围外的查询如实返回“未预存”。教师电脑上可设 LIVE=1 直接请求接口。
 提示格式：Qwen3 官方聊天模板的工具调用写法（<tools> 定义，模型输出 <tool_call>{json}</tool_call>）。
 用法：python3 run_d01_agent.py <gguf 路径> <输出 json>
+      环境变量：LIVE=1 实时请求；RAW_DIR 回放目录；N_CTX、N_THREADS；MODEL_SHA256（已另行核对时传入）
 """
 import json, sys, time, hashlib, urllib.parse, urllib.request, re, platform
 
 MODEL, OUT = sys.argv[1], sys.argv[2]
 API = "https://cbdb.fas.harvard.edu/cbdbapi/person.php"
 MAX_TOOL_CHARS = 6000  # 交给模型的接口返回上限（上下文 8192 词元）；原样全文另存记录
-SEED, N_CTX, MAX_TURNS = 20261028, 8192, 6
+SEED, MAX_TURNS = 20261028, 6
+import os as _os
+N_CTX = int(_os.environ.get("N_CTX", "8192"))       # 教师电脑内存小时可设 4096（本例全程约 1.3k 词元）
+N_THREADS = int(_os.environ.get("N_THREADS", "2"))
 
 SYSTEM = "你是一个帮助历史研究者查询资料的智能体。需要时调用工具查询中国历代人物传记资料库（CBDB），再根据查询结果用中文回答。"
 USER = "我在读《宋史》，想了解神宗朝宰相王珪的生平。请去中国历代人物传记资料库（CBDB）查一下王珪，告诉我他的籍贯、生卒年和主要任官。"
@@ -53,10 +57,10 @@ def prompt(msgs):
     return s + "<|im_start|>assistant\n"
 
 from llama_cpp import Llama, __version__ as LV
-sha = hashlib.sha256(open(MODEL, "rb").read()).hexdigest()
-llm = Llama(model_path=MODEL, n_ctx=N_CTX, n_threads=2, seed=SEED, verbose=False)
+sha = os.environ.get("MODEL_SHA256") or hashlib.sha256(open(MODEL, "rb").read()).hexdigest()  # 预先 sha256sum 核对后可经环境变量传入，省去重复计算
+llm = Llama(model_path=MODEL, n_ctx=N_CTX, n_threads=N_THREADS, seed=SEED, verbose=False)
 rec = {"purpose": "第七讲 D01：智能体经 CBDB 接口查“王珪”的一次实际运行",
-       "date": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "model": {"file": MODEL.split("/")[-1], "sha256": sha, "runtime": f"llama-cpp-python {LV}", "n_threads": 2, "n_ctx": N_CTX, "temperature": 0, "seed": SEED},
+       "date": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "model": {"file": MODEL.split("/")[-1], "sha256": sha, "runtime": f"llama-cpp-python {LV}", "n_threads": N_THREADS, "n_ctx": N_CTX, "temperature": 0, "seed": SEED},
        "machine": platform.platform(), "tool_mode": "live" if LIVE else "replay of curl responses fetched 2026-10-28 11:49 +08:00", "system": SYSTEM, "user": USER, "tools": TOOLS, "max_tool_chars": MAX_TOOL_CHARS, "steps": []}
 msgs = [{"role": "user", "content": USER}]
 t_all = time.time()

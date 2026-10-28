@@ -1,0 +1,27 @@
+$ node skill/history-demo-courseware/scripts/check-quotes.mjs plan/papers.json research/原文核对_20261028 \
+    --allow "For example, the model may still" "The results indicate that text genre" "In semistructured data"
+（2026-10-28 在教师电脑工作区运行；原文目录只存本地，地址与 SHA256 见 README.md）
+OK   .kcl_factoid  A factoid is a spot in a source that says something about a person or 
+OK   .cosovschi  On the contrary, data is the product of interpretation and transformat
+OK   .tsui2020  Traditional Chinese naming customs pose big challenges to this, especi
+OK   .nipponica_toyokuni  以上の理由から現在では便宜上、国貞の豊国を3世と数えている。
+OK   .openrefine_recon  If there is no clear match, one or more candidates are displayed, toge
+OK   .berman2003  The first instance of Jianning Fu was valid from 1368 to 1454, and the
+OK   .hipe2026  Moving from named entity recognition and linking (HIPE-2020, HIPE-2022
+OK   .guner2023  评测发布了覆盖多个朝代和领域的”二十四史”评测数据集,共15万余字,包含人名、书名、官职名三种实体超万数。
+NOTE .evahan2025  The results indicate that text genre significantly impacts model perfo  （已登记例外：注释须说明）
+OK   .zhang2025  Our experiments, conducted on the HIPE-2022 (Identifying Historical Pe
+OK   .zheng2025  Experimental results show that the pre-trained and fine-tuned 7B model
+OK   .gliner2023  Through comprehensive testing, GLiNER demonstrate strong performance, 
+NOTE .buneman1997  In semistructured data, the information that is normally associated wi  （已登记例外：注释须说明）
+OK   .willard2023  In this article we show how the problem of neural text generation can 
+NOTE .openai_so  For example, the model may still make mistakes within the values of th  （已登记例外：注释须说明）
+OK   .anthropic_so  Structured outputs guarantee schema-compliant responses through constr
+OK   .tam2024  Surprisingly, we observe a significant decline in LLMs reasoning abili
+OK   .langextract_readme  Maps every extraction to its exact location in the source text, enabli
+OK   .stewart2025  Ultimately, LLMs are not a magic bullet for data extraction.
+
+19 quotes, 0 unverified
+
+$ node skill/history-demo-courseware/scripts/check-page-map.mjs plan/page-map.json source/讲义_week07.typ
+页表 30 页；讲义概念 30 个；讲义图 25 张；建议时长 172 分／讲义 172 分。

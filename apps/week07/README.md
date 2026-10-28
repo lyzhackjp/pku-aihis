@@ -29,7 +29,7 @@ python3 apps/week07/scripts/build_calendar.py <DDBC 解压目录> <输出 calend
 
 ## 实跑脚本
 
-- `run_d01_agent.py`：D01 智能体经 CBDB 查“王珪”。用 Qwen3-4B-Instruct-2507 Q4_K_M，与讲义 4.2 同一文件，llama-cpp-python 0.3.36，温度 0。默认回放预取的接口返回；设 `LIVE=1` 直连接口。
+- `run_d01_agent.py`：D01 智能体经 CBDB 查“王珪”。用 Qwen3-4B-Instruct-2507 Q4_K_M，与讲义 4.2 同一文件，llama-cpp-python 0.3.36，温度 0。默认回放预取的接口返回；设 `LIVE=1` 直连接口（2026-10-28 已在教师电脑实连复跑，内存小时加 `N_CTX=4096`）。
 - `run_d25_langextract.py`：D25 LangExtract（提交 3a68580）实跑。按 200 字分块抽取，同一批抽取分别用默认分词与按字分词对齐。
 
 ## 验收
@@ -40,3 +40,5 @@ python3 apps/week07/scripts/verify_week07.py http://localhost:8765/prototype/ind
 ```
 
 需要 Playwright 与 Chromium。2026-10-28 共 82 项，全部通过；截图与结果见 `docs/week07/verification/20261028/`。
+
+补充脚本 `verify_week07_extra.py`：演讲者窗口同步、B 静态模式、输入框方向键、5 种视口×30 页无溢出。用法：`python3 verify_week07_extra.py <原型 URL> <材料包相对 URL> <输出目录>`。2026-10-28 下午 23／23 通过，记录在 `docs/week07/verification/20261028-local/`。

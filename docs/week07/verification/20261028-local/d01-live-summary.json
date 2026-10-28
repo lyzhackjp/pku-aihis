@@ -1,0 +1,56 @@
+{
+ "purpose": "D01 在教师电脑上以 LIVE=1 实连 CBDB 接口复跑，与 2026-10-28 回放运行比对",
+ "date": "2026-10-28T05:38:09+0000",
+ "machine": "Linux-6.8.0-138-generic-aarch64-with-glibc2.35（教师电脑上的 Linux 虚拟机，4 核，约 4 GB 内存）",
+ "model": {
+  "file": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+  "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+  "runtime": "llama-cpp-python 0.3.36",
+  "n_threads": 4,
+  "n_ctx": 4096,
+  "temperature": 0,
+  "seed": 20261028
+ },
+ "tool_mode": "live",
+ "steps": [
+  {
+   "turn": 1,
+   "prompt_tokens": 339,
+   "completion_tokens": 23,
+   "seconds": 17.0,
+   "tool_calls": [
+    {
+     "call": {
+      "name": "cbdb_search_by_name",
+      "arguments": {
+       "name": "王珪"
+      }
+     },
+     "url": "https://cbdb.fas.harvard.edu/cbdbapi/person.php?name=%E7%8E%8B%E7%8F%AA&o=json",
+     "http_seconds": 1.7,
+     "response_chars": 1680,
+     "response_sha256": "7de3538ff63b0bfe35448f41df773e7b29b6df08061431f06536bc057663f6b0"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "prompt_tokens": 1069,
+   "completion_tokens": 217,
+   "seconds": 50.1,
+   "tool_calls": []
+  }
+ ],
+ "total_seconds": 68.7,
+ "compare_with_replay": {
+  "replay_record": "local-only/runs/d01_agent_run_20261028.json（n_ctx 8192，2 线程，容器内）",
+  "turn1_tool_call_identical": true,
+  "cbdb_response_identical_to_replayed_curl": true,
+  "final_answer_identical": false,
+  "cbdb_record_returned": "PersonId 570937，清代，籍贯蕭山，出处《紹興府志》——不是北宋宰相王珪",
+  "answer_claims_kaifeng": true,
+  "answer_mentions_qing_or_xiaoshan": false,
+  "answer_claims_kinship_with_wang_anshi": true
+ },
+ "note": "原始接口返回与完整模型回答只存本地 local-only/runs/d01_agent_live_20261028.json，不进仓库。n_ctx 由 8192 改为 4096、线程 2→4 后第二轮措辞有变化，结论相同：回答仍称籍贯河南开封、与王安石有亲属关系，且未提接口返回的清代与蕭山。"
+}
