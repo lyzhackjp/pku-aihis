@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第七讲 · 条目重构、实体识别与结构化输出（测试原型）</title>
+<link rel="stylesheet" href="deck.css">
+<link rel="stylesheet" href="week07.css">
+<script src="data/data.js"></script>
+<script src="deck-core.js"></script>
+<script src="week07-core.js"></script>
+<script src="week07-labs.js"></script>
+<script src="week07-labs2.js"></script>
+</head><body><div id="app"></div>
+<!-- 由 assemble-prototype.mjs 依 page-map.json 生成；请改页表后重新生成，不要直接改这里。 -->
+<template id="deck-template"><deck-container>
+<deck-slide slide-id="D00" data-status="prototype" kicker="D00 / 导入" header-title="名实：表中的一行凭什么代替史料中的一句" transition="前几讲落实了称引、出处与文本来源；本讲处理最后一段：把史料中的人、地、时排成可以复核的表。" theme="dark" layout="hero" mode="静态内容" notes="目的：立住全讲的问题与四个条件，后面每一节回答其中一个。
+范例引导：念问题，停一下；指出四个条件分别对应第一至五节，结语会回到这里。
+机制背景：四个条件按钮即贯穿页 D30 的阶段入口；贯穿页记录在此页显示完成进度。"><hero-cover7></hero-cover7><div slot="footer">D00 · 静态内容；问题与四个条件据讲义导入。</div></deck-slide>
+<deck-slide slide-id="D01" data-status="prototype" kicker="D01 / 导入" header-title="在 CBDB 查“王珪”：同一个名字，四种返回" transition="从一个具体情形开始：让智能体去 CBDB 查王珪，看看程序实际拿到了什么。" theme="light" layout="flow4" mode="保存结果回放（智能体 2026-10-28 本地实际运行一次；CBDB 接口返回为同日预取，运行时回放；材料包现场导入（原始数据不进公开构建））" notes="目的：让学生看到错误发生在“一个名字被当成一个人”这一步，早于模型生成。
+范例引导：先切到“按名 JSON”，问：程序会报错吗？请学生用一分钟写下智能体的回答，再展开实际运行记录对照。
+机制背景：JSON 头部版本字段“20131220”与出处栏 2025 年批次并存，2.3 与 D12 复用此数据；四条记录在 D09 消歧页复用。 智能体：Qwen3-4B-Instruct-2507 Q4_K_M（与 4.2 同一模型，SHA-256 相同）＋ cbdb_search_by_name、cbdb_get_person 两个工具，温度 0，2026-10-28 本地运行一次，用时 84.8 秒。CBDB 接口对脚本请求返回 403（第一次运行，记录另存），工具改为回放同日 11:49 用 curl 正常请求所得的原始返回。实际结果：只调用一次按名查询即作答，籍贯写“河南开封”、称其为神宗朝宰相与王安石亲属，返回的“清”“蕭山”都未采用；比讲义导入第 3 段的推断更进一步，建议讲义改用实际记录（design.md 第八节）。"><cbdb-query-lab></cbdb-query-lab><div slot="footer">D01 · 保存结果回放：CBDB 接口返回（2026-10-28 预取）与智能体运行记录（同日本地运行一次）；材料包现场导入。</div></deck-slide>
+<deck-slide slide-id="D02" data-status="prototype" kicker="D02 / 教案 1.1" header-title="『大日本史料』的一页：綱文是断言，下面是证据" transition="条目早在数字时代之前就有成熟的形式：1928 年刊行的一页史料集已经把断言与证据分开排版。" theme="light" layout="diagram" mode="静态内容（页影与目验转录；转录待核）；材料包现场导入（原始数据不进公开构建）" notes="目的：建立“断言／证据分列”的直观印象，并预告实体链接（括注）与实体索引（見出）。
+范例引导：依次点綱文、史料、括注、見出；在括注处停一下：编者九十多年前已经在做“这个官名指谁”的判断。
+机制背景：页影热区坐标手工标定；括注区域在 D08、D11（OCR 丢失）、D24（抽取对照）复用。"><dnsr-page></dnsr-page><div slot="footer">D02 · 静态内容：『大日本史料』9-1 本文第 1 页（NDL 3450611，PDF 页序 29），转录为目验，待核。</div></deck-slide>
+<deck-slide slide-id="D03" data-status="prototype" kicker="D03 / 教案 1.1" header-title="拆一句：谁、何时、何地、做了什么、据什么" transition="把綱文下的一句史料拆成五项，再看三种条目形式各以什么为中心。" theme="light" layout="flow4" mode="浏览器实时（学生填写；参照答案为讲义所给）" notes="目的：让学生亲手体会条目重构，并看到“谁”的填法引出第二节。
+范例引导：给两分钟。收回时只问一个问题：“谁”写的是什么？把两种写法并列在投屏上。
+机制背景：五项格式与 D05 证据表前五列对应，填写结果可一键送入 D05 与贯穿页阶段 1。"><split-lab></split-lab><div slot="footer">D03 · 浏览器实时；史料句据『大日本史料』9-1 第 1 页，factoid 定义据 KCL 项目页。</div></deck-slide>
+<deck-slide slide-id="D04" data-status="prototype" kicker="D04 / 教案 1.2" header-title="字段由问题决定：一格“籍贯”回答的是哪个问题" transition="拆出条目之后，每条要有哪些栏目，由研究问题决定。" theme="light" layout="flow4" mode="浏览器实时（学生输入）＋保存结果回放（CBDB 编者注原文）；材料包现场导入（原始数据不进公开构建）" notes="目的：让学生把“字段”与“判断”绑定，理解一格回答两个问题时要拆栏。
+范例引导：三分钟练习后，请一位同学念出一个“写不出用途”的字段；再切到王珪例。
+机制背景：整洁数据三原则放在备注口述；“一格一个值”做不到时多开一张表，在 D21 三种数据形态处回收。"><field-lab></field-lab><div slot="footer">D04 · 浏览器实时；王珪籍贯据《宋史》卷三一二（维基文库，待改点校本）与 CBDB 1845 编者注。</div></deck-slide>
+<deck-slide slide-id="D05" data-status="prototype" kicker="D05 / 教案 1.3" header-title="证据表：每一格都是一次可记录的转换" transition="把第四周的证据矩阵推进到史料中的人、地、时：表中每一格都要留下转换的记录。" theme="light" layout="workbench" mode="浏览器实时（表格存当前浏览器，可导出）" notes="目的：给出全讲共用的证据表，并强调原值／规范值分栏、“未见”合法、位置来源要记。
+范例引导：逐列念一遍；在“判断类型”处切到“未见”，说明空格子与“未见”的区别，预告 4.2 的必填字段问题。
+机制背景：此表是贯穿页 D30 与对勘实践 D28 的同一组件；HIPE 的 PROBABLE 与解释字段对应“判断类型”“理由”，在 D17 回收。"><evidence-table></evidence-table><div slot="footer">D05 · 浏览器实时；示例行据讲义 @fig-evtable（『後法成寺尚通公記』永正五年六月十四日条）。</div></deck-slide>
+<deck-slide slide-id="D06" data-status="prototype" kicker="D06 / 教案 1.4" header-title="就地标注：TEI 把证据表收进原文" transition="另一种做法是把判断直接写在原文旁边；『大日本史料』的括注就是行内标注。" theme="light" layout="flow4" mode="浏览器实时（XML 格式良好性用浏览器解析器检查）＋保存结果回放（TEI 有效性校验记录）" notes="目的：让学生能读懂 &lt;persName ref=…&gt;，看到行内标注与证据表一一对应，并体会括号不配对的代价。
+范例引导：先点 persName，再点 when；然后当场删掉 &lt;/persName&gt;，请学生看报错。最后问讲义的两分钟问题：史料汇编选哪种，校注本选哪种。
+机制背景：浏览器只能检查“格式良好”，不能检查 TEI schema“有效”；有效性显示的是 2026-10-27 的校验记录。when 用格里历：此日儒略历 1508-07-11，格里历 1508-07-21（D14 可复算）。"><tei-lab></tei-lab><div slot="footer">D06 · 浏览器实时（格式检查）＋保存结果回放（tei_all 校验）；示例为讲义教学构造。</div></deck-slide>
+<deck-slide slide-id="D07" data-status="prototype" kicker="D07 / 教案 2.1" header-title="一人多名：称呼的类型带着时间与立场" transition="上一节留下“畠山尾州”填哪个名字的问题；先看一个人为什么会有许多名字。" theme="light" layout="diagram" mode="保存结果回放（规范库原始数据）；材料包现场导入（原始数据不进公开构建）" notes="目的：让学生看到称呼类型可用于断代与判断立场。
+范例引导：切到北宋王珪，依次点“禹玉”“岐國公”“文恭”；最后点“三旨相公”，指出 CBDB 别名表里没有它。
+机制背景：称呼类型照规范库原值显示，不另造类型；“三旨相公”标为“讲义据《宋史》补，库中未收”。"><alias-lab></alias-lab><div slot="footer">D07 · 保存结果回放：CBDB 与 NDL 典拠原始数据（2026-10-28 重取；讲义据 10-22 查询）；“三旨相公”据《宋史》卷三一二。</div></deck-slide>
+<deck-slide slide-id="D08" data-status="prototype" kicker="D08 / 教案 2.1" header-title="足利义尹的四种叫法与王珪传中的称呼" transition="同一页史料之内，同一个人就有四种叫法；规范档与编年史料各有取法。" theme="light" layout="flow4" mode="浏览器实时（学生标注；参照答案为讲义所列）；材料包现场导入（原始数据不进公开构建）" notes="目的：练习识别称呼与类型，并落到原值／规范值两栏。
+范例引导：三分钟练习。收回时数一数单字“珪”出现了几次，指出它在“珪、確”处的歧义。官名称人（細川民部少輔、畠山尾州）口述，与日期绑定。
+机制背景：“九州大樹”的含义按讲义并存两说，页面标注“未决问题”；义材改名年份不显示（讲义附录未决问题）。参照答案只列讲义明确给出的称呼。"><naming-lab></naming-lab><div slot="footer">D08 · 浏览器实时；选段据维基文库《宋史》卷三一二，义尹称呼据『大日本史料』9-1 第 1—2 页与 NDL 典拠 001247822。</div></deck-slide>
+<deck-slide slide-id="D09" data-status="prototype" kicker="D09 / 教案 2.2" header-title="同名异人：靠哪些字段把四个王珪分开" transition="反过来，多人共用一个名字；偶然的同名要靠字段比对来分开。" theme="light" layout="flow4" mode="浏览器实时（在保存的规范库记录上筛选）；材料包现场导入（原始数据不进公开构建）" notes="目的：看到消歧依靠的就是传统考证用的字段。
+范例引导：先只勾“时代”，再加“官职”；说明 CBDB 并入地方志时的三步规则（同地多次任官→跨志比对→外部佐证）都来自史学常识。
+机制背景：筛选是确定性的字段比较，不打分；“34 条”中其余 30 条只显示编号与时代（若原始 HTML 中有）。"><namesake-lab></namesake-lab><div slot="footer">D09 · 浏览器实时筛选；记录据 CBDB 接口 2026-10-28 重取；讲义据 10-22 查询 原始 JSON，三步规则据 Tsui DH2020 摘要。</div></deck-slide>
+<deck-slide slide-id="D10" data-status="prototype" kicker="D10 / 教案 2.2" header-title="襲名：歌川豊国一门的称呼重叠" transition="制度性的同名以襲名最为典型：名号作为身份传给后人。" theme="light" layout="diagram" mode="保存结果回放（NDL 典拠原始 JSON）；材料包现场导入（原始数据不进公开构建）" notes="目的：看到代数是后人的编号约定，同一号可指多人。
+范例引导：点“一陽斎”，四条连线同时亮起；再切口径，念ニッポニカ原句“現在では便宜上……”。
+机制背景：二部图：左为规范档记录，右为异称；连线来自原始 JSON 的异称字段，不手工补。初名丰重者生年不显示（未决问题）。"><shumei-lab></shumei-lab><div slot="footer">D10 · 保存结果回放：NDL 典拠原始 JSON（2026-10-28 重取；讲义据 10-22 查询）；代数口径据コトバンク所收辞典。</div></deck-slide>
+<deck-slide slide-id="D11" data-status="prototype" kicker="D11 / 教案 2.2" header-title="豐國条：一个名字两个人，编者注在识读中丢失" transition="同时代的编者已经在做同样的辨析；而识读最容易丢掉的正是编者的声音。" theme="light" layout="flow4" mode="保存结果回放（NDLOCR-Lite 2026-10-24 实际运行，150 dpi）；材料包现场导入（原始数据不进公开构建）" notes="目的：把第六周的识读与本周的辨认连起来：编者注最容易丢，又最为辨认所需。
+范例引导：先在页影上指出两个“豐國”分指一世与三世；再切到 OCR，看割注消失。最后两分钟问题。
+机制背景：差异按字对齐后标色；D24 的日文抽取对照以此处两种文本为输入。狂歌谐音解释照讲义（未决问题照现稿）。"><ocr-loss-lab></ocr-loss-lab><div slot="footer">D11 · 保存结果回放：NDLOCR-Lite（提交 d001dad）2026-10-24 输出；页影 NDL 994737（PDM），转录目验待核。</div></deck-slide>
+<deck-slide slide-id="D12" data-status="prototype" kicker="D12 / 教案 2.3" header-title="实体链接与对账：机器给候选，人来选" transition="辨认出“这是谁”以后，要写成别人能复核的形式：一个规范库中的编号。" theme="light" layout="flow4" mode="浏览器实时（在导入的候选记录上做字段比对；非 OpenRefine 运行；材料包现场导入（原始数据不进公开构建））" notes="目的：养成“候选＋人工选择＋写理由”的习惯，并接受“库中无对应”是正当结论。
+范例引导：三分钟练习：每人写出排除其余 33 个王珪的依据。强调导入中的错误就在于程序替我们选了一个。
+机制背景：页面只做透明的字段吻合计数，刻意不仿造 OpenRefine 的对账分数；对账原句与界面说明放在第 2 列顶部。 原 D13 并入本页，#D13 跳转到此。"><link-lab></link-lab><div slot="footer">D12 · 浏览器实时字段比对；候选据 CBDB 2026-10-28 重取；讲义据 10-22 查询 原始返回，对账说明据 OpenRefine 手册。</div></deck-slide>
+<deck-slide slide-id="D14" data-status="prototype" kicker="D14 / 教案 3.1" header-title="年号换算：熙寧三年何以是 1071 年" transition="前两节解决了“谁”；断言还要放到可以比较先后的时间轴上。" theme="light" layout="flow4" mode="浏览器实时（干支公式、儒略日与历表查询；中日历表为 DDBC 時間規範資料庫，CC BY-SA 3.0，随材料包导入；未导入时四个预设仍可算）" notes="目的：会用干支公式验算，看到年号年与公历年不一一对应，并分清儒略历与格里历。
+范例引导：先放熙宁例：两个丁卯日，十一月以前的排除；问讲义两分钟问题：原值与规范值怎样同时保存。再切永正例与元治例。
+机制背景：干支序号 = (JDN − 2433191) mod 60，2433191 为 1949-10-01（甲子）；已在本机复算：1071-01-14J、1508-06-28J 为丁卯（3），1508-07-05J 为甲戌（10），1508-07-11J 为庚辰（16）。历表打包后任意日期可查；日本例在 1685 年以前按宣明暦等当时历法，若历表来源与时宪历不同，页面并列两种结果。天保十五年改元弘化＝1845-01-09（时宪历推算互验，讲义注）。 原 D15（EDTF）并入第 5 列，#D15 跳转到此；EDTF 解析器只支持扩充五所列九种写法。"><calendar-lab></calendar-lab><div slot="footer">D14 · 浏览器实时；历表据 DDBC 時間規範資料庫（中、日，日本历据須賀隆数据），与 sxtwl 互验；熙宁例据《續資治通鑑》卷六十八，EDTF 据 LoC 规范。</div></deck-slide>
+<deck-slide slide-id="D16" data-status="prototype" kicker="D16 / 教案 3.2" header-title="地名有起止年：建寧府的三段" transition="地名也要放到时间轴上：同一个名字在不同年份所指的范围不同。" theme="light" layout="flow4" mode="浏览器实时（三条实例为论文所举之例，非 CHGIS 数据下载）" notes="目的：知道历史地名要链接到带起止年的记录，而不是今天的坐标。
+范例引导：拖到 1454、1455、1733、1734 四个边界年；然后指出 4.2 中模型把“成都華陽”规范成“今四川成都华阳地区”的问题。
+机制背景：隶属关系另表记录、可单独变化，口述带过；历史地理分析留第八周。讲义注明此前曾把辖境变化误记为隶属变化，页面按更正后的表述。"><place-time-lab></place-time-lab><div slot="footer">D16 · 浏览器实时筛选；建寧府三条实例据 Berman 2003 数据模型说明。</div></deck-slide>
+<deck-slide slide-id="D17" data-status="prototype" kicker="D17 / 教案 3.3" header-title="同现与在场：人名地名同句之后还要判断" transition="有了人、时、地，最常见的关系是“某人某时在某地”；它需要判断，而不能只靠同现读出。" theme="light" layout="flow4" mode="浏览器实时（学生判断；统计在打包的英文训练集上实时计算）；材料包现场导入（原始数据不进公开构建）" notes="目的：分清同现与在场，并练习写出判断理由。
+范例引导：先尚通公記例：在武衞的是没写出的主语近卫尚通。两分钟练习做 HIPE 例。和标注者不同不要紧，理由写得出来就行。
+机制背景：HIPE 数据为 CC BY-NC-SA 4.0，仅打包英文训练集并在页脚注明许可；307／152 由页面从数据重算，与讲义数字核对。"><presence-lab></presence-lab><div slot="footer">D17 · 浏览器实时；HIPE-2026-data v1.0（CC BY-NC-SA 4.0）英文训练集；概述据 arXiv:2606.25935v1 摘要。</div></deck-slide>
+<deck-slide slide-id="D18" data-status="prototype" kicker="D18 / 教案 3.3" header-title="真冲突与伪冲突：1846 号王珪卒后两年任知州" transition="把时间轴用起来就能发现矛盾，而矛盾要分真伪。" theme="light" layout="diagram" mode="保存结果回放（原书文本与 CBDB 单机版记录）；材料包现场导入（原始数据不进公开构建）" notes="目的：区分真伪冲突与各自的处理方式。
+范例引导：先伪后真；在“王圭卒”处停下，提出讲义的开放问题：另有其人，还是王珪之误写。
+机制背景：推断照讲义标为“本讲推断”；四库本与点校本未对校（未决问题）。"><conflict-lab></conflict-lab><div slot="footer">D18 · 保存结果回放：《建炎以來繫年要錄》四库本卷 169、170、175（维基文库）；CBDB 单机版 2026-10-24。</div></deck-slide>
+<deck-slide slide-id="D19" data-status="prototype" kicker="D19 / 教案 4.1" header-title="命名实体识别的三条路线" transition="前三节的辨认、链接、系年过去都靠手工；先看机器怎样把人名、地名、时间、官职认出来。" theme="light" layout="diagram" mode="静态内容（论文报告的数字与条件，未复现）" notes="目的：建立三条路线的脉络，以及“分数依赖条件”的意识。
+范例引导：每张卡只念条件与一句结论；在 GuNER 与 EvaHan 之间停下，对比条件变化与分数下降。最后两分钟预测错法。
+机制背景：EvaHan2025 摘要写共 12 类实体；讲义“《史记》六类、二十四史三类、中医六类”需对正文核对（design.md 待核 2）。论文结果只放条件与数字，“本讲推论”另列。"><ner-stages></ner-stages><div slot="footer">D19 · 静态内容；数字据各评测与论文摘要，未复现。</div></deck-slide>
+<deck-slide slide-id="D20" data-status="prototype" kicker="D20 / 教案 4.1" header-title="BIO 标注：给每个字贴标签" transition="第二条路线把识别看成给每个字贴标签；先在一句史料上手动标一次。" theme="light" layout="flow4" mode="浏览器实时（词表为教学构造的小表，非 MARKUS）" notes="目的：理解 BIO 标签与边界、类型判断。
+范例引导：把“充”改成 O，看“俞充”断成“俞”；说明“充”既可能是名字一部分也可能是动词。
+机制背景：词表匹配为最长匹配；词表在页面上可见可改，标明教学构造。"><bio-lab></bio-lab><div slot="footer">D20 · 浏览器实时；例句据讲义 @fig-bio，词表为教学构造。</div></deck-slide>
+<deck-slide slide-id="D21" data-status="prototype" kicker="D21 / 教案 4.2" header-title="三种数据形态：表、JSON 与 JSON Schema" transition="识别出来的东西要让程序也能读，先分清三种形态的数据。" theme="light" layout="flow4" mode="浏览器实时（自写的 JSON Schema 子集校验：type、required、enum、items）；材料包现场导入（原始数据不进公开构建）" notes="目的：分清三种形态，知道 JSON Schema 相当于“表头加填表须知”。
+范例引导：念 Buneman 原句；然后把卒年改成“不詳”，问：这张表怎样才能写“原文未见”？
+机制背景：校验器不新增依赖，只实现本讲两种 schema 用到的关键字；完整 schema 取自运行记录。扩充十的“表／树／图”比较放在备注口述。"><shape-lab></shape-lab><div slot="footer">D21 · 浏览器实时校验；数据据《宋史·王珪传》选段，定义据 Buneman 1997。</div></deck-slide>
+<deck-slide slide-id="D22" data-status="prototype" kicker="D22 / 教案 4.2" header-title="约束解码：每一步屏蔽不合 schema 的词元" transition="现在让模型按格式输出靠的是约束解码；看清它保证了什么。" theme="light" layout="flow4" mode="教学构造（候选词元与概率为示意；状态机按 schema 实时构建）" notes="目的：知道约束解码保证格式、不保证内容，必填字段会逼出编造。
+范例引导：先不允许 null 走一遍，停在只剩数字的一步，问：模型“想”编吗？再开 null。念 OpenAI 文档“Limitations”一句。
+机制背景：此页不调用模型，候选词元为构造；真实运行结果在 D23 回放。嵌套 JSON 需要上下文无关文法，口述带过。"><constrain-lab></constrain-lab><div slot="footer">D22 · 教学构造（候选词元示意）；机制据 Willard &amp; Louf 2023 与两家官方文档。</div></deck-slide>
+<deck-slide slide-id="D23" data-status="prototype" kicker="D23 / 教案 4.2" header-title="一次真实抽取：A 型人物卡片与 B 型证据表" transition="用一个本机运行的开源小模型做了一次真实抽取，比较两种 schema 的结果。" theme="light" layout="workbench" mode="保存结果回放（Qwen3-4B-Instruct-2507 Q4_K_M，llama-cpp-python 0.3.36，CPU，温度 0，2026-10-24）＋浏览器实时（规则校验）；材料包现场导入（原始数据不进公开构建）" notes="目的：用真实输出说明：必填字段逼出编造；留出“未见”的位置是必要条件而非充分条件。
+范例引导：先看 A 型生年 1000，再切无约束对照（null），说明“1000”是 schema 逼出来的；再看 B 型的过度标注与截断。最后两分钟练习。
+机制背景：回放原样显示原始回复；B 型截断的 JSON 用容错方式逐条读出，并在页面明示“原始回复非合法 JSON”。不在课堂重跑（阻碍与替代路径）。三点结论照讲义。规则校验为页内自写，不调用 Instructor，也不重试；说明重试可能让模型“改到能通过为止”。"><replay-lab></replay-lab><div slot="footer">D23 · 保存结果回放：2026-10-24 本地实际运行记录（耗时 A 335 s、B 1473 s）；原文据维基文库《宋史》卷三一二。</div></deck-slide>
+<deck-slide slide-id="D24" data-status="prototype" kicker="D24 / 教案 4.2" header-title="同一模型、同一 schema：两种日文输入" transition="日文一组说明了识读与抽取之间的关系：抽取的质量取决于输入保留了多少前人的判断。" theme="light" layout="flow4" mode="保存结果回放（2026-10-24 实际运行）；材料包现场导入（原始数据不进公开构建）" notes="目的：看到模型主要在“抄写”编者的判断，识读一丢，判断随之消失。
+范例引导：只讲两行：細川民部少輔与“九州大樹”。豊国条结果口述“一层同名也没分开”。
+机制背景：第 3 列复用 D02 的括注热区与 D11 的 OCR 对齐。"><ja-inputs-lab></ja-inputs-lab><div slot="footer">D24 · 保存结果回放：同一模型与 B 型 schema，2026-10-24；输入为参照转录与 NDLOCR-Lite 输出。</div></deck-slide>
+<deck-slide slide-id="D25" data-status="prototype" kicker="D25 / 教案 4.3" header-title="回到原文：源位置对齐的三种状态" transition="证据表要求每一格都能回到原文；机器抽取的位置是从哪里来的？" theme="light" layout="flow4" mode="浏览器实时（自写对齐器）＋保存结果回放（LangExtract 课前实跑，默认分词与按字分词各一次；材料包现场导入（原始数据不进公开构建））" notes="目的：知道位置可能是事后模糊对上的，“位置来源”要单独记录；高亮之后仍要逐字比对。
+范例引导：先演示默认分词的问题，再切按字；把阈值从 0.75 拖到 0.5，看“叔珠”被对上。讲义问题：高亮只说明这里有相近的文字。
+机制背景：对齐器按讲义描述实现：先精确，再模糊（抽取词元按序在原文中找到的比例 ≥ 阈值），状态 MATCH_EXACT／MATCH_LESSER／MATCH_FUZZY／空。LangExtract 课前实跑（教师 10-28 同意），结果放“实跑记录”标签，并回填讲义 4.3 的待核框。 核对源码（3a68580）：状态另有 MATCH_GREATER；模糊匹配默认用 LCS 算法，除覆盖阈值 0.75 外另有密度门槛 1/3（命中数／窗口长）；默认接受部分精确，所以“叔珠”先成为 MATCH_LESSER。页面对齐器与 LangExtract 对齐器的 36 个用例结果逐一相同。实跑（2026-10-28，200 字一块，同一批抽取两种分词对齐）：王珪传 94 项，默认分词 39 精确、6 模糊、49 无位置，按字分词 89 精确、2 模糊、3 无位置——这 3 项是“王安石”“介甫”“撫州臨川”，即提示中的少样本示例被模型照抄进输出，原文没有，无位置正好把编造标出；『大日本史料』第 1 页 42 项，默认分词 24 精确、4 模糊、14 无位置，按字分词 38 精确、4 模糊，其中“晚大内左京大夫”多带一字且字形与原文“晩”不同，“於武衞”被标为人物。"><align-lab></align-lab><div slot="footer">D25 · 浏览器实时（自写对齐器）＋保存结果回放（LangExtract 课前实跑）；材料包现场导入。</div></deck-slide>
+<deck-slide slide-id="D26" data-status="prototype" kicker="D26 / 教案 5.1" header-title="清洗只动规范值：合并之前先问是不是同一个对象" transition="机器给出的表还只是候选；第一步清洗，让同一个值只有一种写法。" theme="light" layout="flow4" mode="浏览器实时（自写键聚类，非 OpenRefine 运行；示例列为教学构造）" notes="目的：确立“只动规范值”的操作原则，并把同名异人问题带到表格清洗中。
+范例引导：点“全部合并”前停一下，问它们是不是同一个对象；在“國貞”组上演示“不合并”。
+机制背景：聚类键可见；繁简用页内小字表（教学用），与第三周 OpenCC 说明一致。"><clean-lab></clean-lab><div slot="footer">D26 · 浏览器实时聚类；示例值为教学构造，取自本讲材料中的写法。</div></deck-slide>
+<deck-slide slide-id="D27" data-status="prototype" kicker="D27 / 教案 5.2" header-title="用小样本量出错误：五类计数与两种口径" transition="模型抽取得好不好，只能拿一份人工校订的结果来比。" theme="light" layout="flow4" mode="浏览器实时（金标准为讲义初判，教师 10-28 确认照此）；材料包现场导入（原始数据不进公开构建）" notes="目的：会按五类计数，知道报告分数要说明口径，以及金标准本身也是判断。
+范例引导：三分钟练习：从“部分”“多出”各挑一条说理由（“大校”“字禹玉”）。再口述 Féral 等“一人两条被合成一条”的例子。
+机制背景：召回率需要金标准全数；讲义只给“截断以前覆盖部分”的人物，页面按讲义所列计算 R 并注明范围。kappa 留扩充七，口述带过。"><score-lab></score-lab><div slot="footer">D27 · 浏览器实时；输出据 B 型原始回复（材料包导入），金标准为讲义初判（教师已确认）。</div></deck-slide>
+<deck-slide slide-id="D28" data-status="prototype" kicker="D28 / 教案 5.3" header-title="对勘实践：填证据表、标错误、分真伪" transition="最后用一个练习把全讲串起来：两人一组，从原文、模型输出到一张可复核的表。" theme="light" layout="workbench" mode="浏览器实时（记录存当前浏览器，可导出；模型输出为保存结果回放）；材料包现场导入（原始数据不进公开构建）" notes="目的：用全讲工具完成一次完整的对勘。
+范例引导：开场先讲讲义中网页抓取工具把“叔玠”写成“叔珠”的真实例子。计时 15 分钟，最后 3 分钟请两三组报告最难判断的一处。
+机制背景：证据表与贯穿页同一组件；错误类型九类照 @fig-errtypes；“不确定”处要求写判断等级与理由。"><practice-lab></practice-lab><div slot="footer">D28 · 浏览器实时记录；材料甲据维基文库《宋史》卷三一二，材料乙据 NDL 994737 与 3450611，模型输出为 2026-10-24 回放。</div></deck-slide>
+<deck-slide slide-id="D29" data-status="prototype" kicker="D29 / 结语" header-title="查得回：四个条件不会因为模型更强而自动满足" transition="回到导入的问题，把四个条件收在一起。" theme="dark" layout="hero" mode="静态内容" notes="目的：收束全讲，衔接第八周。
+范例引导：念四个条件；最后一句回到『大日本史料』编者的括注与凡例。
+机制背景：四个按钮跳转并记住来处。"><hero-end7></hero-end7><div slot="footer">D29 · 静态内容；据讲义结语。</div></deck-slide>
+<deck-slide slide-id="D30" data-status="prototype" kicker="D30 / 贯穿" header-title="贯穿：把一句史料变成可以复核的一行" transition="同一组材料、同一张证据表，沿六个阶段逐项记录；各讲解页可随时进出。" theme="light" layout="through" mode="浏览器实时（记录存当前浏览器，可导出；材料包现场导入（原始数据不进公开构建））" notes="目的：让一条材料链承接整讲，每节回答它的一道检查。
+范例引导：每讲完一节回到这里填一步；默认『大日本史料』第 1 页（教师 10-28 决定），王珪传供中国史方向的同学课后做。
+机制背景：阶段计算复用：D03/D05（立目）、D08（称呼）、D09/D12（链接）、D14/D17/D18（系年）、D23/D25（抽取与对齐）、D27/D28（勘误）。TEI 导出把证据表行反向写成 &lt;persName ref cert resp&gt; 片段，说明行内标注与证据表可以互相转换（讲义 1.4 末段）。"><through-workbench></through-workbench><div slot="footer">D30 · 贯穿记录；默认材料『大日本史料』9-1 本文第 1 页（NDL 3450611，PDM），另可选《宋史》卷三一二；规范库、页影与抽取记录随材料包导入。</div></deck-slide>
+<deck-slide slide-id="D31" data-status="prototype" kicker="D31 / 附录" header-title="概念表：第七讲 30 条" transition="本讲出现的概念集中在这里，可随时查阅并回到首次出现的页面。" theme="light" layout="concepts" mode="静态内容＋客户端搜索" notes="目的：随时可查的概念附录。
+范例引导：顶栏“概念表”随时进入，再点返回来处。
+机制背景：由 typ-concepts-to-md.mjs 转换；F1 与 κ 公式条目需对照原表复核。"><concept-table7></concept-table7><div slot="footer">D31 · 静态内容；据第七周概念讲解表。</div></deck-slide>
+</deck-container></template>
+</body></html>

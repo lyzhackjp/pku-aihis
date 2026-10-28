@@ -1,0 +1,58 @@
+{
+  "title": "第七讲 · 条目重构、实体识别与结构化输出（测试原型）",
+  "pageMap": "../../../docs/week07/page-map.json",
+  "glossary": "../../../docs/week07/glossary.json",
+  "scripts": [
+    "deck-core.js",
+    "week07-core.js",
+    "week07-labs.js",
+    "week07-labs2.js"
+  ],
+  "deck": {
+    "name": "第七周 · 条目重构、实体识别与结构化输出 · 测试原型",
+    "channel": "pku-aihis-week07-prototype-20261028",
+    "store": "week07-prototype/",
+    "entries": {
+      "through": {
+        "label": "贯穿：一句史料到一行",
+        "page": "D30"
+      },
+      "concepts": {
+        "label": "概念表",
+        "page": "D31"
+      }
+    }
+  },
+  "bodies": {
+    "D00": "hero-cover7",
+    "D01": "cbdb-query-lab",
+    "D02": "dnsr-page",
+    "D03": "split-lab",
+    "D04": "field-lab",
+    "D05": "evidence-table",
+    "D06": "tei-lab",
+    "D07": "alias-lab",
+    "D08": "naming-lab",
+    "D09": "namesake-lab",
+    "D10": "shumei-lab",
+    "D11": "ocr-loss-lab",
+    "D12": "link-lab",
+    "D14": "calendar-lab",
+    "D16": "place-time-lab",
+    "D17": "presence-lab",
+    "D18": "conflict-lab",
+    "D19": "ner-stages",
+    "D20": "bio-lab",
+    "D21": "shape-lab",
+    "D22": "constrain-lab",
+    "D23": "replay-lab",
+    "D24": "ja-inputs-lab",
+    "D25": "align-lab",
+    "D26": "clean-lab",
+    "D27": "score-lab",
+    "D28": "practice-lab",
+    "D29": "hero-end7",
+    "D30": "through-workbench",
+    "D31": "concept-table7"
+  }
+}
