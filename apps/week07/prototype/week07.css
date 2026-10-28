@@ -114,3 +114,22 @@ svg.fsm{width:100%;max-width:320px}svg.fsm circle,svg.fsm rect{fill:#fff;stroke:
 evidence-table{display:block;min-width:0;max-width:100%}.ev-wrap,.ev-scroll{max-width:100%;min-width:0}
 .slide-page{max-width:100%;min-width:0}.slide-page>*{min-width:0;max-width:100%}.slide-body>*{min-width:0}
 .deck-shell{grid-template-columns:minmax(0,1fr)}.deck-shell>main{min-width:0}
+
+/* ===== 现场抽取、模型接入（2026-10-28 晚） ===== */
+.model-shade{position:fixed;inset:0;background:#17221b88;z-index:1000;display:grid;place-items:center}
+.model-panel{background:#f4f3ee;color:#20272e;padding:22px 26px;max-width:760px;width:calc(100% - 30px);max-height:90vh;overflow:auto;box-shadow:0 10px 40px #0004}
+.model-panel h2{margin:0 0 8px}.model-panel h3{margin:18px 0 6px;font-size:17px}
+.model-panel label{display:block;margin:10px 0}.model-panel input:not([type=checkbox]),.model-panel select{display:block;width:100%;max-width:100%}
+.model-panel .close{float:right}.model-panel .check-row{display:flex;gap:8px;align-items:baseline}.model-panel .check-row input{width:auto}
+.mp-status{color:#47654b;font-weight:600}
+.live{display:flex;flex-direction:column;gap:8px;min-width:0}
+.live-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.live-grid{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end}.live-grid label{display:flex;flex-direction:column;gap:2px;font-size:14px;min-width:0}.live-grid select{max-width:520px}
+.live-grid .check-row{flex-direction:row;align-items:center}
+.live textarea{width:100%}
+.consent{background:#fff4dc;border-left:4px solid #b38844;padding:8px 12px}.consent.ok{background:#e8eee1;border-color:#47654b}
+.live-result{border-top:1px solid #ccd0c9;padding-top:8px;min-width:0}
+.live-result mark{background:#ffe08a}.live-result mark.st-match_fuzzy,.live-result mark.st-match_lesser{background:#ffd0b5}
+.live-result mark.gl-人物{background:#ffe08a}.live-result mark.gl-地点{background:#c9e6c9}.live-result mark.gl-官职{background:#d6dcf5}.live-result mark.gl-时间{background:#f3d1e6}
+.live-toast{position:fixed;left:50%;bottom:64px;transform:translateX(-50%);background:#20272e;color:#fff;padding:10px 16px;z-index:1100;max-width:80vw;border-radius:4px}
+.lx-progress{margin-left:8px}

@@ -118,7 +118,7 @@
         return `<textarea data-r="${i}" data-c="${k}" rows="2" placeholder="${esc(empty ? '可以为空（' + r.kind + '）' : ph)}" class="${k === 'text' || k === 'orig' ? 'verbatim' : ''}">${esc(r[k])}</textarea>`;
       };
       rerender(this, `<div class="ev-wrap">
-        <div class="ev-bar">${this.compact ? '' : `材料　${['dnsr', 'songshi'].map((m) => `<button data-ev="mat:${m}" class="small ${this.mat === m ? 'on' : ''}">${m === 'dnsr' ? '『大日本史料』第 1 页' : '《宋史·王珪传》'}</button>`).join('')}　`}
+        <div class="ev-bar">${this.compact ? '' : `材料　${['dnsr', 'songshi', 'mine'].map((m) => `<button data-ev="mat:${m}" class="small ${this.mat === m ? 'on' : ''}">${{ dnsr: '『大日本史料』第 1 页', songshi: '《宋史·王珪传》', mine: '我的材料' }[m]}</button>`).join('')}　`}
           <button data-ev="add" class="small">新增一行</button><button data-ev="csv" class="small">导出 CSV</button><button data-ev="json" class="small">导出 JSON</button><button data-ev="tei" class="small">导出 TEI 片段</button><button data-ev="reset" class="small">恢复示例</button></div>
         <div class="ev-scroll"><table class="evtable"><thead><tr><th>#</th>${C.map(([k, l]) => `<th class="c-${k}">${esc(l)}</th>`).join('')}<th></th></tr></thead>
         <tbody>${rows.map((r, i) => `<tr><td>${i + 1}</td>${C.map((c) => `<td class="c-${c[0]}">${cell(r, i, c)}</td>`).join('')}<td><button data-ev="del:${i}" class="small" title="删除此行">×</button></td></tr>`).join('')}</tbody></table></div>
@@ -338,7 +338,7 @@
     renderRun(page) {
       const P = this.pack;
       if (!P) { rerender(this, `<div class="tabs">${seg('view', [['live', '对齐规则（实时）'], ['run', 'LangExtract 实跑记录']], 'run')}</div>` + W.packGate('LangExtract 实跑记录（runs.d25_langextract）')); return; }
-      const R = P.runs.d25_langextract;
+      const R = P?.runs?.d25_langextract;
       if (!R) { rerender(this, `<div class="tabs">${seg('view', [['live', '对齐规则（实时）'], ['run', 'LangExtract 实跑记录']], 'run')}</div><p class="warn">材料包中没有 LangExtract 运行记录。</p>`); return; }
       const i = Math.min(+this.s.runIdx || 0, R.runs.length - 1), run = R.runs[i];
       const text = run.input === 'songshi_wanggui' ? P.texts.songshi_wanggui_excerpt.text : P.texts.dnsr_p1_excerpt.text;
@@ -412,7 +412,11 @@
     init() { this.addEventListener('click', (e) => {
       const b = e.target.closest('[data-th]'); if (!b) return; const [a, v] = b.dataset.th.split('|');
       const rows = W.Evidence.rows(this.s.mat);
-      if (a === 'addsent') { rows.push({ text: v, loc: this.s.mat === 'dnsr' ? '『大日本史料』9-1，本文第 1 页（PDF 页序 29）' : '《宋史》卷三一二《王珪传》', orig: '', norm: '', kind: '未见', reason: '', locsrc: '人工标出', who: '' }); W.Evidence.save(this.s.mat, rows); this.mark('entry'); }
+      if (a === 'addsent') { rows.push({ text: v, loc: this.s.mat === 'dnsr' ? '『大日本史料』9-1，本文第 1 页（PDF 页序 29）' : this.s.mat === 'songshi' ? '《宋史》卷三一二《王珪传》' : (store.get('w7-mine', {}).loc || '我的材料'), orig: '', norm: '', kind: '未见', reason: '', locsrc: '人工标出', who: '' }); W.Evidence.save(this.s.mat, rows); this.mark('entry'); }
+      if (a === 'mineseg') { const sg = (window.W7Live?.segments() || []).find((x) => x.id === v); if (sg) store.set('w7-mine', { text: sg.text, segId: sg.id, loc: sg.loc }); }
+      if (a === 'minepaste') { const t = this.querySelector('[data-mine-paste]')?.value || ''; if (t.trim()) store.set('w7-mine', { text: t.trim(), loc: this.querySelector('[data-mine-loc]')?.value || '粘贴文字（出处待补）' }); }
+      if (a === 'mineclear') store.del('w7-mine');
+      if (a === 'importer') window.W7Live?.openImporter();
       if (a === 'link') { const [i, val] = v.split('~'); rows[+i].norm = val; W.Evidence.save(this.s.mat, rows); this.mark('link'); }
       if (a === 'err') { const [i, t] = v.split('~'); const key = this.s.mat + i; this.s.err[key] = this.s.err[key] === t ? '' : t; this.mark('check'); }
       if (a === 'export') { const rows2 = rows.map((r, i) => ({ ...r, error: this.s.err[this.s.mat + i] || '' })); download(`贯穿证据表_${this.s.mat}.json`, JSON.stringify({ question: this.s.q, material: this.s.mat, rows: rows2 }, null, 1), 'application/json'); }
@@ -421,34 +425,49 @@
       this.save();
     }); }
     mark(k) { this.s.done[this.s.mat + ':' + k] = true; }
+    connectedCallback() { super.connectedCallback(); if (!this._mineL) { this._mineL = () => { if (this.s.mat === 'mine' && !this.contains(document.activeElement)) this.render(); }; document.addEventListener('w7-materials', this._mineL); document.addEventListener('w7-live-ready', this._mineL); } }
+    minePicker() {
+      const segs = window.W7Live?.segments() || []; const cur = store.get('w7-mine', null);
+      return `<p>“我的材料”：选一段导入的正文，或直接粘贴。${cur?.text ? `当前：<b>${esc(cur.loc)}</b>（${cur.text.length} 字） <button class="small" data-th="mineclear|">换一段</button>` : ''}</p>
+        ${cur?.text ? '' : `<p><button class="small" data-th="importer|">打开材料导入页</button> <span class="sub">${window.W7Live ? `已导入 ${segs.length} 个正文片段` : '材料导入需经本机服务打开课件'}</span></p>
+        ${segs.length ? `<ul class="sents">${segs.slice(0, 40).map((g) => `<li><button class="small" data-th="mineseg|${esc(g.id)}">选用</button> ${esc(g.source?.title || '')}${g.pdfPage ? ' · PDF ' + g.pdfPage : ''}：${esc(g.text.slice(0, 40))}…（${g.text.length} 字）</li>`).join('')}</ul>` : ''}
+        <label class="field">或粘贴原文<textarea data-mine-paste rows="4"></textarea></label><label class="field">出处、版本与位置<input data-mine-loc placeholder="书名、卷、页；说明页码体系"></label><button class="small" data-th="minepaste|">使用这段文字</button>`}`;
+    }
     render() {
       const s = this.s, P = this.pack;
-      if (!P) { rerender(this, `<div class="through"><div class="through-main">${W.packGate('『大日本史料』第 1 页页影与转录、NDL 典拠、模型抽取记录（默认材料）；《宋史·王珪传》与 CBDB 记录（另一份材料）')}</div><aside class="through-rail disabled">${this.rail()}</aside></div>`); return; }
+      if (!P && s.mat !== 'mine') { rerender(this, `<div class="through"><div class="through-main">${W.packGate('『大日本史料』第 1 页页影与转录、NDL 典拠、模型抽取记录（默认材料）；《宋史·王珪传》与 CBDB 记录（另一份材料）')}</div><aside class="through-rail disabled">${this.rail()}</aside></div>`); return; }
       const rows = W.Evidence.rows(s.mat);
       const stage = STAGES.find((x) => x.k === s.stage);
       let work = '';
-      if (s.stage === 'entry') work = `<p>点一句加入证据表（“原文片段”照录）：</p><ul class="sents">${(s.mat === 'dnsr' ? DNSR_SENT : W.Pack.get().texts.songshi_wanggui_excerpt.text.split(/(?<=。)/).slice(0, 12)).map((t) => `<li><button class="small" data-th="addsent|${esc(t)}">＋</button> ${esc(t)}</li>`).join('')}</ul>`;
+      const mine = store.get('w7-mine', null);
+      const sents = s.mat === 'dnsr' ? DNSR_SENT : s.mat === 'songshi' ? W.Pack.get().texts.songshi_wanggui_excerpt.text.split(/(?<=。)/).slice(0, 12) : (mine?.text || '').split(/(?<=[。！？!?；\n])/).map((x) => x.trim()).filter(Boolean).slice(0, 60);
+      if (s.stage === 'entry') work = (s.mat === 'mine' ? this.minePicker() : '') + (sents.length ? `<p>点一句加入证据表（“原文片段”照录）：</p><ul class="sents">${sents.map((t) => `<li><button class="small" data-th="addsent|${esc(t)}">＋</button> ${esc(t)}</li>`).join('')}</ul>` : '');
       if (s.stage === 'name') work = `<p>在证据表中填“原值”（照录称呼）；称呼类型写进理由。</p><evidence-table material="${s.mat}" compact></evidence-table>`;
-      if (s.stage === 'link') work = s.mat === 'dnsr'
+      if (s.stage === 'link' && s.mat === 'mine') work = `<p>到 ${pageLink('D12', 'D12')} 看候选与对账；在证据表“规范值”中写规范库编号，库中没有就写 NIL，并在“理由”中写依据。</p><table class="steps">${rows.map((r, i) => `<tr><td>${i + 1}. ${esc(r.orig || r.text.slice(0, 16))}</td><td><button class="small" data-th="link|${i}~NIL（库中无对应）">NIL</button> <span class="sub">${esc(r.norm || '')}</span></td></tr>`).join('')}</table><evidence-table material="mine" compact></evidence-table>`;
+      else if (s.stage === 'link') work = s.mat === 'dnsr'
         ? `<p>候选（据 NDL 典拠；未查到编号的如实写“待查”或 NIL）：</p><table class="steps">${rows.map((r, i) => `<tr><td>${i + 1}. ${esc(r.orig || r.text.slice(0, 16))}</td><td>${DNSR_LINK.map(([a, b]) => `<button class="small" data-th="link|${i}~${esc(b)}">${esc(b)}</button>`).join(' ')} <button class="small" data-th="link|${i}~NIL（库中无对应）">NIL</button></td></tr>`).join('')}</table>`
         : `<p>为王珪选 CBDB 编号：到 ${pageLink('D09', 'D09')} 比对字段，再回来填写。</p><table class="steps">${rows.map((r, i) => `<tr><td>${i + 1}. ${esc(r.orig || r.text.slice(0, 16))}</td><td>${['CBDB 1845', 'CBDB 33013', 'CBDB 1846', 'CBDB 570937'].map((b) => `<button class="small" data-th="link|${i}~${b}">${b}</button>`).join(' ')} <button class="small" data-th="link|${i}~NIL（库中无对应）">NIL</button></td></tr>`).join('')}</table>`;
       if (s.stage === 'date') work = `<calendar-mini></calendar-mini><p>在证据表中写入换算结果，并在理由里注明历表来源；“对不上”的地方标真伪。到 ${pageLink('D14', 'D14')} 做完整换算。</p>`;
-      if (s.stage === 'extract') { const R = P.runs.d25_langextract; const run = R?.runs.find((x) => x.input === (s.mat === 'dnsr' ? 'dnsr_9-1_p1' : 'songshi_wanggui') && x.tokenizer.startsWith('Unicode')); work = run ? `<p>LangExtract 实跑（按字分词）抽出的 ${run.extractions.length} 项；与证据表的原值对照，写“位置来源”。</p><ol class="exlist">${run.extractions.map((e) => `<li class="st-${e.status || 'none'} ${rows.some((r) => r.orig && r.orig === e.text) ? 'on' : ''}"><b>${esc(e.class)}</b> ${esc(e.text)} <span class="sub">${esc(e.status || '无位置')}${e.attributes?.refers_to ? '；所指：' + esc(e.attributes.refers_to) : ''}</span></li>`).join('')}</ol>` : '<p class="warn">材料包中没有这份材料的抽取记录。</p>'; }
+      if (s.stage === 'extract') {
+        const R = P?.runs?.d25_langextract; const run = s.mat === 'mine' ? null : R?.runs.find((x) => x.input === (s.mat === 'dnsr' ? 'dnsr_9-1_p1' : 'songshi_wanggui') && x.tokenizer.startsWith('Unicode'));
+        const live = `<h4>现场抽取</h4><p class="sub">接入模型后对这份材料重新抽取；“写入证据表”把结果追加到本材料的证据表，位置来源按事后对齐写，判断类型照模型输出，处理人注明“模型输出，未核”。</p><live-extract key="d30-${s.mat}" input="${s.mat === 'dnsr' ? 'dnsr_ref' : s.mat === 'songshi' ? 'songshi' : 'mine'}" ev-mat="${s.mat}"><p class="warn">现场抽取需要经本机服务打开课件（双击“启动第七周演示.command”）。</p></live-extract>`;
+        work = (run ? `<details ${s.mat === 'mine' ? '' : 'open'}><summary>课前实跑回放：LangExtract（按字分词）抽出的 ${run.extractions.length} 项</summary><p>与证据表的原值对照，写“位置来源”。</p><ol class="exlist">${run.extractions.map((e) => `<li class="st-${e.status || 'none'} ${rows.some((r) => r.orig && r.orig === e.text) ? 'on' : ''}"><b>${esc(e.class)}</b> ${esc(e.text)} <span class="sub">${esc(e.status || '无位置')}${e.attributes?.refers_to ? '；所指：' + esc(e.attributes.refers_to) : ''}</span></li>`).join('')}</ol></details>` : s.mat === 'mine' ? '' : '<p class="warn">材料包中没有这份材料的抽取记录。</p>') + live;
+      }
       if (s.stage === 'check') work = `<p>逐行标错（九类，可再点取消）：</p><table class="steps">${rows.map((r, i) => `<tr><td>${i + 1}. ${esc(r.orig || r.text.slice(0, 16))}</td><td>${ERRTYPES.map((t) => `<button class="small ${s.err[s.mat + i] === t ? 'on' : ''}" data-th="err|${i}~${t}">${t}</button>`).join(' ')}</td></tr>`).join('')}</table>`;
       const img = s.mat === 'dnsr' ? P.images.dnsr_p1 : null;
-      const refT = P.teach?.reference?.['dnsr_9-1_p1_reference'];
-      const orig = s.mat === 'dnsr' ? `<div class="split"><div class="page-img"><img src="${img.dataUrl}" alt="${esc(img.note)}"><p class="sub">${esc(img.note)}</p></div>${refT ? `<div><p class="sub">人工参照转录（300 dpi 页影目验，保留编者括注；未决问题 U-05）</p><pre class="srcbox small-src">${esc(refT)}</pre></div>` : ''}</div>` : `<pre class="srcbox">${esc(P.texts.songshi_wanggui_excerpt.text)}</pre>`;
+      const refT = P?.teach?.reference?.['dnsr_9-1_p1_reference'];
+      const orig = s.mat === 'mine' ? (mine?.text ? `<p class="sub">${esc(mine.loc)}</p><pre class="srcbox">${esc(mine.text)}</pre>` : this.minePicker()) : s.mat === 'dnsr' ? `<div class="split"><div class="page-img"><img src="${img.dataUrl}" alt="${esc(img.note)}"><p class="sub">${esc(img.note)}</p></div>${refT ? `<div><p class="sub">人工参照转录（300 dpi 页影目验，保留编者括注；未决问题 U-05）</p><pre class="srcbox small-src">${esc(refT)}</pre></div>` : ''}</div>` : `<pre class="srcbox">${esc(P.texts.songshi_wanggui_excerpt.text)}</pre>`;
       rerender(this, `<div class="through"><div class="through-main">
-        <div class="tabs">${seg('tab', [['work', '工作区：' + stage.name], ['orig', '原文：' + (s.mat === 'dnsr' ? '大日本史料第 1 页' : '宋史王珪传')], ['table', '证据表 ↓']], s.tab)}</div>
+        <div class="tabs">${seg('tab', [['work', '工作区：' + stage.name], ['orig', '原文：' + ({ dnsr: '大日本史料第 1 页', songshi: '宋史王珪传', mine: '我的材料' }[s.mat])], ['table', '证据表 ↓']], s.tab)}</div>
         <div class="through-pane">${s.tab === 'work' ? work : s.tab === 'orig' ? orig : `<evidence-table material="${s.mat}" compact></evidence-table>`}</div>
-        <p class="sub">材料：${s.mat === 'dnsr' ? '『大日本史料』9-1 本文第 1 页（NDL 3450611，PDF 页序 29 左半；默认，教师 10-28 决定）' : '《宋史》卷三一二《王珪传》选段（维基文库）'}；数据随材料包导入，记录存当前浏览器。</p></div>
+        <p class="sub">材料：${s.mat === 'dnsr' ? '『大日本史料』9-1 本文第 1 页（NDL 3450611，PDF 页序 29 左半；默认，教师 10-28 决定）' : s.mat === 'songshi' ? '《宋史》卷三一二《王珪传》选段（维基文库）' : '我的材料：' + esc(mine?.loc || '尚未选定')}；数据随材料包或材料导入进入本机浏览器，记录存当前浏览器。</p></div>
         <aside class="through-rail">${this.rail()}</aside></div>`);
     }
     rail() {
       const s = this.s; const done = (k) => !!s.done[s.mat + ':' + k];
       return `<p class="eyebrow">第七周贯穿：把一句史料变成可以复核的一行</p>
         <label class="field">问题起点<textarea data-k="q" rows="2">${esc(s.q)}</textarea></label>
-        ${seg('mat', [['dnsr', '大日本史料（默认）'], ['songshi', '宋史王珪传']], s.mat)}
+        ${seg('mat', [['dnsr', '大日本史料（默认）'], ['songshi', '宋史王珪传'], ['mine', '我的材料']], s.mat)}
         <div class="stage-grid">${STAGES.map((x, i) => `<button data-set="stage:${x.k}" class="${s.stage === x.k ? 'on' : ''} ${done(x.k) ? 'done' : ''}">${i + 1} ${esc(x.name)}</button>`).join('')}</div>
         <p class="note-box">${esc(STAGES.find((x) => x.k === s.stage).hint)} 讲解页：${pageLink(STAGES.find((x) => x.k === s.stage).page)}</p>
         <ul class="conds">${CONDS.map(([c, ks]) => `<li class="${ks.every(done) ? 'on' : ''}">${c}</li>`).join('')}</ul>

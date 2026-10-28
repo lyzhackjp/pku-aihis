@@ -88,3 +88,6 @@ apps/week06/src/assets/modules/
 # macOS/sync duplicate suffixes are not source files.
 /apps/week06/**/** 2.*
 /apps/week06/**/** 4.*
+
+# Week07 prototype: shared importer copied in by apps/week07/scripts/build_importer.sh
+/apps/week07/prototype/importer/

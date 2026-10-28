@@ -8,6 +8,8 @@
 <script src="week07-core.js"></script>
 <script src="week07-labs.js"></script>
 <script src="week07-labs2.js"></script>
+<!-- 现场抽取、模型接入与材料导入（ES 模块；须经本机服务打开，见 apps/week07/README.md）。assemble 之后手工加入。 -->
+<script type="module" src="live/w7-live.js"></script>
 </head><body><div id="app"></div>
 <!-- 由 assemble-prototype.mjs 依 page-map.json 生成；请改页表后重新生成，不要直接改这里。 -->
 <template id="deck-template"><deck-container>
@@ -74,9 +76,9 @@
 <deck-slide slide-id="D22" data-status="prototype" kicker="D22 / 教案 4.2" header-title="约束解码：每一步屏蔽不合 schema 的词元" transition="现在让模型按格式输出靠的是约束解码；看清它保证了什么。" theme="light" layout="flow4" mode="教学构造（候选词元与概率为示意；状态机按 schema 实时构建）" notes="目的：知道约束解码保证格式、不保证内容，必填字段会逼出编造。
 范例引导：先不允许 null 走一遍，停在只剩数字的一步，问：模型“想”编吗？再开 null。念 OpenAI 文档“Limitations”一句。
 机制背景：此页不调用模型，候选词元为构造；真实运行结果在 D23 回放。嵌套 JSON 需要上下文无关文法，口述带过。"><constrain-lab></constrain-lab><div slot="footer">D22 · 教学构造（候选词元示意）；机制据 Willard &amp; Louf 2023 与两家官方文档。</div></deck-slide>
-<deck-slide slide-id="D23" data-status="prototype" kicker="D23 / 教案 4.2" header-title="一次真实抽取：A 型人物卡片与 B 型证据表" transition="用一个本机运行的开源小模型做了一次真实抽取，比较两种 schema 的结果。" theme="light" layout="workbench" mode="保存结果回放（Qwen3-4B-Instruct-2507 Q4_K_M，llama-cpp-python 0.3.36，CPU，温度 0，2026-10-24）＋浏览器实时（规则校验）；材料包现场导入（原始数据不进公开构建）" notes="目的：用真实输出说明：必填字段逼出编造；留出“未见”的位置是必要条件而非充分条件。
+<deck-slide slide-id="D23" data-status="prototype" kicker="D23 / 教案 4.2" header-title="一次真实抽取：A 型人物卡片与 B 型证据表" transition="用一个本机运行的开源小模型做了一次真实抽取，比较两种 schema 的结果。" theme="light" layout="workbench" mode="保存结果回放（Qwen3-4B-Instruct-2507 Q4_K_M，llama-cpp-python 0.3.36，CPU，温度 0，2026-10-24）＋浏览器实时（规则校验）；材料包现场导入（原始数据不进公开构建）；现场运行按需（模型接入）" notes="目的：用真实输出说明：必填字段逼出编造；留出“未见”的位置是必要条件而非充分条件。
 范例引导：先看 A 型生年 1000，再切无约束对照（null），说明“1000”是 schema 逼出来的；再看 B 型的过度标注与截断。最后两分钟练习。
-机制背景：回放原样显示原始回复；B 型截断的 JSON 用容错方式逐条读出，并在页面明示“原始回复非合法 JSON”。不在课堂重跑（阻碍与替代路径）。三点结论照讲义。规则校验为页内自写，不调用 Instructor，也不重试；说明重试可能让模型“改到能通过为止”。"><replay-lab></replay-lab><div slot="footer">D23 · 保存结果回放：2026-10-24 本地实际运行记录（耗时 A 335 s、B 1473 s）；原文据维基文库《宋史》卷三一二。</div></deck-slide>
+机制背景：回放原样显示原始回复；B 型截断的 JSON 用容错方式逐条读出，并在页面明示“原始回复非合法 JSON”。不在课堂重跑（阻碍与替代路径）。三点结论照讲义。规则校验为页内自写，不调用 Instructor，也不重试；说明重试可能让模型“改到能通过为止”。 现场运行（按需）：顶栏“模型接入”配置云端 API 或本机 Ollama／LM Studio，或在浏览器内运行 Qwen3（transformers.js）、GLiNER；LangExtract 3a68580 经 Pyodide 在浏览器内分块、提示与对齐。现场结果与回放分开显示，并注明模型、服务地址、输出约束、耗时与 usage。"><replay-lab></replay-lab><div slot="footer">D23 · 保存结果回放：2026-10-24 本地实际运行记录（耗时 A 335 s、B 1473 s）；原文据维基文库《宋史》卷三一二。</div></deck-slide>
 <deck-slide slide-id="D24" data-status="prototype" kicker="D24 / 教案 4.2" header-title="同一模型、同一 schema：两种日文输入" transition="日文一组说明了识读与抽取之间的关系：抽取的质量取决于输入保留了多少前人的判断。" theme="light" layout="flow4" mode="保存结果回放（2026-10-24 实际运行）；材料包现场导入（原始数据不进公开构建）" notes="目的：看到模型主要在“抄写”编者的判断，识读一丢，判断随之消失。
 范例引导：只讲两行：細川民部少輔与“九州大樹”。豊国条结果口述“一层同名也没分开”。
 机制背景：第 3 列复用 D02 的括注热区与 D11 的 OCR 对齐。"><ja-inputs-lab></ja-inputs-lab><div slot="footer">D24 · 保存结果回放：同一模型与 B 型 schema，2026-10-24；输入为参照转录与 NDLOCR-Lite 输出。</div></deck-slide>
@@ -95,9 +97,9 @@
 <deck-slide slide-id="D29" data-status="prototype" kicker="D29 / 结语" header-title="查得回：四个条件不会因为模型更强而自动满足" transition="回到导入的问题，把四个条件收在一起。" theme="dark" layout="hero" mode="静态内容" notes="目的：收束全讲，衔接第八周。
 范例引导：念四个条件；最后一句回到『大日本史料』编者的括注与凡例。
 机制背景：四个按钮跳转并记住来处。"><hero-end7></hero-end7><div slot="footer">D29 · 静态内容；据讲义结语。</div></deck-slide>
-<deck-slide slide-id="D30" data-status="prototype" kicker="D30 / 贯穿" header-title="贯穿：把一句史料变成可以复核的一行" transition="同一组材料、同一张证据表，沿六个阶段逐项记录；各讲解页可随时进出。" theme="light" layout="through" mode="浏览器实时（记录存当前浏览器，可导出；材料包现场导入（原始数据不进公开构建））" notes="目的：让一条材料链承接整讲，每节回答它的一道检查。
+<deck-slide slide-id="D30" data-status="prototype" kicker="D30 / 贯穿" header-title="贯穿：把一句史料变成可以复核的一行" transition="同一组材料、同一张证据表，沿六个阶段逐项记录；各讲解页可随时进出。" theme="light" layout="through" mode="浏览器实时（记录存当前浏览器，可导出；材料包现场导入（原始数据不进公开构建））；第 5 阶段可现场抽取（模型接入，按需）" notes="目的：让一条材料链承接整讲，每节回答它的一道检查。
 范例引导：每讲完一节回到这里填一步；默认『大日本史料』第 1 页（教师 10-28 决定），王珪传供中国史方向的同学课后做。
-机制背景：阶段计算复用：D03/D05（立目）、D08（称呼）、D09/D12（链接）、D14/D17/D18（系年）、D23/D25（抽取与对齐）、D27/D28（勘误）。TEI 导出把证据表行反向写成 &lt;persName ref cert resp&gt; 片段，说明行内标注与证据表可以互相转换（讲义 1.4 末段）。"><through-workbench></through-workbench><div slot="footer">D30 · 贯穿记录；默认材料『大日本史料』9-1 本文第 1 页（NDL 3450611，PDM），另可选《宋史》卷三一二；规范库、页影与抽取记录随材料包导入。</div></deck-slide>
+机制背景：阶段计算复用：D03/D05（立目）、D08（称呼）、D09/D12（链接）、D14/D17/D18（系年）、D23/D25（抽取与对齐）、D27/D28（勘误）。TEI 导出把证据表行反向写成 &lt;persName ref cert resp&gt; 片段，说明行内标注与证据表可以互相转换（讲义 1.4 末段）。 第 5 阶段现场运行（按需）：顶栏“模型接入”配置云端 API 或本机 Ollama／LM Studio，或在浏览器内运行 Qwen3（transformers.js）、GLiNER；LangExtract 3a68580 经 Pyodide 在浏览器内分块、提示与对齐。"><through-workbench></through-workbench><div slot="footer">D30 · 贯穿记录；默认材料『大日本史料』9-1 本文第 1 页（NDL 3450611，PDM），另可选《宋史》卷三一二或同学自带材料；规范库、页影与抽取记录随材料包导入；现场抽取按需接入模型。</div></deck-slide>
 <deck-slide slide-id="D31" data-status="prototype" kicker="D31 / 附录" header-title="概念表：第七讲 30 条" transition="本讲出现的概念集中在这里，可随时查阅并回到首次出现的页面。" theme="light" layout="concepts" mode="静态内容＋客户端搜索" notes="目的：随时可查的概念附录。
 范例引导：顶栏“概念表”随时进入，再点返回来处。
 机制背景：由 typ-concepts-to-md.mjs 转换；F1 与 κ 公式条目需对照原表复核。"><concept-table7></concept-table7><div slot="footer">D31 · 静态内容；据第七周概念讲解表。</div></deck-slide>

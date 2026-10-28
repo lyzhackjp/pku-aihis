@@ -42,12 +42,26 @@
   }
 
   /* 保留输入焦点的局部重绘：重绘前记下焦点控件，重绘后恢复。 */
+  /* 重绘：保留焦点与光标。输入法组字（中文、日文）进行中不替换 DOM，组字结束后再补绘，否则候选窗被打断。 */
+  const FOCUS_KEYS = ['data-k', 'data-q', 'data-r', 'data-c', 'data-fi', 'data-arr', 'data-field', 'data-ty', 'name'];
+  const focusSelector = (a) => {
+    const parts = FOCUS_KEYS.filter((k) => a.hasAttribute(k)).map((k) => `[${k}="${CSS.escape(a.getAttribute(k))}"]`);
+    return parts.length ? a.tagName.toLowerCase() + parts.join('') : null;
+  };
+  let composing = null; const pending = new Map();
+  document.addEventListener('compositionstart', (e) => { composing = e.target; }, true);
+  document.addEventListener('compositionend', () => {
+    composing = null;
+    setTimeout(() => { for (const [el, html] of [...pending]) { pending.delete(el); if (el.isConnected) rerender(el, html); } }, 0);
+  }, true);
   function rerender(el, html) {
+    if (composing && el.contains(composing)) { pending.set(el, html); return; }
+    pending.delete(el);
     const a = document.activeElement;
-    const key = a && el.contains(a) ? a.getAttribute('data-k') : null;
-    const pos = key && 'selectionStart' in a ? [a.selectionStart, a.selectionEnd] : null;
+    const sel = a && el.contains(a) && a !== el ? focusSelector(a) : null;
+    const pos = sel && 'selectionStart' in a ? (() => { try { return [a.selectionStart, a.selectionEnd]; } catch { return null; } })() : null;
     el.innerHTML = html;
-    if (key) { const n = el.querySelector(`[data-k="${key}"]`); if (n) { n.focus(); if (pos && n.setSelectionRange) try { n.setSelectionRange(pos[0], pos[1]); } catch { /* ignore */ } } }
+    if (sel) { const n = el.querySelector(sel); if (n) { n.focus(); if (pos && n.setSelectionRange) try { n.setSelectionRange(pos[0], pos[1]); } catch { /* ignore */ } } }
   }
 
   /* ================= deck-slide ================= */
@@ -142,7 +156,7 @@
       this.append(div);
     }
     key(e) {
-      if (e.isComposing || document.querySelector('dialog[open]')) return;
+      if (e.isComposing || e.keyCode === 229 || document.querySelector('dialog[open], .model-shade')) return;
       if (e.composedPath().some((x) => x?.matches?.('input,textarea,select,[contenteditable=true]'))) return;
       const m = { ArrowRight: 1, PageDown: 1, ArrowLeft: -1, PageUp: -1 };
       if (m[e.key]) { e.preventDefault(); this.go(this.cur + m[e.key]); }
@@ -287,7 +301,15 @@
 
   const registry = { 'deck-slide': DeckSlide, 'planned-page': PlannedPage, 'concept-table': ConceptTable };
   window.Deck = { DATA, DECK, esc, store, pageById, pageLink, download, flowShell, rerender, parseConceptMd,
-    register(tag, cls) { registry[tag] = cls; } };
+    /* 组件在页面装配时会被移动一次，connectedCallback 因此可能执行两次；只初始化一次，否则事件监听重复（D05“新增一行”一次加两行）。 */
+    register(tag, cls) {
+      const cc = cls.prototype.connectedCallback;
+      if (cc && !Object.prototype.hasOwnProperty.call(cls.prototype, '__once')) {
+        cls.prototype.connectedCallback = function () { if (this.__built) { if (this.render) this.render(); return; } this.__built = true; return cc.call(this); };
+        cls.prototype.__once = true;
+      }
+      registry[tag] = cls;
+    } };
   window.addEventListener('DOMContentLoaded', () => {
     const host = document.getElementById('app');
     if (new URLSearchParams(location.search).has('presenter')) { customElements.define('deck-presenter', DeckPresenter); host.append(document.createElement('deck-presenter')); return; }

@@ -64,17 +64,27 @@
   register('split-lab', SplitLab);
 
   /* ================= D04 字段由问题决定 ================= */
+  /* 填写示例（课件编写者拟，供课堂参考，待教师确认）：每个字段都写明它为哪一个判断服务；“籍贯”按记载来源拆成两栏。 */
+  const D04_EXAMPLE = { q: '北宋宰执出身何地', split: true,
+    fields: ['姓名与 CBDB 编号', '籍贯（史书所记）', '籍贯（今人推定）', '任宰执年份', '出处与位置'],
+    uses: ['确认是哪一个人：同名者（如四个王珪）靠编号区分', '回答史家如何记述其出身：照录《宋史》本传原文', '回答今人据墓志等材料的推定：与史书所记分栏，并写推定理由', '限定统计范围：只计任宰执者，年份写公元并注明换算依据', '每一格都能回到原文：书名、卷、页（说明页码体系）'] };
   class FieldLab extends PackLab {
     get key() { return 'w7-d04'; }
     defaults() { return { q: '北宋宰执出身何地', fields: ['姓名', '籍贯', '任宰执年份', '', ''], uses: ['', '', '', '', ''], split: false }; }
-    init() { this.addEventListener('input', (e) => { const t = e.target; if (t.dataset.fi != null) { this.s[t.dataset.arr][+t.dataset.fi] = t.value; store.set(this.key, this.s); this.querySelectorAll('[data-row]').forEach((r) => r.classList.toggle('dim', !this.s.uses[+r.dataset.row])); } }); }
+    init() {
+      this.addEventListener('input', (e) => { const t = e.target; if (t.dataset.fi != null) { this.s[t.dataset.arr][+t.dataset.fi] = t.value; store.set(this.key, this.s); this.querySelectorAll('[data-row]').forEach((r) => r.classList.toggle('dim', !this.s.uses[+r.dataset.row])); } });
+      this.addEventListener('click', (e) => { const a = e.target.closest('[data-fx]')?.dataset.fx; if (!a) return;
+        if (a === 'example') Object.assign(this.s, JSON.parse(JSON.stringify(D04_EXAMPLE)));
+        if (a === 'clear') Object.assign(this.s, { fields: ['', '', '', '', ''], uses: ['', '', '', '', ''] });
+        this.save(); });
+    }
     render() {
       const page = pageById('D04'); const s = this.s; const p = P();
       const note = p ? (cbdbPerson(p.cbdb.persons['1845'])?.BasicInfo?.Notes || '').replace(/\x7f/g, '') : '';
       const m = note.match(/According to[^.]*\.[^.]*\.[^.]*\./); const m2 = note.match(/I am accepting[^.]*\./);
       rerender(this, flowShell(page, [
         { title: '写下研究问题', why: '先问问题需要哪些对象。', body: `<label class="field">研究问题<textarea data-k="q" rows="3">${esc(s.q)}</textarea></label><p class="lab-quote">“On the contrary, data is the product of interpretation and transformation.”<br><span class="sub">恰恰相反，数据是解释与转换的产物。——Cosovschi, Programming Historian (2024)，引言（2026-10-28 原页核对）</span></p>` },
-        { title: '列出字段', why: '五个字段。', body: s.fields.map((f, i) => `<div data-row="${i}" class="${s.uses[i] ? '' : 'dim'}"><input data-arr="fields" data-fi="${i}" value="${esc(f)}" placeholder="字段 ${i + 1}"></div>`).join('') },
+        { title: '列出字段', why: '五个字段。', body: `<div class="row3"><button class="small" data-fx="example">填入示例</button><button class="small" data-fx="clear">清空字段</button></div>` + s.fields.map((f, i) => `<div data-row="${i}" class="${s.uses[i] ? '' : 'dim'}"><input data-arr="fields" data-fi="${i}" value="${esc(f)}" placeholder="字段 ${i + 1}"></div>`).join('') },
         { title: '每个字段服务哪个判断', why: '写不出用途的字段先不要；一栏回答两个问题就拆成两栏。', body: s.fields.map((f, i) => `<input data-arr="uses" data-fi="${i}" value="${esc(s.uses[i])}" placeholder="“${esc(f || '字段')}”为哪一个判断服务">`).join('') },
         { title: '一格拆成两栏', why: '王珪的“籍贯”有两种记载，回答的是不同问题。', body: `<div class="assert-card"><b>《宋史》卷三一二</b><p class="src-line">王珪，字禹玉，成都華陽人，後徙舒。</p><p class="sub">史家对家世的记述（维基文库录文，未决问题 U-07）</p></div>
           <div class="evid-card"><b>CBDB 1845</b><p>指数地址：${esc(p ? cbdbPerson(p.cbdb.persons['1845']).BasicInfo.IndexAddr : '（导入材料包后显示）')}</p>${p ? `<p class="sub mono">${esc((m ? m[0] : '') + ' … ' + (m2 ? m2[0] : ''))}</p>` : ''}<p class="sub">编者据李清臣所撰墓志推定（接口原始返回的编者注）</p></div>
@@ -125,6 +135,7 @@
         if (a === 'add' && this.s.add.trim() && !L.some((x) => x[0] === this.s.add.trim())) { L.push([this.s.add.trim(), '其他']); this.s.add = ''; }
         if (a === 'del') L.splice(+v, 1); this.save(); });
       this.addEventListener('change', (e) => { if (e.target.dataset.ty != null) { this.s.marks[this.s.mat][+e.target.dataset.ty][1] = e.target.value; this.save(); } });
+      this.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229 && e.target.dataset.k === 'add') { e.preventDefault(); this.querySelector('[data-n="add|"]')?.click(); } });
     }
     render() {
       const p = P(), page = pageById('D08'); const s = this.s; const L = s.marks[s.mat];
@@ -133,7 +144,7 @@
       const ref = D08_REF[s.mat]; const mine = new Set(L.map((x) => x[0]));
       rerender(this, flowShell(page, [
         { title: '原文选段', why: s.mat === 'songshi' ? '传文中最常出现的称呼是单字“珪”。' : '同一页之内，同一个人至少四种叫法。', body: seg('mat', [['songshi', '王珪传选段'], ['dnsr', '大日本史料第 1 页']], s.mat) + `<pre class="srcbox small-src">${hl(text, L.map((x) => x[0]))}</pre>` },
-        { title: '标出称呼', why: '输入一个称呼，原文中所有出现处都会高亮。', body: `<div class="row3"><input data-k="add" value="${esc(s.add)}" placeholder="如 禹玉"><button class="small" data-n="add|">加入</button></div><ul class="marks">${L.map(([w], i) => `<li>${esc(w)} <span class="sub">${count(w)} 处</span> <button class="small" data-n="del|${i}">×</button></li>`).join('')}</ul>` },
+        { title: '标出称呼', why: '输入一个称呼，原文中所有出现处都会高亮。', body: `<div class="row3"><input data-k="add" value="${esc(s.add)}" placeholder="如 禹玉（回车加入）"><button class="small" data-n="add|">加入</button></div><ul class="marks">${L.map(([w], i) => `<li>${esc(w)} <span class="sub">${count(w)} 处</span> <button class="small" data-n="del|${i}">×</button></li>`).join('')}</ul>` },
         { title: '标出类型', why: '类型带着时间与立场的信息。', body: L.length ? `<table class="steps">${L.map(([w, t], i) => `<tr><td>${esc(w)}</td><td><select data-ty="${i}">${D08_TYPES.map((x) => `<option ${x === t ? 'selected' : ''}>${x}</option>`).join('')}</select></td></tr>`).join('')}</table>` : '<p class="sub">先在第 2 列加入称呼。</p>' },
         { title: '原值与规范值', why: '规范档取固定入口，史料按当时称呼；两栏兼顾。', body: `<button class="small" data-set="show:${s.show ? '' : '1'}">${s.show ? '收起对照' : '对照'}</button>` + (s.show ? `<table class="steps"><tr><th>参照称呼</th><th>类型</th><th>你标了吗</th></tr>${ref.map(([w, t]) => `<tr class="${mine.has(w) ? 'ok' : ''}"><td>${esc(w)}${s.mat === 'dnsr' && !text.includes(w) ? ' <span class="sub">（本页外）</span>' : ''}</td><td>${t}</td><td>${mine.has(w) ? '✓' : '—'}</td></tr>`).join('')}</table>
           ${s.mat === 'songshi' ? `<p class="warn small">单字“珪”出现 ${count('珪')} 处；“珪、確相顧失色”中“珪”紧挨另一人名，边界要判断。</p><p class="sub">参照为课件编写者据选段整理（“公”为蔡確对王珪的对称），待教师确认。</p>` : `<table class="steps"><tr><th>原值（当时称呼）</th><th>规范值（NDL 典拠首选形）</th></tr><tr><td>前將軍足利義尹</td><td>足利, 義稙, 1466-1523（001247822）</td></tr></table><p class="sub">“九州”二字含义两说并存（未决问题 U-01）；义材改名义尹的年份不标（U-02）。</p>`}` : '') },
@@ -423,11 +434,16 @@
     }
     return out;
   }
+  window.W7L.rules = rules;
   class ReplayLab extends PackLab {
     get key() { return 'w7-d23'; }
     defaults() { return { v: 'A', pick: '', ty: 'all' }; }
     render() {
-      const p = P(), page = pageById('D23'); if (!p?.teach) return gate(this, '讲义 4.2 的 A／B 抽取记录（教学文件夹原件）与王珪传选段');
+      const p = P(), page = pageById('D23');
+      const tabs = seg('v', [['A', 'A 型（人物卡片，全部必填）'], ['F', '不加约束对照'], ['B', 'B 型（证据表式）'], ['R', '史学规则校验'], ['L', '现场运行：接入模型']], this.s.v);
+      if (this.s.v === 'L') return rerender(this, `<div class="ev-bar">${tabs}</div><p class="sub">左侧四个标签是讲义 4.2 的实跑回放；本标签在课堂现场重新抽取：可接云端 API、本机 Ollama／LM Studio，或在浏览器内运行 Qwen3、GLiNER 与 LangExtract。输入可选材料包中的同一段原文，也可选同学用“材料导入”带来的材料。</p>
+        <live-extract key="d23" input="songshi"><p class="warn">现场运行需要经本机服务打开课件（双击“启动第七周演示.command”）；直接打开 HTML 文件时，浏览器不允许载入模型模块。</p></live-extract>`);
+      if (!p?.teach) return gate(this, '讲义 4.2 的 A／B 抽取记录（教学文件夹原件）与王珪传选段');
       const E = p.teach.extract, text = p.teach.inputs.songshi_wanggui_excerpt;
       const key = { A: 'songshi_wanggui_excerpt__A', F: 'songshi_wanggui_excerpt__A-free', B: 'songshi_wanggui_excerpt__B', R: 'songshi_wanggui_excerpt__A' }[this.s.v]; const R = E[key];
       const meta = `<p class="sub">${esc(R.model_file)} · llama-cpp-python ${esc(R.llama_cpp_python)} · 温度 ${R.temperature} · ${R.constrained_decoding ? 'JSON Schema 约束解码' : '不加约束'} · ${esc(R.run_at)} · ${R.seconds} 秒 · ${R.usage.completion_tokens} 词元 · finish_reason=${esc(R.finish_reason)}${R.parse_error ? ' · <span class="warn">原始回复非合法 JSON</span>' : ''}</p>`;
@@ -451,7 +467,7 @@
           <p class="sub">规则能拦住一部分错误（如生年 1000、王琪 0／0）；参知政事 1053 这类“合乎规则的错年份”拦不住，仍要回原文。重试可能让模型“改到能通过为止”。页内规则为自写，不调用 Instructor。</p>`;
       }
       const lhl = this.s.v === 'B' && this.s.pick ? hl(text, [this.s.pick]) : hl(text, ['熙寧三年，拜參知政事', '年六十七', '八年', '曾祖永，事太宗為右補闕', '五年，正三省官名，拜尚書左僕射兼門下侍郎']);
-      rerender(this, `<div class="ev-bar">${seg('v', [['A', 'A 型（人物卡片，全部必填）'], ['F', '不加约束对照'], ['B', 'B 型（证据表式）'], ['R', '史学规则校验']], this.s.v)}</div>${meta}
+      rerender(this, `<div class="ev-bar">${tabs}</div>${meta}
         <div class="runpage"><div class="runsrc"><p class="sub">输入：王珪传选段（${text.length} 字，维基文库录文）</p><pre class="srcbox small-src">${lhl}</pre>
           <details><summary>运行设置与提示</summary><pre class="code small-src">${esc(R.system)}\n\n${esc(R.user.slice(0, 400))}……</pre></details>
           <p class="note-box small">A 型生年“1000”在不加约束时成了 null——是 schema 逼出来的；可任官年份不加约束照样是编的。B 型给了“推定”“原文未见”与 null，模型却 76 条全标“原文直接记载”，并在 4096 词元处截断。</p>
