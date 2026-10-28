@@ -7,11 +7,11 @@
   "note": "原页以引号形式给出此定义；讲义 1.1 引同句。"
  },
  "cosovschi": {
-  "en": "data is the product of interpretation and transformation",
-  "zh": "数据是解释与转换的产物。",
-  "cite": "Agustín Cosovschi, “From Sources to Data…”, Programming Historian 13 (2024), 引言",
-  "status": "lesson-verified",
-  "note": "讲义所引为半句；开发时须取原页补成完整句（教师意见：不引半句）。原页存教学文件夹 research/原始数据/核对_20261027/。"
+  "en": "On the contrary, data is the product of interpretation and transformation.",
+  "zh": "恰恰相反，数据是解释与转换的产物。",
+  "cite": "Agustín Cosovschi, “From Sources to Data: Designing a Database in the Humanities and Social Sciences with nodegoat”, Silvia Stoyanova 英译, Programming Historian (2024), doi:10.46430/phen0130, 引言",
+  "status": "verified-20261028",
+  "note": "2026-10-28 取 programminghistorian.org 英文版原页逐字核对。前一句：“Data, in contrast to what its etymology might lead us to believe, is not a ‘given’ at all: it is not simply there, waiting to be collected.” 后一句即“In order to transform their sources into data, researchers must read their sources with a defined set of research questions in mind…”。法文原版 2024-02-29 刊，英译 2026-01-28 刊；“13 (2024)”卷号待与讲义统一。"
  },
  "tsui2020": {
   "en": "Traditional Chinese naming customs pose big challenges to this, especially for the gazetteer dataset containing 0.12 million records and 90k unique names of imperial government officials.",
@@ -21,11 +21,11 @@
   "note": "完整句说的是“帝制政府官员”（imperial government officials），讲义转述作“人名”，可在页面照原句补足。"
  },
  "nipponica_toyokuni": {
-  "en": "現在では便宜上、国貞の豊国を3世と数えている",
-  "zh": "现在为方便起见，把国贞的丰国算作三世。",
-  "cite": "コトバンク「歌川国貞」条所收『日本大百科全書（ニッポニカ）』",
-  "status": "lesson-verified",
-  "note": "日文原句（非英文），讲义称已逐字核对；本次所取 URL 不对，开发时据教学文件夹原页重核并补成完整句。"
+  "en": "以上の理由から現在では便宜上、国貞の豊国を3世と数えている。",
+  "zh": "由于以上原因，现在为方便起见，把国贞的丰国算作三世。",
+  "cite": "コトバンク「歌川国貞」条所收『日本大百科全書（ニッポニカ）』（小学館）",
+  "status": "verified-20261028",
+  "note": "2026-10-28 取 kotobank.jp/word/歌川国貞 原页逐字核对。“以上の理由”指前句：国贞 1844 年自称 2 世豊国，而正式袭 2 世的是豊重。同条记国贞“元治元年12月15日、79歳で没”。"
  },
  "openrefine_recon": {
   "en": "If there is no clear match, one or more candidates are displayed, together with their reconciliation score, with the text in light blue links.",
@@ -84,11 +84,11 @@
   "note": "原文“GLiNER demonstrate”照录（主谓不一致为原文如此）。古汉语上的表现未见报告。"
  },
  "buneman1997": {
-  "en": "In semistructured data, the information that is normally associated with a schema is contained within the data",
-  "zh": "在半结构化数据中，通常属于 schema 的那部分信息就包含在数据本身之中。",
-  "cite": "Peter Buneman, “Semistructured Data”, PODS 1997, 摘要",
-  "status": "lesson-verified",
-  "note": "讲义称据作者主页 PDF 逐字核对，存 research/原始数据/核对_20261027/；开发时补全句末并重核。"
+  "en": "In semistructured data, the information that is normally associated with a schema is contained within the data, which is sometimes called “self-describing”.",
+  "zh": "在半结构化数据中，通常属于 schema 的那部分信息就包含在数据本身之中，这种数据有时被称为“自描述的”。",
+  "cite": "Peter Buneman, “Semistructured Data”, PODS 1997, 摘要首句",
+  "status": "verified-20261028",
+  "note": "2026-10-28 取作者主页 PDF（homepages.inf.ed.ac.uk/opb/papers/PODS1997a.pdf）逐字核对；PDF 中引号排作 \\self-describing\"，页面用弯引号。"
  },
  "willard2023": {
   "en": "In this article we show how the problem of neural text generation can be constructively reformulated in terms of transitions between the states of a finite-state machine.",
@@ -98,11 +98,11 @@
   "note": ""
  },
  "openai_so": {
-  "en": "the model may still make mistakes within the values of the JSON object",
-  "zh": "模型仍可能在 JSON 对象的值上出错。",
-  "cite": "OpenAI, “Introducing Structured Outputs in the API”, 2024-08-06, Limitations 节",
-  "status": "lesson-verified",
-  "note": "本次抓取被网页拦截；开发时补成完整句并用教学文件夹原页重核。"
+  "en": "For example, the model may still make mistakes within the values of the JSON object (e.g., getting a step wrong in a mathematical equation).",
+  "zh": "例如，模型仍可能在 JSON 对象的值上出错（比如数学算式里有一步算错）。",
+  "cite": "OpenAI, “Introducing Structured Outputs in the API”, 2024-08-06, “Limitations and restrictions”节",
+  "status": "verified-20261028",
+  "note": "2026-10-28 核对。前一句为“Structured Outputs doesn’t prevent all kinds of model mistakes.”。openai.com 对命令行请求返回 JavaScript 验证页，未保存原页；经网页读取工具分段取得原文。"
  },
  "anthropic_so": {
   "en": "Structured outputs guarantee schema-compliant responses through constrained decoding",
@@ -126,10 +126,10 @@
   "note": "同 README 注明“This is not an officially supported Google product”。"
  },
  "stewart2025": {
-  "en": "LLMs are not a magic bullet for data extraction",
-  "zh": "大模型不是数据抽取的灵丹妙药。",
-  "cite": "Stewart & Sinha, Computational Humanities Research 1 (2025)",
-  "status": "lesson-verified",
-  "note": "讲义所引为半句；本次 URL 未取到，开发时补成完整句并重核。"
+  "en": "Ultimately, LLMs are not a magic bullet for data extraction.",
+  "zh": "归根结底，大模型不是数据抽取的灵丹妙药。",
+  "cite": "Spencer D. Stewart & Sanskriti Sinha, “Retrieving information from unstructured historical sources using large language models”, Computational Humanities Research 1 (2025), doi:10.1017/chr.2025.10019, Discussion 节",
+  "status": "verified-20261028",
+  "note": "2026-10-28 取 Cambridge Core 阅读页逐字核对。下一句：“They work best when paired with traditional methods, such as manual annotation, human-in-the-loop verification and domain-specific heuristics”。"
  }
 }

@@ -15,7 +15,7 @@ json.dump(Q, open(f"{out}/papers.json", "w", encoding="utf8"), ensure_ascii=Fals
 LAY = {"hero": "封面／结语", "flow4": "四栏流程", "diagram": "示意图", "workbench": "工作台", "through": "贯穿", "concepts": "概念表"}
 L = ["# 第七讲演示：逐页内容稿（候选，待教师确认）", "",
      "版本：2026-10-28（教师 11:44 答复七项后修订：D13 并入 D12、D15 并入 D14，30 页，旧 ID 作别名跳转）。依据：`week07/source/讲义_week07.typ`（2026-10-27 修订版，净教学 172 分钟）。本稿由 `page-map.json` 生成，改页表后重新生成。",
-     "原句状态：✔ 本次取原文逐字核对；△ 讲义称已核，本次未取到原文，开发时据教学文件夹原文重核。", ""]
+     "原句状态：✔ 已取原文逐字核对（2026-10-28 补核 5 条后全部为 ✔）；△ 讲义称已核、尚未取到原文。", ""]
 sec = None
 for p in P:
     if p["section"] != sec:

@@ -86,7 +86,7 @@ page(id="D04", section="1.2", anchor="字段由问题决定", title="字段由�
   through="entry", quotes=["cosovschi"],
   options=dict(A="四栏流程，最后一列为王珪籍贯拆栏实例", B="左：学生字段表；右：王珪例对照", recommend="A"),
   demo="第 1 列：研究问题输入框（预置“北宋宰执出身何地”）。第 2 列：五行字段输入。第 3 列：每个字段后“服务的判断”输入，空则灰显并提示。第 4 列：王珪籍贯两条记载卡（原文、出处、判断者），下方“拆成两栏”后的表头与一行示例。顶部窄条：Cosovschi 原句“data is the product of interpretation and transformation”所在完整句＋中译＋出处。",
-  data="cbdb_1845.json 编者注（需取得）；Cosovschi 原句需取自 research/原始数据/核对_20261027/。")
+  data="cbdb_1845.json 编者注（需取得）；Cosovschi 原句已于 2026-10-28 取原页补成完整句（papers.json）。")
 
 page(id="D05", section="1.3", anchor="fig-evtable", title="证据表：每一格都是一次可记录的转换", layout="workbench", minutes=8,
   transition="把第四周的证据矩阵推进到史料中的人、地、时：表中每一格都要留下转换的记录。",

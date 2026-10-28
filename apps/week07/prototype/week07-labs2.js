@@ -73,7 +73,7 @@
       const note = p ? (cbdbPerson(p.cbdb.persons['1845'])?.BasicInfo?.Notes || '').replace(/\x7f/g, '') : '';
       const m = note.match(/According to[^.]*\.[^.]*\.[^.]*\./); const m2 = note.match(/I am accepting[^.]*\./);
       rerender(this, flowShell(page, [
-        { title: '写下研究问题', why: '先问问题需要哪些对象。', body: `<label class="field">研究问题<textarea data-k="q" rows="3">${esc(s.q)}</textarea></label><p class="lab-quote">“data is the product of interpretation and transformation”<br><span class="sub">数据是解释与转换的产物。——Cosovschi, Programming Historian 13 (2024)，引言（讲义已核；完整句待补）</span></p>` },
+        { title: '写下研究问题', why: '先问问题需要哪些对象。', body: `<label class="field">研究问题<textarea data-k="q" rows="3">${esc(s.q)}</textarea></label><p class="lab-quote">“On the contrary, data is the product of interpretation and transformation.”<br><span class="sub">恰恰相反，数据是解释与转换的产物。——Cosovschi, Programming Historian (2024)，引言（2026-10-28 原页核对）</span></p>` },
         { title: '列出字段', why: '五个字段。', body: s.fields.map((f, i) => `<div data-row="${i}" class="${s.uses[i] ? '' : 'dim'}"><input data-arr="fields" data-fi="${i}" value="${esc(f)}" placeholder="字段 ${i + 1}"></div>`).join('') },
         { title: '每个字段服务哪个判断', why: '写不出用途的字段先不要；一栏回答两个问题就拆成两栏。', body: s.fields.map((f, i) => `<input data-arr="uses" data-fi="${i}" value="${esc(s.uses[i])}" placeholder="“${esc(f || '字段')}”为哪一个判断服务">`).join('') },
         { title: '一格拆成两栏', why: '王珪的“籍贯”有两种记载，回答的是不同问题。', body: `<div class="assert-card"><b>《宋史》卷三一二</b><p class="src-line">王珪，字禹玉，成都華陽人，後徙舒。</p><p class="sub">史家对家世的记述（维基文库录文，未决问题 U-07）</p></div>
@@ -167,7 +167,7 @@
         <div class="zone-panel">${seg('count', [['ndl', '规范档'], ['self', '自称'], ['ichiyo', '一陽斎计数']], this.s.count)}
         <table class="steps"><tr><th>记录</th><th>${cnt[0]}</th></tr>${recs.map((r, i) => `<tr><td>${esc(r.pref)}</td><td>${esc(cnt[1][i])}</td></tr>`).join('')}</table>
         <p class="note-box"><b>${esc(this.s.pick)}</b>：出现在 ${pick.length} 条记录——${pick.map((r) => esc(r.g)).join('、') || '无'}。${pick.length > 1 ? '单凭这几个字，无从判断是哪一位。' : ''}</p>
-        <p class="lab-quote">“現在では便宜上、国貞の豊国を3世と数えている”<br><span class="sub">现在为方便起见，把国贞的丰国算作三世。——コトバンク「歌川国貞」条所收『日本大百科全書（ニッポニカ）』（讲义已核）</span></p>
+        <p class="lab-quote">“以上の理由から現在では便宜上、国貞の豊国を3世と数えている。”<br><span class="sub">由于以上原因，现在为方便起见，把国贞的丰国算作三世。——コトバンク「歌川国貞」条所收『日本大百科全書（ニッポニカ）』（2026-10-28 原页核对）</span></p>
         <p class="sub">“自称”栏据讲义 2.2 与『浮世絵類考』（按语“二世にはあらず三世なり”）；初名豊重者生年两说（未决问题 U-03），不列。</p></div></div>`);
     }
   }
@@ -373,7 +373,7 @@
       let data = null, perr = '';
       try { data = JSON.parse(this.s.json); } catch (e) { perr = e.message; }
       const errs = data ? validate(schema, data) : [];
-      rerender(this, `<p class="lab-quote">“In semistructured data, the information that is normally associated with a schema is contained within the data”<br><span class="sub">在半结构化数据中，通常属于 schema 的那部分信息就包含在数据本身之中。——Buneman, PODS 1997，摘要（讲义已核，待补全句）</span></p>` + flowShell(page, [
+      rerender(this, `<p class="lab-quote">“In semistructured data, the information that is normally associated with a schema is contained within the data, which is sometimes called “self-describing”.”<br><span class="sub">在半结构化数据中，通常属于 schema 的那部分信息就包含在数据本身之中，这种数据有时被称为“自描述的”。——Buneman, PODS 1997，摘要首句（2026-10-28 原页核对）</span></p>` + flowShell(page, [
         { title: '非结构化原文', why: '人读起来最自然。', body: `<p class="src-line">王珪，字禹玉，成都華陽人，後徙舒。……進珪金紫光祿大夫，封岐國公。五月，卒於位，年六十七。……諡曰文恭。</p>` },
         { title: '二维表', why: '每格一个值；一人多名放不进一格。', body: `<table class="steps"><tr><th>姓名</th><th>字</th><th>籍贯</th><th>卒年</th><th>谥号</th></tr><tr><td>王珪</td><td>禹玉</td><td class="warn">成都華陽／舒／東明？</td><td>1085</td><td>文恭</td></tr></table><p class="sub">别名、任官要另开表，一项一行。</p>` },
         { title: 'JSON', why: '值自带字段名，可以嵌套列表。改一改看右侧。', body: `<textarea data-k="json" class="code" rows="10" spellcheck="false">${esc(this.s.json)}</textarea>` },
@@ -401,7 +401,7 @@
         { title: '候选词元：保留与屏蔽', why: '不合法的词元概率置零，其余重新归一。', body: `<table class="steps"><tr><th>候选</th><th>原概率</th><th>处理</th></tr>${CANDS.map(([c, p]) => `<tr class="${ok(c) ? '' : 'bad'}"><td class="mono">${esc(c)}</td><td>${p.toFixed(2)}</td><td>${ok(c) ? '保留 → ' + (p / z).toFixed(2) : '屏蔽'}</td></tr>`).join('')}</table><p class="sub">候选与概率为教学构造（示意），不是模型的真实分布；真实运行结果见 ${pageLink('D23')}。</p>` },
         { title: '能写出的值', why: '保证格式，不保证内容。', body: `<p class="big-num mono">${esc(best[0])}</p><p>${nul ? '“原文未见”有了合法写法 null。' : '<b>不允许 null 时，“原文未见”没有合法写法</b>，只能写一个整数。'}</p>
           <p class="lab-quote">“Structured outputs guarantee schema-compliant responses through constrained decoding”<br><span class="sub">结构化输出通过约束解码保证回复符合 schema。——Anthropic, “Structured outputs”（同页列出拒答、达到长度上限等例外）</span></p>
-          <p class="lab-quote">“the model may still make mistakes within the values of the JSON object”<br><span class="sub">模型仍可能在 JSON 对象的值上出错。——OpenAI, 2024-08-06, Limitations（讲义已核，待补全句）</span></p>
+          <p class="lab-quote">“For example, the model may still make mistakes within the values of the JSON object (e.g., getting a step wrong in a mathematical equation).”<br><span class="sub">例如，模型仍可能在 JSON 对象的值上出错（比如数学算式里有一步算错）。——OpenAI, 2024-08-06, Limitations and restrictions（2026-10-28 原页核对）</span></p>
           <details><summary>争议：格式约束与推理</summary><p class="lab-quote">“Surprisingly, we observe a significant decline in LLMs reasoning abilities under format restrictions.”<br><span class="sub">出乎意料的是，我们观察到格式限制下大模型的推理能力显著下降。——Tam et al., arXiv:2408.02442v3（讲义所引 EMNLP 版作 “LLMs'”，待核）</span></p><p>.txt 撰文反驳，按其做法重跑后结构化输出略好（GSM8K 0.78 对 0.77）。做法：需要推理的判断先用自然语言写理由，再填表。</p></details>` },
       ], { active: 3 }));
     }

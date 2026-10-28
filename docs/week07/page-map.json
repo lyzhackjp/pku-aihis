@@ -165,7 +165,7 @@
    "chosen": "A"
   },
   "demo": "第 1 列：研究问题输入框（预置“北宋宰执出身何地”）。第 2 列：五行字段输入。第 3 列：每个字段后“服务的判断”输入，空则灰显并提示。第 4 列：王珪籍贯两条记载卡（原文、出处、判断者），下方“拆成两栏”后的表头与一行示例。顶部窄条：Cosovschi 原句“data is the product of interpretation and transformation”所在完整句＋中译＋出处。",
-  "data": "cbdb_1845.json 编者注（随材料包导入）；Cosovschi 原句需取自 research/原始数据/核对_20261027/。 未导入时页面显示导入提示与该页所需文件清单。",
+  "data": "cbdb_1845.json 编者注（随材料包导入）；Cosovschi 原句已于 2026-10-28 取原页补成完整句（papers.json）。 未导入时页面显示导入提示与该页所需文件清单。",
   "theme": "light",
   "status": "prototype",
   "concepts": []
