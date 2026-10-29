@@ -15,7 +15,7 @@
 | 本机服务（双击 `启动第七周演示.command`） | 正常；`?pack=` 自动导入 CBDB 材料包，顶栏与页脚引注正确 | — |
 | 浏览器内 Qwen3-4B（WebGPU q4f16） | 跑通。首次下载 2.84 GB；B 型、『大日本史料』第 1 页：154 秒、2048 词元达上限截断，容错读出 44 条 mention | `browser-qwen3-4b-B-dnsr.json` |
 | Ollama + Qwen3-4B-Instruct-2507 Q4_K_M（讲义同款模型，Ollama 官方库文件） | 跑通。同一提示与 JSON Schema：32 秒，2239 词元，合法 JSON，22 条 mention、6 条 event；6 条 event 的公元年全写成 1467（应为 1508） | `ollama-qwen3-4b-B-dnsr.json` |
-| 课件页 → Ollama | **未测通**：Claude 应用自带浏览器拦截网页对本机其他端口的请求（ERR_BLOCKED_BY_CLIENT），属于该浏览器面板的限制；上面的 Ollama 实跑是从 Ollama 自身地址发出、请求体与课件相同 | — |
+| 课件页 → Ollama | Claude 应用自带浏览器拦截网页对本机其他端口的请求（ERR_BLOCKED_BY_CLIENT），故在其中未能测；**教师 12:04 在 Chrome 中测试通过**：模型接入页“发送一句公开测试文字”，4.1 秒，回复为可解析的 JSON，并抽出“王珪” | 教师报告 |
 
 在 Chrome 中验证“课件页 → Ollama”：
 
