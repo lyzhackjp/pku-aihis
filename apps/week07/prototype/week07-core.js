@@ -22,7 +22,7 @@
   function merge() {
     if (!PUB && !LOCAL) return null;
     const m = { ...(PUB || {}), ...(LOCAL || {}) };
-    for (const k of ['texts', 'images', 'licenses']) m[k] = { ...(PUB?.[k] || {}), ...(LOCAL?.[k] || {}) };
+    for (const k of ['texts', 'images', 'licenses', 'runs', 'teach']) m[k] = { ...(PUB?.[k] || {}), ...(LOCAL?.[k] || {}) };
     m._public = !!PUB; m._local = !!LOCAL; m._persisted = LOCAL?._persisted;
     return m;
   }
@@ -62,7 +62,7 @@
   };
   /* 导入提示：说明本页还缺哪部分本机材料。 */
   function packGate(needs) {
-    return `<div class="pack-gate"><p><b>本页还需要第七周本机材料包。</b>${PUB ? '公开站点已带许可允许公开的史料（NDL 典拠与页影、维基文库录文、DDBC 历表、HIPE 数据）；' : ''}本页用到的 CBDB 接口返回或教学文件夹原件不在公开站点，请从本机导入（文件名形如 <code>week07-pack.json</code>，由 <code>build_week07_pack.py</code> 生成）。</p>
+    return `<div class="pack-gate"><p><b>本页用到 CBDB 数据，需课堂导入第七周本机材料包。</b>其他史料与教学材料已随课件公开；CBDB 接口返回按教师决定只在课堂现场导入（文件名形如 <code>week07-pack.json</code>，由 <code>build_week07_pack.py</code> 生成）。</p>
       <p class="sub">本页用到：${esc(needs)}</p>
       <label class="pack-btn">选择第七周材料包<input type="file" accept=".json,application/json" data-pack-file hidden></label>
       <p class="pack-err" hidden></p></div>`;
@@ -73,13 +73,26 @@
     const err = e.target.closest('.pack-gate,.pack-bar')?.querySelector('.pack-err');
     try { await Pack.importFile(f); } catch (x) { if (err) { err.hidden = false; err.textContent = '导入失败：' + x.message + '（原有数据未改动）'; } }
   });
+  /* CBDB 引注：导入本机材料包后，在用到 CBDB 的各页页脚与顶栏显示（教师 2026-10-29）。 */
+  const CBDB_CITE = 'China Biographical Database（中國歷代人物傳記資料庫，CBDB），CBDB BJ 20260602，CC BY-NC-SA 4.0';
+  const CBDB_NOTE = '本课件所用记录经 CBDB API 于 2026-10-28 取得；许可见 https://creativecommons.org/licenses/by-nc-sa/4.0/';
+  const CBDB_PAGES = ['D01', 'D04', 'D07', 'D09', 'D12', 'D18'];
+  function cbdbCite() {
+    for (const id of CBDB_PAGES) {
+      const f = document.querySelector(`deck-slide[slide-id="${id}"] .slide-footer`); if (!f) continue;
+      let n = f.querySelector('.cbdb-cite'); if (!n) { n = document.createElement('span'); n.className = 'cbdb-cite'; f.append(n); }
+      n.textContent = LOCAL?.cbdb ? `　CBDB 数据引注：${CBDB_CITE}。${CBDB_NOTE}。` : '　本页的 CBDB 数据需课堂导入。';
+    }
+  }
+  document.addEventListener('w7-pack', cbdbCite);
+
   /* 顶栏状态：公开材料／本机材料包。 */
   function packBar() {
     const top = document.querySelector('.deck-top'); if (!top || top.querySelector('.pack-bar')) return;
     const span = document.createElement('span'); span.className = 'pack-bar';
     const draw = () => {
-      span.innerHTML = LOCAL ? `<span class="pack-ok" title="${esc(LOCAL.built)}">本机材料包已导入${LOCAL._persisted ? '' : '（未能写入浏览器存储，刷新后需重新导入）'}</span> <button data-pack-clear>移除</button>`
-        : `${PUB ? '<span class="pack-ok" title="随课件发布的公开史料">公开材料</span> ' : ''}<label class="pack-btn small">导入本机材料包<input type="file" accept=".json" data-pack-file hidden></label><span class="pack-err" hidden></span>`;
+      span.innerHTML = LOCAL ? `<span class="pack-ok" title="${esc(CBDB_CITE + '。' + CBDB_NOTE)}">CBDB 材料已导入（CBDB BJ 20260602，CC BY-NC-SA 4.0）${LOCAL._persisted ? '' : '（未能写入浏览器存储，刷新后需重新导入）'}</span> <button data-pack-clear>移除</button>`
+        : `${PUB ? '<span class="pack-ok" title="随课件发布的公开材料">公开材料</span> ' : ''}<label class="pack-btn small">导入 CBDB 材料包<input type="file" accept=".json" data-pack-file hidden></label><span class="pack-err" hidden></span>`;
     };
     draw(); document.addEventListener('w7-pack', draw);
     span.addEventListener('click', (e) => { if (e.target.matches('[data-pack-clear]')) Pack.clear(); });
@@ -207,5 +220,5 @@
   fixHash(); window.addEventListener('hashchange', fixHash);
 
   window.W7 = { Pack, packGate, packBar, Cal, GZ, gzIndex, jdnFromGreg, jdnFromJul, gregFromJdn, julFromJdn, ymd, MONTH_NUM, tokRegex, tokUnicode, align, lcsSpans, Evidence };
-  window.addEventListener('DOMContentLoaded', () => { Pack.init(); setTimeout(packBar, 0); });
+  window.addEventListener('DOMContentLoaded', () => { Pack.init(); setTimeout(() => { packBar(); cbdbCite(); }, 0); });
 })();
