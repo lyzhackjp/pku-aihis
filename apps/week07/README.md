@@ -6,12 +6,12 @@
 
 ## 打开
 
-1. 经本机服务打开（推荐）：把 `scripts/start_week07.command` 放到含 `prototype/` 与 `local-only/week07-pack.json` 的第七周目录下双击，它在 `127.0.0.1:8777` 起静态服务并用 Chrome 打开，同时载入材料包。也可在该目录手动运行 `python3 -m http.server 8777 --bind 127.0.0.1`，再访问 `prototype/index.html?pack=../local-only/week07-pack.json`。
-2. 直接双击 `prototype/index.html` 也能看各页，但 D23、D30 的现场抽取、“模型接入”“材料导入”用的是 ES 模块与 Web Worker，浏览器在 `file://` 下不载入，这些功能会显示提示。
-3. 首次打开时点顶栏“导入材料包”（或用上面的 `?pack=`）。导入一次即可，之后存在浏览器 IndexedDB 里；顶栏可移除。注意 `file://` 与 `http://127.0.0.1:8777` 是两个不同的站点，各自要导入一次。
-4. 右上角“贯穿：一句史料到一行”“概念表”随时进出；Esc 课程地图；P 演讲者窗口；B 静态。输入框里打字（含中文、日文输入法组字）不翻页。
+1. **本机**：把 `scripts/start_week07.command` 放到含 `prototype/` 与 `local-only/week07-pack.json` 的第七周目录下双击，它在 `127.0.0.1:8777` 起静态服务并用 Chrome 打开，同时载入本机材料包。也可手动运行 `python3 -m http.server 8777 --bind 127.0.0.1`，再访问 `prototype/index.html?pack=../local-only/week07-pack.json`。
+2. **发布到 GitHub Pages 后**：学生直接打开网址即可，不需要启动脚本。公开材料（NDL 典拠与页影、维基文库录文、DDBC 历表、HIPE 数据，许可见 `docs/week07/licensing-20261029.md`）随课件发布、自动载入；D23“现场运行”、D30 默认材料与“我的材料”、模型接入、材料导入都可用。CBDB 接口返回与教学文件夹原件不在公开站点，相关页（D01、D02、D07、D09、D11、D12、D18、D23 回放、D24、D28）由教师课堂导入本机材料包后显示。`scripts/build_pages_preview.py` 按 Pages 的目录形状组装预览，用于本机检查。
+3. **直接双击 HTML（`file://`）**：各页与公开材料可看；现场抽取、模型接入、材料导入用到 ES 模块与 Web Worker，浏览器在 `file://` 下不载入，会显示提示。
+4. 本机材料包导入一次即存浏览器 IndexedDB；`file://`、`127.0.0.1:8777` 与 Pages 网址是不同站点，各自导入。右上角“贯穿”“概念表”随时进出；Esc 课程地图；P 演讲者窗口；B 静态。输入框里打字（含中文、日文输入法组字）不翻页。
 
-不导入材料包时，D03、D06、D14（四个预设）、D16、D19—D22、D25（对齐规则）、D26、D27 可用；D23“现场运行”与 D30“我的材料”可用粘贴或导入的文字；其余页显示导入提示和本页所需文件。
+从网上地址（Pages）连学生自己电脑上的 Ollama／LM Studio：Chrome 会询问是否允许该网站访问本机上的应用，选允许；Ollama 默认只放行 127.0.0.1 来源，须运行 `launchctl setenv OLLAMA_ORIGINS "https://lyzhackjp.github.io"` 后重开 Ollama（Windows、Linux 设同名环境变量）；LM Studio 在开发者设置中打开 CORS。云端 API 与浏览器内模型不受此限。
 
 ## 现场抽取、模型接入与材料导入（2026-10-28 晚）
 
@@ -35,7 +35,11 @@ D23 第五个标签“现场运行：接入模型”与 D30 第 5 阶段“抽�
 sh apps/week07/scripts/build_importer.sh   # 产物复制到 prototype/importer/，不入 Git
 ```
 
-## 材料包：原始数据不进仓库
+## 材料包：公开部分与本机部分
+
+公开部分由 `scripts/build_public_pack.py <week07-pack.json> prototype/data/public/week07-public-pack.js` 从本机材料包中挑出许可允许公开的五类生成（脚本断言不含 CBDB、教学文件夹原件与运行记录）。其余仍只在本机。
+
+### 本机材料包
 
 教师 2026-10-28 决定：所有原始数据不上公开站点，课堂现场导入。材料包包括：
 - CBDB、NDL 典拠、HIPE 训练集、维基文库 wikitext；

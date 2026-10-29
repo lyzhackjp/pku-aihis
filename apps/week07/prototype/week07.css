@@ -133,3 +133,5 @@ evidence-table{display:block;min-width:0;max-width:100%}.ev-wrap,.ev-scroll{max-
 .live-result mark.gl-人物{background:#ffe08a}.live-result mark.gl-地点{background:#c9e6c9}.live-result mark.gl-官职{background:#d6dcf5}.live-result mark.gl-时间{background:#f3d1e6}
 .live-toast{position:fixed;left:50%;bottom:64px;transform:translateX(-50%);background:#20272e;color:#fff;padding:10px 16px;z-index:1100;max-width:80vw;border-radius:4px}
 .lx-progress{margin-left:8px}
+
+.sents li.added{color:#47654b}.sents li.added button{background:#e8eee1;border-color:#47654b;color:#2f4a33}.ok-line{background:#e8eee1;border-left:4px solid #47654b;padding:6px 10px;margin:6px 0}

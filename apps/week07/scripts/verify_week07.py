@@ -21,7 +21,7 @@ async def main():
         # 1 未导入材料包：需要原始数据的页显示导入提示
         await pg.goto(URL + "#D01"); await pg.wait_for_timeout(600)
         s = await go(pg, "D01"); check("无材料包时 D01 显示导入提示", await s.locator(".pack-gate").count() == 1)
-        s = await go(pg, "D30"); check("无材料包时 D30 显示导入提示且阶段按钮灰显", await s.locator(".pack-gate").count() == 1 and await s.locator(".through-rail.disabled").count() == 1)
+        s = await go(pg, "D30"); check("无本机材料包时 D30 用公开材料（页影）可用，不停在导入提示", await s.locator(".pack-gate").count() == 0 and await s.locator(".through-rail.disabled").count() == 0 and await s.locator("[data-th^='addsent|']").count() >= 5)
         s = await go(pg, "D14"); await s.locator('[data-preset="0"]').click(); await pg.wait_for_timeout(200)
         check("无材料包时 D14 预设仍可算：熙寧三年十二月丁卯→1071-01-14（儒略）", "1071-01-14（儒略历）" in await s.inner_text())
         # 2 通过地址导入材料包

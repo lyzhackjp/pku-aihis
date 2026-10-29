@@ -42,6 +42,8 @@ function setProfile(patch, id = selected) {
   const changed = ['baseUrl', 'model', 'apiKey', 'protocol', 'proxy'].some((k) => k in patch && patch[k] !== p[k]);
   profiles[i] = { ...p, ...patch, ...(changed ? { test: null } : {}) }; persist();
 }
+/* 从网上地址（GitHub Pages 等）连本机服务：浏览器要允许“访问本机应用／本地网络”，本机服务要放行本站来源。 */
+const LOCAL_FROM_WEB = `从网上地址连本机模型服务需要两步：① 浏览器弹出“访问本机上的应用（本地网络）”时选允许，或在地址栏左侧的网站设置中把该项改为允许；② Ollama 须放行本站来源：在终端运行 launchctl setenv OLLAMA_ORIGINS "${location.origin}" 后退出并重新打开 Ollama（Windows、Linux 设同名环境变量）；LM Studio 在开发者设置中打开 CORS`;
 const isLocalUrl = (u) => { try { return ['localhost', '127.0.0.1', '[::1]'].includes(new URL(u).hostname); } catch { return false; } };
 const ready = (c = profile()) => !!c && !!c.model.trim() && !!c.baseUrl.trim() && (!!c.apiKey.trim() || isLocalUrl(c.baseUrl));
 const presetLabel = (c) => PRESETS.find((x) => x.id === c.preset)?.label || c.preset;
@@ -68,7 +70,7 @@ async function chat(messages, { profileId, maxTokens = 4096, format = 'json', sc
     const a = API.parseResponse(parsed, c.protocol);
     return { text: clean(a.text), usage: a.usage, model: a.model || c.model, finish_reason: a.finishReason, seconds: +((performance.now() - t0) / 1000).toFixed(1), request, endpoint: built.url, profile: profileLabel(c) };
   } catch (e) {
-    const msg = e.name === 'TypeError' ? `${e.message}（多为跨域被拒或网络不通；本机服务请确认已启动；云端服务可改用本机转发器）` : e.message;
+    const msg = e.name === 'TypeError' ? `${e.message}（${isLocalUrl(c.baseUrl) && !isLocalUrl(location.href) ? LOCAL_FROM_WEB : '多为跨域被拒或网络不通；本机服务请确认已启动；云端服务可改用本机转发器'}）` : e.message;
     const err = new Error(clean(msg)); err.raw = raw; err.request = request; err.seconds = +((performance.now() - t0) / 1000).toFixed(1); throw err;
   }
 }
@@ -229,7 +231,8 @@ class ModelPanel extends HTMLElement {
       if (t.dataset.sel != null) { selected = t.value; persist(); this.render(); } });
     this.addEventListener('click', (e) => { const b = e.target.closest('[data-mp]'); if (!b) return; this.act(b.dataset.mp, b); });
     this.addEventListener('keydown', (e) => { if (e.key === 'Escape') { this.open = false; this.render(); } });
-    document.addEventListener('w7-live', () => { if (this.open && !this.contains(document.activeElement)) this.render(); else if (this.open) this.renderStatus(); });
+    // 载入模型时进度事件很密：只更新“浏览器内模型”表格，不整页重绘（整页重绘会把滚动条拉回顶部）。
+    document.addEventListener('w7-live', () => { if (this.open) this.renderStatus(); });
     this.render();
   }
   show() { this.open = true; this.render(); probe(); }
@@ -271,6 +274,10 @@ class ModelPanel extends HTMLElement {
   }
   render() {
     if (!this.open) { this.innerHTML = ''; return; }
+    const keep = this.querySelector('.model-panel')?.scrollTop || 0;
+    this.draw(); const pn = this.querySelector('.model-panel'); if (pn) pn.scrollTop = keep;
+  }
+  draw() {
     const c = profile(); const pr = PRESETS.find((x) => x.id === c?.preset);
     const opt = (v, l, cur) => `<option value="${esc(v)}" ${v === cur ? 'selected' : ''}>${esc(l)}</option>`;
     this.innerHTML = `<div class="model-shade"><section class="model-panel" role="dialog" aria-modal="true" aria-label="模型接入"><button class="close" data-mp="close">关闭</button>
@@ -291,6 +298,7 @@ class ModelPanel extends HTMLElement {
         <label>输出约束<select data-pf="format">${opt('schema', 'JSON Schema（response_format=json_schema，服务须支持）', c.format)}${opt('json', 'JSON 模式（response_format=json_object）', c.format)}${opt('free', '不加约束（只在提示中要求 JSON）', c.format)}</select></label>
         <label class="check-row"><input type="checkbox" data-pf="proxy" ${c.proxy ? 'checked' : ''}>经已启动的本机转发器（127.0.0.1:8796，见仓库 tools/llm-proxy）</label>
       </div>
+      ${isLocalUrl(c.baseUrl) && !isLocalUrl(location.href) ? `<p class="consent">${esc(LOCAL_FROM_WEB)}。</p>` : ''}
       <details><summary>预设出处与说明</summary><p class="sub">${esc(pr?.notes || '')}</p>${(pr?.sources || []).map((s) => `<p class="sub"><a href="${esc(s.url)}" target="_blank" rel="noopener">官方依据</a> · ${esc(s.read_date)} · ${esc(s.read_depth)}</p>`).join('')}<p class="sub">预设表沿用第六周（modules/history-demo/ocr/api-presets.json），其中“视觉”“看图测试”的说明对第七周不适用；第七周只发送文字。跨域失败时显示实际错误。DeepSeek 等部分服务不支持 json_schema，请选 JSON 模式。</p></details>
       <p><button data-mp="test" ${this.busy || !ready(c) ? 'disabled' : ''}>发送一句公开测试文字，检查能否返回 JSON</button></p>
       <p role="status" class="mp-status">${esc(this.status || (c.test ? (c.test.passed ? '当前配置已通过文字测试' : '上次测试未通过') : '尚未测试'))}</p>
@@ -313,7 +321,7 @@ class LiveExtract extends HTMLElement {
     this.addEventListener('click', (e) => { const b = e.target.closest('[data-lx]'); if (b) this.act(b.dataset.lx); });
     this.addEventListener('change', (e) => { const t = e.target; if (t.dataset.ls) { this.s[t.dataset.ls] = t.type === 'checkbox' ? t.checked : t.value; this.save(); if (t.dataset.ls === 'input') this.consent = ''; this.render(); } if (t.type === 'file' && t.files?.[0]) t.files[0].text().then((x) => { this.s.paste = x; this.s.input = 'paste'; this.save(); this.render(); }); });
     this.addEventListener('input', (e) => { const t = e.target; if (t.dataset.lt) { this.s[t.dataset.lt] = t.value; this.save(); } });
-    this.onLive = () => { if (!this.contains(document.activeElement)) this.render(); };
+    this.onLive = () => { if (!this.busy && !this.contains(document.activeElement)) this.render(); };
     document.addEventListener('w7-live', this.onLive); document.addEventListener('w7-materials', this.onLive); document.addEventListener('w7-pack', this.onLive);
     this.render();
   }

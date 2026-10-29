@@ -22,7 +22,7 @@
     get key() { return 'w7-d02'; }
     defaults() { return { z: 'kobun' }; }
     render() {
-      const p = P(); if (!p) return gate(this, '『大日本史料』9-1 本文第 1 页页影与人工参照转录');
+      const p = P(); if (!W.Pack.has('images.dnsr_p1', 'texts.dnsr_p1_excerpt')) return gate(this, '『大日本史料』9-1 本文第 1 页页影与讲义所录节录');
       const z = D02_ZONES[this.s.z], ref = p.teach?.reference?.['dnsr_9-1_p1_reference'] || p.texts.dnsr_p1_excerpt.text;
       const boxes = Object.entries(D02_ZONES).map(([k, v]) => v.boxes.map(([x, y, w, h]) => `<span class="hot ${k === this.s.z ? 'on' : ''} hot-${k}" data-set="z:${k}" style="left:${pct(x / DNSR_W)};top:${pct(y / DNSR_H)};width:${pct(w / DNSR_W)};height:${pct(h / DNSR_H)}" title="${esc(v.label)}"></span>`).join('')).join('');
       let body = z.text ? `<p class="src-line">${esc(z.text)}</p>` : '';
@@ -80,14 +80,14 @@
     }
     render() {
       const page = pageById('D04'); const s = this.s; const p = P();
-      const note = p ? (cbdbPerson(p.cbdb.persons['1845'])?.BasicInfo?.Notes || '').replace(/\x7f/g, '') : '';
+      const note = p?.cbdb ? (cbdbPerson(p.cbdb.persons['1845'])?.BasicInfo?.Notes || '').replace(/\x7f/g, '') : '';
       const m = note.match(/According to[^.]*\.[^.]*\.[^.]*\./); const m2 = note.match(/I am accepting[^.]*\./);
       rerender(this, flowShell(page, [
         { title: '写下研究问题', why: '先问问题需要哪些对象。', body: `<label class="field">研究问题<textarea data-k="q" rows="3">${esc(s.q)}</textarea></label><p class="lab-quote">“On the contrary, data is the product of interpretation and transformation.”<br><span class="sub">恰恰相反，数据是解释与转换的产物。——Cosovschi, Programming Historian (2024)，引言（2026-10-28 原页核对）</span></p>` },
         { title: '列出字段', why: '五个字段。', body: `<div class="row3"><button class="small" data-fx="example">填入示例</button><button class="small" data-fx="clear">清空字段</button></div>` + s.fields.map((f, i) => `<div data-row="${i}" class="${s.uses[i] ? '' : 'dim'}"><input data-arr="fields" data-fi="${i}" value="${esc(f)}" placeholder="字段 ${i + 1}"></div>`).join('') },
         { title: '每个字段服务哪个判断', why: '写不出用途的字段先不要；一栏回答两个问题就拆成两栏。', body: s.fields.map((f, i) => `<input data-arr="uses" data-fi="${i}" value="${esc(s.uses[i])}" placeholder="“${esc(f || '字段')}”为哪一个判断服务">`).join('') },
         { title: '一格拆成两栏', why: '王珪的“籍贯”有两种记载，回答的是不同问题。', body: `<div class="assert-card"><b>《宋史》卷三一二</b><p class="src-line">王珪，字禹玉，成都華陽人，後徙舒。</p><p class="sub">史家对家世的记述（维基文库录文，未决问题 U-07）</p></div>
-          <div class="evid-card"><b>CBDB 1845</b><p>指数地址：${esc(p ? cbdbPerson(p.cbdb.persons['1845']).BasicInfo.IndexAddr : '（导入材料包后显示）')}</p>${p ? `<p class="sub mono">${esc((m ? m[0] : '') + ' … ' + (m2 ? m2[0] : ''))}</p>` : ''}<p class="sub">编者据李清臣所撰墓志推定（接口原始返回的编者注）</p></div>
+          <div class="evid-card"><b>CBDB 1845</b><p>指数地址：${esc(p?.cbdb ? cbdbPerson(p.cbdb.persons['1845']).BasicInfo.IndexAddr : '（导入本机材料包后显示）')}</p>${p?.cbdb ? `<p class="sub mono">${esc((m ? m[0] : '') + ' … ' + (m2 ? m2[0] : ''))}</p>` : ''}<p class="sub">编者据李清臣所撰墓志推定（接口原始返回的编者注）</p></div>
           <button class="small" data-set="split:${s.split ? '' : '1'}">${s.split ? '合成一栏' : '拆成两栏'}</button>
           ${s.split ? '<table class="steps"><tr><th>史书所记籍贯</th><th>今人推定籍贯</th><th>推定理由</th></tr><tr><td>成都華陽，後徙舒</td><td>東明（開封府）</td><td>CBDB 编者据墓志：曾祖葬河南、户籍转舒州、王珪葬开封东明</td></tr></table>' : '<table class="steps"><tr><th>籍贯</th></tr><tr><td class="warn">成都華陽？舒？東明？</td></tr></table>'}` },
       ], { active: s.split ? 3 : 1 }));
@@ -101,7 +101,7 @@
     get key() { return 'w7-d07'; }
     defaults() { return { who: '1845', pick: '' }; }
     render() {
-      const p = P(), page = pageById('D07'); if (!p) return gate(this, 'CBDB 1762、1845、33013 与 NDL 典拠 00269218 原始数据');
+      const p = P(), page = pageById('D07'); if (!W.Pack.has('cbdb', 'ndl')) return gate(this, 'CBDB 1762、1845、33013 与 NDL 典拠 00269218 原始数据');
       let cards = [], title = '';
       if (this.s.who === 'ndl') {
         const r = p.ndl.records['00269218']; title = r.prefLabel.literalForm + '（NDL 典拠 00269218）';
@@ -139,7 +139,7 @@
     }
     render() {
       const p = P(), page = pageById('D08'); const s = this.s; const L = s.marks[s.mat];
-      const text = s.mat === 'songshi' ? (p ? p.texts.songshi_wanggui_excerpt.text : '（导入材料包后显示选段）') : (p?.teach?.reference?.['dnsr_9-1_p1_reference'] || p?.texts.dnsr_p1_excerpt.text || '（导入材料包后显示）');
+      const text = s.mat === 'songshi' ? (p?.texts?.songshi_wanggui_excerpt?.text || '（导入材料包后显示选段）') : (p?.teach?.reference?.['dnsr_9-1_p1_reference'] || p?.texts?.dnsr_p1_excerpt?.text || '（导入本机材料包后显示）');
       const count = (w) => text.split(w).length - 1;
       const ref = D08_REF[s.mat]; const mine = new Set(L.map((x) => x[0]));
       rerender(this, flowShell(page, [
@@ -159,7 +159,7 @@
     get key() { return 'w7-d10'; }
     defaults() { return { pick: '一陽斎', count: 'ndl' }; }
     render() {
-      const p = P(); if (!p) return gate(this, 'NDL 典拠 00272460、00360993、00272461、00272462 原始 JSON');
+      const p = P(); if (!W.Pack.has('ndl')) return gate(this, 'NDL 典拠 00272460、00360993、00272461、00272462 原始 JSON');
       const recs = D10_IDS.map(([id, g]) => { const r = p.ndl.records[id]; return { id, g, pref: r.prefLabel.literalForm, alts: (r.altLabel || []).map((a) => ({ f: a.literalForm, d: a.description || '' })) }; });
       const key = (f) => f.replace(/[,，]\s*/g, '').replace(/\s*\d+世.*$/, '').replace(/[\d-]+$/, '').trim();
       const norm = (f) => { const k = f.replace(/\s+/g, ''); return /一陽斎|一陽齋/.test(k) ? '一陽斎' : /国貞|國貞/.test(k) ? '国貞' : /香蝶楼/.test(k) ? '香蝶楼' : /五渡亭/.test(k) ? '五渡亭' : /一雄斎|一雄齋/.test(k) ? '一雄斎' : /梅蝶楼/.test(k) ? '梅蝶楼' : null; };
@@ -221,7 +221,7 @@
     get key() { return 'w7-d12'; }
     defaults() { return { pick: '', reason: '' }; }
     render() {
-      const p = P(), page = pageById('D12'); if (!p) return gate(this, 'CBDB 按名“王珪”的 34 条记录、4 条完整记录、HIPE 训练集');
+      const p = P(), page = pageById('D12'); if (!W.Pack.has('cbdb', 'hipe')) return gate(this, 'CBDB 按名“王珪”的 34 条记录、4 条完整记录、HIPE 训练集');
       const list = p.cbdb.name_query.html_list.filter((x) => x.label === '王珪');
       const facts = { dyn: '宋', office: '參知政事', yr: 1070 };
       const rows = list.map((x) => {
@@ -270,7 +270,7 @@
     get key() { return 'w7-d17'; }
     defaults() { return { ex: 'hipe', at: '', isAt: '', why: '' }; }
     render() {
-      const p = P(), page = pageById('D17'); if (!p) return gate(this, 'HIPE-2026 英文训练集');
+      const p = P(), page = pageById('D17'); if (!W.Pack.has('hipe')) return gate(this, 'HIPE-2026 英文训练集');
       const pairs = p.hipe.docs.flatMap((d) => d.sampled_pairs); const both = pairs.filter((x) => x.at === 'FALSE' && x.isAt === 'FALSE').length;
       const doc = p.hipe.docs[0], pr = doc.sampled_pairs[0];
       const EX = {
@@ -295,7 +295,7 @@
     get key() { return 'w7-d18'; }
     defaults() { return { side: 'true' }; }
     render() {
-      const p = P(); if (!p) return gate(this, 'CBDB 1846 号记录、《建炎以來繫年要錄》卷 169、170、175');
+      const p = P(); if (!W.Pack.has('cbdb', 'texts.xnyl')) return gate(this, 'CBDB 1846 号记录、《建炎以來繫年要錄》卷 169、170、175');
       const per = cbdbPerson(p.cbdb.persons['1846']), b = per.BasicInfo, po = arr(per.PersonPostings, 'Posting');
       const posts = po.map((o) => [o.OfficeName + (o.AddrName && !/未詳/.test(o.AddrName) ? '（' + o.AddrName + '）' : ''), +o.FirstYear || +o.LastYear, +o.LastYear || +o.FirstYear, o.AddrName]).filter((x) => x[1]);
       const X = (v) => ((v - 1150) / 14 * 100).toFixed(2) + '%';
@@ -443,7 +443,7 @@
       const tabs = seg('v', [['A', 'A 型（人物卡片，全部必填）'], ['F', '不加约束对照'], ['B', 'B 型（证据表式）'], ['R', '史学规则校验'], ['L', '现场运行：接入模型']], this.s.v);
       if (this.s.v === 'L') return rerender(this, `<div class="ev-bar">${tabs}</div><p class="sub">左侧四个标签是讲义 4.2 的实跑回放；本标签在课堂现场重新抽取：可接云端 API、本机 Ollama／LM Studio，或在浏览器内运行 Qwen3、GLiNER 与 LangExtract。输入可选材料包中的同一段原文，也可选同学用“材料导入”带来的材料。</p>
         <live-extract key="d23" input="songshi"><p class="warn">现场运行需要经本机服务打开课件（双击“启动第七周演示.command”）；直接打开 HTML 文件时，浏览器不允许载入模型模块。</p></live-extract>`);
-      if (!p?.teach) return gate(this, '讲义 4.2 的 A／B 抽取记录（教学文件夹原件）与王珪传选段');
+      if (!p?.teach) return rerender(this, `<div class="ev-bar">${tabs}</div><p class="note-box">前四个标签是讲义 4.2 实跑记录的回放，需要本机材料包；第五个标签“现场运行”不需要，可以直接用。</p>` + W.packGate('讲义 4.2 的 A／B 抽取记录（教学文件夹原件）与王珪传选段'));
       const E = p.teach.extract, text = p.teach.inputs.songshi_wanggui_excerpt;
       const key = { A: 'songshi_wanggui_excerpt__A', F: 'songshi_wanggui_excerpt__A-free', B: 'songshi_wanggui_excerpt__B', R: 'songshi_wanggui_excerpt__A' }[this.s.v]; const R = E[key];
       const meta = `<p class="sub">${esc(R.model_file)} · llama-cpp-python ${esc(R.llama_cpp_python)} · 温度 ${R.temperature} · ${R.constrained_decoding ? 'JSON Schema 约束解码' : '不加约束'} · ${esc(R.run_at)} · ${R.seconds} 秒 · ${R.usage.completion_tokens} 词元 · finish_reason=${esc(R.finish_reason)}${R.parse_error ? ' · <span class="warn">原始回复非合法 JSON</span>' : ''}</p>`;

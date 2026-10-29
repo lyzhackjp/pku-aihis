@@ -48,7 +48,7 @@
     defaults() { return { q: 'json', guess: '', reveal: false }; }
     render() {
       const P = this.pack, page = pageById('D01');
-      if (!P) { rerender(this, W.packGate('CBDB 接口原始返回（按名 HTML 与 JSON、编号 1845／33013）与智能体运行记录')); return; }
+      if (!W.Pack.has('cbdb', 'runs.d01_agent')) { rerender(this, W.packGate('CBDB 接口原始返回（按名 HTML 与 JSON、编号 1845／33013）与智能体运行记录')); return; }
       const { q } = this.s; const C = P.cbdb;
       const url = q === 'html' ? `${C.api}?name=王珪` : q === 'json' ? `${C.api}?name=王珪&o=json` : `${C.api}?id=${q}&o=json`;
       const raw = q === 'html' ? null : q === 'json' ? C.name_query.json : C.persons[q];
@@ -204,7 +204,7 @@
     defaults() { return { dyn: '宋', office: '參知政事', addr: '', alive: '' }; }
     render() {
       const P = this.pack, page = pageById('D09');
-      if (!P) { rerender(this, W.packGate('CBDB 编号 33013、1845、1846、570937 的接口原始返回')); return; }
+      if (!W.Pack.has('cbdb')) { rerender(this, W.packGate('CBDB 编号 33013、1845、1846、570937 的接口原始返回')); return; }
       const people = D09_IDS.map((id) => ({ id, p: cbdbPerson(P.cbdb.persons[id]) })).filter((x) => x.p);
       const { dyn, office, addr, alive } = this.s;
       const steps = [];
@@ -337,7 +337,7 @@
     }
     renderRun(page) {
       const P = this.pack;
-      if (!P) { rerender(this, `<div class="tabs">${seg('view', [['live', '对齐规则（实时）'], ['run', 'LangExtract 实跑记录']], 'run')}</div>` + W.packGate('LangExtract 实跑记录（runs.d25_langextract）')); return; }
+      if (!W.Pack.has('runs.d25_langextract', 'texts.dnsr_p1_excerpt')) { rerender(this, `<div class="tabs">${seg('view', [['live', '对齐规则（实时）'], ['run', 'LangExtract 实跑记录']], 'run')}</div>` + W.packGate('LangExtract 实跑记录（runs.d25_langextract）')); return; }
       const R = P?.runs?.d25_langextract;
       if (!R) { rerender(this, `<div class="tabs">${seg('view', [['live', '对齐规则（实时）'], ['run', 'LangExtract 实跑记录']], 'run')}</div><p class="warn">材料包中没有 LangExtract 运行记录。</p>`); return; }
       const i = Math.min(+this.s.runIdx || 0, R.runs.length - 1), run = R.runs[i];
@@ -412,7 +412,7 @@
     init() { this.addEventListener('click', (e) => {
       const b = e.target.closest('[data-th]'); if (!b) return; const [a, v] = b.dataset.th.split('|');
       const rows = W.Evidence.rows(this.s.mat);
-      if (a === 'addsent') { rows.push({ text: v, loc: this.s.mat === 'dnsr' ? '『大日本史料』9-1，本文第 1 页（PDF 页序 29）' : this.s.mat === 'songshi' ? '《宋史》卷三一二《王珪传》' : (store.get('w7-mine', {}).loc || '我的材料'), orig: '', norm: '', kind: '未见', reason: '', locsrc: '人工标出', who: '' }); W.Evidence.save(this.s.mat, rows); this.mark('entry'); }
+      if (a === 'addsent') { rows.push({ text: v, loc: this.s.mat === 'dnsr' ? '『大日本史料』9-1，本文第 1 页（PDF 页序 29）' : this.s.mat === 'songshi' ? '《宋史》卷三一二《王珪传》' : (store.get('w7-mine', {}).loc || '我的材料'), orig: '', norm: '', kind: '未见', reason: '', locsrc: '人工标出', who: '' }); W.Evidence.save(this.s.mat, rows); this.mark('entry'); this.flash = `已加入证据表第 ${rows.length} 行：“${v.slice(0, 18)}${v.length > 18 ? '…' : ''}”。到“证据表 ↓”或下一阶段继续填写。`; clearTimeout(this._fl); this._fl = setTimeout(() => { this.flash = ''; if (!this.contains(document.activeElement)) this.render(); }, 6000); }
       if (a === 'mineseg') { const sg = (window.W7Live?.segments() || []).find((x) => x.id === v); if (sg) store.set('w7-mine', { text: sg.text, segId: sg.id, loc: sg.loc }); }
       if (a === 'minepaste') { const t = this.querySelector('[data-mine-paste]')?.value || ''; if (t.trim()) store.set('w7-mine', { text: t.trim(), loc: this.querySelector('[data-mine-loc]')?.value || '粘贴文字（出处待补）' }); }
       if (a === 'mineclear') store.del('w7-mine');
@@ -435,13 +435,14 @@
     }
     render() {
       const s = this.s, P = this.pack;
-      if (!P && s.mat !== 'mine') { rerender(this, `<div class="through"><div class="through-main">${W.packGate('『大日本史料』第 1 页页影与转录、NDL 典拠、模型抽取记录（默认材料）；《宋史·王珪传》与 CBDB 记录（另一份材料）')}</div><aside class="through-rail disabled">${this.rail()}</aside></div>`); return; }
+      if ((s.mat === 'dnsr' && !W.Pack.has('images.dnsr_p1')) || (s.mat === 'songshi' && !W.Pack.has('texts.songshi_wanggui_excerpt'))) { rerender(this, `<div class="through"><div class="through-main">${W.packGate('『大日本史料』第 1 页页影与转录、NDL 典拠、模型抽取记录（默认材料）；《宋史·王珪传》与 CBDB 记录（另一份材料）')}</div><aside class="through-rail disabled">${this.rail()}</aside></div>`); return; }
       const rows = W.Evidence.rows(s.mat);
       const stage = STAGES.find((x) => x.k === s.stage);
       let work = '';
       const mine = store.get('w7-mine', null);
       const sents = s.mat === 'dnsr' ? DNSR_SENT : s.mat === 'songshi' ? W.Pack.get().texts.songshi_wanggui_excerpt.text.split(/(?<=。)/).slice(0, 12) : (mine?.text || '').split(/(?<=[。！？!?；\n])/).map((x) => x.trim()).filter(Boolean).slice(0, 60);
-      if (s.stage === 'entry') work = (s.mat === 'mine' ? this.minePicker() : '') + (sents.length ? `<p>点一句加入证据表（“原文片段”照录）：</p><ul class="sents">${sents.map((t) => `<li><button class="small" data-th="addsent|${esc(t)}">＋</button> ${esc(t)}</li>`).join('')}</ul>` : '');
+      const rowOf = (t) => rows.findIndex((r) => r.text === t);
+      if (s.stage === 'entry') work = (s.mat === 'mine' ? this.minePicker() : '') + (sents.length ? `<p>点一句加入证据表（“原文片段”照录）。已加入 ${sents.filter((t) => rowOf(t) >= 0).length}／${sents.length} 句；证据表共 ${rows.length} 行。</p>${this.flash ? `<p class="ok-line" role="status">${esc(this.flash)}</p>` : ''}<ul class="sents">${sents.map((t) => { const k = rowOf(t); return `<li class="${k >= 0 ? 'added' : ''}">${k >= 0 ? `<button class="small on" disabled title="已在证据表第 ${k + 1} 行">✓ 第 ${k + 1} 行</button>` : `<button class="small" data-th="addsent|${esc(t)}" title="加入证据表">＋ 加入</button>`} ${esc(t)}</li>`; }).join('')}</ul>` : '');
       if (s.stage === 'name') work = `<p>在证据表中填“原值”（照录称呼）；称呼类型写进理由。</p><evidence-table material="${s.mat}" compact></evidence-table>`;
       if (s.stage === 'link' && s.mat === 'mine') work = `<p>到 ${pageLink('D12', 'D12')} 看候选与对账；在证据表“规范值”中写规范库编号，库中没有就写 NIL，并在“理由”中写依据。</p><table class="steps">${rows.map((r, i) => `<tr><td>${i + 1}. ${esc(r.orig || r.text.slice(0, 16))}</td><td><button class="small" data-th="link|${i}~NIL（库中无对应）">NIL</button> <span class="sub">${esc(r.norm || '')}</span></td></tr>`).join('')}</table><evidence-table material="mine" compact></evidence-table>`;
       else if (s.stage === 'link') work = s.mat === 'dnsr'

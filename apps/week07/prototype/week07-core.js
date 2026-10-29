@@ -4,41 +4,65 @@
   'use strict';
   const { esc, store } = window.Deck;
 
-  /* ================= 材料包 ================= */
+  /* ================= 材料包 =================
+   * 两部分：公开部分（data/public/week07-public-pack.js，许可允许公开再发布的史料，随课件发布，自动载入，file:// 也可用）；
+   * 本机部分（week07-pack.json，CBDB 接口返回与教学文件夹原件等，课堂现场导入，存 IndexedDB）。页面读两者合并后的结果，
+   * 并按本页实际用到的部分判断是否显示导入提示（Pack.has）。 */
   const DB = 'pku-aihis-week07', OS = 'pack';
-  let PACK = null; const waiters = [];
+  let PUB = null, LOCAL = null, PACK = null; const waiters = [];
   const idb = () => new Promise((ok, no) => { const r = indexedDB.open(DB, 1); r.onupgradeneeded = () => r.result.createObjectStore(OS); r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); });
   async function idbGet() { try { const db = await idb(); return await new Promise((ok) => { const q = db.transaction(OS).objectStore(OS).get('current'); q.onsuccess = () => ok(q.result || null); q.onerror = () => ok(null); }); } catch { return null; } }
   async function idbPut(v) { try { const db = await idb(); await new Promise((ok, no) => { const t = db.transaction(OS, 'readwrite'); t.objectStore(OS).put(v, 'current'); t.oncomplete = ok; t.onerror = () => no(t.error); }); return true; } catch { return false; } }
   async function idbDel() { try { const db = await idb(); await new Promise((ok) => { const t = db.transaction(OS, 'readwrite'); t.objectStore(OS).delete('current'); t.oncomplete = ok; }); } catch { /* ignore */ } }
   function validate(p) {
     if (!p || p.format !== 'pku-aihis-week07-pack') throw new Error('不是第七周材料包（format 字段不符）');
-    for (const k of ['cbdb', 'ndl', 'hipe', 'texts', 'images', 'runs']) if (!p[k]) throw new Error('材料包缺少 ' + k);
+    for (const k of ['cbdb', 'texts', 'runs']) if (!p[k]) throw new Error('材料包缺少 ' + k);
     return p;
   }
-  function setPack(p, persisted) {
-    PACK = p; PACK._persisted = persisted;
-    waiters.splice(0).forEach((f) => f(p));
-    document.querySelectorAll('[data-needs-pack]').forEach((n) => n.packChanged?.());
-    document.dispatchEvent(new CustomEvent('w7-pack', { detail: p }));
+  function merge() {
+    if (!PUB && !LOCAL) return null;
+    const m = { ...(PUB || {}), ...(LOCAL || {}) };
+    for (const k of ['texts', 'images', 'licenses']) m[k] = { ...(PUB?.[k] || {}), ...(LOCAL?.[k] || {}) };
+    m._public = !!PUB; m._local = !!LOCAL; m._persisted = LOCAL?._persisted;
+    return m;
   }
+  function changed() {
+    PACK = merge(); if (PACK) waiters.splice(0).forEach((f) => f(PACK));
+    document.querySelectorAll('[data-needs-pack]').forEach((n) => n.packChanged?.());
+    document.dispatchEvent(new CustomEvent('w7-pack', { detail: PACK }));
+  }
+  function setPack(p, persisted) { LOCAL = p; LOCAL._persisted = persisted; changed(); }
+  const getPath = (o, path) => path.split('.').reduce((a, k) => (a == null ? a : a[k]), o);
   const Pack = {
     get: () => PACK,
+    hasLocal: () => !!LOCAL, hasPublic: () => !!PUB,
+    /* 本页用到的各部分是否都在（路径如 'cbdb'、'images.dnsr_p1'、'teach.extract'）。 */
+    has: (...paths) => !!PACK && paths.every((x) => getPath(PACK, x) != null),
     ready: () => (PACK ? Promise.resolve(PACK) : new Promise((ok) => waiters.push(ok))),
     async importFile(file) {
       const text = await file.text(); const p = validate(JSON.parse(text));
       const ok = await idbPut(p); setPack(p, ok); return p;
     },
-    async clear() { await idbDel(); PACK = null; document.querySelectorAll('[data-needs-pack]').forEach((n) => n.packChanged?.()); document.dispatchEvent(new CustomEvent('w7-pack', { detail: null })); },
+    async clear() { await idbDel(); LOCAL = null; changed(); },
+    loadPublic() {
+      return new Promise((ok) => {
+        if (window.W7_PUBLIC_PACK) { PUB = window.W7_PUBLIC_PACK; changed(); return ok(true); }
+        const sc = document.createElement('script'); sc.src = 'data/public/week07-public-pack.js'; sc.async = true;
+        sc.onload = () => { PUB = window.W7_PUBLIC_PACK || null; changed(); ok(!!PUB); }; sc.onerror = () => ok(false);
+        document.head.append(sc);
+      });
+    },
     async init() {
+      const pub = this.loadPublic();
       const u = new URLSearchParams(location.search).get('pack');
-      if (u) { try { const p = validate(await (await fetch(u)).json()); setPack(p, await idbPut(p)); return; } catch (e) { console.warn('材料包地址载入失败', e); } }
+      if (u) { try { const p = validate(await (await fetch(u)).json()); setPack(p, await idbPut(p)); await pub; return; } catch (e) { console.warn('材料包地址载入失败', e); } }
       const p = await idbGet(); if (p) setPack(p, true);
+      await pub;
     },
   };
-  /* 未导入时的统一提示：列出本页需要的材料，给导入按钮。 */
+  /* 导入提示：说明本页还缺哪部分本机材料。 */
   function packGate(needs) {
-    return `<div class="pack-gate"><p><b>本页需要第七周材料包。</b>原始数据不放在公开站点，请从本机导入（文件名形如 <code>week07-pack.json</code>，由 <code>build_week07_pack.py</code> 生成）。</p>
+    return `<div class="pack-gate"><p><b>本页还需要第七周本机材料包。</b>${PUB ? '公开站点已带许可允许公开的史料（NDL 典拠与页影、维基文库录文、DDBC 历表、HIPE 数据）；' : ''}本页用到的 CBDB 接口返回或教学文件夹原件不在公开站点，请从本机导入（文件名形如 <code>week07-pack.json</code>，由 <code>build_week07_pack.py</code> 生成）。</p>
       <p class="sub">本页用到：${esc(needs)}</p>
       <label class="pack-btn">选择第七周材料包<input type="file" accept=".json,application/json" data-pack-file hidden></label>
       <p class="pack-err" hidden></p></div>`;
@@ -49,14 +73,13 @@
     const err = e.target.closest('.pack-gate,.pack-bar')?.querySelector('.pack-err');
     try { await Pack.importFile(f); } catch (x) { if (err) { err.hidden = false; err.textContent = '导入失败：' + x.message + '（原有数据未改动）'; } }
   });
-  /* 在顶栏加一个“材料包”状态按钮。 */
+  /* 顶栏状态：公开材料／本机材料包。 */
   function packBar() {
     const top = document.querySelector('.deck-top'); if (!top || top.querySelector('.pack-bar')) return;
     const span = document.createElement('span'); span.className = 'pack-bar';
     const draw = () => {
-      const p = PACK;
-      span.innerHTML = p ? `<span class="pack-ok" title="${esc(p.built)}">材料包已导入${p._persisted ? '' : '（未能写入浏览器存储，刷新后需重新导入）'}</span> <button data-pack-clear>移除</button>`
-        : `<label class="pack-btn small">导入材料包<input type="file" accept=".json" data-pack-file hidden></label><span class="pack-err" hidden></span>`;
+      span.innerHTML = LOCAL ? `<span class="pack-ok" title="${esc(LOCAL.built)}">本机材料包已导入${LOCAL._persisted ? '' : '（未能写入浏览器存储，刷新后需重新导入）'}</span> <button data-pack-clear>移除</button>`
+        : `${PUB ? '<span class="pack-ok" title="随课件发布的公开史料">公开材料</span> ' : ''}<label class="pack-btn small">导入本机材料包<input type="file" accept=".json" data-pack-file hidden></label><span class="pack-err" hidden></span>`;
     };
     draw(); document.addEventListener('w7-pack', draw);
     span.addEventListener('click', (e) => { if (e.target.matches('[data-pack-clear]')) Pack.clear(); });
