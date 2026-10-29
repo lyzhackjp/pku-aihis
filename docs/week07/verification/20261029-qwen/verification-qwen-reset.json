@@ -1,0 +1,36 @@
+{
+ "date": "2026-10-29T14:13:23+0800",
+ "url": "http://localhost:8777/prototype/index.html",
+ "results": [
+  {
+   "name": "现场运行的规模下拉只有 0.6B 与 4B",
+   "pass": true,
+   "info": "['qwen3-0.6b', 'qwen3-4b']"
+  },
+  {
+   "name": "旧设置中的 1.7B 自动改为 0.6B",
+   "pass": true,
+   "info": "qwen3-0.6b"
+  },
+  {
+   "name": "模型接入页不再列出 1.7B",
+   "pass": true,
+   "info": "关闭\n模型接入\n\n三种做法：API 或本机服务（云端模型，或本机 Ollama／LM Studio）；浏览器内模型（Qwen3、GLiNER，在本页内运行，文字不出本机）；LangExtract（在浏览器中运行它的分块与对齐，模型用前两种之一）。Key 只留在本页内存，刷新后清除；发送材料前另行确认。\n\n一、API 或本机服务\n已配置模型\nDeepSeek V4.1 Flash · deepseek-flash\n本机 Ollama／LM Studio · qwen3:4b\n添加一个配置\n删除此配置\n服务预设\nOpenAI\nGoogle Gemini\nAnthropic Claude\nDeepS"
+  },
+  {
+   "name": "载入失败时提示写明运行方式并说明已自动重置",
+   "pass": true,
+   "info": "Qwen3-0.6B（transformers.js 3.8.1）WebGPU q4f16 约 0.6 GB；无 WebGPU 时 WASM q8 约 0.6 GB失败（wasm/q8）：Failed to fetch。模型线程已自动重置，可直接重试。下载并载入"
+  },
+  {
+   "name": "失败后不刷新页面直接重试，0.6B 载入成功（31 秒）",
+   "pass": true,
+   "info": "Qwen3-0.6B（transformers.js 3.8.1）WebGPU q4f16 约 0.6 GB；无 WebGPU 时 WASM q8 约 0.6 GB已载入（wasm/q8，30.5 秒）已载入"
+  },
+  {
+   "name": "全程无脚本错误",
+   "pass": true,
+   "info": "[]"
+  }
+ ]
+}

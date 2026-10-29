@@ -1,5 +1,6 @@
 /* 第七周：浏览器内模型（Web Worker，避免卡住页面）。
- * - Qwen3（transformers.js 3.8.1，ONNX）：有 WebGPU 用 q4f16，否则用 WASM 跑 q8（0.6B、1.7B）。不支持约束解码，只能事后校验。
+ * - Qwen3（transformers.js 3.8.1，ONNX）：有 WebGPU 用 q4f16，否则用 WASM 跑 q8（只有 0.6B）。不支持约束解码，只能事后校验。
+ *   不收 1.7B：其 q4f16 与 q8 都是权重内嵌的单个大文件（1.4—1.7 GB），载入时整份拷进 WASM 内存再解析，实测报 Aborted()；4B 权重在外部文件中，可载入。
  * - GLiNER multi v2.1（gliner.js 0.0.19，onnx-community 的 fp16 ONNX）：零样本命名实体识别，输出字符位置。int8 版本实测全部低分，不用。
  * 库从 jsdelivr 取固定版本，权重从 Hugging Face 取，均由浏览器缓存；材料文字不出本机。 */
 const TJS = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js';
@@ -7,7 +8,6 @@ const GLINER = 'https://cdn.jsdelivr.net/npm/gliner@0.0.19/+esm';
 const ORT_WASM = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.2/dist/';
 export const QWEN = {
   'qwen3-0.6b': { repo: 'onnx-community/Qwen3-0.6B-ONNX', webgpu: 'q4f16', wasm: 'q8', size: { q4f16: '约 0.6 GB', q8: '约 0.6 GB' } },
-  'qwen3-1.7b': { repo: 'onnx-community/Qwen3-1.7B-ONNX', webgpu: 'q4f16', wasm: 'q8', size: { q4f16: '约 1.3 GB', q8: '约 1.9 GB' } },
   'qwen3-4b': { repo: 'onnx-community/Qwen3-4B-ONNX', webgpu: 'q4f16', wasm: null, size: { q4f16: '约 2.9 GB' } },
 };
 let T = null; const qwen = {}; let gliner = null; let glinerInfo = null;
@@ -19,7 +19,8 @@ async function loadQwen(id, key, prefer) {
   T ||= await import(TJS); T.env.allowLocalModels = false;
   const gpu = prefer !== 'wasm' && await hasWebGPU();
   const device = gpu ? 'webgpu' : 'wasm', dtype = gpu ? spec.webgpu : spec.wasm;
-  if (!dtype) throw new Error(`${key} 在本浏览器只能用 WebGPU（未检测到可用的 WebGPU）；请改用 0.6B 或 1.7B，或用 Chrome 打开`);
+  if (!dtype) throw new Error(`${key} 在本浏览器只能用 WebGPU（未检测到可用的 WebGPU）；请改用 0.6B，或用开启 WebGPU 的 Chrome 打开`);
+  post(id, { progress: `准备载入 ${key}（${device}/${dtype}）…`, device, dtype });
   const files = {};
   const progress_callback = (p) => { if (p.status === 'progress' && p.file) { files[p.file] = [p.loaded, p.total]; const L = Object.values(files).reduce((a, [l]) => a + l, 0), Tt = Object.values(files).reduce((a, [, t]) => a + (t || 0), 0); post(id, { progress: `下载 ${key}（${device}/${dtype}）：${(L / 1e6).toFixed(0)} / ${(Tt / 1e6).toFixed(0)} MB` }); } };
   const t0 = performance.now();

@@ -78,33 +78,40 @@ async function chat(messages, { profileId, maxTokens = 4096, format = 'json', sc
 /* ================= 浏览器内模型与 LangExtract（两个 Worker） ================= */
 const QWEN = {
   'qwen3-0.6b': { label: 'Qwen3-0.6B', size: 'WebGPU q4f16 约 0.6 GB；无 WebGPU 时 WASM q8 约 0.6 GB' },
-  'qwen3-1.7b': { label: 'Qwen3-1.7B', size: 'WebGPU q4f16 约 1.3 GB；无 WebGPU 时 WASM q8 约 1.9 GB' },
   'qwen3-4b': { label: 'Qwen3-4B', size: '只能 WebGPU，q4f16 约 2.9 GB（与讲义同系列；讲义用的是 Instruct-2507 的 GGUF，不是同一文件）' },
 };
 const STATUS = { webgpu: null, qwen: {}, gliner: null, lx: null, msg: {} };
-function workerClient(file) {
+/* resetOnFail：浏览器内模型线程一旦报错（尤其运行库 Aborted()），该线程即不可再用；失败后立即关掉，下次调用自动新开，不必刷新页面。 */
+function workerClient(file, { resetOnFail = false, onReset = null } = {}) {
   let w = null, seq = 0; const calls = new Map();
   const get = () => {
     if (w) return w;
     w = new Worker(new URL(file, import.meta.url), { type: 'module' });
-    w.onmessage = ({ data }) => { const c = calls.get(data.id); if (!c) return; if (data.progress || data.partial != null) { c.onProgress?.(data); return; } calls.delete(data.id); data.ok ? c.ok(data.result) : c.no(new Error(data.error)); };
-    w.onerror = (e) => { for (const c of calls.values()) c.no(new Error('浏览器内模型线程出错：' + (e.message || '可能是内存不足或网络中断'))); calls.clear(); w = null; };
+    w.onmessage = ({ data }) => { const c = calls.get(data.id); if (!c) return; if (data.progress || data.partial != null) { c.onProgress?.(data); return; } calls.delete(data.id); if (data.ok) return c.ok(data.result); c.no(new Error(data.error)); if (resetOnFail) reset(); };
+    w.onerror = (e) => { for (const c of calls.values()) c.no(new Error('浏览器内模型线程出错：' + (e.message || '可能是内存不足或网络中断'))); calls.clear(); try { w.terminate(); } catch { /* ignore */ } w = null; onReset?.(); };
     return w;
   };
   const call = (msg, onProgress) => new Promise((ok, no) => { const id = ++seq; calls.set(id, { ok, no, onProgress }); get().postMessage({ ...msg, id }); });
   call.terminate = () => { if (!w) return; w.terminate(); w = null; for (const c of calls.values()) c.no(new Error('线程已关闭')); calls.clear(); };
+  function reset() { if (!w) return; w.terminate(); w = null; for (const c of calls.values()) c.no(new Error('线程已关闭（上一步失败后重置）')); calls.clear(); onReset?.(); }
   call.busy = () => calls.size > 0;
   return call;
 }
 /* Qwen3 与 GLiNER 各用一个线程；同一时间只保留其中一个已载入的模型：两者同时驻留时，实测浏览器渲染进程因内存不足崩溃。 */
-const qcall = workerClient('./browser-worker.js'), gcall0 = workerClient('./browser-worker.js');
+const qcall = workerClient('./browser-worker.js', { resetOnFail: true, onReset: () => { for (const k of Object.keys(STATUS.qwen)) STATUS.msg[k] = '已卸载（模型线程出错后重置），用时会重新载入'; STATUS.qwen = {}; emit('w7-live'); } }),
+  gcall0 = workerClient('./browser-worker.js', { resetOnFail: true, onReset: () => { if (STATUS.gliner) STATUS.msg.gliner = '已卸载（模型线程出错后重置），用时会重新载入'; STATUS.gliner = null; emit('w7-live'); } });
 const bcall = (msg, onP) => { if (msg.op.startsWith('qwen') && STATUS.gliner && !gcall0.busy()) { gcall0.terminate(); STATUS.gliner = null; STATUS.msg.gliner = '已卸载（为 Qwen3 腾出内存），用时会重新载入'; } return qcall(msg, onP); };
 const gcall = (msg, onP) => { if (Object.keys(STATUS.qwen).length && !qcall.busy()) { qcall.terminate(); for (const k of Object.keys(STATUS.qwen)) STATUS.msg[k] = '已卸载（为 GLiNER 腾出内存），用时会重新载入'; STATUS.qwen = {}; } return gcall0(msg, onP); };
 const lcall = workerClient('./lx-worker.js');
 async function probe() { try { const r = await bcall({ op: 'probe' }); STATUS.webgpu = r.webgpu; } catch { STATUS.webgpu = false; } emit('w7-live'); }
 async function loadQwen(key, onProgress) {
-  if (Object.keys(STATUS.qwen).some((k) => k !== key) && !qcall.busy()) { qcall.terminate(); for (const k of Object.keys(STATUS.qwen)) STATUS.msg[k] = '已卸载（换用其他规模）'; STATUS.qwen = {}; } STATUS.msg[key] = '载入中…'; emit('w7-live'); try { const info = await bcall({ op: 'qwen-load', key }, (d) => { STATUS.msg[key] = d.progress; onProgress?.(d.progress); emit('w7-live'); }); STATUS.qwen[key] = info; STATUS.msg[key] = `已载入（${info.device}/${info.dtype}，${info.load_seconds} 秒）`; return info; } catch (e) { STATUS.msg[key] = '失败：' + e.message; throw e; } finally { emit('w7-live'); } }
-async function loadGliner(onProgress) { STATUS.msg.gliner = '载入中…'; emit('w7-live'); try { const info = await gcall({ op: 'gliner-load' }, (d) => { STATUS.msg.gliner = d.progress; onProgress?.(d.progress); emit('w7-live'); }); STATUS.gliner = info; STATUS.msg.gliner = `已载入（${info.load_seconds} 秒）`; return info; } catch (e) { STATUS.msg.gliner = '失败：' + e.message; throw e; } finally { emit('w7-live'); } }
+  if (Object.keys(STATUS.qwen).some((k) => k !== key) && !qcall.busy()) { qcall.terminate(); for (const k of Object.keys(STATUS.qwen)) STATUS.msg[k] = '已卸载（换用其他规模）'; STATUS.qwen = {}; } STATUS.msg[key] = '载入中…'; emit('w7-live'); let mode = ''; try { const info = await bcall({ op: 'qwen-load', key }, (d) => { if (d.device) mode = d.device + '/' + d.dtype; STATUS.msg[key] = d.progress; onProgress?.(d.progress); emit('w7-live'); }); STATUS.qwen[key] = info; STATUS.msg[key] = `已载入（${info.device}/${info.dtype}，${info.load_seconds} 秒）`; return info; } catch (e) { const m = failText(e, mode); STATUS.msg[key] = m; throw new Error(m); } finally { emit('w7-live'); } }
+function failText(e, mode) {
+  const msg = String(e?.message || e), where = mode ? `（${mode}）` : '';
+  if (/Aborted|out of memory|内存/i.test(msg)) return `失败${where}：浏览器内存不够，运行库中止（${msg.slice(0, 60)}）。模型线程已自动重置，可直接重试；建议先关闭 Ollama 等占内存的程序，或改用 0.6B、API。`;
+  return `失败${where}：${msg}。模型线程已自动重置，可直接重试。`;
+}
+async function loadGliner(onProgress) { STATUS.msg.gliner = '载入中…'; emit('w7-live'); try { const info = await gcall({ op: 'gliner-load' }, (d) => { STATUS.msg.gliner = d.progress; onProgress?.(d.progress); emit('w7-live'); }); STATUS.gliner = info; STATUS.msg.gliner = `已载入（${info.load_seconds} 秒）`; return info; } catch (e) { const m = failText(e, 'wasm/fp16'); STATUS.msg.gliner = m; throw new Error(m); } finally { emit('w7-live'); } }
 async function loadLx(onProgress) { STATUS.msg.lx = '载入中…'; emit('w7-live'); try { const info = await lcall({ op: 'load' }, (d) => { STATUS.msg.lx = d.progress; onProgress?.(d.progress); emit('w7-live'); }); STATUS.lx = info; STATUS.msg.lx = `已载入（${info.load_seconds} 秒）`; return info; } catch (e) { STATUS.msg.lx = '失败：' + e.message; throw e; } finally { emit('w7-live'); } }
 
 /* ================= 抽取任务（A、B 照讲义 4.2 原提示与 schema） ================= */
@@ -265,7 +272,7 @@ class ModelPanel extends HTMLElement {
   renderStatus() { const n = this.querySelector('.mp-browser'); if (n) n.innerHTML = this.browserHtml(); }
   browserHtml() {
     const row = (k, label, size, btn, done) => `<tr><td><b>${esc(label)}</b><br><span class="sub">${esc(size)}</span></td><td class="sub">${esc(STATUS.msg[k] || (done ? '已载入' : '未载入'))}</td><td><button class="small" data-mp="${btn}" ${done ? 'disabled' : ''}>${done ? '已载入' : '下载并载入'}</button></td></tr>`;
-    return `<p class="sub">WebGPU：${STATUS.webgpu == null ? '检测中…' : STATUS.webgpu ? '可用（Qwen3 用 q4f16）' : '不可用（Qwen3 只能用 WASM 跑 0.6B／1.7B，较慢）'}</p>
+    return `<p class="sub">WebGPU：${STATUS.webgpu == null ? '检测中…' : STATUS.webgpu ? '可用（Qwen3 用 q4f16）' : '不可用（Qwen3 只能用 WASM 跑 0.6B，较慢；4B 需要 WebGPU）'}</p>
       <table class="steps"><tr><th>模型</th><th>状态</th><th></th></tr>
       ${Object.entries(QWEN).map(([k, v]) => row(k, v.label + '（transformers.js 3.8.1）', v.size, 'qwen:' + k, !!STATUS.qwen[k])).join('')}
       ${row('gliner', 'GLiNER multi v2.1（零样本实体识别）', 'fp16 约 580 MB；只做实体识别，不做 A／B 型 JSON', 'gliner', !!STATUS.gliner)}
@@ -315,7 +322,8 @@ class LiveExtract extends HTMLElement {
   connectedCallback() {
     if (this._b) return this.render(); this._b = true;
     this.k = 'w7-live-' + (this.getAttribute('key') || 'x');
-    this.s = Object.assign({ task: 'B', engine: 'api', qwen: 'qwen3-1.7b', input: this.getAttribute('input') || 'songshi', paste: '', tok: 'unicode', labels: 'person, location, official title, date', threshold: '0.3', maxTokens: '4096', hint: true }, store.get(this.k, {}));
+    this.s = Object.assign({ task: 'B', engine: 'api', qwen: 'qwen3-0.6b', input: this.getAttribute('input') || 'songshi', paste: '', tok: 'unicode', labels: 'person, location, official title, date', threshold: '0.3', maxTokens: '4096', hint: true }, store.get(this.k, {}));
+    if (!QWEN[this.s.qwen]) this.s.qwen = 'qwen3-0.6b'; // 旧设置里可能存着已去掉的 1.7B
     if (this.getAttribute('input') && this.hasAttribute('lock-input')) this.s.input = this.getAttribute('input');
     this.consent = ''; this.busy = false; this.progress = ''; this.last = LAST.get(this.k) || null; this.abort = null;
     this.addEventListener('click', (e) => { const b = e.target.closest('[data-lx]'); if (b) this.act(b.dataset.lx); });
@@ -342,7 +350,8 @@ class LiveExtract extends HTMLElement {
   async llm(messages, { maxTokens, schema, onProgress }) {
     if (this.s.engine === 'qwen') {
       if (!STATUS.qwen[this.s.qwen]) await loadQwen(this.s.qwen, onProgress);
-      const r = await bcall({ op: 'qwen-gen', key: this.s.qwen, messages, max_new_tokens: maxTokens }, (d) => onProgress?.(d.progress || `生成中：${d.tokens} 词元`));
+      const mode = STATUS.qwen[this.s.qwen] ? STATUS.qwen[this.s.qwen].device + '/' + STATUS.qwen[this.s.qwen].dtype : '';
+      const r = await bcall({ op: 'qwen-gen', key: this.s.qwen, messages, max_new_tokens: maxTokens }, (d) => onProgress?.(d.progress || `生成中：${d.tokens} 词元`)).catch((e) => { throw new Error(failText(e, mode).replace(/^失败/, '生成失败')); });
       STATUS.qwen[this.s.qwen] = r.info; return { ...r, endpoint: '浏览器内（' + r.info.device + '/' + r.info.dtype + '）', request: { messages, max_new_tokens: maxTokens, do_sample: false, enable_thinking: false }, profile: QWEN[this.s.qwen].label };
     }
     const c = profile(); this.abort = new AbortController();
