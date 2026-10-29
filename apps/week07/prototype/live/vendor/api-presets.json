@@ -1,0 +1,258 @@
+[
+  {
+    "id": "openai",
+    "label": "OpenAI",
+    "baseUrl": "https://api.openai.com/v1",
+    "protocol": "openai",
+    "model": "",
+    "image_format": "content[].image_url.url = data:image/png;base64,…",
+    "coordinates": "pixel-xywh",
+    "coordinate_status": "课件提示词约定；所选具体模型的官方坐标默认值待核",
+    "sources": [
+      {
+        "url": "https://developers.openai.com/api/docs/guides/images-vision",
+        "read_date": "2026-10-20",
+        "read_depth": "接口与图像传入示例"
+      }
+    ],
+    "verified_date": "2026-10-20",
+    "notes": "填写有权调用的实际视觉模型名，并通过公开图测试。"
+  },
+  {
+    "id": "gemini",
+    "label": "Google Gemini",
+    "baseUrl": "https://generativelanguage.googleapis.com/v1beta/openai",
+    "protocol": "openai",
+    "model": "",
+    "image_format": "content[].image_url.url = data:image/png;base64,…",
+    "coordinates": "normalized-yxyx",
+    "coordinate_status": "官方图像理解文档的框坐标示例",
+    "sources": [
+      {
+        "url": "https://ai.google.dev/gemini-api/docs/openai",
+        "read_date": "2026-10-20",
+        "read_depth": "接口与图像传入示例"
+      },
+      {
+        "url": "https://ai.google.dev/gemini-api/docs/image-understanding",
+        "read_date": "2026-10-20",
+        "read_depth": "框坐标示例：[ymin,xmin,ymax,xmax]，0—1000"
+      }
+    ],
+    "verified_date": "2026-10-20",
+    "notes": "填写有权调用的实际视觉模型名，并通过公开图测试。"
+  },
+  {
+    "id": "claude",
+    "label": "Anthropic Claude",
+    "baseUrl": "https://api.anthropic.com/v1",
+    "protocol": "anthropic",
+    "model": "",
+    "image_format": "image.source={type:base64,media_type,data}",
+    "coordinates": "pixel-xywh",
+    "coordinate_status": "课件提示词约定；所选具体模型的官方坐标默认值待核",
+    "sources": [
+      {
+        "url": "https://platform.claude.com/docs/en/build-with-claude/vision",
+        "read_date": "2026-10-20",
+        "read_depth": "接口与图像传入示例"
+      },
+      {
+        "url": "https://github.com/anthropics/anthropic-sdk-typescript/blob/main/src/client.ts",
+        "read_date": "2026-10-20",
+        "read_depth": "实际读取client.ts第1918—1925行：defaultHeaders；2026-10-20保存的源码"
+      }
+    ],
+    "verified_date": "2026-10-20",
+    "notes": "填写有权调用的实际视觉模型名，并通过公开图测试。"
+  },
+  {
+    "id": "deepseek",
+    "label": "DeepSeek V4.1 Flash",
+    "baseUrl": "https://api.deepseek.com",
+    "protocol": "openai",
+    "model": "deepseek-flash",
+    "image_format": "content[].image_url.url = data:image/png;base64,…",
+    "coordinates": "pixel-xywh",
+    "coordinate_status": "课件提示词约定；所选具体模型的官方坐标默认值待核",
+    "sources": [
+      {
+        "url": "https://api-docs.deepseek.com/guides/vision/",
+        "read_date": "2026-10-20",
+        "read_depth": "接口与图像传入示例"
+      },
+      {
+        "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+        "read_date": "2026-10-22",
+        "read_depth": "API型号 deepseek-flash 与当前版本 V4.1-Flash-1017 的对应"
+      },
+      {
+        "url": "https://api-docs.deepseek.com/guides/thinking_mode/",
+        "read_date": "2026-10-22",
+        "read_depth": "默认思考模式，reasoning_effort 支持 low/high/max"
+      }
+    ],
+    "verified_date": "2026-10-22",
+    "notes": "V4.1 Flash 的官方 API 型号为 deepseek-flash；2026-10-22 文档对应 V4.1-Flash-1017。后处理默认低推理强度，输出预算至少32768；真实权限与效果须用本人的 Key 检验。",
+    "reasoning_effort": "low"
+  },
+  {
+    "id": "qwen",
+    "label": "阿里通义千问",
+    "baseUrl": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+    "protocol": "openai",
+    "model": "",
+    "image_format": "content[].image_url.url = data:image/png;base64,…",
+    "coordinates": "pixel-xywh",
+    "coordinate_status": "课件提示词约定；所选具体模型的官方坐标默认值待核",
+    "sources": [
+      {
+        "url": "https://help.aliyun.com/zh/model-studio/vision",
+        "read_date": "2026-10-20",
+        "read_depth": "接口与图像传入示例"
+      }
+    ],
+    "verified_date": "2026-10-20",
+    "notes": "北京业务空间地址，须把{WorkspaceId}替换为自己的空间ID。不同地域端点和Key不可混用。"
+  },
+  {
+    "id": "glm",
+    "label": "智谱 GLM",
+    "baseUrl": "https://open.bigmodel.cn/api/paas/v4",
+    "protocol": "openai",
+    "model": "",
+    "image_format": "content[].image_url.url = data:image/png;base64,…",
+    "coordinates": "pixel-xywh",
+    "coordinate_status": "课件提示词约定；所选具体模型的官方坐标默认值待核",
+    "sources": [
+      {
+        "url": "https://docs.bigmodel.cn/cn/guide/models/vlm/glm-4.5v",
+        "read_date": "2026-10-20",
+        "read_depth": "接口与图像传入示例"
+      }
+    ],
+    "verified_date": "2026-10-20",
+    "notes": "填写有权调用的实际视觉模型名，并通过公开图测试。"
+  },
+  {
+    "id": "kimi",
+    "label": "月之暗面 Kimi（K3）",
+    "baseUrl": "https://api.moonshot.cn/v1",
+    "protocol": "openai",
+    "model": "kimi-k3",
+    "image_format": "content[].image_url.url = data:image/png;base64,…",
+    "coordinates": "pixel-xywh",
+    "coordinate_status": "课件提示词约定；所选具体模型的官方坐标默认值待核",
+    "sources": [
+      {
+        "url": "https://platform.kimi.com/docs/guide/use-kimi-vision-model",
+        "read_date": "2026-10-20",
+        "read_depth": "接口与图像传入示例"
+      },
+      {
+        "url": "https://platform.kimi.com/docs/guide/kimi-k3-quickstart",
+        "read_date": "2026-10-22",
+        "read_depth": "模型名 kimi-k3、base64 图像传入、思考模式始终开启、reasoning_effort（low/high/max，默认 max）、max_completion_tokens 默认 131072；temperature 等为固定值，建议不传"
+      }
+    ],
+    "verified_date": "2026-10-22",
+    "notes": "第六周 D12、D13 只用 Kimi K3（教师 2026-10-22 决定；Gemini、ChatGPT 改用网页版）。K3 始终先思考再作答：课件把 reasoning_effort 设为 low 以缩短等待，并放宽输出上限，避免思考耗尽额度而正文为空。",
+    "reasoning_effort": "low"
+  },
+  {
+    "id": "doubao",
+    "label": "火山方舟（豆包）",
+    "baseUrl": "https://ark.cn-beijing.volces.com/api/v3",
+    "protocol": "openai",
+    "model": "",
+    "image_format": "content[].image_url.url = data:image/png;base64,…",
+    "coordinates": "pixel-xywh",
+    "coordinate_status": "课件提示词约定；所选具体模型的官方坐标默认值待核",
+    "sources": [
+      {
+        "url": "https://docs.volcengine.com/docs/ark/chat-api?lang=zh&redirect=1",
+        "read_date": "2026-10-20",
+        "read_depth": "接口与图像传入示例"
+      }
+    ],
+    "verified_date": "2026-10-20",
+    "notes": "填写有权调用的实际视觉模型名，并通过公开图测试。"
+  },
+  {
+    "id": "siliconflow",
+    "label": "硅基流动",
+    "baseUrl": "https://api.siliconflow.cn/v1",
+    "protocol": "openai",
+    "model": "",
+    "image_format": "content[].image_url.url = data:image/png;base64,…",
+    "coordinates": "pixel-xywh",
+    "coordinate_status": "课件提示词约定；所选具体模型的官方坐标默认值待核",
+    "sources": [
+      {
+        "url": "https://docs.siliconflow.cn/docs/userguide/capabilities/vision",
+        "read_date": "2026-10-20",
+        "read_depth": "接口与图像传入示例"
+      }
+    ],
+    "verified_date": "2026-10-20",
+    "notes": "填写有权调用的实际视觉模型名，并通过公开图测试。"
+  },
+  {
+    "id": "openrouter",
+    "label": "OpenRouter",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "protocol": "openai",
+    "model": "",
+    "image_format": "content[].image_url.url = data:image/png;base64,…",
+    "coordinates": "pixel-xywh",
+    "coordinate_status": "课件提示词约定；所选具体模型的官方坐标默认值待核",
+    "sources": [
+      {
+        "url": "https://openrouter.ai/blog/tutorials/send-image-to-llm/",
+        "read_date": "2026-10-20",
+        "read_depth": "接口与图像传入示例"
+      }
+    ],
+    "verified_date": "2026-10-20",
+    "notes": "填写有权调用的实际视觉模型名，并通过公开图测试。"
+  },
+  {
+    "id": "local",
+    "label": "本机 Ollama／LM Studio",
+    "baseUrl": "http://127.0.0.1:11434/v1",
+    "protocol": "openai",
+    "model": "",
+    "image_format": "content[].image_url.url = data:image/png;base64,…",
+    "coordinates": "pixel-xywh",
+    "coordinate_status": "课件提示词约定；所选具体模型的官方坐标默认值待核",
+    "sources": [
+      {
+        "url": "https://docs.ollama.com/api/openai-compatibility",
+        "read_date": "2026-10-20",
+        "read_depth": "接口与图像传入示例"
+      }
+    ],
+    "verified_date": "2026-10-20",
+    "notes": "填写有权调用的实际视觉模型名，并通过公开图测试。",
+    "alternatives": [
+      {
+        "label": "LM Studio",
+        "baseUrl": "http://127.0.0.1:1234/v1",
+        "source": "https://lmstudio.ai/docs/developer/openai-compat"
+      }
+    ]
+  },
+  {
+    "id": "custom",
+    "label": "自定义",
+    "baseUrl": "",
+    "protocol": "openai",
+    "model": "",
+    "image_format": "用户选择协议后使用相应图像格式；服务支持情况待核",
+    "coordinates": "pixel-xywh",
+    "coordinate_status": "课件提示词约定；所选具体模型的官方坐标默认值待核",
+    "sources": [],
+    "verified_date": "2026-10-20",
+    "notes": "接口、视觉能力与坐标约定均待核；按实际服务配置。"
+  }
+]

@@ -1,0 +1,17 @@
+{
+ "what": "教师 Mac 上 Claude 应用自带浏览器（Chrome 152 内核，WebGPU 可用）中运行 D23“现场运行”：浏览器内 Qwen3-4B，B 型提示，『大日本史料』9-1 第 1 页人工参照转录",
+ "date": "2026-10-29T03:14:08Z",
+ "model": "onnx-community/Qwen3-4B-ONNX（webgpu／q4f16，约 2.84 GB，首次从 Hugging Face 下载约 25 分钟，与 Ollama 拉取同时进行）",
+ "runtime": "transformers.js 3.8.1，不加约束解码；提示末尾附 JSON Schema",
+ "seconds": 154.3,
+ "usage": {"prompt_tokens": 809, "completion_tokens": 2048},
+ "finish_reason": "length",
+ "parse": "原始回复非合法 JSON（在 2048 词元上限处截断）；页面容错读出 44 条完整 mention，0 条 event",
+ "observations": [
+  "生成速度约 13 词元／秒（Ollama 同模型约 70 词元／秒）",
+  "切分过细：“六月”“大盡”“丁卯朔”分作三条，“晴”“上洛”“之”“四十五”也当作实体",
+  "refers_to 写成字符串 \"null\" 而不是 null：没有约束解码时 schema 规定的类型守不住",
+  "44 条全标“原文直接记载”",
+  "输出上限 2048 不够写完 B 型；课堂演示可把上限调到 4096，或改用 GLiNER／Ollama"
+ ]
+}

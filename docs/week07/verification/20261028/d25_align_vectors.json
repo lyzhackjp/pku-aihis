@@ -1,0 +1,365 @@
+{
+"langextract_commit": "3a68580",
+"vectors": [
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "叔珠",
+"tokenizer": "regex",
+"lesser": true,
+"threshold": 0.75,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "叔珠",
+"tokenizer": "regex",
+"lesser": false,
+"threshold": 0.75,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "叔珠",
+"tokenizer": "regex",
+"lesser": false,
+"threshold": 0.5,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "參知政事",
+"tokenizer": "regex",
+"lesser": true,
+"threshold": 0.75,
+"status": "match_exact",
+"start": 21,
+"end": 25
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "參知政事",
+"tokenizer": "regex",
+"lesser": false,
+"threshold": 0.75,
+"status": "match_exact",
+"start": 21,
+"end": 25
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "參知政事",
+"tokenizer": "regex",
+"lesser": false,
+"threshold": 0.5,
+"status": "match_exact",
+"start": 21,
+"end": 25
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "王禹玉",
+"tokenizer": "regex",
+"lesser": true,
+"threshold": 0.75,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "王禹玉",
+"tokenizer": "regex",
+"lesser": false,
+"threshold": 0.75,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "王禹玉",
+"tokenizer": "regex",
+"lesser": false,
+"threshold": 0.5,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "叔玠",
+"tokenizer": "regex",
+"lesser": true,
+"threshold": 0.75,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "叔玠",
+"tokenizer": "regex",
+"lesser": false,
+"threshold": 0.75,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "叔玠",
+"tokenizer": "regex",
+"lesser": false,
+"threshold": 0.5,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "珪",
+"tokenizer": "regex",
+"lesser": true,
+"threshold": 0.75,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "珪",
+"tokenizer": "regex",
+"lesser": false,
+"threshold": 0.75,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "珪",
+"tokenizer": "regex",
+"lesser": false,
+"threshold": 0.5,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "懿",
+"tokenizer": "regex",
+"lesser": true,
+"threshold": 0.75,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "懿",
+"tokenizer": "regex",
+"lesser": false,
+"threshold": 0.75,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "懿",
+"tokenizer": "regex",
+"lesser": false,
+"threshold": 0.5,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "叔珠",
+"tokenizer": "unicode",
+"lesser": true,
+"threshold": 0.75,
+"status": "match_lesser",
+"start": 4,
+"end": 5
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "叔珠",
+"tokenizer": "unicode",
+"lesser": false,
+"threshold": 0.75,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "叔珠",
+"tokenizer": "unicode",
+"lesser": false,
+"threshold": 0.5,
+"status": "match_fuzzy",
+"start": 4,
+"end": 5
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "參知政事",
+"tokenizer": "unicode",
+"lesser": true,
+"threshold": 0.75,
+"status": "match_exact",
+"start": 16,
+"end": 20
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "參知政事",
+"tokenizer": "unicode",
+"lesser": false,
+"threshold": 0.75,
+"status": "match_exact",
+"start": 16,
+"end": 20
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "參知政事",
+"tokenizer": "unicode",
+"lesser": false,
+"threshold": 0.5,
+"status": "match_exact",
+"start": 16,
+"end": 20
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "王禹玉",
+"tokenizer": "unicode",
+"lesser": true,
+"threshold": 0.75,
+"status": "match_lesser",
+"start": 0,
+"end": 1
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "王禹玉",
+"tokenizer": "unicode",
+"lesser": false,
+"threshold": 0.75,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "王禹玉",
+"tokenizer": "unicode",
+"lesser": false,
+"threshold": 0.5,
+"status": null,
+"start": null,
+"end": null
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "叔玠",
+"tokenizer": "unicode",
+"lesser": true,
+"threshold": 0.75,
+"status": "match_exact",
+"start": 4,
+"end": 6
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "叔玠",
+"tokenizer": "unicode",
+"lesser": false,
+"threshold": 0.75,
+"status": "match_exact",
+"start": 4,
+"end": 6
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "叔玠",
+"tokenizer": "unicode",
+"lesser": false,
+"threshold": 0.5,
+"status": "match_exact",
+"start": 4,
+"end": 6
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "珪",
+"tokenizer": "unicode",
+"lesser": true,
+"threshold": 0.75,
+"status": "match_exact",
+"start": 1,
+"end": 2
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "珪",
+"tokenizer": "unicode",
+"lesser": false,
+"threshold": 0.75,
+"status": "match_exact",
+"start": 1,
+"end": 2
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "珪",
+"tokenizer": "unicode",
+"lesser": false,
+"threshold": 0.5,
+"status": "match_exact",
+"start": 1,
+"end": 2
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "懿",
+"tokenizer": "unicode",
+"lesser": true,
+"threshold": 0.75,
+"status": "match_exact",
+"start": 8,
+"end": 9
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "懿",
+"tokenizer": "unicode",
+"lesser": false,
+"threshold": 0.75,
+"status": "match_exact",
+"start": 8,
+"end": 9
+},
+{
+"source": "王珪，字叔玠，諡懿。熙寧三年，拜參知政事。參知政事",
+"extraction": "懿",
+"tokenizer": "unicode",
+"lesser": false,
+"threshold": 0.5,
+"status": "match_exact",
+"start": 8,
+"end": 9
+}
+]
+}

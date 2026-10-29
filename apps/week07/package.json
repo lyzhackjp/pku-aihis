@@ -1,0 +1,14 @@
+{
+  "name": "pku-aihis-week07",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/assemble.mjs",
+    "check": "node scripts/check-delivery.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=22"
+  }
+}

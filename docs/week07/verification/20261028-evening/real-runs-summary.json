@@ -1,0 +1,106 @@
+{
+ "note": "本机服务实测（llama-cpp-python 0.3.36 的 OpenAI 兼容服务，Qwen3-0.6B Q4_K_M GGUF，sha256 ac2d9771…0d524a，CPU 2 线程，JSON 模式）。完整请求与回复只存本地。",
+ "runs": [
+  {
+   "task": "LX",
+   "date": "2026-10-28T16:18:50.003Z",
+   "engine": {
+    "type": "api",
+    "label": "本机 Ollama／LM Studio · qwen3-0.6b-q4_k_m",
+    "format": "json"
+   },
+   "model": "qwen3-0.6b-q4_k_m",
+   "endpoint": "http://127.0.0.1:8011/v1/chat/completions",
+   "seconds": 6.6,
+   "usage": null,
+   "finish_reason": null,
+   "parse": null,
+   "validation": null,
+   "input": {
+    "key": "dnsr_ref",
+    "label": "『大日本史料』9-1 第 1 页（人工参照转录）（383 字）",
+    "chars": 382,
+    "sha256": "b07534b088c81419ca3e8866761c876682c303b1b27f2db67ff9f5e14a7244b2"
+   },
+   "langextract": {
+    "runtime": "Pyodide 0.28.3",
+    "langextract": "1.7.1+3a68580（本仓库自源码构建的 wheel）",
+    "load_seconds": 11.8,
+    "prompt": "从史料原文中按出现顺序抽取人物、地点、官职、时间。extraction_text 必须照录原文中的字，不改字、不意译、不重叠；attributes 中写 refers_to（所指，原文未明示时写 null）。",
+    "example": "ja",
+    "tokenizer": "UnicodeTokenizer",
+    "max_char_buffer": 200,
+    "chunks": 3
+   },
+   "calls": [
+    {
+     "prompt_chars": 625,
+     "response": "{}\n",
+     "finish_reason": "stop",
+     "seconds": 4,
+     "usage": {
+      "prompt_tokens": 371,
+      "completion_tokens": 1,
+      "total_tokens": 372
+     }
+    },
+    {
+     "prompt_chars": 628,
+     "response": "{}\n",
+     "finish_reason": "stop",
+     "seconds": 1.9,
+     "usage": {
+      "prompt_tokens": 373,
+      "completion_tokens": 1,
+      "total_tokens": 374
+     }
+    },
+    {
+     "prompt_chars": 483,
+     "response": "{}\n",
+     "finish_reason": "stop",
+     "seconds": 0.7,
+     "usage": {
+      "prompt_tokens": 232,
+      "completion_tokens": 1,
+      "total_tokens": 233
+     }
+    }
+   ],
+   "extractions": 0
+  },
+  {
+   "task": "B",
+   "date": "2026-10-28T16:16:25.840Z",
+   "engine": {
+    "type": "api",
+    "label": "本机 Ollama／LM Studio · qwen3-0.6b-q4_k_m",
+    "format": "json"
+   },
+   "model": "qwen3-0.6b-q4_k_m",
+   "endpoint": "http://127.0.0.1:8011/v1/chat/completions",
+   "seconds": 143.4,
+   "usage": {
+    "prompt_tokens": 805,
+    "completion_tokens": 1118,
+    "total_tokens": 1923
+   },
+   "finish_reason": "stop",
+   "parse": "合法 JSON",
+   "validation": [
+    "$.mentions[4].entity_type：\"事件\" 不在允许值 人物／地点／官职／时间／其他 中",
+    "$.mentions[5].entity_type：\"事件\" 不在允许值 人物／地点／官职／时间／其他 中"
+   ],
+   "input": {
+    "key": "dnsr_ref",
+    "label": "『大日本史料』9-1 第 1 页（人工参照转录）（383 字）",
+    "chars": 382,
+    "sha256": "b07534b088c81419ca3e8866761c876682c303b1b27f2db67ff9f5e14a7244b2"
+   },
+   "counts": {
+    "mentions": 6,
+    "events": 5
+   }
+  }
+ ]
+}

@@ -4,7 +4,7 @@
 
 教师已确认将原D14—D20合为“知识库产品、搜索引擎、向量数据库”三页。页面对应及核验见[简化版说明](docs/week03/tool-families-preview.md)；无需修改源码的本地／线上语料操作见[导入说明](apps/week03/src/assets/guides/corpus-import.md)。
 
-主线课堂入口部署到 **[第三周](https://lyzhackjp.github.io/pku-aihis/week03/)**；另有 **[第四周](https://lyzhackjp.github.io/pku-aihis/week04/)**、**[第五周](https://lyzhackjp.github.io/pku-aihis/week05/)**、**[第六周](https://lyzhackjp.github.io/pku-aihis/week06/)** 与 **[通用导入页](https://lyzhackjp.github.io/pku-aihis/material-importer/)**。各周的发布说明登记检查范围，实际发布以 [Publish classroom](https://github.com/lyzhackjp/pku-aihis/actions/workflows/pages.yml) 的成功部署为准。
+主线课堂入口部署到 **[第三周](https://lyzhackjp.github.io/pku-aihis/week03/)**；另有 **[第四周](https://lyzhackjp.github.io/pku-aihis/week04/)**、**[第五周](https://lyzhackjp.github.io/pku-aihis/week05/)**、**[第六周](https://lyzhackjp.github.io/pku-aihis/week06/)**、**[第七周](https://lyzhackjp.github.io/pku-aihis/week07/)** 与 **[通用导入页](https://lyzhackjp.github.io/pku-aihis/material-importer/)**。各周的发布说明登记检查范围，实际发布以 [Publish classroom](https://github.com/lyzhackjp/pku-aihis/actions/workflows/pages.yml) 的成功部署为准。
 
 ## 本地使用
 
@@ -70,3 +70,7 @@ Leymore另经[课堂内容复核](docs/week03/leymore-content-review.md)，仅23
 ## 第六周
 
 教师2026-10-22授权推送当前分支、合入main并发布。第六周“文从何来”含25个实体页，保留D00—D25全部26个旧链接，D13跳转到D12。公开1926年《史德》页影、实际OCR保存回放、左右分栏交互与本机材料导入入口随站点提供；教师材料包只在本机。发布范围、验收与模型运行边界见[第六周发布说明](docs/week06/formal-release.md)。
+
+## 第七周
+
+教师2026-10-29授权全面检查后合入main并发布。第七周“条目重构、实体识别与结构化输出”含30个实体页，D13、D15旧链接跳转到合并页。CBDB以外的材料随站点公开；CBDB记录由教师课堂导入并显示引注。页内可接云端API、本机Ollama或浏览器内小模型做现场抽取。见[第七周发布说明](docs/week07/formal-release.md)。

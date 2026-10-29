@@ -1,0 +1,33 @@
+{
+ "what": "教师 Mac 上的 Ollama 0.40.13，讲义 4.2 的 B 型提示与 JSON Schema，『大日本史料』9-1 第 1 页人工参照转录（383 字）",
+ "date": "2026-10-29",
+ "runtime": "Ollama 0.40.13（macOS，经 /v1/chat/completions，response_format=json_schema，temperature 0，seed 20261028，max_tokens 4096）",
+ "model": "qwen3:4b-instruct-2507-q4_K_M（Ollama 官方库；GGUF blob sha256:85e4a5b7b8ef…，2,497,280,480 字节；讲义所用 unsloth GGUF 为 2,497,281,120 字节，两者非同一文件）",
+ "seconds": 32.2,
+ "usage": {
+  "prompt_tokens": 581,
+  "completion_tokens": 2239
+ },
+ "finish_reason": "stop",
+ "compare_with_lesson_run": {
+  "lesson": {
+   "runtime": "llama-cpp-python 0.3.36，CPU",
+   "seconds": 1238.5,
+   "completion_tokens": 3611,
+   "finish_reason": "stop",
+   "mentions": 54,
+   "events": 5
+  },
+  "this_run": {
+   "mentions": 22,
+   "events": 6
+  }
+ },
+ "observations": [
+  "6 条 event 的 when_ce 全为 1467（应为永正五年＝1508）：值合乎 schema，但是错的",
+  "22 条 mention 的 basis 全为“原文直接记载”，包括写出 refers_to 的推定（如“細川民部少輔（高國）”→ 細川高國）",
+  "“九州大樹”没有作为 mention 抽出，只在 event 的 who 中原样出现，未链接到足利義尹",
+  "“鷹司前關白父子（政平・兼輔）”的 refers_to 写作“政平・兼輔”，两人并成一项"
+ ],
+ "note": "课件页（127.0.0.1:8777）连 Ollama 这一段未能在 Claude 应用自带浏览器中测：该浏览器面板拦截网页对本机其他端口的请求（ERR_BLOCKED_BY_CLIENT）。本次请求从 Ollama 自身地址发出，请求体与课件“现场运行”B 型 + JSON Schema 时相同（提示末尾不另附 schema）。"
+}
