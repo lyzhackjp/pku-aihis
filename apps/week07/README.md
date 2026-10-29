@@ -71,3 +71,7 @@ python3 apps/week07/scripts/verify_week07.py http://localhost:8765/prototype/ind
 补充脚本 `verify_week07_extra.py`：演讲者窗口同步、B 静态模式、输入框方向键、5 种视口×30 页无溢出。用法：`python3 verify_week07_extra.py <原型 URL> <材料包相对 URL> <输出目录>`。2026-10-28 下午 23／23 通过，记录在 `docs/week07/verification/20261028-local/`。
 
 补充脚本 `verify_week07_live.py`：现场抽取、模型接入与材料导入。先起接口测试替身 `fake_openai_server.py`（固定写法的回复，不是模型），再运行 `python3 verify_week07_live.py <原型 URL> <材料包相对 URL> <替身端口> <输出目录> [--browser-models]`；加 `--browser-models` 时另在浏览器内实际运行 GLiNER 与 Qwen3-0.6B（需联网）。2026-10-28 晚 17／17 通过，记录在 `docs/week07/verification/20261028-evening/`。
+
+## 发布构建
+
+`apps/week07` 是无依赖的 pnpm 包：`pnpm test`（源码级检查）→ `pnpm build`（语法检查、复制原型、内嵌导入页到 `www/pku-aihis/week07/`）→ `pnpm run check`（产物检查；设 `WEEK07_LOCAL_PACK=<week07-pack.json>` 时另与本机 CBDB 记录逐段比对）。全站由 `scripts/build-site.mjs` 组装，Pages 只从 main 手动发布。发布说明见 `docs/week07/formal-release.md`。

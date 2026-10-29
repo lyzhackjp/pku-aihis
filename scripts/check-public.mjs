@@ -192,3 +192,22 @@ if (manifest4.weeks?.includes('week06')) {
   assert(home.includes('href="week06/"') && home.includes('第六周 · 文从何来'));
   console.log('Week06: 25 pages and D13 alias, public source hashes, saved replays, embedded importer and preflight; no teacher originals, ZIPs or model weights');
 }
+if (manifest4.weeks?.includes('week07')) {
+  const week = path.join(site, 'week07');
+  const html7 = await fs.readFile(path.join(week, 'index.html'), 'utf8');
+  const map7 = JSON.parse(await fs.readFile(path.join(root, 'docs/week07/page-map.json'), 'utf8'));
+  assert.equal(map7.length, 30);
+  assert.deepEqual([...html7.matchAll(/<deck-slide\b[^>]*slide-id="([^"]+)"/g)].map(m => m[1]), map7.map(p => p.id));
+  assert.deepEqual(map7.find(p => p.id === 'D12').aliases, ['D13']);
+  assert.deepEqual(map7.find(p => p.id === 'D14').aliases, ['D15']);
+  const files7 = manifest4.files.filter(f => f.path.startsWith('week07/'));
+  assert(!files7.some(f => /\.(pdf|zip|sqlite|db|onnx|safetensors|gguf|pt|pth|ckpt|bin|typ)$/i.test(f.path) || f.path.endsWith('week07-pack.json')));
+  assert.deepEqual(files7.filter(f => f.path.endsWith('.whl')).map(f => f.path), ['week07/live/vendor/langextract-1.7.1+3a68580-py3-none-any.whl']);
+  const pub7 = await fs.readFile(path.join(week, 'data/public/week07-public-pack.js'), 'utf8');
+  for (const marker of ['PersonAuthority', 'cbdbapi', 'BasicInfo', 'c_personid', 'PersonKinshipInfo']) assert(!pub7.includes(marker), 'CBDB in public pack: ' + marker);
+  const importer7 = await fs.readFile(path.join(week, 'importer/index.html'), 'utf8');
+  assert(importer7.includes('./assets/') && !importer7.includes('/pku-aihis/material-importer/assets/'));
+  const home = await fs.readFile(path.join(site, 'index.html'), 'utf8');
+  assert(home.includes('href="week07/"') && home.includes('第七周 · 条目重构、实体识别与结构化输出'));
+  console.log('Week07: 30 pages with D13/D15 aliases, public pack without CBDB, LangExtract wheel, embedded importer; no material pack, model weights or keys');
+}

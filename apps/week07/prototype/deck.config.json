@@ -1,5 +1,5 @@
 {
-  "title": "第七讲 · 条目重构、实体识别与结构化输出（测试原型）",
+  "title": "第七周 · 条目重构、实体识别与结构化输出",
   "pageMap": "../../../docs/week07/page-map.json",
   "glossary": "../../../docs/week07/glossary.json",
   "scripts": [
@@ -9,7 +9,7 @@
     "week07-labs2.js"
   ],
   "deck": {
-    "name": "第七周 · 条目重构、实体识别与结构化输出 · 测试原型",
+    "name": "第七周 · 条目重构、实体识别与结构化输出",
     "channel": "pku-aihis-week07-prototype-20261028",
     "store": "week07-prototype/",
     "entries": {

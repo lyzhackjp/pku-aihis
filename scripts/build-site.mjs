@@ -38,6 +38,7 @@ const weekTitles = {
   week04: "第四周 · 文献整理、学术阅读与个人知识系统",
   week05: "第五周 · 知识库检索与有依据的生成",
   week06: "第六周 · 文从何来",
+  week07: "第七周 · 条目重构、实体识别与结构化输出",
 };
 for (const tool of releases.tools || []) {
   if (tool !== 'material-importer') throw Error('Unapproved public tool');
