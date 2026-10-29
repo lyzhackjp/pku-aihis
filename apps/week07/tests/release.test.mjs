@@ -50,3 +50,11 @@ test('LangExtract wheel 与许可随附', async () => {
   assert.ok(files.includes('LICENSE.langextract'));
   assert.ok(files.includes('langextract-1.7.1+3a68580-py3-none-any.whl'));
 });
+
+test('浏览器内 Qwen3 只留 0.6B 与 4B；失败后重置模型线程', async () => {
+  const worker = await read('live/browser-worker.js'), live = await read('live/w7-live.js');
+  assert.deepEqual([...worker.matchAll(/'(qwen3-[^']+)': \{ repo/g)].map(m => m[1]), ['qwen3-0.6b', 'qwen3-4b']);
+  assert.deepEqual([...live.matchAll(/'(qwen3-[^']+)': \{ label/g)].map(m => m[1]), ['qwen3-0.6b', 'qwen3-4b']);
+  assert.match(live, /resetOnFail: true/);
+  assert.match(live, /if \(!QWEN\[this\.s\.qwen\]\) this\.s\.qwen = 'qwen3-0\.6b'/);
+});
