@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+"""第八周原型浏览器验收（Playwright）。
+用法：python3 verify_week08.py <原型 URL> <本机材料包相对 URL 或 -> <输出目录> [--models]
+例：在含 prototype/ 与 local-only/week08-pack.json 的目录起 python3 -m http.server 8788，再
+    python3 verify_week08.py http://127.0.0.1:8788/prototype/index.html ../local-only/week08-pack.json out
+--models：另在浏览器内实际载入句向量与 GLiNER 模型（需联网；经代理时设 HTTPS_PROXY）。
+检查讲义数值回归、交互、未导入材料包时的提示、两种视口无横向溢出、全程无脚本错误。"""
+import asyncio, json, os, sys, pathlib, re
+from playwright.async_api import async_playwright
+
+URL, PACK, OUT = sys.argv[1], sys.argv[2], pathlib.Path(sys.argv[3]); MODELS = '--models' in sys.argv
+OUT.mkdir(parents=True, exist_ok=True); (OUT / 'screenshots').mkdir(exist_ok=True)
+results = []
+def check(name, ok, detail=''):
+    results.append({'check': name, 'ok': bool(ok), 'detail': str(detail)[:300]}); print(('✔' if ok else '✘'), name, ('' if ok else detail))
+
+async def main():
+    async with async_playwright() as p:
+        args = []
+        if MODELS and os.environ.get('HTTPS_PROXY'):
+            px = os.environ['HTTPS_PROXY'].replace('http://', '').split('@')[-1]
+            args = [f'--proxy-server=http://{px}', '--proxy-bypass-list=127.0.0.1;localhost', '--ignore-certificate-errors']
+        b = await p.chromium.launch(args=args)
+        errs = []
+        def watch(pg):
+            pg.on('pageerror', lambda e: errs.append(str(e)))
+            pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' and 'onnxruntime' not in m.text else None)
+        # ---------- 1 未导入本机材料包 ----------
+        ctx = await b.new_context(viewport={'width': 1440, 'height': 900}); pg = await ctx.new_page(); watch(pg)
+        await pg.goto(URL + '#D01'); await pg.wait_for_timeout(2500)
+        t = await pg.inner_text('deck-slide[slide-id="D01"]')
+        check('未导入时 D01 显示材料包提示', '需课堂导入第八周本机材料包' in t, t[:200])
+        await pg.goto(URL + '#D13'); await pg.wait_for_timeout(800)
+        t = await pg.inner_text('deck-slide[slide-id="D13"]')
+        check('未导入时 D13 不内置日记原文', '需课堂导入' in t and '中井' not in t, t[:200])
+        await pg.goto(URL + '#D10'); await pg.wait_for_timeout(800)
+        t = await pg.inner_text('deck-slide[slide-id="D10"]')
+        check('未导入时公开材料页 D10 可用', '丁' in t and '9' in t)
+        await ctx.close()
+        # ---------- 2 导入后逐页 ----------
+        ctx = await b.new_context(viewport={'width': 1440, 'height': 900}); pg = await ctx.new_page(); watch(pg)
+        q = '' if PACK == '-' else '?pack=' + PACK
+        await pg.goto(URL + q + '#D00'); await pg.wait_for_timeout(4000)
+        ids = await pg.evaluate("window.DECK_DATA.pages.map(p=>p.id)")
+        check('页表 26 页', len(ids) == 26, len(ids))
+        async def go(i): await pg.evaluate(f"location.hash='{i}'"); await pg.wait_for_timeout(600)
+        async def txt(i): return await pg.inner_text(f'deck-slide[slide-id="{i}"] .slide-body')
+        # D01
+        await go('D01'); t = await txt('D01')
+        bad = await pg.locator('deck-slide[slide-id="D01"] tr.bad').count()
+        check('D01 按类型计数与讲义 @fig-wanggui-types 一致（8 行）', bad == 0 and '97' in t, f'bad rows {bad}')
+        check('D01 纪念文字 73、出处含《華陽集》63、无出处 17', '纪念文字类 73 条' in t and '63 条' in t and '17 条' in t, t[:300])
+        await pg.check('deck-slide[slide-id="D01"] input[data-k="memorial"]'); await pg.wait_for_timeout(500); t = await txt('D01')
+        check('D01 去掉纪念文字后剩 24 条、19 人', '剩余 24 条记录、19 人' in t, re.findall(r'剩余[^。]*', t))
+        await pg.uncheck('deck-slide[slide-id="D01"] input[data-k="memorial"]'); await pg.wait_for_timeout(300)
+        hits = await pg.evaluate("W8.findInHuayangji('李氏墓誌銘 / 華陽集').map(h=>h.juan)")
+        check('D01 回原文：“李氏墓誌銘”在本地《華陽集》卷五十一', 51 in hits, hits)
+        await pg.locator('deck-slide[slide-id="D01"] svg.netsvg line').first.click(force=True); await pg.wait_for_timeout(400)
+        check('D01 点边显示出处卡', await pg.locator('deck-slide[slide-id="D01"] .evid-card').count() >= 1)
+        await pg.screenshot(path=str(OUT / 'screenshots/D01_edge.png'))
+        # D04
+        await go('D04'); t = await txt('D04')
+        check('D04 两份材料四栏说明并排', t.count('缺在哪里') >= 2)
+        await pg.click('deck-slide[slide-id="D04"] details[data-adv] summary'); await pg.click('deck-slide[slide-id="D04"] button[data-set="miss:drop"]'); await pg.wait_for_timeout(300); t2 = await txt('D04')
+        await pg.click('deck-slide[slide-id="D04"] button[data-set="miss:absent"]'); await pg.wait_for_timeout(300); t1 = await txt('D04')
+        c1 = re.search(r'结论：([^。]*)', t1).group(1); c2 = re.search(r'结论：([^。]*)', t2).group(1)
+        check('D04 进阶：两种缺失值处理结论相反（教学构造）', c1 != c2 and '复杂化在先' in c1, f'{c1} / {c2}')
+        # D06
+        await go('D06'); t = await txt('D06')
+        diffs_lev = await pg.evaluate("[...document.querySelectorAll('deck-slide[slide-id=D06] table.simtable tr')].slice(1).map(r=>r.children[3].classList.contains('diff'))")
+        diffs_lcs = await pg.evaluate("[...document.querySelectorAll('deck-slide[slide-id=D06] table.simtable tr')].slice(1).map(r=>r.children[4].classList.contains('diff'))")
+        check('D06 程宁表 2 的“编辑距离”栏十组都等于 2×LCS／总字数', not any(diffs_lcs[:10]), diffs_lcs)
+        check('D06 按 1−编辑距离／较长句字数有 4 组与论文不同（CN02、CN06、CN07、CN08：共有字次序相反或错位）', diffs_lev[:10] == [False, True, False, False, False, True, True, True, False, False], diffs_lev)
+        check('D06 阈值 0.9 下保留 10／11 组（0.88 一例被排除）', '保留 10 ／ 11 组' in t, re.findall(r'保留[^。]*', t))
+        # D08
+        await go('D08'); t = await txt('D08')
+        check('D08 四人网络：有向时矩阵不对称', '矩阵不对称' in t)
+        await pg.click('deck-slide[slide-id="D08"] button[data-set="dir:false"]'); await pg.wait_for_timeout(300)
+        check('D08 无向时矩阵对称', '沿对角线对称' in await txt('D08'))
+        await pg.click('deck-slide[slide-id="D08"] button[data-set="tab:dup"]'); await pg.wait_for_timeout(300); t = await txt('D08')
+        check('D08 查重列出俞充、李受、周必大等多条记录', '俞充' in t and '李受' in t and '周必大' in t, re.findall(r'同一对人[^。]*', t))
+        await pg.click('deck-slide[slide-id="D08"] button[data-set="tab:adj"]')
+        # D09
+        await go('D09'); t = await txt('D09')
+        check('D09 表头转换与导出按钮', 'Source' in t and await pg.locator('deck-slide[slide-id="D09"] [data-exp="edges"]').count() == 1)
+        # D10
+        await go('D10'); t = await txt('D10')
+        bt = await pg.evaluate("(()=>{const m=W8.Mat.get('toy7');const g=W8.graph(m,{directed:false});const b=W8.betweenness(g);return Object.fromEntries(g.nodes.map((n,i)=>[n.id,b[i]]))})()")
+        check('D10 七人小网介数：丁 9，丙、戊 8，其余 0（讲义 @fig-betw）', bt == {'甲': 0, '乙': 0, '丙': 8, '丁': 9, '戊': 8, '己': 0, '庚': 0}, bt)
+        check('D10 页面显示密度 0.38', '0.38' in t)
+        await pg.click('deck-slide[slide-id="D10"] [data-preset="jiaji"]'); await pg.wait_for_timeout(400); t = await txt('D10')
+        m = re.search(r'丁\s+2\s+([\d.]+)\s*（原 9）', t)
+        check('D10 添“甲—己”后丁的介数下降', m and float(m.group(1)) < 9, m.group(0) if m else t[:300])
+        await pg.click('deck-slide[slide-id="D10"] [data-preset="reset"]')
+        await pg.select_option('deck-slide[slide-id="D10"] select[data-k="mat"]', 'padgett'); await pg.wait_for_timeout(500); t = await txt('D10')
+        check('D10 美第奇：度 6、介数 47.5 均最高', '度最高：Medici（6）' in t and '介数最高：Medici（47.50）' in t, re.findall(r'度最高[^\n]*', t))
+        await pg.select_option('deck-slide[slide-id="D10"] select[data-k="mat"]', 'toy7')
+        # D11
+        await go('D11'); t = await txt('D11')
+        check('D11 七人小网：密度 0.381、丙聚类系数 0.33', '0.381' in t and '（页面：0.33）' in t)
+        await pg.click('deck-slide[slide-id="D11"] [data-run]'); await pg.wait_for_timeout(2500); t = await txt('D11')
+        check('D11 生成 100 张随机网络并给出实际值位置', '100 张随机网络中' in t, re.findall(r'实际值[^。]*', t))
+        # D12
+        await go('D12'); t = await txt('D12')
+        check('D12 王裕华亲属网 2106 人，王珪度 11，作为 target 11 行', '全网 2106 人' in t and '此人度 11' in t and 'target（他人的亲属）11 行' in t, re.findall(r'全网[^。]*。[^。]*', t))
+        check('D12 复制数据：王珪 0.11、王安石 0.47、司马光 0.61', all(x in t for x in ['0.11', '0.47', '0.61']))
+        check('D12 变法立场空缺 74 人', '为空者 74 人' in t)
+        # D13
+        await go('D13'); t = await txt('D13')
+        check('D13 默认 BS09（文政七年九月六日，全書本 p.658）', '文政七年九月六日' in t and '658' in t)
+        check('D13 JBDB 同日只有一条书信事件，赴京记事未录入', '餘一から' in t and '未录入' in t)
+        await pg.click('deck-slide[slide-id="D13"] button[data-who="中井小娘二人"]'); await pg.wait_for_timeout(300)
+        check('D13 点选人物生成边表一行', '中井小娘二人' in await pg.inner_text('deck-slide[slide-id="D13"] table.steps'))
+        ar = await pg.evaluate("(()=>{const b=document.querySelector('deck-slide[slide-id=D13] .cropbox');return b?getComputedStyle(b).aspectRatio:''})()")
+        check('D13 影像按比例裁去页脚（外框宽高比已按原图设定）', '/' in ar, ar)
+        # D20
+        await go('D20'); t = await txt('D20')
+        check('D20 王珪年份：有年份 18 条、缺省 79 条；可疑值 1085 共 14 条；早于出生 1 条', '有年份 18 条，缺省 79 条' in t and '1085）14 条' in t and '早于事主出生（1019）的 1 条' in t, re.findall(r'有年份[^。]*。[^。]*。[^。]*。', t))
+        await pg.fill('deck-slide[slide-id="D20"] input[data-k="miss"]', ''); await pg.press('deck-slide[slide-id="D20"] input[data-k="miss"]', 'Tab'); await pg.wait_for_timeout(400); t = await txt('D20')
+        check('D20 不声明缺省值时 97 条都“有年份”（0 年被当作年份）', '有年份 97 条' in t, re.findall(r'有年份[^。]*', t))
+        await pg.fill('deck-slide[slide-id="D20"] input[data-k="miss"]', '0,-1'); await pg.press('deck-slide[slide-id="D20"] input[data-k="miss"]', 'Tab'); await pg.wait_for_timeout(300)
+        # D23
+        await go('D23'); await pg.fill('deck-slide[slide-id="D23"] textarea[data-ki="s1a"]', '在现存记录中，王珪为 84 人中的多数写过纪念文字。')
+        await pg.fill('deck-slide[slide-id="D23"] textarea[data-ki="s1b"]', '在现存记录中，去掉纪念文字后只剩 19 人。'); await pg.wait_for_timeout(300)
+        done = await pg.evaluate("JSON.parse(localStorage.getItem('week08-prototype/w8/D23')).done.scale")
+        check('D23 第一步填写后记为完成，打字时不整页重绘', done is True)
+        await pg.click('deck-slide[slide-id="D23"] button[data-set="stage:source"]'); await pg.wait_for_timeout(300)
+        for k in range(3): await pg.click(f'deck-slide[slide-id="D23"] button[data-pickc="{k}"]'); await pg.wait_for_timeout(150)
+        check('D23 回读三条原文后“问来源”完成', await pg.evaluate("JSON.parse(localStorage.getItem('week08-prototype/w8/D23')).done.source") is True)
+        async with pg.expect_download() as dl: await pg.click('deck-slide[slide-id="D23"] button[data-th="export"]')
+        md = (await (await dl.value).path()).read_text(encoding='utf-8') if hasattr(await (await dl.value).path(), 'read_text') else open(await (await dl.value).path(), encoding='utf-8').read()
+        check('D23 导出的记录单含三条原文与模板各栏', '原文一' in md and '原文三' in md and '能写进论文的一句话' in md, md[:200])
+        await go('D00'); t = await txt('D00')
+        check('D00 封面显示贯穿页完成状态', await pg.locator('deck-slide[slide-id="D00"] .dot.on').count() >= 2)
+        # D25
+        await go('D25'); n = await pg.locator('deck-slide[slide-id="D25"] .concept-card').count()
+        check('D25 概念表 34 条', n == 34, n)
+        # 输入框内方向键不翻页
+        await go('D13'); await pg.click('deck-slide[slide-id="D13"] input[data-ki="pick"]'); await pg.keyboard.press('ArrowRight'); await pg.wait_for_timeout(200)
+        check('输入框内方向键不翻页', (await pg.evaluate('location.hash')) == '#D13')
+        # 逐页截图（1440×900）与横向溢出
+        for i in ids:
+            await go(i); await pg.screenshot(path=str(OUT / f'screenshots/{i}.png'))
+        ctx2 = await b.new_context(viewport={'width': 390, 'height': 844}); pg2 = await ctx2.new_page(); watch(pg2)
+        await pg2.goto(URL + q + '#D00'); await pg2.wait_for_timeout(3500); over = []
+        for i in ids:
+            await pg2.evaluate(f"location.hash='{i}'"); await pg2.wait_for_timeout(400)
+            if await pg2.evaluate('document.documentElement.scrollWidth > innerWidth + 1'): over.append(i)
+            if i in ('D01', 'D12', 'D13', 'D23'): await pg2.screenshot(path=str(OUT / f'screenshots/narrow_{i}.png'), full_page=True)
+        check('390×844 下各页无横向溢出', not over, over)
+        # 浏览器内模型（可选）
+        if MODELS:
+            await go('D06'); await pg.click('deck-slide[slide-id="D06"] [data-emb]'); await pg.wait_for_timeout(60000)
+            t = await txt('D06'); emb = await pg.evaluate("localStorage.getItem('week08-prototype/w8/emb')")
+            check('D06 浏览器内句向量模型实际计算余弦', emb and len(json.loads(emb)) == 1, (emb or '')[:200])
+            await go('D13'); await pg.click('deck-slide[slide-id="D13"] [data-ner]'); await pg.wait_for_timeout(90000)
+            nb = await pg.inner_text('deck-slide[slide-id="D13"] .nerbox')
+            check('D13 浏览器内 GLiNER 给出人物候选', 'gliner' in nb.lower(), nb[:200])
+            await pg.screenshot(path=str(OUT / 'screenshots/D13_gliner.png'))
+        check('全程无脚本错误', not errs, errs[:5])
+        await b.close()
+    (OUT / 'verification.json').write_text(json.dumps({'url': URL, 'pack': PACK, 'models': MODELS, 'passed': sum(r['ok'] for r in results), 'total': len(results), 'results': results}, ensure_ascii=False, indent=1), encoding='utf-8')
+    print(f"{sum(r['ok'] for r in results)}/{len(results)} 通过")
+asyncio.run(main())

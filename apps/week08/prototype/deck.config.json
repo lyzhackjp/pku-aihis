@@ -1,0 +1,31 @@
+{
+  "title": "第八周 · 数字人文方法与人工智能",
+  "pageMap": "../../../docs/week08/page-map.json",
+  "glossary": "../../../docs/week08/glossary.json",
+  "scripts": ["deck-core.js", "week08-core.js", "week08-labs.js", "week08-labs2.js"],
+  "deck": {
+    "name": "第八周 · 数字人文方法与人工智能",
+    "channel": "pku-aihis-week08-prototype-20261102",
+    "store": "week08-prototype/",
+    "entries": {
+      "through": { "label": "贯穿：回读小任务", "page": "D23" },
+      "concepts": { "label": "概念表", "page": "D25" }
+    }
+  },
+  "bodies": {
+    "D00": "hero-cover8",
+    "D01": "wanggui-lab",
+    "D04": "source-lab",
+    "D06": "sim-lab",
+    "D08": "model-lab",
+    "D09": "gephi-lab",
+    "D10": "metric-lab",
+    "D11": "compare-lab",
+    "D12": "two-net-lab",
+    "D13": "diary-lab",
+    "D20": "years-lab",
+    "D23": "readback-through",
+    "D24": "hero-end8",
+    "D25": "concept-table"
+  }
+}

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第八周 · 数字人文方法与人工智能</title>
+<link rel="stylesheet" href="deck.css">
+<link rel="stylesheet" href="week08.css">
+<script src="data/data.js"></script>
+<script src="deck-core.js"></script>
+<script src="week08-core.js"></script>
+<script src="week08-labs.js"></script>
+<script src="week08-labs2.js"></script>
+<!-- 浏览器内模型与通用导入页握手（ES 模块；须经 HTTP 打开：本机服务或 GitHub Pages）。由 scripts/assemble-prototype.mjs 补入。 -->
+<script type="module" src="live/w8-live.js"></script>
+</head><body><div id="app"></div>
+<!-- 由 assemble-prototype.mjs 依 page-map.json 生成；请改页表后重新生成，不要直接改这里。 -->
+<template id="deck-template"><deck-container>
+<deck-slide slide-id="D00" data-status="prototype" kicker="D00 / 导入" header-title="远近：机器发现的“规律”怎样回到史学" transition="前几讲练的是考据一路的功夫；表做出来以后，这一讲转向通观：把成百上千条记录交给机器去数、去连、去上图、去排序。" theme="dark" layout="hero" mode="静态内容" notes="目的：立住全讲的中心问题与四个动作，后面每一节回答其中一个。
+范例引导：念中心问题，停一下；点“问来源”，告诉学生下一页就用王珪的 97 条关系来问。
+机制背景：四个动作按钮即贯穿页 D23 的四个阶段入口；贯穿页记录在此页显示完成状态。"><hero-cover8></hero-cover8><div slot="footer">D00 · 静态内容；中心问题与四个动作据讲义导入。</div></deck-slide>
+<deck-slide slide-id="D01" data-status="prototype" kicker="D01 / 导入" header-title="王珪为什么在中心：97 条关系从哪里来" transition="先看一个具体的例子：上周在 CBDB 里辨认过的神宗朝宰相王珪，记录里有 97 条社会关系。" theme="light" layout="flow4" mode="浏览器实时（在本机材料包的 CBDB 边表上计数、过滤与布局；CBDB 记录课堂导入）" notes="目的：让学生先犯一次“把来源的规律当成历史的规律”的错，再由过滤开关自己看出来。
+范例引导：先只放网络图，请学生用一分钟写判断；再展开计数栏，最后打开“去掉纪念文字”。点“為Y作墓誌銘｜鄭戩”一条，预告 3.5。
+机制背景：过滤开关由导入边表中实际存在的 type 取值生成，不写死王珪；“纪念文字”一组按讲义口径（墓誌銘、神道碑、祭文、挽詩、諡議、神道碑書丹、神道碑由Y所作，共 73 条）。点边时若出处题名能在本地《華陽集》卷三十五至六十中找到，跳到该卷原文；卷四十五至四十八本地文本为空，显示“只在教师影像中”。"><wanggui-lab></wanggui-lab><div slot="footer">D01 · 浏览器实时；CBDB 1845 号社会关系 97 条（2026-10-22 接口原始数据，课堂导入），《華陽集》据维基文库四庫全書本。</div></deck-slide>
+<deck-slide slide-id="D02" data-status="planned" kicker="D02 / 教案 1.1" header-title="远读从哪里来：细读、远读与“距离是认识的条件”" transition="格局要先远看才看得见；远读这个说法本身有来历，也有争论。" theme="light" layout="diagram" mode="静态内容（原句据所引文献，未核的标待核）" notes="目的：交代远读的来历与“换单位”的要点，不要求读原著。
+范例引导：只念一句莫莱蒂的原话，强调“单位”。
+机制背景：阶段卡沿用第五周页面模式；原句须逐字核对后才能标已核。"><planned-page page-id="D02"></planned-page><div slot="footer">D02 · 静态内容；远读与细读的来历据讲义 1.1 所引文献。</div></deck-slide>
+<deck-slide slide-id="D03" data-status="planned" kicker="D03 / 教案 1.2" header-title="远看与回读：四个问题各需哪种尺度" transition="远看与近读可以往返：先远看发现格局，再近读解释格局。" theme="light" layout="flow4" mode="浏览器实时（学生分类；参照答案为讲义所给）" notes="目的：让学生判断自己的问题需要哪种尺度，并看到四种方法可以施加于不同对象。
+范例引导：给两分钟；收回时只追问第三个问题，它正是本讲日本史案例。
+机制背景：方法×对象表照讲义 @fig-methods；进阶层的练习数据集目录据扩充部分丁一。"><planned-page page-id="D03"></planned-page><div slot="footer">D03 · 浏览器实时；四个问题与方法×对象表据讲义 1.2。</div></deck-slide>
+<deck-slide slide-id="D04" data-status="prototype" kicker="D04 / 教案 1.3" header-title="规律从哪里来：史实、材料构成、编码约定、模型假设" transition="王珪的星形图已经给出了答案的一半：规律是真的，但它可能是来源的规律。" theme="light" layout="flow4" mode="浏览器实时（两份真实材料上的计数）＋教学构造（缺失值小表，模仿 Seshat 争议）；CBDB 课堂导入" notes="目的：把“规律从哪里来”的四种来源变成四个可以动手查的问题。
+范例引导：只演示第二问“材料构成”：切换两份材料，念出各自的“缺在哪里”。进阶层课后自学。
+机制背景：四问的检查分别跳到 D01（材料构成）、D20（编码约定）、D11（零模型，模型假设）；缺失值小表为教学构造，标明模仿的是 Seshat“道德神”争议（C-25）。"><source-lab></source-lab><div slot="footer">D04 · 浏览器实时＋教学构造；材料说明据各数据的原始说明，缺失值小表为教学构造。</div></deck-slide>
+<deck-slide slide-id="D05" data-status="planned" kicker="D05 / 教案 2.1" header-title="词频与上下文：“相”字会怎样误导" transition="第一种方法从字词开始：数一数、看一看上下文。" theme="light" layout="flow4" mode="浏览器实时" notes="目的：让学生体会 KWIC 必须与词频一起看，以及东亚文字的切分问题。
+范例引导：两分钟练习；收回时念出“相繼”“丞相”的例子。
+机制背景：切分按字、按二字串两种；进阶层换《華陽集》几卷对照文体。"><planned-page page-id="D05"></planned-page><div slot="footer">D05 · 浏览器实时；练习材料一据维基文库《宋史》卷三一二，《華陽集》据维基文库四庫全書本。</div></deck-slide>
+<deck-slide slide-id="D06" data-status="prototype" kicker="D06 / 教案 2.2" header-title="互文性：字面复用与语义相近，阈值由谁来定" transition="比字词更进一步，是比句子：一句诗与另一句诗有多像。" theme="light" layout="flow4" mode="浏览器实时（n-gram 与编辑距离；浏览器内嵌入模型现场计算余弦，模型与论文不同）＋保存结果回放（BERT-CCPoem 分数据程宁表 2 原文）＋教学构造（题材相近组）" notes="目的：看到字面与语义两条路线各自的盲区，以及阈值是研究者的选择。
+范例引导：先点“逸翮思拂霄”一组，问学生字面相似是多少；再拖阈值到 0.88 与 0.9 之间，念仇兆鳌注杜一事。
+机制背景：程宁表 2 的“编辑距离”一栏实为相似度：十组都等于“2×最长公共子序列／两句总字数”（python-Levenshtein 的 ratio），按“1−编辑距离／较长句字数”算则“兰茝荪蕙之芳”一组为 0（页面并列两种算法）；浏览器内余弦用 bge-small-zh-v1.5（BAAI，MIT）或多语 MiniLM，课前载入；它们不是 BERT-CCPoem，数值不可与表 2 直接比。"><sim-lab></sim-lab><div slot="footer">D06 · 浏览器实时＋保存结果回放；句对据程宁 2023 表 2（《清华大学学报》2023 年第 6 期，第 78—79 页），模型分数照录原文。</div></deck-slide>
+<deck-slide slide-id="D07" data-status="planned" kicker="D07 / 教案 2.3" header-title="主题与分类：主题是词的共现，名字由人起" transition="从句子再放大到整批文献：主题模型找的是哪些词常一起出现。" theme="light" layout="flow4" mode="浏览器实时（小例子 LDA 吉布斯采样）＋保存结果回放（真实语料主题模型，待课前运行）" notes="目的：主题名是解释，要回原文抽查。
+范例引导：两分钟命名练习。
+机制背景：三种语言的语料待取得（Ballard 日记、《清实录》、『上井覚兼日記』）。"><planned-page page-id="D07"></planned-page><div slot="footer">D07 · 规划页；主题模型步骤据 BERTopic 官方文档。</div></deck-slide>
+<deck-slide slide-id="D08" data-status="prototype" kicker="D08 / 教案 3.1" header-title="网络建模：节点、边、方向与查重" transition="构网的第一件事是定义：节点代表什么，边代表什么。" theme="light" layout="flow4" mode="浏览器实时（在边表上互转、查重）；CBDB 课堂导入" notes="目的：能读懂边表与邻接矩阵；查重查向在计算之前。
+范例引导：先做四人网络的互转，再切到王珪边表点“查重”。
+机制背景：查重规则：同一对人（不论方向）出现多条记录即列出，并显示各自的关系类型；不自动合并，由使用者决定。"><model-lab></model-lab><div slot="footer">D08 · 浏览器实时；四人网络据讲义 @fig-adj（教学构造），王珪边表据 CBDB 2026-10-22 原始数据。</div></deck-slide>
+<deck-slide slide-id="D09" data-status="prototype" kicker="D09 / 教案 3.2" header-title="交给 Gephi：表头、布局与导出" transition="定义好的边表可以交给 Gephi、NetworkX 或 igraph；本页先在浏览器里走一遍同样的流程。" theme="light" layout="flow4" mode="浏览器实时（表头转换、力导向布局与导出）" notes="目的：知道布局只是为了好读。
+范例引导：改两次布局参数，指出节点的度与邻居没有变。
+机制背景：布局为浏览器内简化的力导向算法（Fruchterman–Reingold 式），不是 Gephi 的 ForceAtlas2；Gephi 逐步截图待课前环境实际操作。"><gephi-lab></gephi-lab><div slot="footer">D09 · 浏览器实时；表头规则据 Gephi 文档（Source、Target、Type、Id、Label）。</div></deck-slide>
+<deck-slide slide-id="D10" data-status="prototype" kicker="D10 / 教案 3.3" header-title="指标怎样解释：度低而介数高" transition="图画出来以后，Gephi 的统计面板会给出十几种指标；先在七人小网上把三种算一遍。" theme="light" layout="flow4" mode="浏览器实时（Brandes 算法计算介数）＋教学构造（七人小网）；美第奇婚姻网据 Padgett 数据（NetworkX 示例数据）" notes="目的：会读度与介数，理解“度低介数高”，并把指标翻译成“在现存记录中……”。
+范例引导：先请学生预测，再点“甲—己”。切到美第奇，问：介数比第二名高出多少；再说明这份示例数据只有婚姻一种关系。
+机制背景：介数按讲义未作标准化；进阶层逐对列出最短路径，社群用贪心模块度算法，换随机种子可见边缘节点换群。"><metric-lab></metric-lab><div slot="footer">D10 · 浏览器实时；七人小网据讲义 @fig-toy（教学构造），佛罗伦萨婚姻网据 Padgett 与 Ansell 编码、NetworkX 3.x 所附数据。</div></deck-slide>
+<deck-slide slide-id="D11" data-status="prototype" kicker="D11 / 教案 3.4" header-title="比较结构：密度、度分布与零模型" transition="单看一张网很难判断形状的意义；把它与别的网、与随机网络放在一起比。" theme="light" layout="flow4" mode="浏览器实时（度保持重连生成零模型）" notes="目的：比较的前提是边的含义可比；结构影响要与零模型对照。
+范例引导：先看密度相同而结构不同的两张网，再生成随机网络。
+机制背景：零模型用度保持重连（双边交换），交换次数为边数的 10 倍；随机种子可设，结果可复现。"><compare-lab></compare-lab><div slot="footer">D11 · 浏览器实时；各网络来源见材料说明。</div></deck-slide>
+<deck-slide slide-id="D12" data-status="prototype" kicker="D12 / 教案 3.4" header-title="同一个人，两种网络：王珪在 CBDB 与王裕华数据中" transition="同一个王珪，换一份材料，就换了一张网。" theme="light" layout="flow4" mode="浏览器实时（两份真实数据上的计算；王裕华数据 CC0 随课件发布，CBDB 课堂导入）" notes="目的：看到“位置”取决于材料与建网方式。
+范例引导：只念两份材料的“一条边是什么”。
+机制背景：亲属网的边表为 ego（官员）—target（亲属），编号为 CBDB 人物编号；王珪不是 ego，只在 11 行中作为 target 出现，本课未核这 11 条各为何种亲属。讲义“137 个节点之一”的说法与复制数据的结构不尽相合，已记入 STATE 请教师决定。"><two-net-lab></two-net-lab><div slot="footer">D12 · 浏览器实时；王裕华复制数据（CC0，2026-11-02 下载），CBDB 1845 号（课堂导入）。</div></deck-slide>
+<deck-slide slide-id="D13" data-status="prototype" kicker="D13 / 教案 3.4" header-title="赖家：从一条日记到人物与关系" transition="日本史的核心案例：夫妻二人的日记，在 JBDB 中各成一张网。" theme="light" layout="flow4" mode="浏览器实时（学生点选；可选浏览器内模型给候选）＋保存结果回放（JBDB 接口查询结果）；日记录文与影像只在本机导入" notes="目的：看到“把日记变成网络”每一步都是判断，且数据库收录有选择。
+范例引导：先投影录文（不投影页脚），请学生数出几个人、几种关系，再对照 JBDB。
+机制背景：JBDB 接口的实际地址为 app.jbdb.jp/api（SwaggerHub 所载 jbdb.jp 的证书只对 app.jbdb.jp 有效）。性别由学生据称呼判读，标“学生判读，未考证”。讲义“8 vs 62 女”在接口数据中未能复现：按 cFemale 字段，『梅颸日記』所见 1,566 人中女性 169 人，『春水日記』2,497 人中女性 83 人（另有未标性别者），记入待核实事项 T-01。"><diary-lab></diary-lab><div slot="footer">D13 · 浏览器实时＋保存结果回放；『梅颸日記』据『頼山陽全書』本（本机导入，不分发），JBDB 据 2026-11-02 接口查询。</div></deck-slide>
+<deck-slide slide-id="D14" data-status="planned" kicker="D14 / 教案 3.5" header-title="核验网络结论：回原文、敏感性、稳健性、独立来源" transition="网络的结论可以从四个方向去核。" theme="light" layout="flow4" mode="浏览器实时" notes="目的：分清随机缺失与系统偏差。
+范例引导：先做李氏墓志，再拖删减滑块。
+机制背景：王珪的偏差是系统性的，删减实验测不出来。"><planned-page page-id="D14"></planned-page><div slot="footer">D14 · 规划页；练习材料二据《華陽集》卷五十一（维基文库四庫全書本，标点为本讲所加，待核）。</div></deck-slide>
+<deck-slide slide-id="D15" data-status="planned" kicker="D15 / 教案 3.6" header-title="智能体辅助网络分析：把核验写进要求" transition="让智能体写代码、跑指标时，要求里写什么决定了能核对什么。" theme="light" layout="flow4" mode="教学构造（提法）＋保存结果回放（运行记录，待课前运行）" notes="目的：把核验写进要求。
+范例引导：两分钟补项。
+机制背景：运行记录待课前实际运行一次。"><planned-page page-id="D15"></planned-page><div slot="footer">D15 · 规划页。</div></deck-slide>
+<deck-slide slide-id="D16" data-status="planned" kicker="D16 / 教案 4.1" header-title="地名对账与坐标：唯一匹配、多个候选、无对应" transition="第三种方法把记录放到地图上；上图之前先对账。" theme="light" layout="flow4" mode="浏览器实时" notes="目的：上图之前要对账、保留误差。
+范例引导：先对“開封”。
+机制背景：地名表样本用王裕华复制数据中的府州坐标（CC0）与 Pleiades（CC BY 3.0）；CHGIS V6 需签使用协议，未下载。"><planned-page page-id="D16"></planned-page><div slot="footer">D16 · 规划页。</div></deck-slide>
+<deck-slide slide-id="D17" data-status="planned" kicker="D17 / 教案 4.2" header-title="QGIS 与数字地图工具" transition="对账后的表可以交给 QGIS；本页先看坐标参照系怎样改变点的位置。" theme="light" layout="flow4" mode="浏览器实时（坐标转换）＋保存结果回放（QGIS 截图，待课前环境）" notes="目的：知道坐标参照系。
+范例引导：只演示偏移。
+机制背景：QGIS 截图待课前环境。"><planned-page page-id="D17"></planned-page><div slot="footer">D17 · 规划页。</div></deck-slide>
+<deck-slide slide-id="D18" data-status="planned" kicker="D18 / 教案 4.3" header-title="大语言模型提取地点：距离容限怎样改变得分" transition="大模型可以从文字中抽地点并给坐标；得分取决于怎样算“对”。" theme="light" layout="flow4" mode="浏览器实时（计分）＋浏览器内模型（课前载入）" notes="目的：模型结果要回原文。
+范例引导：拖容限。
+机制背景：待一次真实抽取。"><planned-page page-id="D18"></planned-page><div slot="footer">D18 · 规划页。</div></deck-slide>
+<deck-slide slide-id="D19" data-status="planned" kicker="D19 / 教案 4.4" header-title="智能体做空间分析：网页地图与审图号" transition="让智能体画一张网页地图很容易；检查它要看四件事。" theme="light" layout="flow4" mode="浏览器实时（离线底图：Natural Earth，公有领域）" notes="目的：能检查一张网页地图。
+范例引导：交换经纬度。
+机制背景：底图离线；中国境内展示的审图号问题只作说明。"><planned-page page-id="D19"></planned-page><div slot="footer">D19 · 规划页。</div></deck-slide>
+<deck-slide slide-id="D20" data-status="prototype" kicker="D20 / 教案 5.1" header-title="缺省的年份与时序切片" transition="第四种方法把记录排在时间轴上；先看时间这一栏本身。" theme="light" layout="flow4" mode="浏览器实时（在本机材料包的 CBDB 边表上切片）＋教学构造（小型时序网，演示时间顺序路径）；CBDB 课堂导入" notes="目的：知道缺省年份会制造假的变化，时间原值要另存。
+范例引导：先放全部年份的柱状图，问 1085 年的高柱；再关缺省值。
+机制背景：CBDB 年份 0、-1 的含义未见接口文档说明（讲义写“可能的含义”，教师 11-02“先这样”）；页面让使用者在导入时声明缺省值，不替数据库下结论。"><years-lab></years-lab><div slot="footer">D20 · 浏览器实时＋教学构造；王珪边表 Year 栏据 CBDB 2026-10-22 原始数据。</div></deck-slide>
+<deck-slide slide-id="D21" data-status="planned" kicker="D21 / 教案 5.2" header-title="时代、纪年与差读" transition="时间的表示本身要换算；相邻版本之间的差异也是时间信息。" theme="light" layout="flow4" mode="浏览器实时（文本差分）" notes="目的：知道差读是比较相邻版本。
+范例引导：找三处变化。
+机制背景：武鑑相邻两版与中文方志两版两例，待取材料。"><planned-page page-id="D21"></planned-page><div slot="footer">D21 · 规划页。</div></deck-slide>
+<deck-slide slide-id="D22" data-status="planned" kicker="D22 / 教案 5.3" header-title="让模型排年表；时间序列（粮价暂缓）" transition="最后一步可以交给模型排年表，但每一行都要回原文。" theme="light" layout="flow4" mode="保存结果回放（待课前运行）" notes="目的：年表也要回原文。
+范例引导：只看一行。
+机制背景：粮价部分教师 11-02 指示暂缓。"><planned-page page-id="D22"></planned-page><div slot="footer">D22 · 规划页。</div></deck-slide>
+<deck-slide slide-id="D23" data-status="prototype" kicker="D23 / 第六节" header-title="回读：王珪边表小任务" transition="前五节讲了四种方法各自怎样看格局；现在用十五分钟把“问来源、回原文”在一张小图上走完。" theme="light" layout="through" mode="浏览器实时（记录存当前浏览器，可导出）；CBDB 课堂导入" notes="目的：把“选尺度、看格局、问来源、回原文”完整走一次。
+范例引导：计时 13 分钟；提前完成的小组改用“推荐”与“弹劾”两类关系重做。
+机制背景：四阶段与 D00 的四个动作一一对应；记录键按页命名（w8/D23），导入旧记录先验证，坏文件不覆盖。"><readback-through></readback-through><div slot="footer">D23 · 浏览器实时；材料为练习材料一至三与 CBDB 1845 号边表。</div></deck-slide>
+<deck-slide slide-id="D24" data-status="prototype" kicker="D24 / 结语" header-title="读得回：远看给出问题，回读给出论据" transition="回到中心问题：机器的阅读发现规律之后，怎样回到史学本身的理解之中。" theme="dark" layout="hero" mode="静态内容" notes="目的：收束全讲，并衔接第九讲。
+范例引导：念四个动作，停在“回原文”。
+机制背景：下一讲转向历史模拟与仿真，方向与本讲相反。"><hero-end8></hero-end8><div slot="footer">D24 · 静态内容；据讲义结语。</div></deck-slide>
+<deck-slide slide-id="D25" data-status="prototype" kicker="D25 / 附录" header-title="概念表" transition="本讲概念汇总，随时可查，每条链接到首次出现的页。" theme="light" layout="concepts" mode="静态内容" notes="目的：供随时查阅。
+范例引导：课上不专门讲。
+机制背景：由 typ-concepts-to-md.mjs 从概念讲解表转换。"><concept-table></concept-table><div slot="footer">D25 · 静态内容；据第八周《概念讲解表》。</div></deck-slide>
+</deck-container></template>
+</body></html>
