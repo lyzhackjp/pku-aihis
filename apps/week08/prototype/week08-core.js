@@ -222,15 +222,105 @@
     return P.map(([x, y]) => [pad + ((x - x0) / Math.max(x1 - x0, 1)) * (w - 2 * pad), pad + ((y - y0) / Math.max(y1 - y0, 1)) * (h - 2 * pad)]);
   }
   const PALETTE = ['#164ec7', '#b06d00', '#2c6a3a', '#7b3fa0', '#a33', '#00838f', '#6d4c41', '#5d6b78'];
-  /* SVG 绘图：点击边（data-edge）与点（data-node）由页面组件处理。 */
-  function drawGraph(g, P, { w = 600, h = 420, size = null, color = null, hi = new Set(), hiEdges = new Set(), dim = null, labels = 'auto', arrows = g.directed, edgeColor = null } = {}) {
-    const n = g.nodes.length, showLabel = labels === 'all' || (labels === 'auto' && n <= 40);
-    const r = (i) => (size ? size(i) : n > 300 ? 2.5 : n > 60 ? 4 : 9);
-    const lines = g.edges.map((e, k) => { const a = g.index.get(e.s), b = g.index.get(e.t); const on = hiEdges.has(k); const c = edgeColor ? edgeColor(e, k) : null;
-      return `<line data-edge="${k}" x1="${P[a][0].toFixed(1)}" y1="${P[a][1].toFixed(1)}" x2="${P[b][0].toFixed(1)}" y2="${P[b][1].toFixed(1)}" class="${on ? 'on' : ''} ${dim && dim(e) ? 'dim' : ''}" ${c ? `style="stroke:${c}"` : ''} stroke-width="${Math.min(1 + (e.w - 1) * 1.2, 5)}" ${arrows ? 'marker-end="url(#arr)"' : ''}><title>${esc(g.nodes[a].label)} → ${esc(g.nodes[b].label)}（${e.w} 条记录）</title></line>`; }).join('');
-    const dots = g.nodes.map((nd, i) => `<g data-node="${esc(nd.id)}" class="nd ${hi.has(nd.id) ? 'on' : ''}"><circle cx="${P[i][0].toFixed(1)}" cy="${P[i][1].toFixed(1)}" r="${r(i)}" style="fill:${color ? color(i) : '#fff'}"><title>${esc(nd.label)}</title></circle>${showLabel || hi.has(nd.id) ? `<text x="${(P[i][0] + r(i) + 2).toFixed(1)}" y="${(P[i][1] + 4).toFixed(1)}">${esc(nd.label)}</text>` : ''}</g>`).join('');
-    return `<svg class="netsvg" viewBox="0 0 ${w} ${h}" role="img"><defs><marker id="arr" viewBox="0 0 10 10" refX="16" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#6d8494"/></marker></defs><g class="edges">${lines}</g><g class="nodes">${dots}</g></svg>`;
+  /* ================= 可交互的网络图 =================
+   * drawGraph 输出一个带工具栏的图框：拖动节点、滚轮缩放、拖空白处平移、点节点看指标（度、入度出度、介数、聚类系数、邻居）、
+   * “指标表”列出全部节点的指标并可排序。拖动后的位置与选中的节点按图的键保存在本页内存中，页面重绘后保留。
+   * 页面组件自己的点击处理（点边看出处、点两点加删边）照常生效；拖动时不触发点击。 */
+  const NET = { reg: new Map(), pos: new Map(), view: new Map(), sel: new Map(), metrics: new Map(), labels: new Map(), table: new Map() };
+  function gkey(g, extra = '') { let h = 2166136261; const s = g.nodes.length + '|' + g.edges.length + '|' + g.nodes.slice(0, 50).map((n) => n.id).join(',') + '|' + g.edges.slice(0, 200).map((e) => e.s + '>' + e.t).join(',') + extra; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return 'g' + (h >>> 0).toString(36); }
+  function netMetrics(key) {
+    if (NET.metrics.has(key)) return NET.metrics.get(key);
+    const { g } = NET.reg.get(key), st = stats(g), m = { deg: st.deg, cc: st.cc, out: st.out, in: st.in, b: g.nodes.length <= 3000 ? betweenness(g) : null, recs: g.nodes.map(() => 0) };
+    g.edges.forEach((e) => { m.recs[g.index.get(e.s)] += e.w; m.recs[g.index.get(e.t)] += e.w; });
+    NET.metrics.set(key, m); return m;
   }
+  const fx = (x) => (Number.isFinite(x) ? (x % 1 ? x.toFixed(2) : String(x)) : '—');
+  function netInfo(key) {
+    const R = NET.reg.get(key), id = NET.sel.get(key); if (!R || id == null) return '';
+    const { g } = R, i = g.index.get(id); if (i == null) return '';
+    const m = netMetrics(key), adj = adjacency(g, true).out[i], nb = [...adj].map((j) => g.nodes[j]);
+    const inc = g.edges.filter((e) => e.s === id || e.t === id);
+    const types = {}; inc.forEach((e) => e.recs.forEach((r) => { const t = r.type || '（无类型）'; types[t] = (types[t] || 0) + 1; }));
+    return `<p class="ni-title"><b>${esc(g.nodes[i].label)}</b> <small>${esc(id)}</small> <button class="small" data-net="unsel">取消选择</button></p>
+      <table class="steps compact"><tr><td>度（不同的邻居）</td><td>${m.deg[i]}</td></tr>${g.directed ? `<tr><td>出度／入度</td><td>${m.out[i]}／${m.in[i]}</td></tr>` : ''}<tr><td>记录条数（含重复）</td><td>${m.recs[i]}</td></tr>
+      <tr><td>介数（未标准化）</td><td>${m.b ? fx(m.b[i]) + `（第 ${m.b.filter((x) => x > m.b[i]).length + 1} 名）` : '网络过大，未算'}</td></tr><tr><td>聚类系数</td><td>${fx(m.cc[i])}</td></tr></table>
+      ${Object.keys(types).length ? `<p class="sub">关系类型：${Object.entries(types).sort((a, b) => b[1] - a[1]).map(([t, c]) => `${esc(t)} ${c}`).join('；')}</p>` : ''}
+      <p class="sub">邻居（点名字切换）：${nb.slice(0, 40).map((n) => `<a href="#" data-net-sel="${esc(n.id)}">${esc(n.label)}</a>`).join('、')}${nb.length > 40 ? `……共 ${nb.length} 人` : ''}</p>`;
+  }
+  function netTable(key) {
+    const R = NET.reg.get(key); if (!R) return ''; const { g } = R, m = netMetrics(key), sort = NET.table.get(key) || 'deg';
+    const val = { deg: (i) => m.deg[i], b: (i) => (m.b ? m.b[i] : 0), cc: (i) => m.cc[i], recs: (i) => m.recs[i] };
+    const order = g.nodes.map((n, i) => i).sort((a, b) => val[sort](b) - val[sort](a)).slice(0, 60);
+    const th = (k, l) => `<th><a href="#" data-net-sort="${k}" class="${sort === k ? 'on' : ''}">${l}${sort === k ? ' ▼' : ''}</a></th>`;
+    return `<table class="steps compact nettab"><tr><th>节点</th>${th('deg', '度')}${g.directed ? '<th>出／入</th>' : ''}${th('recs', '记录')}${th('b', '介数')}${th('cc', '聚类系数')}</tr>${order.map((i) => `<tr data-net-sel="${esc(g.nodes[i].id)}" class="${NET.sel.get(key) === g.nodes[i].id ? 'on' : ''}"><td>${esc(g.nodes[i].label)}</td><td>${m.deg[i]}</td>${g.directed ? `<td>${m.out[i]}／${m.in[i]}</td>` : ''}<td>${m.recs[i]}</td><td>${m.b ? fx(m.b[i]) : '—'}</td><td>${fx(m.cc[i])}</td></tr>`).join('')}</table>
+      <p class="sub">共 ${g.nodes.length} 个节点、${g.edges.length} 条边（同一对人合为一条）；按所点的列排序，只列前 60 个。介数未标准化，无向图每对点计一次。</p>`;
+  }
+  function drawGraph(g, P, { w = 600, h = 420, size = null, color = null, hi = new Set(), hiEdges = new Set(), dim = null, labels = 'auto', arrows = g.directed, edgeColor = null, key = null } = {}) {
+    const k = key || gkey(g, '|' + w + 'x' + h);
+    const pos = NET.pos.get(k) || new Map(); NET.pos.set(k, pos);
+    P = g.nodes.map((nd, i) => pos.get(nd.id) || P[i]);
+    const n = g.nodes.length, labDefault = labels === 'all' || (labels === 'auto' && n <= 40), showLabel = NET.labels.has(k) ? NET.labels.get(k) : labDefault;
+    NET.reg.set(k, { g, w, h, lab: labDefault });
+    const r = (i) => (size ? size(i) : n > 300 ? 2.5 : n > 60 ? 4 : 9);
+    const sel = NET.sel.get(k), si = sel != null ? g.index.get(sel) : null, nbs = si != null ? adjacency(g, true).out[si] : null;
+    const lines = g.edges.map((e, j) => { const a = g.index.get(e.s), b = g.index.get(e.t); const on = hiEdges.has(j); const c = edgeColor ? edgeColor(e, j) : null; const incd = sel != null && (e.s === sel || e.t === sel);
+      return `<line data-edge="${j}" data-s="${esc(e.s)}" data-t="${esc(e.t)}" x1="${P[a][0].toFixed(1)}" y1="${P[a][1].toFixed(1)}" x2="${P[b][0].toFixed(1)}" y2="${P[b][1].toFixed(1)}" class="${on ? 'on' : ''} ${dim && dim(e) ? 'dim' : ''} ${incd ? 'inc' : ''}" ${c ? `style="stroke:${c}"` : ''} stroke-width="${Math.min(1 + (e.w - 1) * 1.2, 5)}" ${arrows ? 'marker-end="url(#arr)"' : ''}><title>${esc(g.nodes[a].label)} → ${esc(g.nodes[b].label)}（${e.w} 条记录）</title></line>`; }).join('');
+    const dots = g.nodes.map((nd, i) => { const cls = `nd ${hi.has(nd.id) ? 'on' : ''} ${sel === nd.id ? 'sel' : ''} ${nbs && nbs.has(i) ? 'nb' : ''}`;
+      return `<g data-node="${esc(nd.id)}" class="${cls}"><circle cx="${P[i][0].toFixed(1)}" cy="${P[i][1].toFixed(1)}" r="${r(i)}" style="fill:${color ? color(i) : '#fff'}"><title>${esc(nd.label)}</title></circle><text x="${(P[i][0] + r(i) + 2).toFixed(1)}" y="${(P[i][1] + 4).toFixed(1)}" class="${showLabel || hi.has(nd.id) || sel === nd.id || (nbs && nbs.has(i)) ? '' : 'lbl-off'}">${esc(nd.label)}</text></g>`; }).join('');
+    const vb = NET.view.get(k) || [0, 0, w, h];
+    return `<div class="netwrap" data-gkey="${k}"><div class="nettools"><button class="small" data-net="in" title="放大">＋</button><button class="small" data-net="out" title="缩小">－</button><button class="small" data-net="reset" title="恢复原来的位置与大小">复位</button><button class="small ${showLabel ? 'on' : ''}" data-net="labels">标签</button><button class="small ${NET.table.has(k) ? 'on' : ''}" data-net="table">指标表</button><span class="nethint">拖动节点；滚轮缩放；拖空白处平移；点节点看度、介数等</span></div>
+      <svg class="netsvg ${sel != null ? 'focus' : ''}" data-gkey="${k}" viewBox="${vb.map((x) => x.toFixed(1)).join(' ')}" role="img"><defs><marker id="arr" viewBox="0 0 10 10" refX="16" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#6d8494"/></marker></defs><g class="edges">${lines}</g><g class="nodes">${dots}</g></svg>
+      <div class="netinfo" ${sel != null ? '' : 'hidden'}>${sel != null ? netInfo(k) : ''}</div><div class="nettable" ${NET.table.has(k) ? '' : 'hidden'}>${NET.table.has(k) ? netTable(k) : ''}</div></div>`;
+  }
+  /* 交互：只在 document 上挂一次。 */
+  (function netEvents() {
+    let drag = null, suppress = false;
+    const svgPt = (svg, e) => { const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); };
+    const wrapOf = (el) => el.closest('.netwrap'), keyOf = (el) => wrapOf(el)?.dataset.gkey;
+    const refresh = (wrap) => { const k = wrap.dataset.gkey, svg = wrap.querySelector('svg'), R = NET.reg.get(k); if (!R) return; const sel = NET.sel.get(k), si = sel != null ? R.g.index.get(sel) : null, nbs = si != null ? adjacency(R.g, true).out[si] : null;
+      svg.classList.toggle('focus', sel != null);
+      svg.querySelectorAll('g[data-node]').forEach((n) => { const i = R.g.index.get(n.dataset.node); n.classList.toggle('sel', n.dataset.node === sel); n.classList.toggle('nb', !!(nbs && nbs.has(i))); const t = n.querySelector('text'), L = NET.labels.has(k) ? NET.labels.get(k) : R.lab; if (t) t.classList.toggle('lbl-off', !(L || n.classList.contains('on') || n.dataset.node === sel || (nbs && nbs.has(i)))); });
+      svg.querySelectorAll('line[data-s]').forEach((l) => l.classList.toggle('inc', sel != null && (l.dataset.s === sel || l.dataset.t === sel)));
+      const info = wrap.querySelector('.netinfo'); info.hidden = sel == null; info.innerHTML = sel != null ? netInfo(k) : '';
+      const tb = wrap.querySelector('.nettable'); if (!tb.hidden) tb.innerHTML = netTable(k); };
+    const setView = (wrap, vb) => { NET.view.set(wrap.dataset.gkey, vb); wrap.querySelector('svg').setAttribute('viewBox', vb.map((x) => x.toFixed(1)).join(' ')); };
+    const zoom = (wrap, f, cx, cy) => { const k = wrap.dataset.gkey, R = NET.reg.get(k), vb = NET.view.get(k) || [0, 0, R.w, R.h]; const nw = Math.min(R.w * 4, Math.max(R.w / 12, vb[2] * f)), nh = nw * (vb[3] / vb[2]); cx ??= vb[0] + vb[2] / 2; cy ??= vb[1] + vb[3] / 2; setView(wrap, [cx - (cx - vb[0]) * (nw / vb[2]), cy - (cy - vb[1]) * (nh / vb[3]), nw, nh]); };
+    document.addEventListener('pointerdown', (e) => {
+      const svg = e.target.closest?.('svg.netsvg[data-gkey]'); if (!svg || e.button !== 0) return;
+      const nd = e.target.closest('g[data-node]'), p = svgPt(svg, e);
+      drag = { svg, wrap: wrapOf(svg), node: nd?.dataset.node ?? null, x0: e.clientX, y0: e.clientY, p0: p, moved: false, vb: [...(NET.view.get(svg.dataset.gkey) || svg.getAttribute('viewBox').split(/\s+/).map(Number))] };
+    });
+    document.addEventListener('pointermove', (e) => {
+      if (!drag) return; if (!drag.moved && Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) < 4) return;
+      drag.moved = true; const k = drag.svg.dataset.gkey, p = svgPt(drag.svg, e);
+      if (drag.node != null) {
+        const nd = [...drag.svg.querySelectorAll('g[data-node]')].find((x) => x.dataset.node === drag.node); if (!nd) return;
+        const c = nd.querySelector('circle'), t = nd.querySelector('text'), r = Number(c.getAttribute('r'));
+        c.setAttribute('cx', p.x); c.setAttribute('cy', p.y); if (t) { t.setAttribute('x', p.x + r + 2); t.setAttribute('y', p.y + 4); }
+        drag.svg.querySelectorAll('line[data-s]').forEach((l) => { if (l.dataset.s === drag.node) { l.setAttribute('x1', p.x); l.setAttribute('y1', p.y); } if (l.dataset.t === drag.node) { l.setAttribute('x2', p.x); l.setAttribute('y2', p.y); } });
+        NET.pos.get(k)?.set(drag.node, [p.x, p.y]);
+      } else { const dx = (e.clientX - drag.x0) * (drag.vb[2] / drag.svg.clientWidth), dy = (e.clientY - drag.y0) * (drag.vb[3] / drag.svg.clientHeight); setView(drag.wrap, [drag.vb[0] - dx, drag.vb[1] - dy, drag.vb[2], drag.vb[3]]); }
+    });
+    document.addEventListener('pointerup', () => {
+      if (!drag) return; const d = drag; drag = null;
+      if (d.moved) { suppress = true; setTimeout(() => { suppress = false; }, 0); return; }
+      if (d.node != null) { const k = d.svg.dataset.gkey; NET.sel.set(k, NET.sel.get(k) === d.node ? null : d.node); if (NET.sel.get(k) == null) NET.sel.delete(k); refresh(d.wrap); }
+    });
+    document.addEventListener('click', (e) => { if (suppress && e.target.closest?.('svg.netsvg')) { e.stopPropagation(); e.preventDefault(); } }, true);
+    document.addEventListener('wheel', (e) => { const svg = e.target.closest?.('svg.netsvg[data-gkey]'); if (!svg) return; e.preventDefault(); const p = svgPt(svg, e); zoom(wrapOf(svg), e.deltaY > 0 ? 1.15 : 1 / 1.15, p.x, p.y); }, { passive: false });
+    document.addEventListener('click', (e) => {
+      const b = e.target.closest?.('[data-net],[data-net-sel],[data-net-sort]'); if (!b || !wrapOf(b)) return; e.preventDefault();
+      const wrap = wrapOf(b), k = wrap.dataset.gkey, R = NET.reg.get(k);
+      if (b.dataset.netSel != null) { NET.sel.set(k, b.dataset.netSel); refresh(wrap); return; }
+      if (b.dataset.netSort) { NET.table.set(k, b.dataset.netSort); refresh(wrap); return; }
+      const a = b.dataset.net;
+      if (a === 'in') zoom(wrap, 1 / 1.3); if (a === 'out') zoom(wrap, 1.3);
+      if (a === 'reset') { NET.view.delete(k); NET.pos.set(k, new Map()); NET.sel.delete(k); const host = wrap.closest('[data-needs-pack]'); if (host?.render) host.render(); else setView(wrap, [0, 0, R.w, R.h]); }
+      if (a === 'unsel') { NET.sel.delete(k); refresh(wrap); }
+      if (a === 'labels') { const cur = NET.labels.has(k) ? NET.labels.get(k) : R.lab; NET.labels.set(k, !cur); b.classList.toggle('on', !cur); refresh(wrap); }
+      if (a === 'table') { const tb = wrap.querySelector('.nettable'); if (NET.table.has(k)) { NET.table.delete(k); tb.hidden = true; b.classList.remove('on'); } else { NET.table.set(k, 'deg'); tb.hidden = false; tb.innerHTML = netTable(k); b.classList.add('on'); } }
+    });
+  })();
   /* 条形图（HTML） */
   function bars(rows, { max = null, fmt = (v) => v, cls = '' } = {}) {
     const M = max ?? Math.max(1, ...rows.map((r) => r[1]));
@@ -418,6 +508,6 @@
   document.addEventListener('click', (e) => { const b = e.target.closest('button[data-open-import]'); if (b && !b.closest('.pack-bar')) Importer.open(b.dataset.openImport || undefined); });
 
   window.W8 = { Pack, Mat, gate, card, rng, graph, adjacency, betweenness, allShortestPaths, clustering, components, pathStats, stats, rewire, modularity, communities,
-    layout, drawGraph, bars, PALETTE, grams, jaccard, levenshtein, lcsRatio, cosine, chars, findInHuayangji, MEMORIAL, LECTURE_GROUPS, parseAny, buildMaterial, guessKind, guessMap, KINDS, Importer, matSelect, CBDB_CITE, kvGet, kvPut };
+    layout, drawGraph, bars, PALETTE, NET, netMetrics, grams, jaccard, levenshtein, lcsRatio, cosine, chars, findInHuayangji, MEMORIAL, LECTURE_GROUPS, parseAny, buildMaterial, guessKind, guessMap, KINDS, Importer, matSelect, CBDB_CITE, kvGet, kvPut };
   window.addEventListener('DOMContentLoaded', () => { Pack.init(); setTimeout(packBar, 0); });
 })();

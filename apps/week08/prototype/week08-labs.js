@@ -71,7 +71,7 @@
       const people = new Set(g.edges.flatMap((e) => [e.s, e.t])); if (center) people.delete(center);
       const lecture = m.id === 'cbdb-wanggui' ? W.LECTURE_GROUPS.map(([k, ts]) => [k, m.edges.filter((e) => ts.includes(e.type)).length]) : null;
       const LECT = [54, 8, 11, 8, 4, 6, 4, 2];
-      const col1 = `${W.drawGraph(g, P, { w: 520, h: 420, edgeColor: memCol, hi: new Set(center ? [center] : []), hiEdges: new Set(this.s.sel != null ? [this.s.sel] : []), labels: g.nodes.length <= 30 ? 'all' : 'none', arrows: false })}
+      const col1 = `${W.drawGraph(g, P, { key: 'D01|' + m.id, w: 520, h: 420, edgeColor: memCol, hi: new Set(center ? [center] : []), hiEdges: new Set(this.s.sel != null ? [this.s.sel] : []), labels: g.nodes.length <= 30 ? 'all' : 'none', arrows: false })}
         <p class="sub">黄线：纪念文字类；蓝线：其他。点任意一条线看出处。当前 ${g.records} 条记录、${people.size} 人（不含中心）。</p>
         <label class="field">我的一句判断（先写再开开关）<textarea data-ki="judge" rows="2" placeholder="这张图说明……">${esc(this.s.judge)}</textarea></label>`;
       const col2 = lecture ? `<p class="sub">按讲义 @fig-wanggui-types 的合并口径，页面现场计数：</p>
@@ -261,7 +261,7 @@
         <label>向心力 <input type="range" min="0" max="0.5" step="0.01" data-k="grav" value="${esc(this.s.grav)}"> ${esc(this.s.grav)}</label>
         <label>迭代次数 <input type="range" min="10" max="600" step="10" data-k="iter" value="${esc(this.s.iter)}"> ${esc(this.s.iter)}</label>
         <p class="okbox">无论怎样调，节点 ${st.n}、边 ${st.m}、各人的度都不变：布局只是为了好读，位置远近不是数据。</p>`;
-      rerender(this, `${W.matSelect('network', this.s.mat)}${flowShell(pageById('D09'), [{ title: '选边表', body: W.card(m, { compact: true }) }, { title: '转表头', body: conv + exp }, { title: '调布局', body: `<div class="gsvg">${W.drawGraph(g, P, { w: 560, h: 420 })}</div>` }, { title: '导出', body: ctl }])}`);
+      rerender(this, `${W.matSelect('network', this.s.mat)}${flowShell(pageById('D09'), [{ title: '选边表', body: W.card(m, { compact: true }) }, { title: '转表头', body: conv + exp }, { title: '调布局', body: `<div class="gsvg">${W.drawGraph(g, P, { key: 'D09|' + m.id + '|' + this.s.seed + this.s.rep + this.s.grav + this.s.iter, w: 560, h: 420 })}</div>` }, { title: '导出', body: ctl }])}`);
       this._csv = () => ({ edges: 'Source,Target,Type,Label,Weight\n' + g.edges.map((e) => [e.s, e.t, g.directed ? 'Directed' : 'Undirected', [...new Set(e.recs.map((r) => r.type || ''))].join('；'), e.w].map((x) => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\n'),
         nodes: 'Id,Label\n' + g.nodes.map((n) => [n.id, nm.get(n.id) ?? n.label].map((x) => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\n') });
     }

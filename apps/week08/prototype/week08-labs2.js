@@ -30,7 +30,7 @@
       const maxCh = Math.max(0, ...change);
       const order = g.nodes.map((n, i) => i).sort((x, y) => (b ? b[y] - b[x] : 0) || st.deg[y] - st.deg[x]);
       const top = order.slice(0, 16);
-      const col1 = `${W.drawGraph(g, P, { w: 520, h: this.s.mat === 'toy7' ? 260 : 300, labels: 'all', hi: new Set([this.s.pick, ...g.nodes.filter((n, i) => maxCh > 0 && change[i] === maxCh).map((n) => n.id)].filter(Boolean)), size: (i) => 8 + (b ? Math.sqrt(b[i]) * 1.6 : 0), edgeColor: (e) => (e.added ? '#a33' : null) })}
+      const col1 = `${W.drawGraph(g, P, { key: 'D10|' + m.id, w: 520, h: this.s.mat === 'toy7' ? 260 : 300, labels: 'all', hi: new Set([this.s.pick, ...g.nodes.filter((n, i) => maxCh > 0 && change[i] === maxCh).map((n) => n.id)].filter(Boolean)), size: (i) => 8 + (b ? Math.sqrt(b[i]) * 1.6 : 0), edgeColor: (e) => (e.added ? '#a33' : null) })}
         <p class="sub">${this.s.pick ? `已选 <b>${esc(this.s.pick)}</b>，再点另一个点：两点之间有边则删去，无边则添加。` : '点一个点，再点另一个点，即在两点之间添加或删除一条边。'} 点的大小随介数变化。</p>
         <p>${this.s.mat === 'toy7' ? '<button class="small" data-preset="jiaji">在甲与己之间添一条边（讲义的问题）</button> ' : ''}<button class="small" data-preset="reset">恢复原网</button></p>`;
       const row = (i) => `<tr class="${maxCh > 0 && change[i] === maxCh ? 'on' : ''}"><td>${esc(g.nodes[i].label)}</td><td>${st.deg[i]}${st.deg[i] !== st0.deg[i] ? ` <small>（原 ${st0.deg[i]}）</small>` : ''}</td><td>${b ? f2(b[i], b[i] % 1 ? 2 : 0) : '—'}${b && Math.abs(b[i] - b0[i]) > 1e-9 ? ` <small>（原 ${f2(b0[i], b0[i] % 1 ? 2 : 0)}）</small>` : ''}</td><td>${f2(cc[i])}</td></tr>`;

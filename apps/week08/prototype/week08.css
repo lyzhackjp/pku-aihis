@@ -105,7 +105,7 @@ table.dp{border-collapse:collapse;font-size:12px;margin:6px 0}table.dp td,table.
 td.diff{background:#f6e3df;color:#a33;font-weight:700}
 table.steps.compact{font-size:12px}
 /* 各页栏宽：表格或原文较长的一栏放宽 */
-deck-slide[slide-id="D01"] .flow-grid{grid-template-columns:1.35fr 1fr 1fr 1.1fr}
+deck-slide[slide-id="D01"] .flow-grid{grid-template-columns:1.7fr .9fr .9fr 1fr}
 deck-slide[slide-id="D06"] .flow-grid{grid-template-columns:2.1fr 1.3fr 1fr .9fr}
 deck-slide[slide-id="D12"] .flow-grid{grid-template-columns:1fr 1.1fr 1.2fr 1fr}
 deck-slide[slide-id="D13"] .flow-grid{grid-template-columns:1.3fr 1.1fr .9fr 1.1fr}
@@ -113,3 +113,14 @@ deck-slide[slide-id="D08"] svg.netsvg{max-width:440px}
 @media (max-width:1100px){deck-slide .flow-grid{grid-template-columns:1fr!important}}
 .matbar{flex-wrap:wrap}.matbar button,.pack-bar button{white-space:nowrap}
 @media (max-width:760px){.through{display:block}.through-rail{min-width:0;max-width:100%}.through-rail *{max-width:100%;box-sizing:border-box}.through-actions{display:flex;flex-direction:column}.matbar select{max-width:72vw}}
+
+/* 可交互网络图 */
+.netwrap{position:relative;min-width:0}
+.nettools{display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:0 0 3px}.nettools button.on{background:#e7edf7;color:#123c9a;border-color:#164ec7}.nethint{font-size:11px;color:#8894a0;margin-left:4px}
+svg.netsvg{touch-action:none;cursor:grab;user-select:none}svg.netsvg:active{cursor:grabbing}svg.netsvg g.nd{cursor:pointer}
+svg.netsvg text.lbl-off{display:none}
+svg.netsvg.focus line:not(.inc):not(.on){opacity:.07}svg.netsvg.focus g.nd:not(.sel):not(.nb):not(.on){opacity:.2}
+svg.netsvg line.inc{stroke:#164ec7!important;stroke-width:2.2}svg.netsvg g.sel circle{stroke:#a33;stroke-width:3;fill:#ffe08a!important}svg.netsvg g.nb circle{stroke:#164ec7;stroke-width:2}
+.netinfo{max-height:200px;overflow:auto;background:#fff;border:1px solid #9fb3c2;border-left:4px solid #a33;padding:4px 8px;font-size:12px;margin-top:4px}
+.netinfo .ni-title{margin:0 0 4px}.netinfo a{color:#164ec7}
+.nettable{max-height:260px;overflow:auto;margin-top:4px}.nettab tr{cursor:pointer}.nettab th a{color:inherit;text-decoration:none}.nettab th a.on{color:#164ec7}

@@ -58,6 +58,21 @@ async def main():
         await pg.locator('deck-slide[slide-id="D01"] svg.netsvg line').first.click(force=True); await pg.wait_for_timeout(400)
         check('D01 点边显示出处卡', await pg.locator('deck-slide[slide-id="D01"] .evid-card').count() >= 1)
         await pg.screenshot(path=str(OUT / 'screenshots/D01_edge.png'))
+        # 网络图交互：点节点看指标、拖动节点、滚轮缩放、指标表；过滤后位置保留
+        S = 'deck-slide[slide-id="D01"] '
+        c = await pg.locator(S + 'g[data-node="1845"] circle').bounding_box()
+        await pg.mouse.click(c['x'] + c['width'] / 2, c['y'] + c['height'] / 2); await pg.wait_for_timeout(300)
+        info = await pg.inner_text(S + '.netinfo')
+        check('网络图：点王珪显示度 84、出度 84、记录 97', '84' in info and '97' in info and '出度／入度' in info, info[:120])
+        n2 = pg.locator(S + 'g[data-node="1488"] circle'); b2 = await n2.bounding_box()
+        await pg.mouse.move(b2['x'] + 3, b2['y'] + 3); await pg.mouse.down(); await pg.mouse.move(b2['x'] + 60, b2['y'] + 40, steps=5); await pg.mouse.up(); b3 = await n2.bounding_box()
+        check('网络图：节点可拖动', abs(b3['x'] - b2['x']) > 30)
+        sv = pg.locator(S + 'svg.netsvg'); vb0 = await sv.get_attribute('viewBox'); sb = await sv.bounding_box()
+        await pg.mouse.move(sb['x'] + sb['width'] / 2 + 20, sb['y'] + sb['height'] / 2 + 20); await pg.mouse.wheel(0, -400); await pg.wait_for_timeout(300)
+        check('网络图：滚轮缩放', (await sv.get_attribute('viewBox')) != vb0)
+        await pg.click(S + '[data-net="table"]'); await pg.wait_for_timeout(300)
+        check('网络图：指标表列出度、介数、聚类系数', '聚类系数' in await pg.inner_text(S + '.nettable'))
+        await pg.click(S + '[data-net="reset"]'); await pg.wait_for_timeout(300)
         # D04
         await go('D04'); t = await txt('D04')
         check('D04 两份材料四栏说明并排', t.count('缺在哪里') >= 2)
