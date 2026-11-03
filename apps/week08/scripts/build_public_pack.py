@@ -113,10 +113,58 @@ texts['huayangji'] = {'title': '王珪《華陽集》卷三十五至六十（四
                       'license': '四库本文本为公有领域；维基文库录入按 CC BY-SA 4.0', 'genre': '文集', 'juan': hy,
                       'note': '卷四十五至四十八本地文本为空（第二轮下载被拒），内容只在教师提供的影像中（来源卡 S-81）。〔篇题〕为维基文库以锚点标出的篇题；〔〕内的纪年为维基文库编者所加（YL 模板），不是四库本原文。'}
 
+# ---------- 第三批（D14—D22）所用公开材料 ----------
+import base64
+extra = {}
+# 武鑑相邻两版（CODH 武鑑全集／日本古典籍データセット，CC BY-SA 4.0），D21 差读
+bk = raw / 'bukan_20261103'
+if bk.exists():
+    cont = json.loads(src(bk / 'contents.json', 'CODH 武鑑全集 目次データ（嘉永4、5、6 年版）').read_text(encoding='utf-8'))
+    BOOK = {'200018983': ('大成武鑑（嘉永4／1851）', 1851), '200018984': ('大成武鑑（嘉永5／1852）', 1852)}
+    def side(book, page, hid):
+        row = next((r for r in cont[book] if r[0] == hid), None); f = bk / f'{book}_{page}.jpg'; src(f, f'IIIF 影像 {book} 第 {int(page)} 幅（宽 1200 像素）')
+        return {'book': book, 'label': BOOK[book][0], 'year': BOOK[book][1], 'page': page, 'head': row[2] if row else '', 'toc': row,
+                'iiif': f'https://codh.rois.ac.jp/pmjt/iiif/{book}/{book}_{page}.tif/full/full/0/default.jpg', 'img': 'data:image/jpeg;base64,' + base64.b64encode(f.read_bytes()).decode()}
+    extra['bukan'] = {'pairs': [{'han': '薩摩', 'hid': 'H408', 'a': side('200018983', '00053', 'H408'), 'b': side('200018984', '00053', 'H408'), 'note': '目次データ的当主名由“薩摩宰相斉興卿”变为“松平薩摩守斉彬”：岛津斉興隐居、斉彬袭封，通行年表系于嘉永四年（1851）二月（课件补注，待核）。'},
+                               {'han': '紀州', 'hid': 'H285', 'a': side('200018983', '00016', 'H285'), 'b': side('200018984', '00016', 'H285'), 'note': '目次データ的当主名由“紀伊菊千代■様”变为“紀伊中将慶福卿様”（■为目次数据原样）。'}],
+                      'license': 'CC BY-SA 4.0', 'credit': '「武鑑全集」（CODH制作）「日本古典籍データセット」（国文研所蔵）を翻案；影像经 CODH IIIF 服务取得（2026-11-03）', 'url': 'https://codh.rois.ac.jp/bukan/'}
+# 北宋、南宋年号（D21、D22 年号换算；课件录入，起始年据通行年表，待对 CBDB 年号表核）
+extra['eras_song'] = {'note': '只到年：一个年号的元年按改元之年计；年中改元（如乾德元年始于建隆四年十一月）在本表中不区分。课件录入，待对 CBDB 年号表核。',
+  'eras': [[n, int(y)] for n, y in (x.split(':') for x in '建隆:960 乾德:963 開寶:968 太平興國:976 雍熙:984 端拱:988 淳化:990 至道:995 咸平:998 景德:1004 大中祥符:1008 天禧:1017 乾興:1022 天聖:1023 明道:1032 景祐:1034 寶元:1038 康定:1040 慶曆:1041 皇祐:1049 至和:1054 嘉祐:1056 治平:1064 熙寧:1068 元豐:1078 元祐:1086 紹聖:1094 元符:1098 建中靖國:1101 崇寧:1102 大觀:1107 政和:1111 重和:1118 宣和:1119 靖康:1126 建炎:1127 紹興:1131 隆興:1163 乾道:1165 淳熙:1174 紹熙:1190 慶元:1195 嘉泰:1201 開禧:1205 嘉定:1208 寶慶:1225 紹定:1228 端平:1234 嘉熙:1237 淳祐:1241 寶祐:1253 開慶:1259 景定:1260 咸淳:1265 德祐:1275 景炎:1276 祥興:1278'.split())]}
+# Natural Earth 50m 海岸线（公有领域），裁到东亚并抽稀，作离线底图（D16—D19）
+ne = raw / 'naturalearth' / 'ne_50m_coastline.geojson'
+if ne.exists():
+    g = json.loads(src(ne, 'Natural Earth 50m coastline（公有领域）').read_text(encoding='utf-8')); lines = []
+    def keep(pt): return 60 <= pt[0] <= 160 and -5 <= pt[1] <= 60
+    for f in g['features']:
+        cs = f['geometry']['coordinates']; cs = cs if f['geometry']['type'] == 'MultiLineString' else [cs]
+        for line in cs:
+            seg = []
+            for pt in line:
+                if keep(pt):
+                    q = [round(pt[0], 2), round(pt[1], 2)]
+                    if not seg or abs(q[0] - seg[-1][0]) + abs(q[1] - seg[-1][1]) >= 0.08: seg.append(q)
+                elif len(seg) > 1: lines.append(seg); seg = []
+                else: seg = []
+            if len(seg) > 1: lines.append(seg)
+    extra['basemap'] = {'bbox': [60, -5, 160, 60], 'coast': lines, 'license': '公有领域（Natural Earth）', 'note': '只画海岸线，不画国界与政区界；公开发表的地图须用有审图号的底图（讲义 4.4）。'}
+# 本地开源模型的实际运行记录（文本为公开的《宋史》选段与练习材料二；D15、D18、D22）
+lr = raw / 'llm_20261103'
+def slim(p):
+    r = json.loads(src(p, '本地模型运行记录（tools/local-llm）').read_text(encoding='utf-8'))
+    for c in r.get('calls', []):
+        c.pop('response', None)
+        if 'request' in c: c['request'] = {k: v for k, v in c['request'].items() if k != 'messages'}
+    return r
+if lr.exists():
+    extra['runs'] = {p.stem: slim(p) for p in sorted(lr.glob('*.json')) if p.name.startswith(('geo_', 'chrono_', 'agent_')) and 'cbdb' not in p.name}
+if (lr / 'tasks').exists():
+    texts['agent_tasks'] = {'title': 'D15 智能体任务（佛罗伦萨家族婚姻网）', **{k: src(lr / 'tasks' / f'{k}_padgett.md', 'D15 任务文本').read_text(encoding='utf-8') for k in ('bad', 'good')}}
+
 pack = {'format': 'pku-aihis-week08-public-pack', 'version': 1, 'built': datetime.datetime.now().astimezone().isoformat(timespec='seconds'),
         'notice': '随第八周课件公开发布的材料与教学构造。各部分许可不同，转用时按各自的 card.license 注明出处。CBDB 记录、『梅颸日記』与 JBDB 查询结果不在此文件中，课堂从本机材料包导入。',
         'materials': {m['id']: m for m in [toy7, adj4, temporal, padgett, shenzong, reform, pairs, constructed]},
-        'texts': texts, 'sources': sources}
+        'texts': texts, 'sources': sources, **extra}
 js = '/* 第八周公开材料（由 apps/week08/scripts/build_public_pack.py 生成；许可见各部分 card.license）。 */\nwindow.W8_PUBLIC_PACK = ' + json.dumps(pack, ensure_ascii=False, separators=(',', ':')) + ';\n'
 out.parent.mkdir(parents=True, exist_ok=True); out.write_text(js, encoding='utf-8')
 print(f'{out}: {len(js)/1e6:.2f} MB; materials {list(pack["materials"])}; huayangji 卷 {len(hy)}（空 {sum(v["empty"] for v in hy.values())}）')

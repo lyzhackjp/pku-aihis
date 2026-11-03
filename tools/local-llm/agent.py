@@ -26,13 +26,21 @@ def main():
     for i in range(x.max_steps):
         c = chat(msgs, max_tokens=x.max_tokens); text = c['text']; step = {'step': i + 1, 'reply': text, 'usage': c['usage'], 'seconds': c['seconds']}
         m = re.search(r'```python\s*(.*?)```', text, re.S)
+        if not m and '```python' in text and '最终回答' not in text[:text.find('```python')]:  # 代码块没有闭合：回复在词元上限处被截断
+            step['truncated'] = True; steps.append(step); print(f'第 {i + 1} 步：代码被截断', flush=True)
+            msgs += [{'role': 'assistant', 'content': text}, {'role': 'user', 'content': '你的代码超过长度上限被截断，没有运行。请分几步做，每次只写一小段代码。'}]
+            continue
         if m and '最终回答' not in text[:m.start()]:
             res = run_code(m.group(1), x.workdir); step.update(code=m.group(1), result=res)
-            msgs += [{'role': 'assistant', 'content': text}, {'role': 'user', 'content': f'运行结果（返回码 {res["returncode"]}）：\n{res["stdout"]}\n{res["stderr"]}'.strip()}]
+            fed = (res['stdout'][-2500:] + ('\n' + res['stderr'][-800:] if res['stderr'] else '')).strip()  # 回给模型的输出截短，免得小上下文溢出；记录里保留全文
+            msgs += [{'role': 'assistant', 'content': text}, {'role': 'user', 'content': f'运行结果（返回码 {res["returncode"]}）：\n{fed}'}]
         else:
             final = text; steps.append(step); break
         steps.append(step); print(f'第 {i + 1} 步：{len(step.get("code", ""))} 字代码，{step["seconds"]} 秒', flush=True)
-    record(steps, x.out, kind='agent', task=task, system=SYSTEM, final=final, finished=final is not None, max_steps=x.max_steps)
+    if final is None:  # 步数用完：再问一次，要求不写代码、只据已有输出作答（记录为额外一步）
+        msgs.append({'role': 'user', 'content': '步数已用完。请不要再写代码，只根据以上实际运行得到的输出，以“最终回答：”开头给出结论；没有算出的数字不要写。'})
+        c = chat(msgs, max_tokens=x.max_tokens); final = c['text']; steps.append({'step': len(steps) + 1, 'reply': final, 'usage': c['usage'], 'seconds': c['seconds'], 'forced_final': True})
+    record(steps, x.out, kind='agent', task=task, system=SYSTEM, final=final, finished=not any(st.get('forced_final') for st in steps), max_steps=x.max_steps)
     print(final or '（未在步数上限内给出最终回答）')
 
 if __name__ == '__main__': main()

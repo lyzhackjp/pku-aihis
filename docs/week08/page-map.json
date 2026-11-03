@@ -576,13 +576,13 @@
   "student_operation": "删减比例滑块，看度最高的五人是否改变；在李氏墓志节录上先按“同篇出现即连边”画网，再按明载关系画网。",
   "observable_output": "随机删减下排名变化频率；同篇共现比明载多出的边高亮。",
   "lesson_evidence": "讲义 3.5、@fig-verify-net；附录练习材料二；案例 C-06、C-08。",
-  "mode": "浏览器实时",
+  "mode": "浏览器实时（随机删边在整体网络上重算度或介数；共现与明载在练习材料二上逐条对照，明载关系为课件据原文标出）",
   "notes": {
    "purpose": "分清随机缺失与系统偏差。",
    "guide": "先做李氏墓志，再拖删减滑块。",
-   "mechanism": "王珪的偏差是系统性的，删减实验测不出来。"
+   "mechanism": "随机删边：每次按比例独立删边，重算前五名，统计仍在前五的次数；王裕华神宗朝网 2,106 节点只算度。共现：节录中出现的 9 人两两连边，明载 9 条据原文（夫妻、母子五、两女婿、知遇）。王珪的偏差是系统性的，删减实验测不出来。"
   },
-  "footer": "D14 · 规划页；练习材料二据《華陽集》卷五十一（维基文库四庫全書本，标点为本讲所加，待核）。",
+  "footer": "D14 · 浏览器实时；整体网络据王裕华 2022 复制数据（CC0），练习材料二据《華陽集》卷五十一（维基文库四庫全書本，标点为本讲所加，待核）。",
   "concepts": [],
   "extension": "乙一",
   "cases": [
@@ -596,7 +596,7 @@
   "data": "",
   "demo": "",
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "steps": [
    "选核验方向",
    "删减",
@@ -616,13 +616,13 @@
   "student_operation": "在差的提法上补齐五件事；对照一份实际运行记录。",
   "observable_output": "缺项标红；运行记录四段（提示、代码、输出、记录）。",
   "lesson_evidence": "讲义 3.6 与 @fig-agent-net；扩充部分乙三、乙五。",
-  "mode": "教学构造（提法）＋保存结果回放（运行记录，待课前运行）",
+  "mode": "教学构造（提法与五件事的关键词检查）＋保存结果回放（本地 Qwen3-4B-Instruct-2507 智能体的实际运行记录：佛罗伦萨婚姻网公开，王珪边表在本机材料包）",
   "notes": {
    "purpose": "把核验写进要求。",
    "guide": "两分钟补项。",
-   "mechanism": "运行记录待课前实际运行一次。"
+   "mechanism": "tools/local-llm/agent.py：模型写 Python→子进程运行→结果回给模型，至多 6 步；每步记录回复、代码、输出、用时。页面在最终回答中查找正确数字（佛罗伦萨网 15 家族、20 边、美第奇度 6、介数 47.5、删去后 3 个分量；王珪 97 行、84 人、73、24、19、63、17）。"
   },
-  "footer": "D15 · 规划页。",
+  "footer": "D15 · 教学构造＋保存结果回放；运行记录由 tools/local-llm（llama-cpp-python 0.3.36，Qwen3-4B-Instruct-2507 Q4_K_M）在课前环境实际生成。",
   "concepts": [],
   "extension": "乙三、乙五",
   "cases": [],
@@ -633,7 +633,7 @@
   "data": "",
   "demo": "",
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "steps": [
    "差的提法",
    "补五件事",
@@ -653,13 +653,13 @@
   "student_operation": "为几个地名在候选中选定记录；把同一组点放在两种坐标参照系下比较。",
   "observable_output": "三栏对账结果；点与误差圈。",
   "lesson_evidence": "讲义 4.1；扩充部分甲六。",
-  "mode": "浏览器实时",
+  "mode": "浏览器实时（在线查询 CHGIS TGAZ 公开接口；课堂离线时用本机材料包中的查询快照）",
   "notes": {
    "purpose": "上图之前要对账、保留误差。",
    "guide": "先对“開封”。",
-   "mechanism": "地名表样本用王裕华复制数据中的府州坐标（CC0）与 Pleiades（CC BY 3.0）；CHGIS V6 需签使用协议，未下载。"
+   "mechanism": "史料地名 15 个（《宋史·王珪传》较长选段与练习材料二），每个名字按前缀查 TGAZ，可限 1050 年；按候选数分三栏；选定记录存浏览器，D17、D18 共用。误差圈为课件按类型设的示意值。底图为 Natural Earth 海岸线（公有领域），不画国界。"
   },
-  "footer": "D16 · 规划页。",
+  "footer": "D16 · 浏览器实时；候选据 CHGIS TGAZ（chgis.hudci.org/tgaz，2026-11-03 查询），底图 Natural Earth。",
   "concepts": [
    "地名表",
    "坐标误差"
@@ -673,7 +673,7 @@
   "data": "",
   "demo": "",
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "steps": [
    "史料地名",
    "候选",
@@ -693,13 +693,13 @@
   "student_operation": "跟随截图走 QGIS 流程；切换 WGS-84 与 GCJ-02。",
   "observable_output": "偏移距离；每步截图。",
   "lesson_evidence": "讲义 4.2、@fig-qgis-flow、@fig-maptools；扩充部分丙二。",
-  "mode": "浏览器实时（坐标转换）＋保存结果回放（QGIS 截图，待课前环境）",
+  "mode": "浏览器实时（坐标转换与符号化）＋静态内容（QGIS 流程表；截图待课前环境）",
   "notes": {
    "purpose": "知道坐标参照系。",
    "guide": "只演示偏移。",
-   "mechanism": "QGIS 截图待课前环境。"
+   "mechanism": "用 D16 选定的坐标：下载 CSV 供 QGIS 加载；WGS 84→GCJ-02 用公开实现中通行的加偏公式演示偏移量；按字段着色；出图检查六项。QGIS 逐步截图待课前在教室电脑上补入。"
   },
-  "footer": "D17 · 规划页。",
+  "footer": "D17 · 浏览器实时＋静态内容；QGIS 功能表据讲义 @fig-qgis-flow。",
   "concepts": [
    "坐标参照系"
   ],
@@ -712,7 +712,7 @@
   "data": "",
   "demo": "",
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "steps": [
    "表格上图",
    "参照系",
@@ -732,13 +732,13 @@
   "student_operation": "原文高亮→抽取表→地图；拖动距离容限。",
   "observable_output": "同一批结果的得分随容限变化。",
   "lesson_evidence": "讲义 4.3、@fig-llmgeo；案例 C-19。",
-  "mode": "浏览器实时（计分）＋浏览器内模型（课前载入）",
+  "mode": "保存结果回放（本地 Qwen3-4B 对公开文本的一次实际抽取）＋浏览器实时（按距离容限计分）",
   "notes": {
    "purpose": "模型结果要回原文。",
    "guide": "拖容限。",
-   "mechanism": "待一次真实抽取。"
+   "mechanism": "提示要求列出地名、原文引句、今地、坐标与误差半径（照 His-Geo）；页面检查原文中有无此写法、引句能否找到；参照为 D16 选定的 CHGIS 记录；固定容限或模型自报误差两种计分。封号中的地名（延安郡王、岐國公）单独提示。"
   },
-  "footer": "D18 · 规划页。",
+  "footer": "D18 · 保存结果回放＋浏览器实时；抽取由本地 Qwen3-4B-Instruct-2507 在课前环境实际运行，参照据 CHGIS TGAZ。",
   "concepts": [],
   "extension": null,
   "cases": [
@@ -751,7 +751,7 @@
   "data": "",
   "demo": "",
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "steps": [
    "原文",
    "抽取",
@@ -771,13 +771,13 @@
   "student_operation": "上传点表生成地图；交换经纬度；切换底图。",
   "observable_output": "“表格 N 行，地图 N 点”；疑似颠倒的提示。",
   "lesson_evidence": "讲义 4.4；扩充部分乙四。",
-  "mode": "浏览器实时（离线底图：Natural Earth，公有领域）",
+  "mode": "浏览器实时（离线底图：Natural Earth 海岸线，公有领域）",
   "notes": {
    "purpose": "能检查一张网页地图。",
    "guide": "交换经纬度。",
-   "mechanism": "底图离线；中国境内展示的审图号问题只作说明。"
+   "mechanism": "默认点表为王裕华神宗朝官员及亲属的籍贯坐标（2,106 人）；“表格 N 行，地图 N 点”；交换经纬度后越界点计数；同一坐标上叠放的点计数（开封 338 人）；可下载一个 Leaflet 网页（联网 OpenStreetMap 底图，无审图号，只供练习）。"
   },
-  "footer": "D19 · 规划页。",
+  "footer": "D19 · 浏览器实时；点表据王裕华 2022 复制数据（CC0），底图 Natural Earth。",
   "concepts": [
    "审图号"
   ],
@@ -790,7 +790,7 @@
   "data": "",
   "demo": "",
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "steps": [
    "上传点表",
    "生成地图",
@@ -851,13 +851,13 @@
   "student_operation": "两版文本逐字差分；年号日期交给换算工具。",
   "observable_output": "变化处高亮。",
   "lesson_evidence": "讲义 5.2；扩充部分丁二；案例 C-20。",
-  "mode": "浏览器实时（文本差分）",
+  "mode": "浏览器实时（武鑑两版影像逐像素差分、文本逐字对齐、年号换算）",
   "notes": {
    "purpose": "知道差读是比较相邻版本。",
    "guide": "找三处变化。",
-   "mechanism": "武鑑相邻两版与中文方志两版两例，待取材料。"
+   "mechanism": "武鑑：CODH 武鑑全集嘉永四年、五年两版大成武鑑的同一幅（薩摩、紀州），影像经 IIIF 取得（CC BY-SA）；差分可手动平移对齐。文本：维基文库选段与 Kanripo《宋史》卷三一二的 WYG、master 两个分支（本机）逐字对齐，异体字另标。年号：宋代年号表为课件录入（待对 CBDB 核），日本年号据 JBDB NengoCodes（本机）。"
   },
-  "footer": "D21 · 规划页。",
+  "footer": "D21 · 浏览器实时；武鑑影像据 CODH 武鑑全集（CC BY-SA 4.0），Kanripo 文本在本机材料包。",
   "concepts": [],
   "extension": "丁二",
   "cases": [
@@ -870,7 +870,7 @@
   "data": "",
   "demo": "",
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "steps": [
    "两版本",
    "对齐",
@@ -890,13 +890,13 @@
   "student_operation": "对照模型年表与原文。",
   "observable_output": "无出处的行标出。",
   "lesson_evidence": "讲义 5.3；扩充部分甲七、乙六（粮价暂缓）。",
-  "mode": "保存结果回放（待课前运行）",
+  "mode": "保存结果回放（本地 Qwen3-4B 对公开文本的一次实际运行）＋浏览器实时（逐行回原文、年号换算核对）",
   "notes": {
    "purpose": "年表也要回原文。",
    "guide": "只看一行。",
-   "mechanism": "粮价部分教师 11-02 指示暂缓。"
+   "mechanism": "提示要求每行给出原文纪年写法、公元年、事件与逐字引句；页面检查引句能否在原文中找到，并按年号表（“八年”等承上文）换算核对模型的公元年。粮价部分按教师指示暂缓。"
   },
-  "footer": "D22 · 规划页。",
+  "footer": "D22 · 保存结果回放＋浏览器实时；年表由本地 Qwen3-4B-Instruct-2507 在课前环境实际生成。",
   "concepts": [
    "时间序列分析"
   ],
@@ -911,7 +911,7 @@
   "data": "",
   "demo": "",
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "steps": [
    "事件表",
    "模型年表",

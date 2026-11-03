@@ -7,7 +7,8 @@
     "week08-core.js",
     "week08-labs.js",
     "week08-labs2.js",
-    "week08-labs3.js"
+    "week08-labs3.js",
+    "week08-labs4.js"
   ],
   "deck": {
     "name": "第八周 · 数字人文方法与人工智能",
@@ -39,7 +40,15 @@
     "D11": "compare-lab",
     "D12": "two-net-lab",
     "D13": "diary-lab",
+    "D14": "verify-lab",
+    "D15": "agent-lab",
+    "D16": "gazetteer-lab",
+    "D17": "qgis-lab",
+    "D18": "geollm-lab",
+    "D19": "webmap-lab",
     "D20": "years-lab",
+    "D21": "diff-lab",
+    "D22": "chrono-lab",
     "D23": "readback-through",
     "D24": "hero-end8",
     "D25": "concept-table"

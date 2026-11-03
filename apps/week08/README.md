@@ -22,6 +22,13 @@ python3 apps/week08/scripts/build_week08_pack.py <原始数据> <cbdb_1845.json>
 # D07：三种语言语料的主题模型（scikit-learn LDA），结果并入本机材料包
 python3 apps/week08/scripts/run_topics.py <语料 JSON> <切分> <K> <种子> <输出 JSON>     # 切分：en-word｜zh-char｜zh-bigram｜ja-bigram｜names
 python3 apps/week08/scripts/build_topics_pack.py <主题结果目录> <ballard_entries.json> <qingshilu_tw_entries.json> <baishi_entries.json> apps/week08/local-only/week08-pack.json
+# D07 进阶：同一语料上的 BERTopic（需 bertopic、sentence-transformers；嵌入模型从 Hugging Face 下载）
+python3 apps/week08/scripts/run_bertopic.py <语料 JSON> en-word|zh-char <嵌入模型> <种子> <输出 JSON> [--min-cluster 30 --selection leaf]
+# D15、D18、D22：本地模型实际运行（先 sh tools/local-llm/serve.sh &）
+python3 apps/week08/scripts/run_llm_w8.py geo|chrono <文本 JSON> <输出 JSON>
+python3 tools/local-llm/agent.py --task <任务.md> --workdir <数据目录> --out <记录.json> --max-steps 5
+# D16、D21 等本机补充（CHGIS 查询快照、Kanripo 文本、JBDB 年号、王珪边表上的智能体记录）
+python3 apps/week08/scripts/build_local_extra.py <原始数据> apps/week08/local-only/week08-pack.json
 node apps/week08/scripts/assemble-prototype.mjs     # 改 docs/week08/page-map.json 之后重新生成 index.html 与 data.js
 ```
 

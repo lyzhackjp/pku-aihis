@@ -9,6 +9,7 @@
 <script src="week08-labs.js"></script>
 <script src="week08-labs2.js"></script>
 <script src="week08-labs3.js"></script>
+<script src="week08-labs4.js"></script>
 <!-- 浏览器内模型与通用导入页握手（ES 模块；须经 HTTP 打开：本机服务或 GitHub Pages）。由 scripts/assemble-prototype.mjs 补入。 -->
 <script type="module" src="live/w8-live.js"></script>
 </head><body><div id="app"></div>
@@ -56,33 +57,33 @@
 <deck-slide slide-id="D13" data-status="prototype" kicker="D13 / 教案 3.4" header-title="赖家：从一条日记到人物与关系" transition="日本史的核心案例：夫妻二人的日记，在 JBDB 中各成一张网。" theme="light" layout="flow4" mode="浏览器实时（学生点选；可选浏览器内模型给候选）＋保存结果回放（JBDB 接口查询结果）；日记录文与影像只在本机导入" notes="目的：看到“把日记变成网络”每一步都是判断，且数据库收录有选择。
 范例引导：先投影录文（不投影页脚），请学生数出几个人、几种关系，再对照 JBDB。
 机制背景：JBDB 接口的实际地址为 app.jbdb.jp/api（SwaggerHub 所载 jbdb.jp 的证书只对 app.jbdb.jp 有效）。性别由学生据称呼判读，标“学生判读，未考证”。讲义“8 vs 62 女”在接口数据中未能复现：按 cFemale 字段，『梅颸日記』所见 1,566 人中女性 169 人，『春水日記』2,497 人中女性 83 人（另有未标性别者），记入待核实事项 T-01。"><diary-lab></diary-lab><div slot="footer">D13 · 浏览器实时＋保存结果回放；『梅颸日記』据『頼山陽全書』本（本机导入，不分发），JBDB 据 2026-11-02 接口查询。</div></deck-slide>
-<deck-slide slide-id="D14" data-status="planned" kicker="D14 / 教案 3.5" header-title="核验网络结论：回原文、敏感性、稳健性、独立来源" transition="网络的结论可以从四个方向去核。" theme="light" layout="flow4" mode="浏览器实时" notes="目的：分清随机缺失与系统偏差。
+<deck-slide slide-id="D14" data-status="prototype" kicker="D14 / 教案 3.5" header-title="核验网络结论：回原文、敏感性、稳健性、独立来源" transition="网络的结论可以从四个方向去核。" theme="light" layout="flow4" mode="浏览器实时（随机删边在整体网络上重算度或介数；共现与明载在练习材料二上逐条对照，明载关系为课件据原文标出）" notes="目的：分清随机缺失与系统偏差。
 范例引导：先做李氏墓志，再拖删减滑块。
-机制背景：王珪的偏差是系统性的，删减实验测不出来。"><planned-page page-id="D14"></planned-page><div slot="footer">D14 · 规划页；练习材料二据《華陽集》卷五十一（维基文库四庫全書本，标点为本讲所加，待核）。</div></deck-slide>
-<deck-slide slide-id="D15" data-status="planned" kicker="D15 / 教案 3.6" header-title="智能体辅助网络分析：把核验写进要求" transition="让智能体写代码、跑指标时，要求里写什么决定了能核对什么。" theme="light" layout="flow4" mode="教学构造（提法）＋保存结果回放（运行记录，待课前运行）" notes="目的：把核验写进要求。
+机制背景：随机删边：每次按比例独立删边，重算前五名，统计仍在前五的次数；王裕华神宗朝网 2,106 节点只算度。共现：节录中出现的 9 人两两连边，明载 9 条据原文（夫妻、母子五、两女婿、知遇）。王珪的偏差是系统性的，删减实验测不出来。"><verify-lab></verify-lab><div slot="footer">D14 · 浏览器实时；整体网络据王裕华 2022 复制数据（CC0），练习材料二据《華陽集》卷五十一（维基文库四庫全書本，标点为本讲所加，待核）。</div></deck-slide>
+<deck-slide slide-id="D15" data-status="prototype" kicker="D15 / 教案 3.6" header-title="智能体辅助网络分析：把核验写进要求" transition="让智能体写代码、跑指标时，要求里写什么决定了能核对什么。" theme="light" layout="flow4" mode="教学构造（提法与五件事的关键词检查）＋保存结果回放（本地 Qwen3-4B-Instruct-2507 智能体的实际运行记录：佛罗伦萨婚姻网公开，王珪边表在本机材料包）" notes="目的：把核验写进要求。
 范例引导：两分钟补项。
-机制背景：运行记录待课前实际运行一次。"><planned-page page-id="D15"></planned-page><div slot="footer">D15 · 规划页。</div></deck-slide>
-<deck-slide slide-id="D16" data-status="planned" kicker="D16 / 教案 4.1" header-title="地名对账与坐标：唯一匹配、多个候选、无对应" transition="第三种方法把记录放到地图上；上图之前先对账。" theme="light" layout="flow4" mode="浏览器实时" notes="目的：上图之前要对账、保留误差。
+机制背景：tools/local-llm/agent.py：模型写 Python→子进程运行→结果回给模型，至多 6 步；每步记录回复、代码、输出、用时。页面在最终回答中查找正确数字（佛罗伦萨网 15 家族、20 边、美第奇度 6、介数 47.5、删去后 3 个分量；王珪 97 行、84 人、73、24、19、63、17）。"><agent-lab></agent-lab><div slot="footer">D15 · 教学构造＋保存结果回放；运行记录由 tools/local-llm（llama-cpp-python 0.3.36，Qwen3-4B-Instruct-2507 Q4_K_M）在课前环境实际生成。</div></deck-slide>
+<deck-slide slide-id="D16" data-status="prototype" kicker="D16 / 教案 4.1" header-title="地名对账与坐标：唯一匹配、多个候选、无对应" transition="第三种方法把记录放到地图上；上图之前先对账。" theme="light" layout="flow4" mode="浏览器实时（在线查询 CHGIS TGAZ 公开接口；课堂离线时用本机材料包中的查询快照）" notes="目的：上图之前要对账、保留误差。
 范例引导：先对“開封”。
-机制背景：地名表样本用王裕华复制数据中的府州坐标（CC0）与 Pleiades（CC BY 3.0）；CHGIS V6 需签使用协议，未下载。"><planned-page page-id="D16"></planned-page><div slot="footer">D16 · 规划页。</div></deck-slide>
-<deck-slide slide-id="D17" data-status="planned" kicker="D17 / 教案 4.2" header-title="QGIS 与数字地图工具" transition="对账后的表可以交给 QGIS；本页先看坐标参照系怎样改变点的位置。" theme="light" layout="flow4" mode="浏览器实时（坐标转换）＋保存结果回放（QGIS 截图，待课前环境）" notes="目的：知道坐标参照系。
+机制背景：史料地名 15 个（《宋史·王珪传》较长选段与练习材料二），每个名字按前缀查 TGAZ，可限 1050 年；按候选数分三栏；选定记录存浏览器，D17、D18 共用。误差圈为课件按类型设的示意值。底图为 Natural Earth 海岸线（公有领域），不画国界。"><gazetteer-lab></gazetteer-lab><div slot="footer">D16 · 浏览器实时；候选据 CHGIS TGAZ（chgis.hudci.org/tgaz，2026-11-03 查询），底图 Natural Earth。</div></deck-slide>
+<deck-slide slide-id="D17" data-status="prototype" kicker="D17 / 教案 4.2" header-title="QGIS 与数字地图工具" transition="对账后的表可以交给 QGIS；本页先看坐标参照系怎样改变点的位置。" theme="light" layout="flow4" mode="浏览器实时（坐标转换与符号化）＋静态内容（QGIS 流程表；截图待课前环境）" notes="目的：知道坐标参照系。
 范例引导：只演示偏移。
-机制背景：QGIS 截图待课前环境。"><planned-page page-id="D17"></planned-page><div slot="footer">D17 · 规划页。</div></deck-slide>
-<deck-slide slide-id="D18" data-status="planned" kicker="D18 / 教案 4.3" header-title="大语言模型提取地点：距离容限怎样改变得分" transition="大模型可以从文字中抽地点并给坐标；得分取决于怎样算“对”。" theme="light" layout="flow4" mode="浏览器实时（计分）＋浏览器内模型（课前载入）" notes="目的：模型结果要回原文。
+机制背景：用 D16 选定的坐标：下载 CSV 供 QGIS 加载；WGS 84→GCJ-02 用公开实现中通行的加偏公式演示偏移量；按字段着色；出图检查六项。QGIS 逐步截图待课前在教室电脑上补入。"><qgis-lab></qgis-lab><div slot="footer">D17 · 浏览器实时＋静态内容；QGIS 功能表据讲义 @fig-qgis-flow。</div></deck-slide>
+<deck-slide slide-id="D18" data-status="prototype" kicker="D18 / 教案 4.3" header-title="大语言模型提取地点：距离容限怎样改变得分" transition="大模型可以从文字中抽地点并给坐标；得分取决于怎样算“对”。" theme="light" layout="flow4" mode="保存结果回放（本地 Qwen3-4B 对公开文本的一次实际抽取）＋浏览器实时（按距离容限计分）" notes="目的：模型结果要回原文。
 范例引导：拖容限。
-机制背景：待一次真实抽取。"><planned-page page-id="D18"></planned-page><div slot="footer">D18 · 规划页。</div></deck-slide>
-<deck-slide slide-id="D19" data-status="planned" kicker="D19 / 教案 4.4" header-title="智能体做空间分析：网页地图与审图号" transition="让智能体画一张网页地图很容易；检查它要看四件事。" theme="light" layout="flow4" mode="浏览器实时（离线底图：Natural Earth，公有领域）" notes="目的：能检查一张网页地图。
+机制背景：提示要求列出地名、原文引句、今地、坐标与误差半径（照 His-Geo）；页面检查原文中有无此写法、引句能否找到；参照为 D16 选定的 CHGIS 记录；固定容限或模型自报误差两种计分。封号中的地名（延安郡王、岐國公）单独提示。"><geollm-lab></geollm-lab><div slot="footer">D18 · 保存结果回放＋浏览器实时；抽取由本地 Qwen3-4B-Instruct-2507 在课前环境实际运行，参照据 CHGIS TGAZ。</div></deck-slide>
+<deck-slide slide-id="D19" data-status="prototype" kicker="D19 / 教案 4.4" header-title="智能体做空间分析：网页地图与审图号" transition="让智能体画一张网页地图很容易；检查它要看四件事。" theme="light" layout="flow4" mode="浏览器实时（离线底图：Natural Earth 海岸线，公有领域）" notes="目的：能检查一张网页地图。
 范例引导：交换经纬度。
-机制背景：底图离线；中国境内展示的审图号问题只作说明。"><planned-page page-id="D19"></planned-page><div slot="footer">D19 · 规划页。</div></deck-slide>
+机制背景：默认点表为王裕华神宗朝官员及亲属的籍贯坐标（2,106 人）；“表格 N 行，地图 N 点”；交换经纬度后越界点计数；同一坐标上叠放的点计数（开封 338 人）；可下载一个 Leaflet 网页（联网 OpenStreetMap 底图，无审图号，只供练习）。"><webmap-lab></webmap-lab><div slot="footer">D19 · 浏览器实时；点表据王裕华 2022 复制数据（CC0），底图 Natural Earth。</div></deck-slide>
 <deck-slide slide-id="D20" data-status="prototype" kicker="D20 / 教案 5.1" header-title="缺省的年份与时序切片" transition="第四种方法把记录排在时间轴上；先看时间这一栏本身。" theme="light" layout="flow4" mode="浏览器实时（在本机材料包的 CBDB 边表上切片）＋教学构造（小型时序网，演示时间顺序路径）；CBDB 课堂导入" notes="目的：知道缺省年份会制造假的变化，时间原值要另存。
 范例引导：先放全部年份的柱状图，问 1085 年的高柱；再关缺省值。
 机制背景：CBDB 年份 0、-1 的含义未见接口文档说明（讲义写“可能的含义”，教师 11-02“先这样”）；页面让使用者在导入时声明缺省值，不替数据库下结论。"><years-lab></years-lab><div slot="footer">D20 · 浏览器实时＋教学构造；王珪边表 Year 栏据 CBDB 2026-10-22 原始数据。</div></deck-slide>
-<deck-slide slide-id="D21" data-status="planned" kicker="D21 / 教案 5.2" header-title="时代、纪年与差读" transition="时间的表示本身要换算；相邻版本之间的差异也是时间信息。" theme="light" layout="flow4" mode="浏览器实时（文本差分）" notes="目的：知道差读是比较相邻版本。
+<deck-slide slide-id="D21" data-status="prototype" kicker="D21 / 教案 5.2" header-title="时代、纪年与差读" transition="时间的表示本身要换算；相邻版本之间的差异也是时间信息。" theme="light" layout="flow4" mode="浏览器实时（武鑑两版影像逐像素差分、文本逐字对齐、年号换算）" notes="目的：知道差读是比较相邻版本。
 范例引导：找三处变化。
-机制背景：武鑑相邻两版与中文方志两版两例，待取材料。"><planned-page page-id="D21"></planned-page><div slot="footer">D21 · 规划页。</div></deck-slide>
-<deck-slide slide-id="D22" data-status="planned" kicker="D22 / 教案 5.3" header-title="让模型排年表；时间序列（粮价暂缓）" transition="最后一步可以交给模型排年表，但每一行都要回原文。" theme="light" layout="flow4" mode="保存结果回放（待课前运行）" notes="目的：年表也要回原文。
+机制背景：武鑑：CODH 武鑑全集嘉永四年、五年两版大成武鑑的同一幅（薩摩、紀州），影像经 IIIF 取得（CC BY-SA）；差分可手动平移对齐。文本：维基文库选段与 Kanripo《宋史》卷三一二的 WYG、master 两个分支（本机）逐字对齐，异体字另标。年号：宋代年号表为课件录入（待对 CBDB 核），日本年号据 JBDB NengoCodes（本机）。"><diff-lab></diff-lab><div slot="footer">D21 · 浏览器实时；武鑑影像据 CODH 武鑑全集（CC BY-SA 4.0），Kanripo 文本在本机材料包。</div></deck-slide>
+<deck-slide slide-id="D22" data-status="prototype" kicker="D22 / 教案 5.3" header-title="让模型排年表；时间序列（粮价暂缓）" transition="最后一步可以交给模型排年表，但每一行都要回原文。" theme="light" layout="flow4" mode="保存结果回放（本地 Qwen3-4B 对公开文本的一次实际运行）＋浏览器实时（逐行回原文、年号换算核对）" notes="目的：年表也要回原文。
 范例引导：只看一行。
-机制背景：粮价部分教师 11-02 指示暂缓。"><planned-page page-id="D22"></planned-page><div slot="footer">D22 · 规划页。</div></deck-slide>
+机制背景：提示要求每行给出原文纪年写法、公元年、事件与逐字引句；页面检查引句能否在原文中找到，并按年号表（“八年”等承上文）换算核对模型的公元年。粮价部分按教师指示暂缓。"><chrono-lab></chrono-lab><div slot="footer">D22 · 保存结果回放＋浏览器实时；年表由本地 Qwen3-4B-Instruct-2507 在课前环境实际生成。</div></deck-slide>
 <deck-slide slide-id="D23" data-status="prototype" kicker="D23 / 第六节" header-title="回读：王珪边表小任务" transition="前五节讲了四种方法各自怎样看格局；现在用十五分钟把“问来源、回原文”在一张小图上走完。" theme="light" layout="through" mode="浏览器实时（记录存当前浏览器，可导出）；CBDB 课堂导入" notes="目的：把“选尺度、看格局、问来源、回原文”完整走一次。
 范例引导：计时 13 分钟；提前完成的小组改用“推荐”与“弹劾”两类关系重做。
 机制背景：四阶段与 D00 的四个动作一一对应；记录键按页命名（w8/D23），导入旧记录先验证，坏文件不覆盖。"><readback-through></readback-through><div slot="footer">D23 · 浏览器实时；材料为练习材料一至三与 CBDB 1845 号边表。</div></deck-slide>

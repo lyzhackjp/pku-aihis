@@ -320,14 +320,14 @@
       const col1 = `<p><label>运行 <select data-k="run">${runs.map((r) => `<option value="${esc(r.id)}" ${r.id === run.id ? 'selected' : ''}>${esc(r.label)}</option>`).join('')}</select></label></p>
         <p class="sub">${esc(run.runtime)}；${run.docs} 篇、词表 ${run.vocab}；切分：${esc(run.mode_label || run.mode)}；K＝${run.k}，随机种子 ${run.seed}。</p>
         <p><label>主题 <select data-k="topic">${topics.map((t) => `<option value="${t.k}" ${t.k === T.k ? 'selected' : ''}>#${t.k}（占 ${f2(t.share * 100, 1)}%）${esc(t.words.slice(0, 4).map((w) => w[0]).join(' '))}</option>`).join('')}</select></label></p>
-        ${W.bars(words.map(([w, v]) => [w, Math.round(v * 1000) / 1000]))}<p class="sub">词后的数为该词在主题中的概率。</p>`;
+        ${W.bars(words.map(([w, v]) => [w, Math.round(v * 1000) / 1000]))}<p class="sub">${run.kind === 'bertopic' ? `词后的数为 c-TF-IDF 权重。BERTopic 每篇只归一类：本类 ${T.n} 篇；另有 ${run.outliers} 篇归为离群（−1），不属于任何主题。` : '词后的数为该词在主题中的概率。'}</p>`;
       const col2 = `<label class="field">我给这个主题起的名字<input data-name="${esc(key)}" value="${esc(myName)}" placeholder="先起名，再读原文"></label>
         <p class="sub">只看词起名。起好后到第三栏读得分最高的三篇。</p>
         ${C.study || STUDIES[C.id] ? `<button class="small" data-set="reveal:${this.s.reveal ? '' : '1'}" ${myName ? '' : 'disabled'}>${this.s.reveal ? '收起' : '看原研究者的命名'}</button>${myName ? '' : '<span class="sub">（先起名）</span>'}` : ''}
         ${this.s.reveal && myName ? this.studyBox(C, T) : ''}`;
       const ws = new Set(T.words.slice(0, 15).map((w) => w[0]));
       const hl = (s) => { if (C.lang === 'en') return esc(s).replace(/[A-Za-z]+/g, (m) => (ws.has(m.toLowerCase()) ? `<mark>${m}</mark>` : m)); const arr = [...s]; let out = ''; for (let i = 0; i < arr.length; i++) { const b = arr[i] + (arr[i + 1] || ''); if (ws.has(b)) { out += `<mark>${esc(b)}</mark>`; i++; } else out += ws.has(arr[i]) ? `<mark>${esc(arr[i])}</mark>` : esc(arr[i]); } return out; };
-      const docs = T.top_docs.slice(0, 3).map(([id, p]) => { const d = C.docs[id]; return d ? `<div class="evid-card"><p class="sub">${esc(id)}｜${esc(d.date || d.wareki || d.year || '')}｜${esc(d.ref || d.title || '')}｜本篇中此主题占 ${f2(p * 100, 0)}%</p><p class="src-line small">${hl(d.text.slice(0, 260))}${d.text.length > 260 ? '……' : ''}</p></div>` : `<p class="nil">${esc(id)} 原文不在材料包中</p>`; }).join('');
+      const docs = T.top_docs.slice(0, 3).map(([id, p]) => { const d = C.docs[id]; return d ? `<div class="evid-card"><p class="sub">${esc(id)}｜${esc(d.date || d.wareki || d.year || '')}｜${esc(d.ref || d.title || '')}｜${run.kind === 'bertopic' ? `与本类中心的余弦 ${f2(p, 2)}` : `本篇中此主题占 ${f2(p * 100, 0)}%`}</p><p class="src-line small">${hl(d.text.slice(0, 260))}${d.text.length > 260 ? '……' : ''}</p></div>` : `<p class="nil">${esc(id)} 原文不在材料包中</p>`; }).join('');
       const col3 = `${myName ? docs + `<label class="field small">读完以后还叫“${esc(myName)}”吗？<input data-name="${esc(key)}|2" value="${esc((this.s.name || {})[key + '|2'] || '')}" placeholder="改名或说明理由"></label>` : '<p class="sub">先在第二栏起名。</p>'}
         ${run.by_year && Object.keys(run.by_year).length > 3 ? `<p class="sub">此主题各年的平均比例：</p>${lineChart(Object.entries(run.by_year).map(([y, v]) => [y, v[T.k]]), { label: '主题比例随年份' })}` : ''}`;
       // 第四栏：两次运行对照；华阳集可现场重跑

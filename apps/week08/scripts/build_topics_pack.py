@@ -10,12 +10,12 @@ MODE = {'en-word': '按词（去 scikit-learn 英文停用词）', 'zh-char': '�
 CORP = {
     'ballard': dict(src=en, title='Martha Ballard 日记（DoHistory 在线录文，1785—1812，9,999 条）', lang='en',
                     license='录文有版权（Robert and Cynthia McCausland，Picton Press）；只供本课堂分析，不分发',
-                    runs=[('en_k30_s1', 'K＝30，种子 1（与 Blevins 同为 30 个主题）'), ('en_k30_s2', 'K＝30，种子 2'), ('en_k20_s1', 'K＝20，种子 1'), ('en_k10_s1', 'K＝10，种子 1')],
+                    runs=[('en_k30_s1', 'K＝30，种子 1（与 Blevins 同为 30 个主题）'), ('en_k30_s2', 'K＝30，种子 2'), ('en_k20_s1', 'K＝20，种子 1'), ('en_k10_s1', 'K＝10，种子 1'), ('en_bertopic_s42', 'BERTopic（all-MiniLM-L6-v2；HDBSCAN 最小类 30、leaf）'), ('en_bertopic_s42_eom40', 'BERTopic（同一嵌入；最小类 40、eom）')],
                     pick=lambda t: len({'birth', 'deld', 'safe', 'morn', 'calld', 'left', 'receivd', 'shee', 'born', 'labour'} & {w for w, _ in t['words']})),
     'qingshilu': dict(src=zh, title='《清实录》台湾资料选辑（9 种，1644—1895，6,184 条；殆知阁简体录文）', lang='zh',
                       license='实录原文为公有领域；此本为台湾文献丛刊选辑的简体录文，录入者与许可未详，只在本机使用',
                       note='年份由条目开头的年号推出并向后沿用；录文偶有错字（如道光九年误注“一九二九”），未改。',
-                      runs=[('zh_char_k20_s1', 'K＝20，按字，种子 1'), ('zh_char_k20_s2', 'K＝20，按字，种子 2'), ('zh_bi_k20_s1', 'K＝20，按二字串，种子 1'), ('zh_char_k10_s1', 'K＝10，按字，种子 1')],
+                      runs=[('zh_char_k20_s1', 'K＝20，按字，种子 1'), ('zh_char_k20_s2', 'K＝20，按字，种子 2'), ('zh_bi_k20_s1', 'K＝20，按二字串，种子 1'), ('zh_char_k10_s1', 'K＝10，按字，种子 1'), ('zh_bertopic_s42', 'BERTopic（bge-small-zh-v1.5；HDBSCAN 最小类 30；第④步按字计数）')],
                       pick=lambda t: dict(t['words']).get('贼', 0) + dict(t['words']).get('匪', 0) + dict(t['words']).get('剿', 0)),
     'meishi': dict(src=ja, title='JBDB『梅颸日記』事件注记（2026-11-02 查询，20,033 条）', lang='ja',
                    license='JBDB 数据的再发布许可未见说明，只在本机使用',
@@ -33,7 +33,7 @@ for cid, c in CORP.items():
         if not p.exists(): print('缺', p); continue
         r = json.loads(p.read_text(encoding='utf-8'))
         files.append({'file': p.name, 'sha256': hashlib.sha256(p.read_bytes()).hexdigest(), 'note': f'D07 主题模型运行结果（{label}）'})
-        r.update(id=f, label=label, mode_label=MODE[r['mode']], exercise=max(r['topics'], key=c['pick'])['k'])
+        r.update(id=f, label=label, mode_label=MODE[r['mode']] + ('（第④步分词计数；第①步嵌入读原文）' if r['kind'] == 'bertopic' else ''), exercise=max(r['topics'], key=c['pick'])['k'])
         for t in r['topics']: need.update(i for i, _ in t['top_docs'])
         runs.append(r)
     keep = {i: {k: docs[i].get(k) for k in ('text', 'date', 'year', 'wareki', 'ref') if docs[i].get(k) is not None} for i in need if i in docs}
