@@ -27,11 +27,12 @@ for (const f of files) {
 let privateScan = 'skipped: WEEK08_LOCAL_PACK not set';
 if (process.env.WEEK08_LOCAL_PACK) {
   const pack = JSON.parse(await fs.readFile(process.env.WEEK08_LOCAL_PACK, 'utf8'));
-  const chunks = [...pack.materials['cbdb-wanggui'].edges.map(e => e.ref).filter(r => r && r.length > 12), ...pack.materials.meishi.passages.map(p => p.text.slice(0, 20))];
+  const chunks = [...pack.materials['cbdb-wanggui'].edges.map(e => e.ref).filter(r => r && r.length > 12), ...pack.materials.meishi.passages.map(p => p.text.slice(0, 20)),
+    ...Object.values(pack.topics || {}).flatMap(c => Object.values(c.docs).map(d => d.text).filter(x => x.length >= 24).slice(0, 60).map(x => x.slice(0, 24)))];
   for (const f of files) if (/\.(m?js|json|html)$/.test(f)) { const t = await fs.readFile(f, 'utf8'); for (const c of chunks) assert.ok(!t.includes(c), '本机材料片段进入构建：' + path.relative(built, f) + '：' + c); }
   privateScan = `passed (${chunks.length} fragments)`;
 }
-const report = {date: new Date().toISOString(), pages: map.length, publicFiles: files.length, localPack: 'classroom import only (CBDB, 梅颸日記, JBDB)', privateScan, weights: 'none', credentials: 'none detected'};
+const report = {date: new Date().toISOString(), pages: map.length, publicFiles: files.length, localPack: 'classroom import only (CBDB, 梅颸日記, JBDB, D07 三种语料与主题模型结果)', privateScan, weights: 'none', credentials: 'none detected'};
 await fs.mkdir(path.join(root, 'docs/week08/verification'), {recursive: true});
 await fs.writeFile(path.join(root, 'docs/week08/verification/public-build.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report));

@@ -19,8 +19,13 @@
 # 原始数据目录即课程文件夹 第八周/research/原始数据/
 python3 apps/week08/scripts/build_public_pack.py <原始数据> <讲义.typ> apps/week08/prototype/data/public/week08-public-pack.js
 python3 apps/week08/scripts/build_week08_pack.py <原始数据> <cbdb_1845.json> <第八周/demo/导入包/梅颸日記> <原始数据/jbdb_20261102> apps/week08/local-only/week08-pack.json
+# D07：三种语言语料的主题模型（scikit-learn LDA），结果并入本机材料包
+python3 apps/week08/scripts/run_topics.py <语料 JSON> <切分> <K> <种子> <输出 JSON>     # 切分：en-word｜zh-char｜zh-bigram｜ja-bigram｜names
+python3 apps/week08/scripts/build_topics_pack.py <主题结果目录> <ballard_entries.json> <qingshilu_tw_entries.json> <baishi_entries.json> apps/week08/local-only/week08-pack.json
 node apps/week08/scripts/assemble-prototype.mjs     # 改 docs/week08/page-map.json 之后重新生成 index.html 与 data.js
 ```
+
+D07 的三种语料（Martha Ballard 日记 DoHistory 录文、《清实录》台湾资料选辑、JBDB『梅颸日記』事件注记）与运行结果只进本机材料包；语料取得方式与许可见课程文件夹 `第八周/research/原始数据/` 各目录的 README。本机模型与智能体见仓库 `tools/local-llm/`（各周共用）。
 
 页表由 `docs/week08/plan-src/make_page_map.py` 生成，逐页内容稿由 `make_pages_md.py` 生成。
 

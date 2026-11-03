@@ -94,6 +94,11 @@ texts = {
   'practice2': {'title': '《丹陽郡夫人李氏墓誌銘》节录（练习材料二）', 'text': practice2, 'ref': '王珪《華陽集》卷五十一，维基文库四庫全書本；标点为本讲所加（待核）；据第八讲讲义附录',
                 'license': '公有领域文本；标点为课程所加', 'genre': '墓志'},
 }
+# 第七周公开材料包中的《宋史·王珪传》较长选段（788 字，维基文库，CC BY-SA 4.0）：练习材料一只是其中一段，“相”字只有两处
+w7 = pathlib.Path(__file__).resolve().parents[2] / 'week07/prototype/data/public/week07-public-pack.js'
+w7p = json.loads(re.search(r'window\.W7_PUBLIC_PACK\s*=\s*(\{.*\});?\s*$', w7.read_text(encoding='utf-8'), re.S).group(1))
+sw = w7p['texts']['songshi_wanggui_excerpt']; sources.append({'file': 'apps/week07/prototype/data/public/week07-public-pack.js', 'sha256': sha(w7), 'note': '第七周公开材料包（取其中《宋史》选段）'})
+texts['songshi_w7'] = {'title': '《宋史·王珪传》较长选段（第七周练习材料一，788 字）', 'text': sw['text'], 'ref': sw['source'] + '；取自第七周公开材料包', 'license': 'CC BY-SA 4.0（维基文库录入）', 'genre': '正史列传'}
 hy = {}
 for f in sorted((raw / 'huayangji').glob('juan*.txt'), key=lambda x: int(re.sub(r'\D', '', x.name))):
     n = int(re.sub(r'\D', '', f.name)); s = f.read_text(encoding='utf-8'); src(f, '维基文库 wikitext 源码')
