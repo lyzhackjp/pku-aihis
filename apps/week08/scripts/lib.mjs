@@ -4,7 +4,8 @@ import path from 'node:path';
 import vm from 'node:vm';
 
 // 只在本机材料包中出现的标记：CBDB 接口字段、王珪边表出处、『梅颸日記』录文与 JBDB 字段。公开文件里出现即视为外泄。
-export const PRIVATE_MARKERS = ['PersonAuthority', 'cbdbapi', 'BasicInfo', 'c_personid', 'PersonKinshipInfo', 'cbdb-wanggui"', '翰林學士王珪等狀',
+export const PRIVATE_MARKERS = ['PersonAuthority', 'cbdbapi', 'BasicInfo', 'c_personid', 'PersonKinshipInfo', 'cbdb-wanggui"', '梁莊肅公墓誌銘 / 華陽集', // 练习材料三（30 行）已印在讲义附录，可公开；97 行全表不公开
+ 
   'いまいせといふひろ舟', '久太郎生日', 'cEventNotes', 'cPersonid', 'data:image/png;base64'];
 
 export async function pageIds(root) {

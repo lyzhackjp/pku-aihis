@@ -169,34 +169,34 @@
   /* ================= D13 从一条日记到人物与关系 ================= */
   const RELS = ['来访', '送行', '同行', '雇用或役使', '书信', '馈赠', '同席', '其他'];
   class DiaryLab extends Lab {
-    defaults() { return { mat: 'meishi', pid: 'BS09', rows: {}, crop: '12', pick: '', rel: '送行', gender: '女', showImg: true }; }
+    defaults() { return { mat: 'meishi', pid: 'BS09', rows: {}, crop: '0', pick: '', rel: '送行', gender: '女', showImg: true }; }
     render() {
       const m = this.mat(this.s.mat);
       if (!m || !m.passages) { rerender(this, `${W.matSelect('events', this.s.mat)}${W.gate('『梅颸日記』十段录文与影像（demo/导入包/梅颸日記/ 生成的本机材料包）', '『梅颸日記』本机导入包')}
         <p class="sub">未导入时，以下为一条教学构造的示例行，只说明操作：日期“某年某月某日”，原文“晴。某氏来、娘二人同道。”，点选“某氏”“娘二人”后生成两条边。</p>`); return; }
       const p = m.passages.find((x) => x.id === this.s.pid) || m.passages[0];
       const rows = this.s.rows[p.id] || [];
-      const diarist = m.id === 'meishi' ? '頼静' : '日记作者';
+      const diarist = m.id === 'meishi' ? '頼静' : m.diarist || m.card?.author?.replace(/（.*/, '') || '日记作者';
       const text = p.text, marks = rows.map((r) => r.who);
       let hl = esc(text); for (const w of [...new Set(marks)].sort((a, b) => b.length - a.length)) hl = hl.split(esc(w)).join(`<mark>${esc(w)}</mark>`);
       const img = p.image && m.images?.[p.image];
       const col1 = `<p><select data-k="pid">${m.passages.map((x) => `<option value="${x.id}" ${x.id === p.id ? 'selected' : ''}>${x.id}${x.classroom ? '（课堂展示）' : ''}　${esc(x.wareki)}</option>`).join('')}</select></p>
-        <p class="sub">${esc(m.card?.version || '')}　第 ${esc(p.page)} 页｜${esc(p.wareki)}（西暦 ${p.year}）</p>
+        <p class="sub">${esc(m.card?.version || '')}　第 ${esc(p.page)} 页｜${esc(p.date_raw ? p.date_raw + '＝' : '')}${esc(p.wareki)}（西暦 ${p.year}）</p>
         <div class="srcbox diary" data-src>${hl}</div>
         <p class="sub">用鼠标在原文中选出一个人物称呼，再点“加为人物”；或点下面导入包中已照录的称呼。</p>
         <p class="chips">${p.persons.map((x) => `<button class="small" data-who="${esc(x)}">${esc(x)}</button>`).join('')}</p>
-        ${img ? `<details ${this.s.showImg ? 'open' : ''} data-img><summary>影像（本机导入；已裁去页脚 ${esc(this.s.crop)}%；点图放大）</summary><div class="cropbox" data-crop="${Number(this.s.crop)}"><img src="${img}" alt="${esc(p.id)} 影像" data-zoom="1"></div><label class="small">裁去页脚 <input type="range" min="0" max="30" data-k="crop" value="${esc(this.s.crop)}"> ${esc(this.s.crop)}%</label></details>` : ''}`;
+        ${img ? `<details ${this.s.showImg ? 'open' : ''} data-img><summary>影像（${m.id === "meishi" ? "本机导入" : "公开影像"}；已裁去页脚 ${esc(this.s.crop)}%；点图放大）</summary><div class="cropbox" data-crop="${Number(this.s.crop)}"><img src="${img}" alt="${esc(p.id)} 影像" data-zoom="1"></div><label class="small">裁去页脚 <input type="range" min="0" max="30" data-k="crop" value="${esc(this.s.crop)}"> ${esc(this.s.crop)}%</label></details>` : ''}`;
       const col2 = `<p>人物：<input data-ki="pick" value="${esc(this.s.pick)}" placeholder="选中文字后自动填入" size="10"> <button data-add="1">加为人物</button></p>
         <p>关系：${seg('rel', RELS.map((r) => [r, r]), this.s.rel)}</p><p>性别（据称呼判读）：${seg('gender', [['女', '女'], ['男', '男'], ['不明', '不明']], this.s.gender)}</p>
-        <table class="steps"><tr><th>起点</th><th>人物（照录称呼）</th><th>关系</th><th>性别判读</th><th>出处</th><th></th></tr>${rows.map((r, k) => `<tr><td>${diarist}</td><td>${esc(r.who)}</td><td>${esc(r.rel)}</td><td>${esc(r.gender)}</td><td class="small">全書 p.${esc(p.page)}</td><td><button class="small" data-delrow="${k}">删</button></td></tr>`).join('') || '<tr><td colspan="6" class="sub">尚无</td></tr>'}</table>
+        <table class="steps"><tr><th>起点</th><th>人物（照录称呼）</th><th>关系</th><th>性别判读</th><th>出处</th><th></th></tr>${rows.map((r, k) => `<tr><td>${diarist}</td><td>${esc(r.who)}</td><td>${esc(r.rel)}</td><td>${esc(r.gender)}</td><td class="small">${m.id === 'meishi' ? '全書 ' : ''}p.${esc(p.page)}</td><td><button class="small" data-delrow="${k}">删</button></td></tr>`).join('') || '<tr><td colspan="6" class="sub">尚无</td></tr>'}</table>
         <p><button class="small" data-csv="1">导出本段边表 CSV</button> ${window.W8Live ? '<button class="small" data-ner="1">请浏览器内模型给人物候选</button>' : ''}</p><div class="nerbox">${this._ner && this._ner.pid === p.id ? this._ner.html : ''}</div>`;
       const g = { nodes: [{ id: diarist, label: diarist }, ...[...new Set(rows.map((r) => r.who))].map((w) => ({ id: w, label: w }))], directed: false, edges: rows.map((r) => ({ s: diarist, t: r.who, w: 1, recs: [r] })) }; g.index = new Map(g.nodes.map((n, i) => [n.id, i]));
       const gcol = (i) => { const r = rows.find((x) => x.who === g.nodes[i].id); return !r ? '#fff' : r.gender === '女' ? '#f3c4c4' : r.gender === '男' ? '#c4d4f3' : '#e0e0e0'; };
       const fem = new Set(rows.filter((r) => r.gender === '女').map((r) => r.who)).size, all = new Set(rows.map((r) => r.who)).size;
       const col3 = `${W.drawGraph(g, egoPos(g, diarist, 360, 260), { w: 360, h: 260, labels: 'all', color: gcol })}
         <p class="okbox">本段：${all} 人，其中判读为女性 ${fem} 人。</p><p class="sub">粉：女；蓝：男；灰：不明。性别为学生据称呼判读，未考证。</p>`;
-      const J = W.Pack.local()?.jbdb; let col4 = '<p class="sub">JBDB 查询结果在本机材料包中。</p>';
-      if (J) {
+      const J = W.Pack.local()?.jbdb; let col4 = m.id === 'meishi' ? '<p class="sub">JBDB 查询结果在本机材料包中。</p>' : `<p class="sub">这一材料没有现成的数据库可对照。可以做的核对：</p><ul class="small"><li>同一人的不同称呼（如“禮卿”与“菅茶山”、“黑子孝”与“黑瀨”）要不要合并为一个节点？括注是原书编者加的。</li><li>“大人”“數子”“長服二子”这类称呼指谁？不能确定的，在边表中保留原称呼，不要替它补名字。</li><li>${m.id === 'raisanyo-1797' ? 'JBDB 收有頼山陽与菅茶山等人；课堂导入本机材料包后，『梅颸日記』一页可以看数据库录了什么。' : '在英文日记中，“my Lord”“my wife”是谁，要靠前后文与编者注。'}</li></ul>`;
+      if (J && m.id === 'meishi') {
         const sd = (J.same_day || []).find((x) => x.passage === p.id);
         const ev = (sd?.events || []);
         const sum = J.summary || {};
@@ -220,7 +220,7 @@
         if (e.target.dataset.who) add(e.target.dataset.who);
         if (e.target.dataset.add) add(this.s.pick.trim());
         if (e.target.dataset.delrow != null) { const rows = [...(this.s.rows[p.id] || [])]; rows.splice(Number(e.target.dataset.delrow), 1); this.s.rows = { ...this.s.rows, [p.id]: rows }; this.save(); }
-        if (e.target.dataset.csv) download(`梅颸日記_${p.id}_边表.csv`, '﻿起点,人物,关系,性别判读,日期,出处\n' + (this.s.rows[p.id] || []).map((r) => ['頼静', r.who, r.rel, r.gender, p.wareki, '頼山陽全書本 p.' + p.page].join(',')).join('\n'), 'text/csv');
+        if (e.target.dataset.csv) { const mm = this.mat(this.s.mat), dia = mm.id === 'meishi' ? '頼静' : mm.diarist || '日记作者'; download(`${mm.id}_${p.id}_边表.csv`, '﻿起点,人物,关系,性别判读,日期,出处\n' + (this.s.rows[p.id] || []).map((r) => [dia, r.who, r.rel, r.gender, p.wareki, (mm.id === 'meishi' ? '頼山陽全書本 p.' : 'p.') + p.page].join(',')).join('\n'), 'text/csv'); }
         if (e.target.dataset.ner) {
           e.target.disabled = true; e.target.textContent = '模型运行中…';
           try { const r = await window.W8Live.ner(p.text, ['person', 'personal name']); this._ner = { pid: p.id, html: `<p class="sub">${esc(r.model)}，${r.seconds} 秒；阈值 ${r.threshold}。候选只供核对，点一下加为人物：</p><p class="chips">${r.spans.map((s) => `<button class="small" data-who="${esc(s.text)}" title="${s.score}">${esc(s.text)} <small>${s.score}</small></button>`).join('') || '无候选'}</p>` }; }

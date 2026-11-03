@@ -500,14 +500,17 @@
   };
 
   /* 材料下拉框：列出某一类材料，并附“导入表格”小按钮（材料栏一行）。 */
+  /* 本机材料包未导入时，案例材料退到公开的同类材料（讲义附录节录、公开日记），页面照常可操作。 */
+  const FALLBACK = { 'cbdb-wanggui': 'cbdb-wanggui-excerpt', meishi: 'raisanyo-1797' };
   function matSelect(kind, cur, key = 'mat', { filter = null, extra = [] } = {}) {
     const list = Mat.list(kind).filter((m) => !filter || filter(m));
+    const fb = !Mat.get(cur) && FALLBACK[cur] && Mat.get(FALLBACK[cur]) ? FALLBACK[cur] : null; if (fb) cur = fb;
     return `<span class="matbar"><label>材料 <select data-k="${key}">${extra.map(([v, l]) => `<option value="${esc(v)}" ${cur === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}${list.map((m) => `<option value="${esc(m.id)}" ${cur === m.id ? 'selected' : ''}>${esc(m.title)}</option>`).join('')}</select></label>
-      <button class="small" data-open-import="${kind}" title="导入自己的表格">导入表格</button></span>`;
+      <button class="small" data-open-import="${kind}" title="导入自己的表格">导入表格</button>${fb ? `<span class="sub">本机材料包未导入，暂用公开的“${esc(Mat.get(fb).title)}”。</span>` : ''}</span>`;
   }
   document.addEventListener('click', (e) => { const b = e.target.closest('button[data-open-import]'); if (b && !b.closest('.pack-bar')) Importer.open(b.dataset.openImport || undefined); });
 
-  window.W8 = { Pack, Mat, gate, card, rng, graph, adjacency, betweenness, allShortestPaths, clustering, components, pathStats, stats, rewire, modularity, communities,
+  window.W8 = { FALLBACK, Pack, Mat, gate, card, rng, graph, adjacency, betweenness, allShortestPaths, clustering, components, pathStats, stats, rewire, modularity, communities,
     layout, drawGraph, bars, PALETTE, NET, netMetrics, grams, jaccard, levenshtein, lcsRatio, cosine, chars, findInHuayangji, MEMORIAL, LECTURE_GROUPS, parseAny, buildMaterial, guessKind, guessMap, KINDS, Importer, matSelect, CBDB_CITE, kvGet, kvPut };
   window.addEventListener('DOMContentLoaded', () => { Pack.init(); setTimeout(packBar, 0); });
 })();

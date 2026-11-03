@@ -158,12 +158,55 @@ def slim(p):
     return r
 if lr.exists():
     extra['runs'] = {p.stem: slim(p) for p in sorted(lr.glob('*.json')) if p.name.startswith(('geo_', 'chrono_', 'agent_')) and 'cbdb' not in p.name}
+# 讲义附录练习材料三：王珪社会关系边表节录 30 行（讲义已印出，随讲义分发；CBDB 为 CC BY-NC-SA 4.0）
+ex = raw / 'cbdb_1845_社会关系边表_20261029.csv'
+if ex.exists():
+    blk = t[t.index('== 练习材料三'):t.index('== 回读记录单')]
+    want = [(m.group(1), m.group(2)) for m in re.finditer(r'\n  \[([^\]]+)\], \[([^\]]+)\], \[[^\]]*\], \[', blk)]
+    want = [(a.strip(), re.sub(r'（附注：.*?）', '', b).strip()) for a, b in want if a != '#hei[对方]']
+    rows = list(csv.DictReader(ex.open(encoding='utf-8-sig'))); src(ex, 'CBDB 1845 号社会关系边表（取讲义附录所录 30 行）')
+    pick, used = [], set()
+    for a, b in want:
+        for i, r in enumerate(rows):
+            if i not in used and r['target'] == a and r['assoc_name'] == b: used.add(i); pick.append((i, r)); break
+    nodes = {r['source_id']: r['source'] for _, r in pick}; nodes.update({r['target_id']: r['target'] for _, r in pick})
+    exm = {'id': 'cbdb-wanggui-excerpt', 'kind': 'network', 'title': '王珪社会关系边表节录 30 行（讲义附录练习材料三；CBDB）',
+           'card': {'unit': '人（王珪与其关系人，按 CBDB 人物编号）', 'edge_meaning': 'CBDB 编者从某一出处录出的一种关系', 'missing': '只是 97 条中的 30 条：纪念文字类以外的全部 24 条，加与 3.5 有关的纪念文字类 6 条；全部 97 条在本机材料包',
+                    'time_precision': '多为缺省（0、-1）', 'author': 'CBDB 项目', 'version': 'CBDB API，2026-10-22 取得', 'location': '讲义附录练习材料三', 'obtained': '由边表按讲义所录 30 行取出', 'nature': '实际数据（节录）',
+                    'license': 'CC BY-NC-SA 4.0（CBDB）', 'visibility': '公开（讲义已印出）'},
+           'declare': {'directed': True, 'missing_time': ['0', '-1'], 'suspect_time': ['1085']},
+           'nodes': [{'id': k, 'label': v} for k, v in nodes.items()],
+           'edges': [{'s': r['source_id'], 't': r['target_id'], 'type': r['assoc_name'], 'code': r['assoc_code'], 'time_raw': r['year'], 'ref': r['text_title'], 'row': i + 2} for i, r in pick]}
+    extra_mats = [exm]; print('练习材料三', len(pick), '行')
+else: extra_mats = []
+# 公开日记（D13 从一条日记到人物与关系；D05 KWIC）：頼山陽「東遊旅行日記」（NDL 公開）、Pepys 1660 年一月（Gutenberg，公有领域）
+rs = raw / 'ndl_777012' / 'raisanyo_1797.json'
+if rs.exists():
+    R = json.loads(src(rs, '頼山陽日记 30 条（OCR 校读）').read_text(encoding='utf-8')); imgs = {}
+    for pg in sorted({e['image'] for e in R['entries']}):
+        f = raw / 'ndl_777012' / pg; src(f, 'NDL 777012 影像（灰度缩图）'); imgs[pg] = 'data:image/jpeg;base64,' + base64.b64encode(f.read_bytes()).decode()
+    extra_mats.append({'id': 'raisanyo-1797', 'kind': 'events', 'title': '頼山陽「東遊旅行日記」寛政九年三—四月（『偉人日記』1911 所收，NDL 公開）', 'diarist': '頼山陽',
+        'card': {'unit': '日条', 'edge_meaning': '一条日记中作者与所见人物的往来（由使用者判读）', 'missing': '只是三月十二日至四月十一日由广岛到江户的一程；编者节录，未注删节', 'time_precision': '日（和暦）', 'author': '頼山陽（1780—1832）',
+                 'version': R['source'], 'form': R['method'], 'nature': '实际数据', 'license': '公有领域（NDL インターネット公開）', 'visibility': '公开'},
+        'declare': {'calendar': '和暦'}, 'passages': [{**e, 'classroom': e['id'] == 'RS08', 'note': ''} for e in R['entries']], 'images': imgs})
+    texts['raisanyo_1797'] = {'title': '頼山陽「東遊旅行日記」寛政九年（『偉人日記』所收）', 'text': '\n'.join(e['date_raw'] + '　' + e['text'] for e in R['entries']), 'ref': R['source'], 'license': '公有领域', 'genre': '日记'}
+pp = raw / 'pepys' / 'pepys_1660.json'
+if pp.exists():
+    P = json.loads(src(pp, 'Pepys 1660 年日记 337 条').read_text(encoding='utf-8'))
+    extra_mats.append({'id': 'pepys-1660-01', 'kind': 'events', 'title': 'Samuel Pepys 日记 1660 年一月（Gutenberg #4200，公有领域）', 'diarist': 'Pepys',
+        'card': {'unit': '日条', 'edge_meaning': '一条日记中作者与所见人物的往来（由使用者判读）', 'missing': '只取一月；编者注已删', 'time_precision': '日（儒略历；英国当时以 3 月 25 日为年首）', 'author': 'Samuel Pepys（1633—1703）',
+                 'version': 'Mynors Bright 转写、H. B. Wheatley 编本，Project Gutenberg #4200', 'nature': '实际数据', 'license': '公有领域', 'visibility': '公开'},
+        'passages': [{'id': e['id'], 'wareki': e['date'] + '（儒略历）', 'year': 1660, 'month': e['month'], 'day': e['day'], 'page': 'Gutenberg #4200', 'text': e['text'], 'persons': []} for e in P if e['month'] == 1]})
+    texts['pepys_1660'] = {'title': 'Samuel Pepys 日记 1660 年（337 条）', 'docs': [{'id': e['id'], 'date': e['date'], 'text': e['text']} for e in P], 'ref': 'Project Gutenberg #4200', 'license': '公有领域', 'genre': '日记',
+                           'text': '\n'.join(e['date'] + ' ' + e['text'] for e in P if e['month'] == 1)}
+# 日本年号（江户后期，D13、D21；课件录入，待对 JBDB NengoCodes 或 HuTime 核）
+extra['eras_jp'] = {'note': '只到年；元年按改元之年计，年中改元不区分。课件录入，待核。', 'eras': [[n, int(y)] for n, y in (x.split(':') for x in '享保:1716 元文:1736 寛保:1741 延享:1744 寛延:1748 宝暦:1751 明和:1764 安永:1772 天明:1781 寛政:1789 享和:1801 文化:1804 文政:1818 天保:1830 弘化:1844 嘉永:1848 安政:1854 万延:1860 文久:1861 元治:1864 慶応:1865 明治:1868'.split())]}
 if (lr / 'tasks').exists():
     texts['agent_tasks'] = {'title': 'D15 智能体任务（佛罗伦萨家族婚姻网）', **{k: src(lr / 'tasks' / f'{k}_padgett.md', 'D15 任务文本').read_text(encoding='utf-8') for k in ('bad', 'good')}}
 
 pack = {'format': 'pku-aihis-week08-public-pack', 'version': 1, 'built': datetime.datetime.now().astimezone().isoformat(timespec='seconds'),
         'notice': '随第八周课件公开发布的材料与教学构造。各部分许可不同，转用时按各自的 card.license 注明出处。CBDB 记录、『梅颸日記』与 JBDB 查询结果不在此文件中，课堂从本机材料包导入。',
-        'materials': {m['id']: m for m in [toy7, adj4, temporal, padgett, shenzong, reform, pairs, constructed]},
+        'materials': {m['id']: m for m in [toy7, adj4, temporal, padgett, shenzong, reform, pairs, constructed, *extra_mats]},
         'texts': texts, 'sources': sources, **extra}
 js = '/* 第八周公开材料（由 apps/week08/scripts/build_public_pack.py 生成；许可见各部分 card.license）。 */\nwindow.W8_PUBLIC_PACK = ' + json.dumps(pack, ensure_ascii=False, separators=(',', ':')) + ';\n'
 out.parent.mkdir(parents=True, exist_ok=True); out.write_text(js, encoding='utf-8')

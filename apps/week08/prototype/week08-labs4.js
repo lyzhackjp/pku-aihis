@@ -123,7 +123,19 @@
         <p>随机删去 <input type="range" min="0" max="80" step="5" data-k="p" value="${esc(this.s.p)}"> <b>${esc(this.s.p)}%</b> 的边，重复 <select data-k="reps">${['20', '50', '100'].map((v) => `<option ${this.s.reps === v ? 'selected' : ''}>${v}</option>`).join('')}</select> 次，种子 <input type="number" data-k="seed" value="${esc(this.s.seed)}" style="width:4em"></p>
         <table class="steps"><tr><th>原排名前五</th><th>原值</th><th>仍在前五的次数</th></tr>${top.map((i, k) => `<tr class="${R.stay[k] / reps >= 0.8 ? 'ok' : R.stay[k] / reps < 0.5 ? 'bad' : ''}"><td>${esc(nm(i))}</td><td>${f2(base[i], metric === 'btw' ? 1 : 0)}</td><td>${R.stay[k]}／${reps}</td></tr>`).join('')}</table>
         <p class="okbox">平均每次保留原前五中的 ${f2((R.jsum / reps) * 100, 0)}%。</p>
+        <details data-curve><summary>按 Ryan 与 Ahnert 2021 的做法：删去比例与等级相关</summary>${(() => { const cv = this.curve(m); return `<table class="steps small"><tr><th>删去</th>${cv.map(([p]) => `<th>${p * 100}%</th>`).join('')}</tr><tr><td>度</td>${cv.map(([, d]) => `<td>${f2(d)}</td>`).join('')}</tr><tr><td>局部聚类系数</td>${cv.map(([, , c]) => `<td>${f2(c)}</td>`).join('')}</tr></table>`; })()}
+          <p class="sub">每格为删边后各节点指标与原指标的斯皮尔曼等级相关（10 次平均）。Ryan 与 Ahnert 在近代早期英国书信网上发现：多数中心度要删去六成以上的数据才明显失真，只有局部聚类系数从一开始就明显受影响（Journal of Cultural Analytics 6.3, 2021，读全文）。这张网上是否如此，看上表。</p></details>
         <p class="sub">这测的是随机缺失。王珪的数据几乎全部来自他本人的文集，缺失是系统性的，删减实验测不出来（讲义 3.5，Ryan 与 Ahnert 2021 的模拟也只针对随机缺失）。</p>`;
+    }
+    /* Ryan 与 Ahnert 2021 的做法：按比例随机删边，计算删后各节点指标与原指标的斯皮尔曼等级相关，多次取平均。 */
+    curve(m) {
+      const ck = m.id + '|' + this.s.seed; if (this._ck === ck) return this._cv;
+      const g = W.graph(m, { directed: false }), r = W.rng(Number(this.s.seed) + 99), reps = 10;
+      const rank = (v) => { const o = v.map((x, i) => [x, i]).sort((a, b) => a[0] - b[0]); const R = new Array(v.length); for (let i = 0; i < o.length;) { let j = i; while (j + 1 < o.length && o[j + 1][0] === o[i][0]) j++; for (let k = i; k <= j; k++) R[o[k][1]] = (i + j) / 2; i = j + 1; } return R; };
+      const sp = (a, b) => { const A = rank(a), B = rank(b), n = A.length, ma = A.reduce((x, y) => x + y, 0) / n, mb = B.reduce((x, y) => x + y, 0) / n; let c = 0, va = 0, vb = 0; for (let i = 0; i < n; i++) { c += (A[i] - ma) * (B[i] - mb); va += (A[i] - ma) ** 2; vb += (B[i] - mb) ** 2; } return va && vb ? c / Math.sqrt(va * vb) : 0; };
+      const d0 = W.stats(g).deg, c0 = W.clustering(g); const out = [];
+      for (const p of [0.1, 0.3, 0.5, 0.7, 0.9]) { let sd = 0, sc = 0; for (let t = 0; t < reps; t++) { const gg = { ...g, edges: g.edges.filter(() => r() >= p) }; sd += sp(d0, W.stats(gg).deg); sc += sp(c0, W.clustering(gg)); } out.push([p, sd / reps, sc / reps]); }
+      this._ck = ck; this._cv = out; return out;
     }
     cooc() {
       const t = W.Mat.text('practice2')?.text || ''; const has = (p) => t.includes(p) || (LISHI.alias[p] && t.includes(LISHI.alias[p]));
@@ -136,6 +148,7 @@
       return `<p class="sub">《丹陽郡夫人李氏墓誌銘》节录（练习材料二）中出现 ${ppl.length} 人（王珪自称“余”，鄭戩称“文肅公”）。按“同篇出现即连边”得 ${pairs.length} 条（黄＋蓝）；原文明载的只有 ${st.size} 条（蓝）。</p>
         ${W.drawGraph(g, P, { w: 320, h: 300, labels: 'all', arrows: false, edgeColor, key: 'D14|lishi' })}
         <details><summary>明载的 ${st.size} 条及原文</summary><table class="steps small">${LISHI.stated.map(([a, b, r, q]) => `<tr><td>${a}—${b}</td><td>${r}</td><td class="src-line">${esc(q)}</td></tr>`).join('')}</table></details>
+        <p class="note-box">同样的两步，Shang 与 Sang 2021 在《世说新语》上做过：1,130 则轶事中，先把同一则里出现的东晋人物两两连边，再逐条判断关系性质、去掉负面关系，留下 484 则、736 次正面关系，250 人、505 条边；直接互动（任用、馈赠）记 3 分，称许、交谈记 1 分（Journal of Historical Network Research 5, 2021，读全文）。</p>
         <p class="okbox">共现比明载多出 ${extra.length} 条，例如 ${extra.slice(0, 4).map(([a, b]) => `${a}—${b}`).join('、')}。王珪与吕公孺是连襟，原文没有写；五个儿子与王珪的关系也没有写。</p>`;
     }
     render() {
@@ -365,7 +378,8 @@ document.title+='：表格 '+pts.length+' 行，地图 '+pts.length+' 点';</scr
   const CN = '〇一二三四五六七八九';
   function cnNum(s) { s = s.replace(/^元$/, '一').replace(/^正$/, '一'); if (/^\d+$/.test(s)) return +s; if (s === '十') return 10; if (s.includes('十')) { const [a, b] = s.split('十'); return (a ? CN.indexOf(a) : 1) * 10 + (b ? CN.indexOf(b) : 0); } return CN.indexOf(s) >= 0 ? CN.indexOf(s) : NaN; }
   function convertEra(s) {
-    const songs = PUB().eras_song?.eras || [], jp = (LX()?.jbdb_nengo || []).map((x) => [x.cNengoName, x.cStartYearMinusOne + 1, x.cMaxYears]);
+    const songs = PUB().eras_song?.eras || [], jpL = (LX()?.jbdb_nengo || []).map((x) => [x.cNengoName, x.cStartYearMinusOne + 1, x.cMaxYears]);
+    const jp = [...jpL, ...(PUB().eras_jp?.eras || []).filter(([n]) => !jpL.some(([m]) => m === n)).map(([n, y]) => [n, y, null])];
     const all = [...songs.map(([n, y]) => [n, y, null, '宋']), ...jp.map(([n, y, mx]) => [n, y, mx, '日'])].sort((a, b) => b[0].length - a[0].length);
     for (const [n, y, mx, k] of all) { const i = s.indexOf(n); if (i < 0) continue; const m = s.slice(i + n.length).match(/^([元正一二三四五六七八九十\d]{1,3})年/); if (!m) continue; const v = cnNum(m[1]); if (!Number.isFinite(v)) continue; return { era: n, n: v, ad: y + v - 1, start: y, over: mx && v > mx, kind: k }; }
     return null;
@@ -454,9 +468,9 @@ document.title+='：表格 '+pts.length+' 行，地图 '+pts.length+' 点';</scr
     }
     eras() {
       const r = convertEra(this.s.era || '');
-      return `<label>纪年 <input data-k="era" value="${esc(this.s.era)}" size="12"></label> <span class="sub">回车换算；例：熙寧三年、元豐五年、嘉祐元年、文政7年（日本年号在本机材料包）</span>
+      return `<label>纪年 <input data-k="era" value="${esc(this.s.era)}" size="12"></label> <span class="sub">回车换算；例：熙寧三年、元豐五年、嘉祐元年、寛政九年、文政7年</span>
         ${r ? `<p class="okbox">${esc(r.era)}${r.n}年 → 公元 <b>${r.ad}</b> 年${r.over ? `（超出该年号的 ${esc(String((LX()?.jbdb_nengo || []).find((x) => x.cNengoName === r.era)?.cMaxYears))} 年，查原文）` : ''}</p>` : `<p class="nil">年号表中未找到“${esc(this.s.era)}”。</p>`}
-        <p class="sub">${esc(PUB().eras_song?.note || '')} 日本年号据 JBDB NengoCodes（cStartYearMinusOne＋1）。年中改元、闰月、公历与农历年首的错位都不在此换算之内；要换到日，用 HuTime 的暦变换服务（讲义 5.2）。</p>`;
+        <p class="sub">${esc(PUB().eras_song?.note || '')} 日本年号：导入本机材料包时据 JBDB NengoCodes（cStartYearMinusOne＋1），否则用课件录入的江户后期年号表（待核）。年中改元、闰月、公历与农历年首的错位都不在此换算之内；要换到日，用 HuTime 的暦变换服务（讲义 5.2）。</p>`;
     }
     render() {
       const body = this.s.tab === 'bukan' ? this.bukan() : this.s.tab === 'text' ? this.textDiff() : this.eras();

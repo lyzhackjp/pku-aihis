@@ -191,8 +191,10 @@
   class KwicLab extends Lab {
     defaults() { return { mat: 'songshi_w7', juan: '51', q: '相', win: '8', sort: 'pos', sense: {}, n: '1', stop: true }; }
     render() {
+      const DEFQ = { raisanyo_1797: '至', pepys_1660: 'my Lord' };
+      if (this.s.qFor !== this.s.mat) { this.s.qFor = this.s.mat; if (DEFQ[this.s.mat]) this.s.q = DEFQ[this.s.mat]; else if (Object.values(DEFQ).includes(this.s.q)) this.s.q = '相'; store.set(this.key, this.s); }
       const T = textOf(this.s.mat, this.s.juan);
-      const textMats = [['songshi_w7', '《宋史·王珪传》较长选段（788 字）'], ['practice1', '练习材料一：《宋史·王珪传》选段（124 字）'], ['practice2', '练习材料二：《丹陽郡夫人李氏墓誌銘》节录'], ['huayangji', '《華陽集》（四庫全书本，选卷）']];
+      const textMats = [['songshi_w7', '练习材料一：《宋史·王珪传》选段（788 字）'], ['practice2', '练习材料二：《丹陽郡夫人李氏墓誌銘》节录'], ['huayangji', '《華陽集》（四庫全书本，选卷）'], ['raisanyo_1797', '頼山陽「東遊旅行日記」寛政九年（日文，NDL 公開）'], ['pepys_1660', 'Pepys 日记 1660 年一月（英文，公有领域）']];
       const sel = `<span class="matbar"><label>材料 <select data-k="mat">${textMats.map(([v, l]) => `<option value="${v}" ${this.s.mat === v ? 'selected' : ''}>${l}</option>`).join('')}${W.Mat.list('text').map((m) => `<option value="${esc(m.id)}" ${this.s.mat === m.id ? 'selected' : ''}>${esc(m.title)}</option>`).join('')}</select></label>
         ${this.s.mat === 'huayangji' ? `<label>卷 <select data-k="juan"><option value="all" ${this.s.juan === 'all' ? 'selected' : ''}>全部</option>${Object.keys(W.Mat.text('huayangji')?.juan || {}).map((j) => `<option ${this.s.juan === j ? 'selected' : ''}>${j}</option>`).join('')}</select></label>` : ''}
         <button class="small" data-open-import="text" title="导入自己的文本">导入文本</button></span>`;
@@ -211,18 +213,19 @@
       const col2 = `<label>检索 <input data-k="q" value="${esc(q)}" size="6"></label> <span class="sub">输入后按回车</span>
         <p class="okbox">“${esc(q)}”出现 <b>${hits.length}</b> 次，每千字 ${nHan ? f2((hits.length / nHan) * 1000, 1) : '—'} 次。</p>
         <p class="sub">搭配（前一字＋检索词／检索词＋后一字）：</p><div class="split2"><div>${W.bars(top(left))}</div><div>${W.bars(top(right))}</div></div>
-        ${q === '相' ? `<p class="sub">只看这个总数，能说这一段“讲宰相事”有 ${hits.length} 处吗？到第三栏逐条看。</p>` : ''}
-        ${this.s.mat === 'practice1' && q === '相' ? '<p class="note-box">讲义附录的练习材料一只有两处“相”（相顧、相位）；讲义提到的“相公”在较长选段中（“三旨相公”），“相繼”“丞相”“互相”两段都没有，换《華陽集》可见“丞相”“相繼”。</p>' : ''}`;
+        ${q === '相' && hits.length ? `<p class="sub">只看这个总数，能说这一段“讲宰相事”有 ${hits.length} 处吗？到第三栏逐条看。</p>` : ''}${this.s.mat === 'raisanyo_1797' && q === '至' ? '<p class="sub">“自某、至某”是行程记的套式：数“至”只数出了行程的日数，到第三栏看“至”后面都是什么。</p>' : ''}${this.s.mat === 'pepys_1660' ? '<p class="sub">“my Lord”在 Pepys 日记里多指他的恩主 Edward Montagu；同一个称呼指谁，要靠上下文与编者注。</p>' : ''}
+        `;
       const col3 = `<p>上下文 <input type="range" min="2" max="20" data-k="win" value="${win}"> ${win} 字　排序 ${seg('sort', [['pos', '原文顺序'], ['l', '按左侧'], ['r', '按右侧']], this.s.sort)}</p>
         <div class="kwic">${hits.map((h) => `<div class="kwrow"><span class="kl">${esc(h.l)}</span><mark>${esc(q)}</mark><span class="kr">${esc(h.r)}</span>
           ${q === '相' ? `<select data-sense="${h.i}">${SENSES.map(([k, l]) => `<option value="${k}" ${h.s === k ? 'selected' : ''}>${l}${k && k === h.sug ? '（建议）' : ''}</option>`).join('')}</select>` : ''}</div>`).join('') || '<p class="nil">没有找到。</p>'}</div>
-        ${q === '相' ? `<p class="okbox">${SENSES.map(([k, l]) => `${l} ${by[k]}`).join('｜')}</p><p class="sub">“建议”只按前后一字的粗规则给出（丞相、拜相→宰相；相公；互相、相繼、相顧→副词），请逐条改正。“相顧失色”的“相”是“互相”，不是宰相。</p>` : ''}`;
-      const n = Number(this.s.n), uni = ngrams(text, 1, this.s.stop).slice(0, 15), bi = ngrams(text, 2, this.s.stop).slice(0, 15);
+        ${q === '相' && hits.length ? `<p class="okbox">${SENSES.map(([k, l]) => `${l} ${by[k]}`).join('｜')}</p><p class="sub">“建议”只按前后一字的粗规则给出（丞相、拜相→宰相；相公；互相、相繼、相顧→副词），请逐条改正。“相顧失色”的“相”是“互相”，不是宰相。</p>` : ''}`;
+      const isEn = nHan < text.length / 20;
+      const n = Number(this.s.n), uni = isEn ? (() => { const c = new Map(); (text.toLowerCase().match(/[a-z][a-z']+/g) || []).forEach((w) => { if (!this.s.stop || !/^(the|and|of|to|a|in|i|my|with|was|that|it|me|he|his|so|for|at|there|by|but|him|we|is|be|as|her|this|had|on|which|from|they|not|all|did|were)$/.test(w)) c.set(w, (c.get(w) || 0) + 1); }); return [...c].sort((x, y) => y[1] - x[1]).slice(0, 15); })() : ngrams(text, 1, this.s.stop).slice(0, 15), bi = isEn ? [] : ngrams(text, 2, this.s.stop).slice(0, 15);
       const hl = (g) => (q && g.includes(q) ? `<mark>${esc(g)}</mark>` : esc(g));
-      const col4 = `<p>${seg('n', [['1', '按字'], ['2', '按二字串']], this.s.n)} <label class="check-row small"><input type="checkbox" data-k="stop" ${this.s.stop ? 'checked' : ''}>去掉虚词（之其以而於為等）</label></p>
+      const col4 = isEn ? `<p class="sub">英文以空格分词，下表为词频（去掉常用虚词）。中文、日文没有空格，要先决定“什么算一个词”（讲义 2.1）。</p><label class="check-row small"><input type="checkbox" data-k="stop" ${this.s.stop ? 'checked' : ''}>去掉常用虚词</label><table class="steps">${uni.map(([g, c]) => `<tr><td>${hl(g)}</td><td>${c}</td></tr>`).join('')}</table>` : `<p>${seg('n', [['1', '按字'], ['2', '按二字串']], this.s.n)} <label class="check-row small"><input type="checkbox" data-k="stop" ${this.s.stop ? 'checked' : ''}>去掉虚词（之其以而於為等）</label></p>
         <div class="split2"><div><p class="sub">按字（1-gram）</p><table class="steps">${uni.map(([g, c]) => `<tr class="${n === 1 ? '' : 'dim'}"><td>${hl(g)}</td><td>${c}</td></tr>`).join('')}</table></div>
         <div><p class="sub">按二字串（2-gram）</p><table class="steps">${bi.map(([g, c]) => `<tr class="${n === 2 ? '' : 'dim'}"><td>${hl(g)}</td><td>${c}</td></tr>`).join('')}</table></div></div>
-        <p class="sub">二字串不是“词”：“王珪”“參知”“知政”都会出现，哪些是词要人判断。古汉语用现代汉语分词器常会切错（讲义 2.1）。${this.s.mat === 'huayangji' ? '换卷三十五（制詞）与卷五十一（墓志）比较：高频字随文体改变，这是材料构成的差别。' : '换《華陽集》几卷对照：高频字随文体改变。'}</p>`;
+        <p class="sub">二字串不是“词”：“王珪”“參知”“知政”都会出现，哪些是词要人判断。古汉语用现代汉语分词器常会切错（讲义 2.1）。${this.s.mat === 'huayangji' ? '换卷三十五（制詞）与卷五十一（墓志）比较：高频字随文体改变，这是材料构成的差别。' : '换《華陽集》几卷对照：高频字随文体改变。'}${this.s.mat === 'raisanyo_1797' ? '日文训读体的行程记，“自”“至”最多：按字计数先看到的是文体（“自某至某”），不是内容。' : ''}</p>`;
       rerender(this, `${sel}${flowShell(pageById('D05'), [{ title: '选文本', body: col1 }, { title: `数“${q}”字`, body: col2 }, { title: 'KWIC 归类', body: col3 }, { title: '换切分', body: col4 }])}`);
     }
     init() {
@@ -236,12 +239,13 @@
 
   /* ================= LDA：浏览器内的折叠吉布斯采样（小语料） ================= */
   function ldaPrepare(docs, { minDf = 3, maxDf = 0.5, mode = 'char' } = {}) {
-    const toks = docs.map((d) => { const c = [...d.text].filter((x) => HAN.test(x) && !STOP1.has(x)); return mode === 'bigram' ? c.slice(1).map((x, i) => c[i] + x) : c; });
+    const toks = docs.map((d) => { if (mode === 'en') return (d.text.toLowerCase().match(/[a-z][a-z']+/g) || []).map((w) => w.replace(/'s$/, '')).filter((w) => w.length > 2 && !EN_STOP.has(w)); const c = [...d.text].filter((x) => HAN.test(x) && !STOP1.has(x)); return mode === 'bigram' ? c.slice(1).map((x, i) => c[i] + x) : c; });
     const df = new Map(); toks.forEach((t) => new Set(t).forEach((w) => df.set(w, (df.get(w) || 0) + 1)));
     const vocab = [...df.entries()].filter(([, n]) => n >= minDf && n <= maxDf * docs.length).map(([w]) => w).sort();
     const id = new Map(vocab.map((w, i) => [w, i]));
     return { vocab, docs: toks.map((t) => t.map((w) => id.get(w)).filter((x) => x != null)) };
   }
+  const EN_STOP = new Set('the and that with for was had his him her she they them their there this then than but not all any have has from which what when where who whom will would should could did does done were been being are one two our out into upon very much more most some such only own same other also about after again against before between both each few further here how its just over under until while why you your yours mine my me we us of to in it is as at be by he on or so an no do up if am did said says say came come went go going got get made make see saw seen took take told tell know knew thence home day night morning afternoon dined dinner supper bed lord mr mrs sir'.split(' '));
   /* 折叠吉布斯采样（Griffiths & Steyvers 2004 的通行写法）；分段运行，每段后回调进度，不阻塞页面。 */
   function ldaGibbs(P, { K = 6, alpha = 0.1, beta = 0.01, iter = 200, seed = 1 }, onProgress) {
     return new Promise((resolve) => {
@@ -283,32 +287,46 @@
   /* ================= D07 主题与分类 ================= */
   /* 原研究者的命名（只录原文给出的；词表只录已见原文的）。 */
   const STUDIES = {
-    ballard: { who: 'Blevins 2010（MALLET，30 个主题；博客与 DH2011 摘要）', match: 'words', labels: [
+    ballard: { who: 'Blevins 2010（MALLET，30 个主题、每个 20 词；博客原文）', match: 'words', labels: [
       ['MIDWIFERY', 'birth deld safe morn receivd calld left cleverly pm labour fine reward arivd infant expected recd shee born patient'],
       ['CHURCH', 'meeting attended afternoon reverend worship foren mr famely performd vers attend public supper st service lecture discoarst administred supt'],
       ['DEATH', 'day yesterday informd morn years death ye hear expired expird weak dead las past heard days drowned departed evinn'],
-      ['GARDENING', 'gardin sett worked clear beens corn warm planted matters cucumbers'],
-    ], note: 'Blevins 还命名了 SHOPPING、ILLNESS、COLD WEATHER、两个 HOUSEWORK 与 EMOTION，词表本页未录（原文未核全）。GARDENING 只录到前 10 词。词表据 DH2011 摘要（Index of DH Conferences 所载），2026-11-03 经检索结果摘录。' },
-    qingshilu: { who: 'Miller 2013（Poetics 41.6，MALLET；《清实录》1722—1911 全书）', match: 'labels', labels: [
-      ['Crime', '与审判、处刑相关的日常罪案'], ['Mass Violence', '大规模的暴力事件'], ['Sedition', '乾隆朝清查割辫等“悖逆”案时激增，与大规模叛乱不相关'], ['Major Rebellion', '十九世纪的太平、义和团等大规模起事'],
-    ], note: 'Miller 的语料是《清实录》1722—1911 年全书，本页是《清实录》中台湾相关条目的选辑（1644—1895），二者不可直接比词；只比“分类的方式”。标签与说明据原文摘要与 Academia 页的概括，各主题的词表本页未录（原文未取得全文）。' },
+      ['GARDENING', 'gardin sett worked clear beens corn warm planted matters cucumbers gatherd potatoes plants ou sowd door squash wed seeds'],
+      ['SHOPPING', 'lb made brot bot tea butter sugar carried oz chees pork candles wheat store pr beef spirit churnd flower'],
+      ['ILLNESS', 'unwell mr sick gave dr rainy easier care head neighbor feet relief made throat poorly takeing medisin ts stomach'],
+      ['HOUSEWORK 1', 'house work clear knit wk home wool removd washing kinds pickt helping banking chips taxes picking cleaning pikt pails'],
+      ['HOUSEWORK 2', 'home clear washt baked cloaths helped washing wash girls pies cleand things room bak kitchen ironed apple seller scolt'],
+      ['EMOTION', 'feel husband unwel warm feeble felt god great fatagud fatagued thro life time year dear rose famely bu good'],
+      ['COLD WEATHER', 'cold windy chilly snowy air'],
+    ], note: '词表据 Blevins 博客原文（教师提供的网页存档，2026-11-03）；原文 PDF 中“fine”“flower”因连字显示为“Tne”“;ower”，已复原。COLD WEATHER 原文只举了 5 个词。他自报 30 个主题，文中给出其中 10 个。' },
+    qingshilu: { who: 'Miller 2013（Poetics 41.6；MALLET，K＝50，按字，条目须超过 20 字；《清实录》1723—1911）', match: 'words', labels: [
+      ['Crime', '拟 罪 案 刑 部 审 例 照 斩 死 议 绞 伤 定 命 勾 监 律 殴 杀 改 理 毙 秋 氏'],
+      ['Unrest', '获 拏 匪 严 犯 地 捕 缉 盗 饬 案 徒 县 劫 首 官 惩 抢 逃 民 经 滋 督 贼 弁'],
+      ['Sedition', '获 拏 讯 供 案 教 解 严 审 究 经 逆 李 现 省 县 王 张 刘 家 密 首 确 往 访'],
+      ['Border Rebellion', '兵 番 贼 路 川 土 军 阿 藏 尔 地 攻 桂 金 往 剿 官 机 力 司 营 带 现 众 驻'],
+      ['Rebellion', '贼 兵 匪 剿 逆 城 攻 军 力 复 窜 勇 官 经 带 击 路 获 胜 克 督 保 首 数 杀'],
+      ['Major Rebellion', '兵 剿 军 贼 匪 防 窜 带 力 饬 现 路 北 州 逆 勇 南 省 东 城 派 严 胜 讯 督'],
+    ], note: '六个主题与各 25 个高频字据原文附录（Appendix. Top frequency words by topic）。原文附录只给拼音与英文释义，这里的汉字是课件据拼音与释义推定的简体字（如 na“capture”作“拏”，zhe“behead”作“斩”存疑），未必与 Miller 所用字形一致。Miller 的语料是《清实录》1723—1911 年全书，本页是台湾相关条目的选辑（1644—1895），比的是分类方式，不是同一批文献。他另有 Personnel、Infrastructure、两个 Han Names 等主题，未列词表。可对照的一点：Miller 的 Sedition 主题在 1787 年有尖峰，对应台湾林爽文起事后对会党的搜捕（原文第 3.3 节）；本页选辑在 1786—1788 年也有条目激增，可在“此主题各年的平均比例”里看。' },
     meishi: { who: '山田太造、野村朋弘、井上聡 2014（『じんもんこん2014論文集』；『上井覚兼日記』，只用人名做 LDA）', match: 'labels', labels: [
       ['V1', '家老・肥後'], ['V2', '大隅・肝付'], ['V3', '龍造寺・肥前筑前'], ['V4', '一門衆・宮崎衆'], ['V5、V8—V10', '老中・島津一門'],
     ], note: '『上井覚兼日記』没有公开的全文，本页改用 JBDB『梅颸日記』的事件注记，只复现他们的做法（每条一篇、只用其中的人名作词），不能与他们的命名逐一对照：他们的主题对应的是“哪一群人常一起出现”。' },
   };
-  const D07_CORPORA = [['huayangji', '《華陽集》各篇（公开，浏览器内运行）'], ['ballard', 'Martha Ballard 日记（英文，本机）'], ['qingshilu', '《清实录》台湾资料选辑（中文，本机）'], ['meishi', 'JBDB『梅颸日記』事件注记（日文，本机）']];
+  const D07_CORPORA = [['huayangji', '《華陽集》各篇（中文，公开，浏览器内运行）'], ['pepys', 'Samuel Pepys 日记 1660 年（英文，公开，浏览器内运行）'], ['ballard', 'Martha Ballard 日记（英文，本机）'], ['qingshilu', '《清实录》台湾资料选辑（中文，本机）'], ['meishi', 'JBDB『梅颸日記』事件注记（日文，本机）']];
   class TopicLab extends Lab {
     defaults() { return { corpus: 'huayangji', run: '', topic: '', name: {}, reveal: false, cmp: '', K: '6', alpha: '0.1', beta: '0.01', seed: '1', iter: '150', mode: 'char' }; }
     corpus() {
-      if (this.s.corpus === 'huayangji') return this._hy ? { id: 'huayangji', title: '《華陽集》卷三十五至六十各篇（四庫全書本）', runs: this._hy.runs, docs: this._hy.docMap, lang: 'zh', license: 'CC BY-SA 4.0（维基文库）' } : null;
+      const L = (this._live || {})[this.s.corpus];
+      if (this.s.corpus === 'huayangji') return L ? { id: 'huayangji', title: '《華陽集》卷三十五至六十各篇（四庫全書本）', runs: L.runs, docs: L.docMap, lang: 'zh', license: 'CC BY-SA 4.0（维基文库）' } : null;
+      if (this.s.corpus === 'pepys') return L ? { id: 'pepys', title: 'Samuel Pepys 日记 1660 年 337 条（Project Gutenberg #4200）', runs: L.runs, docs: L.docMap, lang: 'en', license: '公有领域' } : null;
       return W.Pack.local()?.topics?.[this.s.corpus] || null;
     }
     render() {
       const C = this.corpus();
       const head = `<span class="matbar"><label>语料 <select data-k="corpus">${D07_CORPORA.map(([v, l]) => `<option value="${v}" ${this.s.corpus === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label></span>`;
-      if (!C && this.s.corpus === 'huayangji' && W.Mat.text('huayangji') && !this._auto) { this._auto = true; setTimeout(() => this.runHY(), 0); }
+      const LIVE = { huayangji: () => W.Mat.text('huayangji'), pepys: () => W.Mat.text('pepys_1660') };
+      if (!C && LIVE[this.s.corpus]?.() && !(this._auto || {})[this.s.corpus]) { this._auto = { ...(this._auto || {}), [this.s.corpus]: true }; setTimeout(() => this.runHY(), 0); }
       if (!C) {
-        rerender(this, `${head}${this.s.corpus === 'huayangji' ? (W.Mat.text('huayangji') ? `<p>《華陽集》${huayangPieces().length} 篇。主题模型在浏览器内运行（折叠吉布斯采样），约需数秒。</p><button data-run="1">运行一次（K＝${esc(this.s.K)}，种子 ${esc(this.s.seed)}）</button> <span class="sub" data-prog></span>` : '<p class="sub">公开材料载入中……</p>')
+        rerender(this, `${head}${LIVE[this.s.corpus] ? (LIVE[this.s.corpus]() ? `<p>主题模型在浏览器内运行（折叠吉布斯采样），约需数秒。</p><button data-run="1">运行一次（K＝${esc(this.s.K)}，种子 ${esc(this.s.seed)}）</button> <span class="sub" data-prog></span>` : '<p class="sub">公开材料载入中……</p>')
           : W.gate('三种语言语料的主题模型结果（Ballard 日记、《清实录》台湾资料选辑、JBDB『梅颸日記』）', '本机材料包中的主题模型运行记录')}`);
         return;
       }
@@ -329,7 +347,7 @@
       const hl = (s) => { if (C.lang === 'en') return esc(s).replace(/[A-Za-z]+/g, (m) => (ws.has(m.toLowerCase()) ? `<mark>${m}</mark>` : m)); const arr = [...s]; let out = ''; for (let i = 0; i < arr.length; i++) { const b = arr[i] + (arr[i + 1] || ''); if (ws.has(b)) { out += `<mark>${esc(b)}</mark>`; i++; } else out += ws.has(arr[i]) ? `<mark>${esc(arr[i])}</mark>` : esc(arr[i]); } return out; };
       const docs = T.top_docs.slice(0, 3).map(([id, p]) => { const d = C.docs[id]; return d ? `<div class="evid-card"><p class="sub">${esc(id)}｜${esc(d.date || d.wareki || d.year || '')}｜${esc(d.ref || d.title || '')}｜${run.kind === 'bertopic' ? `与本类中心的余弦 ${f2(p, 2)}` : `本篇中此主题占 ${f2(p * 100, 0)}%`}</p><p class="src-line small">${hl(d.text.slice(0, 260))}${d.text.length > 260 ? '……' : ''}</p></div>` : `<p class="nil">${esc(id)} 原文不在材料包中</p>`; }).join('');
       const col3 = `${myName ? docs + `<label class="field small">读完以后还叫“${esc(myName)}”吗？<input data-name="${esc(key)}|2" value="${esc((this.s.name || {})[key + '|2'] || '')}" placeholder="改名或说明理由"></label>` : '<p class="sub">先在第二栏起名。</p>'}
-        ${run.by_year && Object.keys(run.by_year).length > 3 ? `<p class="sub">此主题各年的平均比例：</p>${lineChart(Object.entries(run.by_year).map(([y, v]) => [y, v[T.k]]), { label: '主题比例随年份' })}` : ''}`;
+        ${run.by_year && Object.keys(run.by_year).length > 3 ? `<p class="sub">此主题${run.by_year_label || '各年'}的平均比例：</p>${lineChart(Object.entries(run.by_year).map(([y, v]) => [y, v[T.k]]), { label: '主题比例随年份' })}` : ''}`;
       // 第四栏：两次运行对照；华阳集可现场重跑
       const other = runs.filter((r) => r.id !== run.id), cmpRun = runs.find((r) => r.id === this.s.cmp) || other[0];
       let col4 = '';
@@ -340,15 +358,15 @@
           <p class="okbox">本次 ${run.k} 个主题中，${stable} 个在对照运行里有前 15 词重合 ≥ 0.4（杰卡德）的对应主题；其余只出现一次。</p>
           <table class="steps small"><tr><th>本次</th><th>对照运行中最像的</th><th>重合</th></tr>${run.topics.map((t, i) => [t, al[i]]).sort((a, b) => b[1].j - a[1].j).map(([t, a]) => `<tr class="${a.j >= 0.4 ? 'ok' : 'dim'} ${t.k === T.k ? 'on' : ''}"><td>#${t.k} ${esc(t.words.slice(0, 4).map((w) => w[0]).join(' '))}</td><td>${a.best >= 0 ? '#' + cmpRun.topics[a.best].k + ' ' + esc(cmpRun.topics[a.best].words.slice(0, 4).map((w) => w[0]).join(' ')) : '—'}</td><td>${f2(a.j)}</td></tr>`).join('')}</table>`;
       }
-      if (C.id === 'huayangji') {
+      if (C.id === 'huayangji' || C.id === 'pepys') {
         col4 += `<details open><summary>改参数，在浏览器里再跑一次</summary>
           <p>K <input type="range" min="2" max="12" data-k="K" value="${esc(this.s.K)}"> ${esc(this.s.K)}　种子 <input type="number" data-k="seed" value="${esc(this.s.seed)}" style="width:4em"></p>
-          <p>α <select data-k="alpha">${['0.01', '0.1', '0.5', '1'].map((v) => `<option ${this.s.alpha === v ? 'selected' : ''}>${v}</option>`).join('')}</select>　β <select data-k="beta">${['0.001', '0.01', '0.1'].map((v) => `<option ${this.s.beta === v ? 'selected' : ''}>${v}</option>`).join('')}</select>　迭代 <select data-k="iter">${['50', '150', '300'].map((v) => `<option ${this.s.iter === v ? 'selected' : ''}>${v}</option>`).join('')}</select>　${seg('mode', [['char', '按字'], ['bigram', '按二字串']], this.s.mode)}</p>
+          <p>α <select data-k="alpha">${['0.01', '0.1', '0.5', '1'].map((v) => `<option ${this.s.alpha === v ? 'selected' : ''}>${v}</option>`).join('')}</select>　β <select data-k="beta">${['0.001', '0.01', '0.1'].map((v) => `<option ${this.s.beta === v ? 'selected' : ''}>${v}</option>`).join('')}</select>　迭代 <select data-k="iter">${['50', '150', '300'].map((v) => `<option ${this.s.iter === v ? 'selected' : ''}>${v}</option>`).join('')}</select>　${C.id === 'pepys' ? '按词（去常用虚词与“lord、home、dined”等日记套语）' : seg('mode', [['char', '按字'], ['bigram', '按二字串']], this.s.mode)}</p>
           <button data-run="1">再跑一次</button> <span class="sub" data-prog></span>
           <p class="sub">α 小，每篇只由少数几个主题构成；β 小，每个主题只由少数几个词构成（扩充部分甲二）。</p>${this.genreBox(run)}</details>`;
       }
       rerender(this, `${head}${flowShell(pageById('D07'), [{ title: '看主题词', body: col1 }, { title: '起名', body: col2 }, { title: '读三篇原文', body: col3 }, { title: '改参数再跑', body: col4 || '<p class="sub">只有一次运行。</p>' }])}
-        <p class="sub">${esc(C.title)}；${esc(C.license || '')}。${C.id === 'huayangji' ? '浏览器实时：每次运行在本页内完成。' : '保存结果回放：' + esc(run.date || '') + ' 在课前环境实际运行，结果保存在本机材料包中。'}${C.note ? ' ' + esc(C.note) : ''}</p>`);
+        <p class="sub">${esc(C.title)}；${esc(C.license || '')}。${C.id === 'huayangji' || C.id === 'pepys' ? '浏览器实时：每次运行在本页内完成。' : '保存结果回放：' + esc(run.date || '') + ' 在课前环境实际运行，结果保存在本机材料包中。'}${C.note ? ' ' + esc(C.note) : ''}</p>`);
     }
     studyBox(C, T) {
       const S = STUDIES[C.id]; if (!S) return '';
@@ -364,17 +382,22 @@
         <p class="sub">如果多数主题只落在一种文体里，模型首先分出的是“这是制詞还是墓志”，即材料构成，而不是“谈些什么”（讲义 1.3）。</p>`;
     }
     async runHY() {
-      const ps = huayangPieces(); const P = ldaPrepare(ps, { mode: this.s.mode }); const prog = this.querySelector('[data-prog]');
+      const cid = this.s.corpus === 'pepys' ? 'pepys' : 'huayangji';
+      const ps = cid === 'pepys' ? (W.Mat.text('pepys_1660')?.docs || []).map((d) => ({ ...d, title: d.date })) : huayangPieces();
+      const mode = cid === 'pepys' ? 'en' : this.s.mode;
+      const P = ldaPrepare(ps, { mode, minDf: cid === 'pepys' ? 5 : 3 }); const prog = this.querySelector('[data-prog]');
       const opt = { K: Number(this.s.K), alpha: Number(this.s.alpha), beta: Number(this.s.beta), iter: Number(this.s.iter), seed: Number(this.s.seed) };
       const res = await ldaGibbs(P, opt, (x) => { if (prog) prog.textContent = `运行中 ${Math.round(x * 100)}%`; });
       const tw = topWords(res.phi, P.vocab, 15);
       const topics = tw.map((words, k) => { const order = res.theta.map((th, i) => [ps[i].id, th[k]]).sort((a, b) => b[1] - a[1]); return { k, share: res.theta.reduce((a, th) => a + th[k], 0) / ps.length, words, top_docs: order.slice(0, 5), top20: order.slice(0, 20).map(([id]) => id) }; });
-      const id = `K${opt.K}-s${opt.seed}-a${opt.alpha}-b${opt.beta}-${this.s.mode}-${opt.iter}`;
-      const run = { id, label: `浏览器内 K＝${opt.K}，种子 ${opt.seed}，α＝${opt.alpha}，β＝${opt.beta}，${this.s.mode === 'char' ? '按字' : '按二字串'}，迭代 ${opt.iter}（${f2(res.secs, 1)} 秒）`, k: opt.K, seed: opt.seed, docs: ps.length, vocab: P.vocab.length, mode: this.s.mode, mode_label: this.s.mode === 'char' ? '按字（去虚词与出现在过半篇中的字）' : '相邻二字串',
-        runtime: '浏览器内折叠吉布斯采样（week08-labs3.js）', topics, genre: Object.fromEntries(ps.map((p) => [p.id, GENRE(p.juan)])), date: new Date().toISOString() };
-      const docMap = Object.fromEntries(ps.map((p) => [p.id, { text: p.text, title: `卷${p.juan}｜${p.title}`, ref: `《華陽集》卷${p.juan}` }]));
-      this._hy = { runs: [run, ...(this._hy?.runs || []).filter((r) => r.id !== id)].slice(0, 6), docMap };
-      this.s.run = id; this.s.topic = ''; this.s.cmp = this._hy.runs[1]?.id || ''; this.save();
+      const id = `${cid}-K${opt.K}-s${opt.seed}-a${opt.alpha}-b${opt.beta}-${mode}-${opt.iter}`;
+      const by_year = cid === 'pepys' ? (() => { const B = {}; ps.forEach((p, i) => { const m = p.date.slice(5, 7); (B[m] ||= { n: 0, v: new Array(opt.K).fill(0) }); B[m].n++; res.theta[i].forEach((v, k) => { B[m].v[k] += v; }); }); return Object.fromEntries(Object.entries(B).map(([m, x]) => [m, x.v.map((v) => v / x.n)])); })() : null;
+      const run = { id, label: `浏览器内 K＝${opt.K}，种子 ${opt.seed}，α＝${opt.alpha}，β＝${opt.beta}，${mode === 'en' ? '按词' : mode === 'char' ? '按字' : '按二字串'}，迭代 ${opt.iter}（${f2(res.secs, 1)} 秒）`, k: opt.K, seed: opt.seed, docs: ps.length, vocab: P.vocab.length, mode, mode_label: mode === 'en' ? '按词（去常用虚词）' : mode === 'char' ? '按字（去虚词与出现在过半篇中的字）' : '相邻二字串',
+        runtime: '浏览器内折叠吉布斯采样（week08-labs3.js）', topics, by_year, by_year_label: cid === 'pepys' ? '各月' : '', genre: cid === 'huayangji' ? Object.fromEntries(ps.map((p) => [p.id, GENRE(p.juan)])) : null, date: new Date().toISOString() };
+      const docMap = Object.fromEntries(ps.map((p) => [p.id, cid === 'pepys' ? { text: p.text, date: p.date, ref: 'Pepys 日记' } : { text: p.text, title: `卷${p.juan}｜${p.title}`, ref: `《華陽集》卷${p.juan}` }]));
+      const prev = (this._live || {})[cid];
+      this._live = { ...(this._live || {}), [cid]: { runs: [run, ...(prev?.runs || []).filter((r) => r.id !== id)].slice(0, 6), docMap } };
+      this.s.run = id; this.s.topic = ''; this.s.cmp = this._live[cid].runs[1]?.id || ''; this.save();
     }
     init() {
       this.addEventListener('click', (e) => { if (e.target.dataset.run) { e.target.disabled = true; this.runHY(); } });

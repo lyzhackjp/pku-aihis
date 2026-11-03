@@ -29,13 +29,20 @@ async def main():
         ctx = await b.new_context(viewport={'width': 1440, 'height': 900}); pg = await ctx.new_page(); watch(pg)
         await pg.goto(URL + '#D01'); await pg.wait_for_timeout(2500)
         t = await pg.inner_text('deck-slide[slide-id="D01"]')
-        check('未导入时 D01 显示材料包提示', '需课堂导入第八周本机材料包' in t, t[:200])
+        check('未导入时 D01 改用公开的讲义附录节录（30 行）并注明', '本机材料包未导入，暂用公开的' in t and '30 条记录' in t, t[:200])
         await pg.goto(URL + '#D13'); await pg.wait_for_timeout(800)
         t = await pg.inner_text('deck-slide[slide-id="D13"]')
-        check('未导入时 D13 不内置日记原文', '需课堂导入' in t and '中井' not in t, t[:200])
+        check('未导入时 D13 不含『梅颸日記』原文，改用公开日记', '本机材料包未导入' in t and '中井' not in t and '頼山陽' in t, t[:200])
         await pg.goto(URL + '#D10'); await pg.wait_for_timeout(800)
         t = await pg.inner_text('deck-slide[slide-id="D10"]')
         check('未导入时公开材料页 D10 可用', '丁' in t and '9' in t)
+        # 知识点页在未导入时都要有可操作的公开材料：只允许 D07 的三种本机语料、D12 的王珪 CBDB 一侧显示导入提示
+        gated = []
+        for i in range(26):
+            pid = f'D{i:02d}'; await pg.goto(URL + '#' + pid); await pg.wait_for_timeout(700)
+            body = await pg.inner_text(f'deck-slide[slide-id="{pid}"]')
+            if '需课堂导入第八周本机材料包' in body: gated.append(pid)
+        check('未导入时只有案例页显示导入提示（知识点页都有公开材料）', set(gated) <= {'D12'}, gated)
         await ctx.close()
         # ---------- 2 导入后逐页 ----------
         ctx = await b.new_context(viewport={'width': 1440, 'height': 900}); pg = await ctx.new_page(); watch(pg)
@@ -148,8 +155,8 @@ async def main():
         check('D03 方法×对象表按“网络分析”筛选后其余 12 格变淡', dim == 12, dim)
         await go('D05'); t = await txt('D05')
         check('D05《宋史》较长选段“相”4 次：宰相 2、相公 1、副词 1（按建议）', '“相”出现 4 次' in t and '宰相（官位） 2｜相公（称谓） 1｜互相、相继（副词） 1' in t, re.findall(r'“相”出现[^。]*|宰相（官位）[^\n]*', t))
-        await pg.select_option(S('D05') + ' select[data-k="mat"]', 'practice1'); await pg.wait_for_timeout(300); t = await txt('D05')
-        check('D05 练习材料一只有 2 处“相”，页面提示讲义所举用法不在此段', '“相”出现 2 次' in t and '两段都没有' in t)
+        await pg.select_option(S('D05') + ' select[data-k="mat"]', 'raisanyo_1797'); await pg.wait_for_timeout(300); t = await txt('D05')
+        check('D05 换日文行程记（頼山陽）：默认检索“至”，提示套式', '“至”出现' in t and '套式' in t, re.findall(r'“至”出现[^。]*', t))
         await pg.select_option(S('D05') + ' select[data-k="mat"]', 'huayangji'); await pg.wait_for_timeout(300)
         await pg.select_option(S('D05') + ' select[data-k="juan"]', 'all'); await pg.wait_for_timeout(500); t = await txt('D05')
         check('D05《華陽集》全部卷“相”120 次', '“相”出现 120 次' in t, re.findall(r'“相”出现[^。]*', t))
@@ -194,6 +201,17 @@ async def main():
         await pg.click(S('D21') + ' [data-set="tab:bukan"]')
         await go('D22'); t = await txt('D22')
         check('D22 模型年表逐行回原文：引句与年份核对', '引句在原文中找不到的' in t and '年份与页面换算不一致的' in t, re.findall(r'共 \d+ 行[^。]*。', t))
+        # 公开材料（知识点页在没有本机材料包时也能操作）
+        await go('D07'); await pg.select_option(S('D07') + ' select[data-k="corpus"]', 'pepys'); await pg.wait_for_timeout(8000); t = await txt('D07')
+        check('D07 Pepys 1660 年 337 条在浏览器内跑 LDA（英文公开语料）', '337 篇' in t and '按词' in t, re.findall(r'\d+ 篇、词表 \d+', t))
+        await pg.select_option(S('D07') + ' select[data-k="corpus"]', 'huayangji')
+        await go('D13'); await pg.select_option(S('D13') + ' select[data-k="mat"]', 'raisanyo-1797'); await pg.wait_for_timeout(500)
+        await pg.select_option(S('D13') + ' select[data-k="pid"]', 'RS08'); await pg.wait_for_timeout(300)
+        await pg.click(S('D13') + ' [data-who="姫井子"]'); await pg.wait_for_timeout(300); t = await txt('D13')
+        check('D13 公开日记（頼山陽寛政九年，NDL 公開）：点选“姫井子”生成边表一行', '姫井子' in await pg.inner_text(S('D13') + ' table.steps') and '寛政' in t)
+        await pg.select_option(S('D13') + ' select[data-k="mat"]', 'meishi') if PACK != '-' else None
+        await go('D21'); await pg.click(S('D21') + ' [data-set="tab:era"]'); await pg.fill(S('D21') + ' input[data-k="era"]', '寛政九年'); await pg.press(S('D21') + ' input[data-k="era"]', 'Enter'); await pg.wait_for_timeout(300); t = await txt('D21')
+        check('D21 年号换算：寛政九年＝1797（公开年号表）', '公元 1797 年' in t); await pg.click(S('D21') + ' [data-set="tab:bukan"]')
         # D23
         await go('D23'); await pg.fill('deck-slide[slide-id="D23"] textarea[data-ki="s1a"]', '在现存记录中，王珪为 84 人中的多数写过纪念文字。')
         await pg.fill('deck-slide[slide-id="D23"] textarea[data-ki="s1b"]', '在现存记录中，去掉纪念文字后只剩 19 人。'); await pg.wait_for_timeout(300)

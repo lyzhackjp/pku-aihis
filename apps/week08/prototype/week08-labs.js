@@ -22,7 +22,7 @@
     get key() { return 'w8/' + this.closest('deck-slide')?.getAttribute('slide-id'); }
     set(k, v) { this.s[k] = v; this.save(); }
     save() { store.set(this.key, this.s); this.render(); }
-    mat(id) { return W.Mat.get(id); }
+    mat(id) { return W.Mat.get(id) || (W.FALLBACK[id] ? W.Mat.get(W.FALLBACK[id]) : null); }
   }
   const layoutCache = new Map();
   function posFor(g, key, opts = {}) { const k = key + '|' + g.nodes.length + '|' + g.edges.length + '|' + JSON.stringify(opts); if (!layoutCache.has(k)) layoutCache.set(k, W.layout(g, opts)); return layoutCache.get(k); }
