@@ -21,7 +21,7 @@
     dLat = (dLat * 180) / ((a * (1 - ee)) / (m * s) * PI); dLng = (dLng * 180) / (a / s * Math.cos(rad) * PI);
     return [lng + dLng, lat + dLat];
   }
-  const okCoord = (p) => Number.isFinite(p?.lng) && Number.isFinite(p?.lat) && Math.abs(p.lat) <= 90 && Math.abs(p.lng) <= 180 && !(p.lng === 0 && p.lat === 0);
+  const okCoord = (p) => Number.isFinite(p?.lng) && Number.isFinite(p?.lat) && Math.abs(p.lat) <= 90 && Math.abs(p.lng) <= 180 && p.lng !== 0 && p.lat !== 0;
   function fitBox(pts, pad = 1.5, min = 6) {
     const v = pts.filter(okCoord); if (!v.length) return [100, 18, 125, 45];
     let x0 = Math.min(...v.map((p) => p.lng)), x1 = Math.max(...v.map((p) => p.lng)), y0 = Math.min(...v.map((p) => p.lat)), y1 = Math.max(...v.map((p) => p.lat));
@@ -71,15 +71,19 @@
   const D16_ITEMS = [
     { name: '成都', q: ['成都'], quote: '成都華陽人', src: '宋史', kind: '地名' }, { name: '華陽', q: ['華陽'], quote: '成都華陽人', src: '宋史', kind: '地名' },
     { name: '舒', q: ['舒州', '舒'], quote: '後徙舒', src: '宋史', kind: '地名' }, { name: '揚州', q: ['揚州'], quote: '通判揚州', src: '宋史', kind: '地名' },
-    { name: '淮南', q: ['淮南'], quote: '王倫犯淮南', src: '宋史', kind: '地区' }, { name: '魏', q: ['魏', '大名'], quote: '北使過魏', src: '宋史', kind: '地名（古称）' },
+    { name: '淮南', q: ['淮南'], quote: '王倫犯淮南', src: '宋史', kind: '地区' }, { name: '魏', q: ['魏', '大名'], prefer: '大名', hint: '“魏”指北宋北京大名府（唐魏州，时贾昌朝判大名府）：课件判断，待核；前缀“魏”带出的魏县、魏城县不是此地，所以初选改取“大名”查得的记录。', quote: '北使過魏', src: '宋史', kind: '地名（古称）' },
     { name: '開封', q: ['開封'], quote: '知開封府', src: '宋史', kind: '地名' }, { name: '靈武', q: ['靈武', '靈州'], quote: '久欲收靈武', src: '宋史', kind: '地名' },
-    { name: '慶', q: ['慶州', '慶'], quote: '珪薦俞充帥慶', src: '宋史', kind: '地名（简称）' }, { name: '永樂', q: ['永樂'], quote: '永樂之敗', src: '宋史', kind: '地名（城寨）' },
+    { name: '慶', q: ['慶州', '慶'], noDefault: true, hint: '“帥慶”指环庆路的庆州（今甘肃庆阳一带）。CHGIS 在 1050 年没有庆州的记录（不限年份只有隋唐的庆州，接口以简体“庆州”才查得到）；前缀“慶”带出的庆甸在云南、庆远府在广西，都不是此地，所以页面不作初选。', quote: '珪薦俞充帥慶', src: '宋史', kind: '地名（简称）' }, { name: '永樂', q: ['永樂'], quote: '永樂之敗', src: '宋史', kind: '地名（城寨）' },
     { name: '延安', q: ['延安'], quote: '請立延安郡王為太子', src: '宋史', kind: '封号中的地名' }, { name: '岐', q: ['岐'], quote: '封岐國公', src: '宋史', kind: '封号中的地名' },
     { name: '常州', q: ['常州'], quote: '終于常州之官第', src: '李氏墓志', kind: '地名' }, { name: '吳郡', q: ['吳郡', '蘇州'], quote: '歸祔于吴郡薦福山', src: '李氏墓志', kind: '地名（古称）' },
     { name: '薦福山', q: ['薦福山'], quote: '吴郡薦福山', src: '李氏墓志', kind: '山名' },
   ];
   /* 默认选定：查询年份内有效、点状、有坐标的第一条 */
-  function defaultPick(item, yr) { const c = cands(item, yr).filter((p) => p['object type'] === 'POINT' && okCoord(p)); return c[0]?.sys_id || ''; }
+  function defaultPick(item, yr) {
+    if (item.noDefault) return '';
+    const c = cands(item, yr).filter((p) => p['object type'] === 'POINT' && okCoord(p));
+    return (item.prefer && c.find((p) => p.via === item.prefer) || c[0])?.sys_id || '';
+  }
   function gazetteerRef(yr = '1050') {
     const st = store.get('w8/D16', {}); const out = {};
     for (const it of D16_ITEMS) { const id = st.pick?.[it.name] ?? defaultPick(it, st.yr ?? yr); const p = cands(it, st.yr ?? yr).find((x) => x.sys_id === id) || cands(it, '').find((x) => x.sys_id === id); if (p && okCoord(p)) out[it.name] = { ...p, item: it }; }
@@ -226,12 +230,12 @@
       const col1 = `<p>查询年份 ${seg('yr', [['1050', '1050 年'], ['', '不限年份']], yr)}</p><table class="steps small"><tr><th>史料地名</th><th>原文</th><th>出处</th></tr>${D16_ITEMS.map((it) => `<tr data-sel="${esc(it.name)}" class="${this.s.sel === it.name ? 'on' : ''}"><td>${esc(it.name)}</td><td class="src-line">${esc(it.quote)}</td><td>${it.src === '宋史' ? '《宋史》本传' : '李氏墓志'}</td></tr>`).join('')}</table>${src}`;
       const bin = (n, arr) => `<div class="bin"><b>${n}（${arr.length}）</b>${arr.map(([it, c]) => `<p class="small"><a href="javascript:void 0" data-sel="${esc(it.name)}">${esc(it.name)}</a> ${c.length > 1 ? `<span class="sub">${c.length} 条</span>` : ''}</p>`).join('')}</div>`;
       const col2 = `<div class="bins">${bin('唯一匹配', bins.one)}${bin('多个候选', bins.many)}${bin('无对应', bins.none)}</div>
-        <p class="sub">按名字前缀查（接口按“名字%”匹配，所以“魏”会带出“魏州”“魏县”等）。改成“不限年份”，候选会变多；“靈武”“慶州”“永樂”在 1050 年无记录，宋夏战争中的城寨与西夏占据的州不在 CHGIS 的北宋州县中，或名称写法不同。</p>`;
+        <p class="sub">按名字前缀查（接口按“名字%”匹配，所以“魏”会带出“魏州”“魏县”等）。改成“不限年份”，候选会变多；“靈武”“慶州”“永樂”在 1050 年无记录（接口对繁体的处理也不一致：“慶州”查不到，简体“庆州”才查得到隋唐的记录），宋夏战争中的城寨与西夏占据的州不在 CHGIS 的北宋州县中，或名称写法不同。</p>`;
       const it = D16_ITEMS.find((x) => x.name === this.s.sel) || D16_ITEMS[0], cs = cands(it, yr), pick = this.s.pick?.[it.name] ?? defaultPick(it, yr);
-      const col3 = `<p><b>${esc(it.name)}</b>｜原文“${esc(it.quote)}”｜页面初判：${esc(it.kind)}</p>
+      const col3 = `<p><b>${esc(it.name)}</b>｜原文“${esc(it.quote)}”｜页面初判：${esc(it.kind)}</p>${it.hint ? `<p class="note small">${esc(it.hint)}</p>` : ''}
         <label class="check-row small"><input type="checkbox" data-np="${esc(it.name)}" ${this.s.notPlace?.[it.name] ? 'checked' : ''}>这不是指地点（如封号、爵号）</label>
         ${cs.length ? `<table class="steps small"><tr><th></th><th>CHGIS 记录</th><th>起讫</th><th>坐标</th></tr>${cs.slice(0, 30).map((p) => `<tr class="${p.sys_id === pick ? 'on' : ''}"><td><input type="radio" name="pk" data-pick="${esc(p.sys_id)}" ${p.sys_id === pick ? 'checked' : ''}></td><td>${esc(p.name)} <span class="sub">${esc(p['feature type'])}｜${esc(p['object type'])}</span><br><span class="sub">${esc(p['parent name'] || '')} ${esc(p.sys_id)}</span></td><td>${esc(p.years)}</td><td class="${okCoord(p) ? '' : 'nil'}">${okCoord(p) ? `${f2(p.lat, 2)}<br>${f2(p.lng, 2)}` : '缺<br>' + esc(p['xy coordinates'])}</td></tr>`).join('')}</table>${cs.length > 30 ? `<p class="sub">只列前 30 条。</p>` : ''}` : '<p class="nil">CHGIS 中查无此名（或年份内无记录）。只能回到史料与研究文献去考订。</p>'}
-        <p class="sub">“POLYGON”一类记录的坐标常为 0（缺），要另取治所的点。页面初选查询年份内有效、点状、有坐标的第一条，请逐条改正。</p>`;
+        <p class="sub">“POLYGON”一类记录的坐标常为 0（缺），要另取治所的点。页面初选查询年份内有效、点状、有坐标的第一条（“魏”“慶”两处另作处理，见上），请逐条改正。</p>`;
       const ref = gazetteerRef(); const pts = Object.entries(ref).filter(([n]) => !this.s.notPlace?.[n]).map(([n, p]) => ({ id: n, lng: p.lng, lat: p.lat, label: n, r_km: TYPE_R(p['feature type'], p['object type']), color: n === it.name ? '#a33' : '#164ec7' }));
       const col4 = `${mapSvg(pts, { key: 'd16', w: 360, h: 320 })}<p class="sub">${pts.length} 个地名上图；圆圈为课件按类型设的示意误差（县 5、州府军 15、路 150 公里），不是 CHGIS 给的数。底图为 Natural Earth 海岸线。</p>`;
       rerender(this, flowShell(pageById('D16'), [{ title: '史料地名', body: col1 }, { title: '候选', body: col2 }, { title: '选定', body: col3 }, { title: '上图', body: col4 }]));
