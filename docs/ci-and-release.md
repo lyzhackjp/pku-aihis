@@ -46,3 +46,9 @@ GitHub Pages不能设置自定义隔离头；第三周使用限定本周作用�
 ## 2026-10-29 第七周发布
 
 教师于2026-10-29授权在全面检查后将week07合入main并发布。第七周课件即无构建原型（经典脚本加 `live/` 下的ES模块），`apps/week07` 新增无依赖的pnpm包：`pnpm test` 核对30页三处页码、公开包不含CBDB、CBDB引注、输入法合成保护与密钥不落盘；`pnpm build` 做语法检查后复制原型并内嵌相对路径导入器到 `www/pku-aihis/week07/`；`pnpm run check` 读取构建产物，因此在build之后运行。PR与Pages工作流加入week07；published-weeks.json新增week07。全站检查核对30页与D13、D15别名、公开材料包无CBDB字段、仅一份LangExtract wheel、内嵌导入器，以及无本机材料包、模型权重与密钥。CBDB记录只由教师课堂导入，导入后显示“CBDB BJ 20260602，CC BY-NC-SA 4.0”引注。
+
+## 2026-11-04 第八周发布
+
+教师于2026-11-04授权在全面检查后将week08合入main并发布。第八周课件为无构建原型，`apps/week08` 为无依赖pnpm包：`pnpm test` 核对页码与公开包边界，`pnpm build` 复制原型、内嵌相对路径导入器到 `www/pku-aihis/week08/`，并写入 `data/site.js`（公开模式）；`pnpm run check` 在build之后运行。PR与Pages工作流加入week08，published-weeks.json新增week08。全站检查核对26页、公开材料包不含CBDB全表、梅颸日記、JBDB与Kanripo，站点内无本机材料包、截图、PDF或模型权重，site.js为公开模式。
+
+底图：公开站点只用有审图号的天地图标准地图。浏览器端密钥由教师申请（域名白名单），发布时由仓库Secret `WEEK08_TIANDITU_TK` 给出，审图号与数据来源署名由仓库Variables `WEEK08_TIANDITU_GS`、`WEEK08_TIANDITU_CREDIT` 给出，均不入Git源码；密钥会出现在发布的 site.js 中，这是浏览器端密钥的正常用法。未配置密钥时，公开站点不画任何底图。

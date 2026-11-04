@@ -211,3 +211,21 @@ if (manifest4.weeks?.includes('week07')) {
   assert(home.includes('href="week07/"') && home.includes('第七周 · 条目重构、实体识别与结构化输出'));
   console.log('Week07: 30 pages with D13/D15 aliases, public pack without CBDB, LangExtract wheel, embedded importer; no material pack, model weights or keys');
 }
+if (manifest4.weeks?.includes('week08')) {
+  const week = path.join(site, 'week08');
+  const html8 = await fs.readFile(path.join(week, 'index.html'), 'utf8');
+  const map8 = JSON.parse(await fs.readFile(path.join(root, 'docs/week08/page-map.json'), 'utf8'));
+  assert.equal(map8.length, 26);
+  assert.deepEqual([...html8.matchAll(/<deck-slide\b[^>]*slide-id="([^"]+)"/g)].map(m => m[1]), map8.map(p => p.id));
+  const files8 = manifest4.files.filter(f => f.path.startsWith('week08/'));
+  assert(!files8.some(f => /\.(pdf|zip|sqlite|db|onnx|safetensors|gguf|pt|pth|ckpt|bin|typ|py|jpe?g|png)$/i.test(f.path) || /week08-pack\.json$|local-only|tianditu\.json/.test(f.path)), 'week08: 本机材料、截图或权重进入站点');
+  const pub8 = await fs.readFile(path.join(week, 'data/public/week08-public-pack.js'), 'utf8');
+  for (const marker of ['PersonAuthority', 'c_personid', 'BasicInfo', '梅颸日記録文', 'agent_tasks_cbdb', 'kanripo']) assert(!pub8.includes(marker), 'week08 public pack: ' + marker);
+  const site8 = await fs.readFile(path.join(week, 'data/site.js'), 'utf8');
+  assert(site8.includes('"public":true'), 'week08: site.js 须为公开模式（不画无审图号底图）');
+  const importer8 = await fs.readFile(path.join(week, 'importer/index.html'), 'utf8');
+  assert(importer8.includes('./assets/') && !importer8.includes('/pku-aihis/material-importer/assets/'));
+  const home = await fs.readFile(path.join(site, 'index.html'), 'utf8');
+  assert(home.includes('href="week08/"') && home.includes('第八周 · 数字人文方法与人工智能'));
+  console.log('Week08: 26 pages, public pack without CBDB full table/梅颸/JBDB/Kanripo, public map mode (天地图 key ' + (/"tk":"[0-9a-f]{32}"/.test(site8) ? 'set' : 'not set: no basemap') + '), embedded importer; no material pack, screenshots or weights');
+}
