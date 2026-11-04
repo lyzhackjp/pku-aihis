@@ -15,7 +15,8 @@
 
   /* ================= 材料包：公开＋本机＋使用者导入 ================= */
   let PUB = null, LOCAL = null, USER = {};
-  const emit = () => { document.querySelectorAll('[data-needs-pack]').forEach((n) => n.packChanged?.()); document.dispatchEvent(new CustomEvent('w8-pack')); };
+  // 一页出错不连累其他页：逐页重画，出错的页显示错误，其余照常
+  const emit = () => { document.querySelectorAll('[data-needs-pack]').forEach((n) => { try { n.packChanged?.(); } catch (e) { console.error(n.tagName, e); try { n.innerHTML = `<p class="nil">本页出错：${String(e.message || e).replace(/[<&]/g, '')}。可在顶栏“备注”旁按 Esc 换页，或清除本页记忆后刷新。</p>`; } catch { /* ignore */ } } }); document.dispatchEvent(new CustomEvent('w8-pack')); };
   function validateLocal(p) {
     if (!p || p.format !== 'pku-aihis-week08-pack') throw new Error('不是第八周本机材料包（format 字段不符）');
     if (!p.materials || typeof p.materials !== 'object') throw new Error('材料包缺少 materials');
@@ -141,7 +142,8 @@
   }
   /* 最短路径逐对列出（进阶层），只用于小网。 */
   function allShortestPaths(g, s, t) {
-    const { out } = adjacency(g, true), a = g.index.get(s), b = g.index.get(t), d = new Map([[a, 0]]), P = new Map([[a, []]]), Q = [a];
+    const { out } = adjacency(g, true), a = g.index.get(s), b = g.index.get(t); if (a == null || b == null) return [];
+    const d = new Map([[a, 0]]), P = new Map([[a, []]]), Q = [a];
     for (let i = 0; i < Q.length; i++) { const v = Q[i]; for (const w of out[v]) { if (!d.has(w)) { d.set(w, d.get(v) + 1); P.set(w, []); Q.push(w); } if (d.get(w) === d.get(v) + 1) P.get(w).push(v); } }
     if (!d.has(b)) return [];
     const res = []; const walk = (v, path) => { if (v === a) { res.push([a, ...path].map((i) => g.nodes[i].id)); return; } for (const u of P.get(v)) walk(u, [v, ...path]); };

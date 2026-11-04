@@ -22,7 +22,7 @@
     render() {
       const m = this.mat(this.s.mat);
       if (!m) { rerender(this, `${W.matSelect('network', this.s.mat)}${this.s.mat === 'cbdb-wanggui' ? W.gate('CBDB 边表', 'CBDB 王珪记录') : '<p class="nil">材料缺</p>'}`); return; }
-      if (this.s.editsMat !== this.s.mat) { this.s.edits = []; this.s.pick = null; this.s.editsMat = this.s.mat; }   // 换材料时清掉上一份材料上的加删
+      if (this.s.editsMat !== this.s.mat) { this.s.edits = []; this.s.pick = null; this.s.spA = ''; this.s.spB = ''; this.s.editsMat = this.s.mat; }   // 换材料时清掉上一份材料上的加删
       const g0 = workGraph(m, []), g = workGraph(m, this.s.edits);
       const big = g.nodes.length > 400;
       const b0 = big ? null : W.betweenness(g0), b = big ? null : W.betweenness(g), st = W.stats(g), st0 = W.stats(g0), cc = st.cc;
@@ -43,7 +43,7 @@
         ${this.s.mat === 'toy7' ? `<p class="sub">讲义 @fig-betw：丁 9，丙、戊 8，其余 0。丁的度只有 2，介数却最高。</p>` : ''}
         ${this.s.mat === 'padgett' ? `<p class="sub">在这份 15 个家族的婚姻网中，美第奇的度（6）与介数（47.5）都是最高，介数约为第二名的两倍。讲义说“美第奇家族的联系并不最多”，是就 Padgett 与 Ansell 把婚姻、经济、庇护关系合起来的编码而言（讲义注明读取深度为二手），与这份只含婚姻的示例数据不同。</p>` : ''}
         <details data-adv><summary>进阶：最短路径逐对列出</summary><p>${g.nodes.length <= 40 ? `起点 <select data-k="spA">${g.nodes.map((n) => `<option ${this.s.spA === n.id ? 'selected' : ''}>${esc(n.id)}</option>`).join('')}</select> 终点 <select data-k="spB">${g.nodes.map((n) => `<option ${this.s.spB === n.id ? 'selected' : ''}>${esc(n.id)}</option>`).join('')}</select>` : '只对 40 个点以内的小网列出。'}</p>
-          ${g.nodes.length <= 40 && this.s.spA && this.s.spB ? (() => { const ps = W.allShortestPaths(g, this.s.spA, this.s.spB); return ps.length ? `<p>共 ${ps.length} 条最短路径（长 ${ps[0].length - 1}）：</p><ul>${ps.map((p) => `<li>${p.map(esc).join(' → ')}</li>`).join('')}</ul><p class="sub">每对点计 1，由经过各点的路径分摊（有 k 条时各计 1/k）。</p>` : '<p>两点不连通。</p>'; })() : ''}</details>`;
+          ${g.nodes.length <= 40 && this.s.spA && this.s.spB && g.index.has(this.s.spA) && g.index.has(this.s.spB) ? (() => { const ps = W.allShortestPaths(g, this.s.spA, this.s.spB); return ps.length ? `<p>共 ${ps.length} 条最短路径（长 ${ps[0].length - 1}）：</p><ul>${ps.map((p) => `<li>${p.map(esc).join(' → ')}</li>`).join('')}</ul><p class="sub">每对点计 1，由经过各点的路径分摊（有 k 条时各计 1/k）。</p>` : '<p>两点不连通。</p>'; })() : ''}</details>`;
       const part = W.communities(g, Number(this.s.seed) || 1), Q = W.modularity(g, part), ncom = new Set(part).size;
       const col4 = `<p>“在现存记录中，两群之间有记录的关系都经过丁”是指标本身说的话；“丁是两群之间的掮客”是解释，要补史料。</p>
         <details data-adv2><summary>进阶：社群与模块度</summary><p>随机种子 <input type="number" data-k="seed" value="${esc(this.s.seed)}" style="width:4em">：分为 ${ncom} 群，模块度 Q = ${f2(Q, 3)}</p>
