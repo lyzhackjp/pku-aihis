@@ -92,7 +92,7 @@ function panel() {
   const shade = document.createElement('div'); shade.className = 'model-shade';
   const draw = () => {
     shade.innerHTML = `<div class="model-panel" role="dialog" aria-label="模型接入"><button class="close" data-x="close">关闭 ×</button><h2>模型接入</h2>
-      <h3>一、API 或本机服务（D13、D18、D22 的“现场再跑一次”可用）</h3>
+      <h3>一、API 或本机服务（D18、D22 的“现场再跑一次”用）</h3>
       <p>现场生成用：${['browser', 'api'].map((k) => `<label class="check-row" style="display:inline-flex;margin-right:12px"><input type="radio" name="eng" value="${k}" data-eng ${A.engine === k ? 'checked' : ''}>${k === 'api' ? 'API 或本机服务' : '浏览器内 Qwen3-0.6B'}</label>`).join('')}</p>
       <div class="mp-grid">
         <label>服务预设<select data-af="preset">${PRESETS.map((p) => `<option value="${esc(p.id)}" ${p.id === A.preset ? 'selected' : ''}>${esc(p.label)}</option>`).join('')}</select></label>
