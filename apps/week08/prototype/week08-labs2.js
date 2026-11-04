@@ -12,7 +12,7 @@
   function workGraph(m, edits) {
     const base = W.graph(m, { directed: false, allNodes: true }), key = (a, b) => [a, b].sort().join('|');
     const set = new Map(base.edges.map((e) => [key(e.s, e.t), e]));
-    for (const [a, b, op] of edits) { const k = key(a, b); if (op === 'add') set.set(k, { s: a, t: b, w: 1, recs: [{ type: '（本页添加）' }], added: true }); else set.delete(k); }
+    for (const [a, b, op] of edits) { if (!base.index.has(String(a)) || !base.index.has(String(b))) continue; const k = key(a, b); if (op === 'add') set.set(k, { s: a, t: b, w: 1, recs: [{ type: '（本页添加）' }], added: true }); else set.delete(k); }
     return { nodes: base.nodes, index: base.index, directed: false, edges: [...set.values()], records: set.size };
   }
 
@@ -22,6 +22,7 @@
     render() {
       const m = this.mat(this.s.mat);
       if (!m) { rerender(this, `${W.matSelect('network', this.s.mat)}${this.s.mat === 'cbdb-wanggui' ? W.gate('CBDB 边表', 'CBDB 王珪记录') : '<p class="nil">材料缺</p>'}`); return; }
+      if (this.s.editsMat !== this.s.mat) { this.s.edits = []; this.s.pick = null; this.s.editsMat = this.s.mat; }   // 换材料时清掉上一份材料上的加删
       const g0 = workGraph(m, []), g = workGraph(m, this.s.edits);
       const big = g.nodes.length > 400;
       const b0 = big ? null : W.betweenness(g0), b = big ? null : W.betweenness(g), st = W.stats(g), st0 = W.stats(g0), cc = st.cc;
@@ -92,7 +93,15 @@
         nullHtml += `<div class="hist">${H.map((c, i) => `<span style="height:${(c / Math.max(...H)) * 100}%" title="${f2(lo + i * w, 3)}—${f2(lo + (i + 1) * w, 3)}：${c} 张"></span>`).join('')}<i style="left:${((actual - lo) / (hi - lo || 1)) * 100}%" title="实际值"></i></div>
           <p class="okbox">实际值 ${f2(actual, 3)}；100 张随机网络中 ${ge} 张不低于实际值（随机网络均值 ${f2(vals.reduce((a, b) => a + b, 0) / vals.length, 3)}，平均每张实际交换 ${Math.round(R.swaps)} 次）。${ge <= 5 ? '实际格局超出随机连线通常所能产生的范围。' : '随机连线也常常产生这样的格局：不能据此说“结构有影响”。'}</p>`;
       } else if (actual == null) nullHtml += '<p class="sub">先选属性。</p>';
-      rerender(this, `${W.matSelect('network', this.s.mat)}${flowShell(pageById('D11'), [{ title: '选网络', body: W.card(m, { compact: true }) }, { title: '基本量', body: base }, { title: '度分布', body: histHtml }, { title: '与随机网络比', body: nullHtml + '<p class="sub">零模型：度保持重连（双边交换，次数为边数的 10 倍），相当于一次消融实验：打乱“结构”，看结论还在不在。</p>' }])}`);
+      // 网络长什么样：实际网络，与（跑过零模型后）其中一张随机网络并排，点位相同，只有连线不同
+      const drawable = g.nodes.length <= 300;
+      const P = drawable ? (this.s.mat === 'toy7' ? toyP(g) : posFor(g, 'D11|' + m.id, { w: 380, h: 260 })) : null;
+      const pic = drawable ? `${W.drawGraph(g, P, { key: 'D11|' + m.id, w: 380, h: 260, labels: g.nodes.length <= 30 ? 'all' : 'none', arrows: false })}<p class="sub">这张网长这样（${st.n} 点、${st.m} 边）。可拖动节点。</p>` : `<p class="sub">${st.n} 个点，太大不画；页面只算数。</p>`;
+      if (drawable && R && R.key === [m.id, this.s.metric, this.s.attr, this.s.seed].join('|')) {
+        const r1 = W.rewire(g, Number(this.s.seed) || 1);
+        nullHtml += `<p class="sub">其中第一张随机网络（各人的度与实际相同，连线打乱）：</p>${W.drawGraph({ ...r1, index: g.index }, P, { key: 'D11null|' + m.id + this.s.seed, w: 380, h: 260, labels: g.nodes.length <= 30 ? 'all' : 'none', arrows: false })}`;
+      }
+      rerender(this, `${W.matSelect('network', this.s.mat)}${flowShell(pageById('D11'), [{ title: '选网络', body: pic + W.card(m, { compact: true }) }, { title: '基本量', body: base }, { title: '度分布', body: histHtml }, { title: '与随机网络比', body: nullHtml + '<p class="sub">零模型：度保持重连（双边交换，次数为边数的 10 倍），相当于一次消融实验：打乱“结构”，看结论还在不在。</p>' }])}`);
     }
     init() {
       this.addEventListener('click', (e) => {
@@ -109,56 +118,72 @@
 
   /* ================= D12 同一个人，两种网络 ================= */
   let shenzongCache = null;
+  /* 两份材料的常用搭配：CBDB 王珪（或公开节录）对王裕华神宗朝网；教学构造“甲的文集”对“八人整体网” */
+  const D12_PAIRS = [['cbdb-wanggui', 'wang2022-shenzong', '1845', 'CBDB 王珪 对 王裕华神宗朝亲属网'], ['twonet-ego', 'twonet-whole', '甲', '教学构造：甲的文集 对 八人整体网']];
   class TwoNetLab extends Lab {
     defaults() { return { left: 'cbdb-wanggui', right: 'wang2022-shenzong', person: '1845', sel: null }; }
     render() {
-      const L = this.mat(this.s.left), Rm = this.mat(this.s.right), pid = this.s.person;
-      const reform = this.mat('wang2022-reform');
+      const L = this.mat(this.s.left), Rm = this.mat(this.s.right);
+      const reform = this.s.right === 'wang2022-shenzong' ? this.mat('wang2022-reform') : null;
       const fanti = new Map(); if (reform) { const ci = reform.columns.indexOf('name_pinyin'), cf = reform.columns.indexOf('name_fanti'); reform.rows.forEach((r) => fanti.set(r[ci], r[cf])); }
-      // 左：自我中心网络
+      if (Rm && (!shenzongCache || shenzongCache.id !== Rm.id)) { const g = W.graph(Rm, { directed: false }); shenzongCache = { id: Rm.id, g, st: W.stats(g), egos: new Set(Rm.edges.map((e) => String(e.s))), b: null }; }
+      const gL = L ? W.graph(L) : null, stL = gL ? W.stats(gL) : null;
+      // 两张网都有的人（按编号），供第三栏选择
+      const both = gL && shenzongCache ? gL.nodes.filter((n) => shenzongCache.g.index.has(n.id)) : [];
+      const pid = both.some((n) => n.id === this.s.person) ? this.s.person : (both[0]?.id || this.s.person);
+      const centerL = gL && gL.nodes.length ? gL.nodes[stL.deg.indexOf(Math.max(...stL.deg))].id : null;
+      // 左：第一份材料中此人的位置
       let left;
       if (!L) left = this.s.left === 'cbdb-wanggui' ? W.gate('CBDB 1845 号社会关系边表', 'CBDB 王珪记录') : '<p class="nil">材料缺</p>';
       else {
-        const g = W.graph(L), st = W.stats(g), i = g.index.get(pid);
-        left = `${W.drawGraph(g, egoPos(g, pid, 420, 330), { w: 420, h: 330, labels: 'none', hi: new Set([pid]), arrows: false })}
-          <p class="okbox">${esc(g.nodes[i]?.label || pid)}：度 ${i != null ? st.deg[i] : '—'}（全网 ${st.n} 人）；${i != null && st.deg[i] === st.n - 1 ? '所有人都只与他相连：他必然在中心。' : ''}</p>`;
+        const i = gL.index.get(pid), isEgo = gL.edges.every((e) => e.s === centerL || e.t === centerL);
+        const P = isEgo ? egoPos(gL, centerL, 420, 330) : posFor(gL, 'D12L|' + L.id, { w: 420, h: 330 });
+        left = `${W.drawGraph(gL, P, { key: 'D12L|' + L.id, w: 420, h: 330, labels: gL.nodes.length <= 30 ? 'all' : 'none', hi: new Set([pid]), arrows: false })}
+          <p class="okbox">${esc(gL.nodes[i]?.label || pid)}：度 ${i != null ? stL.deg[i] : '—'}（全网 ${stL.n} 人）。${isEgo ? (pid === centerL ? '这是自我中心网络，所有人都只与他相连：他必然在中心。' : `这是以 ${esc(gL.nodes[gL.index.get(centerL)]?.label)} 为中心的自我中心网络：此人只连着中心，彼此的关系没有录。`) : ''}</p>`;
       }
-      // 右：王裕华神宗朝官员及亲属网
+      // 右：第二份材料中此人及其直接邻居
       let right;
       if (!Rm) right = '<p class="nil">材料缺</p>';
       else {
-        if (!shenzongCache || shenzongCache.id !== Rm.id) { const g = W.graph(Rm, { directed: false }); shenzongCache = { id: Rm.id, g, st: W.stats(g), egos: new Set(Rm.edges.map((e) => String(e.s))), b: null }; }
         const { g, st, egos } = shenzongCache, i = g.index.get(pid);
         const nm = (id) => { const n = g.nodes[g.index.get(id)]; return n ? `${fanti.get(n.label) || ''} ${n.label}`.trim() : id; };
         if (i == null) right = `<p class="nil">此人（编号 ${esc(pid)}）不在这张网中。</p>`;
         else {
+          const small = g.nodes.length <= 30;
           const nb = [...W.adjacency(g, true).out[i]].map((j) => g.nodes[j].id);
-          const sub = { nodes: [g.nodes[i], ...nb.map((id) => g.nodes[g.index.get(id)])].map((n) => ({ ...n, label: nm(n.id) })), directed: false, edges: [] }; sub.index = new Map(sub.nodes.map((n, k) => [n.id, k]));
-          g.edges.forEach((e) => { if (sub.index.has(e.s) && sub.index.has(e.t)) sub.edges.push(e); });
+          const sub = small ? g : { nodes: [g.nodes[i], ...nb.map((id) => g.nodes[g.index.get(id)])].map((n) => ({ ...n, label: nm(n.id) })), directed: false, edges: [] };
+          if (!small) { sub.index = new Map(sub.nodes.map((n, k) => [n.id, k])); g.edges.forEach((e) => { if (sub.index.has(e.s) && sub.index.has(e.t)) sub.edges.push(e); }); }
           const rank = st.deg.filter((d) => d > st.deg[i]).length + 1;
+          const isShen = Rm.id === 'wang2022-shenzong';
           const asEgo = Rm.edges.filter((e) => String(e.s) === pid).length, asT = Rm.edges.filter((e) => String(e.t) === pid).length;
+          if (small && !shenzongCache.b) shenzongCache.b = W.betweenness(g);
           const B = shenzongCache.b;
-          right = `${W.drawGraph(sub, posFor(sub, 'sz' + pid, { w: 420, h: 330 }), { w: 420, h: 330, labels: 'all', hi: new Set([pid]) })}
-            <p class="okbox">全网 ${st.n} 人、${st.m} 条边（原表 ${Rm.edges.length} 行）、${st.comp.count} 个连通分量。此人度 ${st.deg[i]}，在 ${st.n} 人中排第 ${rank}；作为 ego（亲属被重建的官员）${asEgo} 行，作为 target（他人的亲属）${asT} 行。${B ? `介数 ${f2(B[i], 0)}，排第 ${B.filter((x) => x > B[i]).length + 1}。` : '<button class="small" data-btw="1">算全网介数（约数秒）</button>'}</p>
-            <p class="sub">邻居：${nb.map((id) => `${esc(nm(id))}${egos.has(id) ? '' : '（非 ego）'}`).join('、')}。本课未核这些边各是何种亲属。</p>`;
+          right = `${W.drawGraph(sub, posFor(sub, 'D12R' + Rm.id + (small ? '' : pid), { w: 420, h: 330 }), { key: 'D12R|' + Rm.id + (small ? '' : pid), w: 420, h: 330, labels: 'all', hi: new Set([pid]) })}
+            <p class="okbox">全网 ${st.n} 人、${st.m} 条边（原表 ${Rm.edges.length} 行）、${st.comp.count} 个连通分量。此人度 ${st.deg[i]}，在 ${st.n} 人中排第 ${rank}；${isShen ? `作为 ego（亲属被重建的官员）${asEgo} 行，作为 target（他人的亲属）${asT} 行。` : ''}${B ? `介数 ${f2(B[i], B[i] % 1 ? 2 : 0)}，排第 ${B.filter((x) => x > B[i]).length + 1}。` : '<button class="small" data-btw="1">算全网介数（约数秒）</button>'}</p>
+            ${small ? '' : `<p class="sub">只画此人及其直接邻居。邻居：${nb.map((id) => `${esc(nm(id))}${isShen && !egos.has(id) ? '（非 ego）' : ''}`).join('、')}。${isShen ? '本课未核这些边各是何种亲属。' : ''}</p>`}`;
         }
       }
-      // 复制数据所记属性
+      // 复制数据所记属性（只对王裕华数据）
       let attr = '';
       if (reform) {
         const ci = (k) => reform.columns.indexOf(k), pick = ['Wang Gui', 'Wang Anshi', 'Sima Guang'];
         attr = `<table class="steps compact"><tr><th>人物（籍贯）</th><th>变法立场</th><th>地方化程度</th><th>度（原值）</th></tr>${pick.map((p) => { const r = reform.rows.find((x) => x[ci('name_pinyin')] === p); return r ? `<tr><td>${esc(r[ci('name_fanti')])}（${esc(r[ci('hometown_prefecture_name')])}）</td><td>${esc(r[ci('support_continuous')] || '空')}</td><td>${f2(Number(r[ci('kinproximity')]))}</td><td>${esc(r[ci('degree')])}</td></tr>` : ''; }).join('')}</table><p class="sub">字段：support_continuous、kinproximity、degree（复制数据原名）。</p>
           <p class="sub">137 人中变法立场一栏为空者 ${reform.rows.filter((r) => r[ci('support_continuous')] === '').length} 人（Tackett 书评所说的 74 人）。“度”一栏为复制数据原值，其计算所依的网络本页未能对上（神宗朝亲属网中王珪的度为 ${shenzongCache?.st.deg[shenzongCache.g.index.get('1845')] ?? '—'}），本课未复算。</p>`;
       }
+      const pairNav = `<p class="sub">常用搭配：${D12_PAIRS.map(([a, b, p, n]) => `<button class="small ${this.s.left === a && this.s.right === b ? 'on' : ''}" data-pair="${a}|${b}|${p}">${esc(n)}</button>`).join(' ')}</p>`;
+      const personSel = both.length ? `<p><label>看谁 <select data-k="person">${both.map((n) => `<option value="${esc(n.id)}" ${n.id === pid ? 'selected' : ''}>${esc(n.label)}${n.id !== n.label ? '（' + esc(n.id) + '）' : ''}</option>`).join('')}</select></label> <span class="sub">两张网都有的 ${both.length} 人</span></p>` : '<p class="nil">两份材料没有共同的人（按编号）。</p>';
+      const concl = this.s.left === 'twonet-ego' ? '<p class="note-box">甲在自己的文集网里必然居中；在八人彼此的关系里，甲只连着庚一人，居中的是丙、丁、戊。换成乙、丁看看：在左边都只有度 1，在右边差别很大。位置首先取决于建网所据的材料。</p>'
+        : '<p class="note-box">CBDB 一张网回答“现存记录里谁与王珪有过哪种往来”，大半是他文集的目录；王裕华一张网回答“神宗朝主要官员的亲属彼此怎样相连”，王珪在其中只作为他人的亲属出现。两个答案都不错，回答的是不同的问题。在第二栏换成别的人看看。</p>';
       rerender(this, flowShell(pageById('D12'), [
-        { title: '选两份材料', body: `${W.matSelect('network', this.s.left, 'left')}${W.card(L, { compact: true })}${W.matSelect('network', this.s.right, 'right')}${W.card(Rm, { compact: true })}` },
-        { title: '四栏说明', body: `<p class="sub">左：自我中心网络。</p>${left}` },
-        { title: '找到王珪', body: `<p class="sub">右：整体网络中此人及其直接邻居。</p>${right}` },
-        { title: '两种位置', body: `${attr}<p class="note-box">CBDB 一张网回答“现存记录里谁与王珪有过哪种往来”，大半是他文集的目录；王裕华一张网回答“神宗朝主要官员的亲属彼此怎样相连”，王珪在其中只作为他人的亲属出现。两个答案都不错，回答的是不同的问题。</p>` },
+        { title: '选两份材料', body: `${pairNav}${W.matSelect('network', this.s.left, 'left')}${W.card(L, { compact: true })}${W.matSelect('network', this.s.right, 'right')}${W.card(Rm, { compact: true })}` },
+        { title: '第一份中的位置', body: `${personSel}${left}` },
+        { title: '第二份中的位置', body: right },
+        { title: '两种位置', body: `${attr}${concl}` },
       ]));
     }
     init() {
       this.addEventListener('click', (e) => {
+        const pr = e.target.closest('[data-pair]'); if (pr) { const [a, b, p] = pr.dataset.pair.split('|'); this.s.left = a; this.s.right = b; this.s.person = p; this.save(); return; }
         if (!e.target.dataset.btw || !shenzongCache) return; e.target.textContent = '计算中…';
         setTimeout(() => { shenzongCache.b = W.betweenness(shenzongCache.g); this.render(); }, 20);
       });
@@ -174,7 +199,7 @@
       const m = this.mat(this.s.mat);
       if (!m || !m.passages) { rerender(this, `${W.matSelect('events', this.s.mat)}${W.gate('『梅颸日記』十段录文与影像（demo/导入包/梅颸日記/ 生成的本机材料包）', '『梅颸日記』本机导入包')}
         <p class="sub">未导入时，以下为一条教学构造的示例行，只说明操作：日期“某年某月某日”，原文“晴。某氏来、娘二人同道。”，点选“某氏”“娘二人”后生成两条边。</p>`); return; }
-      const p = m.passages.find((x) => x.id === this.s.pid) || m.passages[0];
+      const p = m.passages.find((x) => x.id === this.s.pid) || m.passages.find((x) => x.classroom) || m.passages.find((x) => (x.ednotes || []).length) || m.passages[0];
       const rows = this.s.rows[p.id] || [];
       const diarist = m.id === 'meishi' ? '頼静' : m.diarist || m.card?.author?.replace(/（.*/, '') || '日记作者';
       const text = p.text, marks = rows.map((r) => r.who);
@@ -195,7 +220,20 @@
       const fem = new Set(rows.filter((r) => r.gender === '女').map((r) => r.who)).size, all = new Set(rows.map((r) => r.who)).size;
       const col3 = `${W.drawGraph(g, egoPos(g, diarist, 360, 260), { w: 360, h: 260, labels: 'all', color: gcol })}
         <p class="okbox">本段：${all} 人，其中判读为女性 ${fem} 人。</p><p class="sub">粉：女；蓝：男；灰：不明。性别为学生据称呼判读，未考证。</p>`;
-      const J = W.Pack.local()?.jbdb; let col4 = m.id === 'meishi' ? '<p class="sub">JBDB 查询结果在本机材料包中。</p>' : `<p class="sub">这一材料没有现成的数据库可对照。可以做的核对：</p><ul class="small"><li>同一人的不同称呼（如“禮卿”与“菅茶山”、“黑子孝”与“黑瀨”）要不要合并为一个节点？括注是原书编者加的。</li><li>“大人”“數子”“長服二子”这类称呼指谁？不能确定的，在边表中保留原称呼，不要替它补名字。</li><li>${m.id === 'raisanyo-1797' ? 'JBDB 收有頼山陽与菅茶山等人；课堂导入本机材料包后，『梅颸日記』一页可以看数据库录了什么。' : '在英文日记中，“my Lord”“my wife”是谁，要靠前后文与编者注。'}</li></ul>`;
+      const J = W.Pack.local()?.jbdb; let col4 = '<p class="sub">JBDB 查询结果在本机材料包中。</p>';
+      if (m.id !== 'meishi') {
+        // 公开日记没有数据库可对照，改与原书编者的注对照：编者对称呼作了哪些比定，与自己点选的是否一致
+        const notes = p.ednotes || [], picked = rows.map((r) => r.who);
+        const bi = (w) => (/[a-z]/i.test(w) ? [w] : [...Array(Math.max(1, w.length - 1)).keys()].map((k) => w.slice(k, k + 2)));   // 汉字称呼按相邻两字比，如“姫井子”与注中“姫井氏”
+        const hitOf = (n) => picked.filter((w) => w && bi(w).some((x) => n.anchor.includes(x) || n.note.includes(x)));
+        const withNotes = m.passages.filter((x) => (x.ednotes || []).length);
+        col4 = `<p class="sub">这一材料没有现成的数据库，可与原书编者的注对照：${esc(m.ednote_src || '编者注')}。</p>
+          ${notes.length ? notes.map((n) => { const h = hitOf(n); return `<div class="evid-card ${h.length ? 'ok' : ''}"><p class="small">注在“<b>${esc(n.anchor)}</b>”之后：</p><p class="src-line small">${esc(n.note)}</p><p class="sub">${h.length ? `你点选的“${h.map(esc).join('、')}”与这条注对得上。` : '你还没有点选这条注所说的人。'}</p></div>`; }).join('')
+            : `<p class="nil">这一条没有编者注。</p>${withNotes.length ? `<p class="sub">有编者注的日条：${withNotes.map((x) => `<button class="small" data-set="pid:${esc(x.id)}">${esc(x.id)}</button>`).join(' ')}</p>` : ''}`}
+          <details><summary>编者注之外还要核什么</summary><ul class="small"><li>同一人的不同称呼（${m.id === 'raisanyo-1797' ? '“禮卿”与“菅茶山”' : '“my Lord”与 Sir Edward Montagu'}）合不合并为一个节点？编者的比定是编者的判断，也可能错。</li>
+            <li>${m.id === 'raisanyo-1797' ? '“大人”“數子”“長服二子”' : '“my wife”“the boy”“some friends”'}这类称呼指谁？不能确定的，在边表中保留原称呼，不要替它补名字。</li>
+            <li>${m.id === 'raisanyo-1797' ? 'JBDB 收有頼家与菅茶山等人；导入本机材料包后，『梅颸日記』一页可以看数据库录了什么。' : '编者注多是人物小传，只说“这人是谁”，不说“这一天两人做了什么”：关系类型仍要自己从原文判读。'}</li></ul></details>`;
+      }
       if (J && m.id === 'meishi') {
         const sd = (J.same_day || []).find((x) => x.passage === p.id);
         const ev = (sd?.events || []);
@@ -204,9 +242,9 @@
           ${ev.length ? ev.map((e) => `<div class="evid-card"><p class="src-line small">${esc(e.notes || '')}</p><p class="sub">${e.sources.map((s) => (s.source === 9 ? '『梅颸日記』' : s.source === 3 ? '『春水日記』' : '来源 ' + s.source) + (s.page ? ' p.' + s.page : '')).join('、') || '来源未登记'}｜人物：${e.persons.map((x) => `${esc(x.name)}${x.female ? '（女）' : x.female === false ? '' : '（未标）'}`).join('、')}</p></div>`).join('') : '<p class="nil">这一天在 JBDB 中没有事件。</p>'}
           ${p.id === 'BS09' ? '<p class="note-box">文政七年九月六日，JBDB 中只有一条“餘一から當月六日出書狀”的书信事件；这一天赖静坐船赴京、一路送行的记事未录入。数据库的“网络”取决于编者录了哪些条目。</p>' : ''}
           <details><summary>两部日记在 JBDB 中的规模（按 cFemale 字段）</summary><table class="steps"><tr><th></th><th>事件</th><th>所见人物</th><th>女</th><th>男</th><th>未标</th></tr>${[['9', '『梅颸日記』'], ['3', '『春水日記』']].map(([k, n]) => sum[k] ? `<tr><td>${n}</td><td>${sum[k].events}</td><td>${sum[k].persons}</td><td>${sum[k].by_gender['女'] || 0}</td><td>${sum[k].by_gender['男'] || 0}</td><td>${sum[k].by_gender['未标'] || 0}</td></tr>` : '').join('')}</table>
-            <p class="sub">讲义据 2022 年讲义写“事件数 7,462 与 3,525”“8 vs 62 女”；今日接口所得事件数已远多于此，女性比例也不能直接复现“8 vs 62”，单位仍待核（待核实事项 T-01）。</p></details>`;
+            <p class="sub">讲义 3.4 用的就是这里的接口实查数（2026-11-02）。</p></details>`;
       }
-      rerender(this, `${W.matSelect('events', this.s.mat)}${flowShell(pageById('D13'), [{ title: '导入日记', body: col1 }, { title: '点选人物', body: col2 }, { title: '选关系', body: col3 }, { title: '与 JBDB 对照', body: col4 }])}`);
+      rerender(this, `${W.matSelect('events', this.s.mat)}${flowShell(pageById('D13'), [{ title: '导入日记', body: col1 }, { title: '点选人物', body: col2 }, { title: '选关系', body: col3 }, { title: m.id === 'meishi' ? '与 JBDB 对照' : '与编者注对照', body: col4 }])}`);
     }
     init() {
       /* 影像按比例裁去页脚：图载入后按原图宽高比设定外框高度，超出部分（页脚水印）不显示。 */
@@ -214,7 +252,7 @@
       new MutationObserver(fit).observe(this, { childList: true, subtree: true });
       this.addEventListener('mouseup', (e) => { if (!e.target.closest('[data-src]')) return; const t = String(window.getSelection() || '').trim(); if (t && t.length <= 12) { this.s.pick = t; this.save(); } });
       this.addEventListener('click', async (e) => {
-        const p = (this.mat(this.s.mat)?.passages || []).find((x) => x.id === this.s.pid) || this.mat(this.s.mat)?.passages?.[0]; if (!p) return;
+        const ps = this.mat(this.s.mat)?.passages || [], p = ps.find((x) => x.id === this.s.pid) || ps.find((x) => x.classroom) || ps.find((x) => (x.ednotes || []).length) || ps[0]; if (!p) return;
         const add = (who) => { if (!who) return; const rows = [...(this.s.rows[p.id] || []), { who, rel: this.s.rel, gender: this.s.gender }]; this.s.rows = { ...this.s.rows, [p.id]: rows }; this.s.pick = ''; this.save(); };
         if (e.target.dataset.zoom) { const d = document.createElement('dialog'); d.className = 'zoom'; const c = Number(this.s.crop); d.innerHTML = `<div class="cropbox big" data-crop="${c}"><img src="${e.target.src}" alt=""></div><p class="sub">已裁去页脚 ${c}%。点任意处关闭。</p>`; d.addEventListener('click', () => { d.close(); d.remove(); }); document.body.append(d); const im = d.querySelector('img'); const f = () => { d.querySelector('.cropbox').style.aspectRatio = `${im.naturalWidth} / ${im.naturalHeight * (1 - c / 100)}`; }; im.complete ? f() : im.onload = f; d.showModal(); return; }
         if (e.target.dataset.who) add(e.target.dataset.who);

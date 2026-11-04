@@ -3,6 +3,7 @@
  * 权重从 Hugging Face 取，均由浏览器缓存；课前在“模型接入”中载入一次即可。材料文字不出本机。
  * 第八周用到：句向量（D06 余弦）、GLiNER（D13 人物候选）、Qwen3（之后的 D15、D18、D22）。 */
 import { EMB, QWEN } from './models.js';
+import * as API from './vendor/api.mjs';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const emit = () => document.dispatchEvent(new CustomEvent('w8-live'));
@@ -33,6 +34,28 @@ async function loadEmb(key) { S.msg['emb-' + key] = '载入中…'; emit(); try 
 async function loadGliner() { S.msg.gliner = '载入中…'; emit(); try { const info = await gcall({ op: 'gliner-load' }, (d) => { S.msg.gliner = d.progress; emit(); }); S.gliner = info; S.msg.gliner = `已载入（${info.load_seconds} 秒）`; emit(); return info; } catch (e) { S.msg.gliner = '失败：' + e.message; emit(); throw e; } }
 async function loadQwen(key) { S.msg[key] = '载入中…'; emit(); try { const info = await qcall({ op: 'qwen-load', key }, (d) => { S.msg[key] = d.progress; emit(); }); S.qwen[key] = info; S.msg[key] = `已载入（${info.device}/${info.dtype}，${info.load_seconds} 秒）`; emit(); return info; } catch (e) { S.msg[key] = '失败：' + e.message; emit(); throw e; } }
 
+/* ================= API 或本机服务（同第六、七周：服务预设、协议适配原样复制；Key 只在本页内存，刷新清除） ================= */
+let PRESETS = []; const AKEY = 'week08-api-profile-v1';
+const isLocalUrl = (u) => { try { return ['localhost', '127.0.0.1', '[::1]'].includes(new URL(u).hostname); } catch { return false; } };
+const A = { preset: 'local', baseUrl: 'http://127.0.0.1:8090/v1', model: 'qwen3-4b-instruct-2507', protocol: 'openai', apiKey: '', test: null, msg: '', engine: localStorage.getItem('w8/engine') || 'browser' };
+try { Object.assign(A, JSON.parse(localStorage.getItem(AKEY) || '{}'), { apiKey: '', test: null }); } catch { /* ignore */ }
+fetch(new URL('./vendor/api-presets.json', import.meta.url)).then((r) => r.json()).then((p) => { PRESETS = p; emit(); }).catch(() => {});
+const apiPersist = () => { try { const { apiKey, test, msg, ...keep } = A; localStorage.setItem(AKEY, JSON.stringify(keep)); localStorage.setItem('w8/engine', A.engine); } catch { /* ignore */ } emit(); };
+const apiReady = () => !!A.model.trim() && !!A.baseUrl.trim() && (!!A.apiKey.trim() || isLocalUrl(A.baseUrl));
+const apiLabel = () => `${PRESETS.find((x) => x.id === A.preset)?.label || A.preset} · ${A.model || '待填型号'}`;
+async function apiChat(messages, { maxTokens = 2048, json = false } = {}) {
+  if (!apiReady()) throw new Error('请先在“模型接入”中填写服务地址、型号和 Key（本机服务可不填 Key）');
+  const built = API.buildRequest({ ...A, coordinates: 'pixel-xywh' }, messages, { maxTokens });
+  if (A.protocol !== 'anthropic') { if (json) built.body.response_format = { type: 'json_object' }; if (!/^kimi-k3/i.test(built.body.model) && !(A.preset === 'deepseek' && built.body.model === 'deepseek-flash')) built.body.temperature = 0; }
+  const clean = (v) => API.redact(v, [A.apiKey]); const t0 = performance.now();
+  let r; try { r = await fetch(built.url, { method: 'POST', headers: built.headers, body: JSON.stringify(built.body), signal: AbortSignal.timeout(isLocalUrl(A.baseUrl) ? 1800000 : 600000), redirect: 'error', credentials: 'omit' }); }
+  catch (e) { throw new Error(clean(`${e.message}（${isLocalUrl(A.baseUrl) ? '本机服务是否已启动（tools/local-llm/serve.sh）？' : '多为跨域被拒或网络不通'}）`)); }
+  const raw = clean(await r.text()); if (!r.ok) throw new Error(API.apiErrorMessage(r.status, raw, A));
+  let parsed; try { parsed = JSON.parse(raw); } catch { throw new Error('API 回复不是合法 JSON'); }
+  const a = API.parseResponse(parsed, A.protocol);
+  return { text: clean(a.text), usage: a.usage, model: a.model || A.model, seconds: +((performance.now() - t0) / 1000).toFixed(1), via: 'API：' + apiLabel(), endpoint: built.url };
+}
+
 const cos = (u, v) => u.reduce((s, x, i) => s + x * v[i], 0);
 const W8Live = {
   status: () => S,
@@ -51,6 +74,14 @@ const W8Live = {
     const seen = new Set(); const spans = r.spans.filter((s) => (seen.has(s.text) ? false : seen.add(s.text)));
     return { model: r.info.model, seconds: r.seconds, threshold, spans };
   },
+  /* 生成：模型接入中选“API 或本机服务”时走 API，否则用浏览器内 Qwen3。返回 {text, seconds, via}。 */
+  engine: () => (A.engine === 'api' && apiReady() ? 'api' : 'browser'),
+  engineLabel: () => (A.engine === 'api' && apiReady() ? 'API：' + apiLabel() : '浏览器内 Qwen3-0.6B'),
+  async chat(messages, { maxTokens = 1536, json = false } = {}) {
+    if (A.engine === 'api' && apiReady()) return apiChat(messages, { maxTokens, json });
+    const r = await qcall({ op: 'qwen-gen', key: 'qwen3-0.6b', messages, max_new_tokens: Math.min(maxTokens, 1024) }, (d) => { S.msg['qwen3-0.6b'] = d.partial ? `生成中：${d.tokens} 词元` : d.progress; emit(); });
+    return { text: r.text ?? r.reply ?? String(r), seconds: r.seconds, via: '浏览器内 Qwen3-0.6B' };
+  },
   async gen(messages, key = 'qwen3-0.6b', max_new_tokens = 512) { return qcall({ op: 'qwen-gen', key, messages, max_new_tokens }, (d) => { S.msg[key] = d.partial ? `生成中：${d.tokens} 词元` : d.progress; emit(); }); },
 };
 window.W8Live = W8Live;
@@ -60,7 +91,19 @@ document.querySelectorAll('[data-needs-pack]').forEach((n) => n.packChanged?.())
 function panel() {
   const shade = document.createElement('div'); shade.className = 'model-shade';
   const draw = () => {
-    shade.innerHTML = `<div class="model-panel" role="dialog" aria-label="模型接入"><button class="close" data-x="close">关闭 ×</button><h2>模型接入：浏览器内模型（课前载入）</h2>
+    shade.innerHTML = `<div class="model-panel" role="dialog" aria-label="模型接入"><button class="close" data-x="close">关闭 ×</button><h2>模型接入</h2>
+      <h3>一、API 或本机服务（D13、D18、D22 的“现场再跑一次”可用）</h3>
+      <p>现场生成用：${['browser', 'api'].map((k) => `<label class="check-row" style="display:inline-flex;margin-right:12px"><input type="radio" name="eng" value="${k}" data-eng ${A.engine === k ? 'checked' : ''}>${k === 'api' ? 'API 或本机服务' : '浏览器内 Qwen3-0.6B'}</label>`).join('')}</p>
+      <div class="mp-grid">
+        <label>服务预设<select data-af="preset">${PRESETS.map((p) => `<option value="${esc(p.id)}" ${p.id === A.preset ? 'selected' : ''}>${esc(p.label)}</option>`).join('')}</select></label>
+        <label>API 地址<input data-af="baseUrl" value="${esc(A.baseUrl)}"></label>
+        <label>协议<select data-af="protocol"><option value="openai" ${A.protocol === 'openai' ? 'selected' : ''}>OpenAI 兼容 Chat Completions</option><option value="anthropic" ${A.protocol === 'anthropic' ? 'selected' : ''}>Anthropic Messages</option></select></label>
+        <label>API 型号（不是显示名称）<input data-af="model" value="${esc(A.model)}"></label>
+        <label>API Key<input type="password" autocomplete="off" data-af="apiKey" value="${esc(A.apiKey)}" placeholder="${isLocalUrl(A.baseUrl) ? '本机服务可不填' : ''}"></label>
+      </div>
+      <p class="sub">默认指向仓库 tools/local-llm 的本机服务（<code>sh tools/local-llm/serve.sh</code> 启动，地址 http://127.0.0.1:8090/v1，型号 qwen3-4b-instruct-2507，即 D15、D18、D22 保存记录所用的模型）。也可选 DeepSeek、通义千问等云端服务：材料文字会发送给该服务，发送前请确认可以外发（CBDB、『梅颸日記』等本机材料不要发）。Key 只留在本页内存，刷新后清除。</p>
+      <p><button class="small" data-atest="1" ${apiReady() ? '' : 'disabled'}>发送一句公开测试文字</button> <span class="mp-status">${esc(A.msg || (A.test ? (A.test.ok ? '已通过：' + A.test.text : '未通过') : '尚未测试'))}</span></p>
+      <h3>二、浏览器内模型（课前载入）</h3>
       <p class="sub">模型在本浏览器内运行，材料文字不发送到任何服务器。首次需联网下载（库来自 jsDelivr，权重来自 Hugging Face），之后由浏览器缓存；换浏览器或清除网站数据后需重下。课前在授课用的浏览器与正式网址上各载入一次。WebGPU：${S.webgpu == null ? '检测中' : S.webgpu ? '可用' : '不可用（Qwen3-4B 不能用）'}</p>
       <h3>句向量（D06 余弦）</h3>${Object.entries(EMB).map(([k, v]) => `<p class="check-row"><input type="radio" name="emb" value="${k}" ${S.embKey === k ? 'checked' : ''} data-emb-pick><span><b>${esc(v.label)}</b>　${esc(v.size)}　<button class="small" data-load="emb:${k}">载入</button>　<span class="mp-status">${esc(S.msg['emb-' + k] || (S.emb[k] ? '已载入' : '未载入'))}</span></span></p>`).join('')}
       <h3>GLiNER multi v2.1（D13 人物候选）</h3><p>fp16 ONNX，约 580 MB　<button class="small" data-load="gliner">载入</button>　<span class="mp-status">${esc(S.msg.gliner || (S.gliner ? '已载入' : '未载入'))}</span></p>
@@ -70,20 +113,28 @@ function panel() {
   draw(); document.addEventListener('w8-live', draw);
   shade.addEventListener('click', (e) => {
     if (e.target === shade || e.target.dataset.x === 'close') { document.removeEventListener('w8-live', draw); shade.remove(); return; }
+    if (e.target.dataset.atest) { A.msg = '测试中…'; emit(); apiChat([{ role: 'user', content: '只回答两个字：可以' }], { maxTokens: 64 }).then((r) => { A.test = { ok: true, text: `${r.text.trim().slice(0, 20)}（${r.seconds} 秒）` }; A.msg = ''; emit(); }).catch((err) => { A.test = { ok: false }; A.msg = '失败：' + String(err.message || err).slice(0, 160); emit(); }); return; }
     const l = e.target.dataset.load; if (!l) return; const [k, v] = l.split(':');
     (k === 'emb' ? loadEmb(v) : k === 'gliner' ? loadGliner() : loadQwen(v)).catch(() => {});
   });
-  shade.addEventListener('change', (e) => { if (e.target.matches('[data-emb-pick]')) { S.embKey = e.target.value; localStorage.setItem('w8/embKey', S.embKey); emit(); } });
+  shade.addEventListener('change', (e) => {
+    if (e.target.matches('[data-emb-pick]')) { S.embKey = e.target.value; localStorage.setItem('w8/embKey', S.embKey); emit(); }
+    if (e.target.matches('[data-eng]')) { A.engine = e.target.value; apiPersist(); }
+    const f = e.target.dataset.af; if (f) { if (f === 'preset') { const p = PRESETS.find((x) => x.id === e.target.value); if (p) Object.assign(A, { preset: p.id, baseUrl: p.id === 'local' ? 'http://127.0.0.1:8090/v1' : p.baseUrl, protocol: p.protocol, model: p.id === 'local' ? 'qwen3-4b-instruct-2507' : p.model || '' }); } else A[f] = e.target.value; A.test = null; A.msg = ''; apiPersist(); }
+  });
   document.body.append(shade);
 }
 ecall({ op: 'probe' }).then((r) => { S.webgpu = r.webgpu; emit(); }).catch(() => { S.webgpu = false; emit(); });
 
 /* ================= 通用导入页握手（同第五、六、七周：PKU_IMPORT_READY／PKU_PROJECT，pku-history-project/v1） ================= */
 let importer = null;
-function openImporter() {
+async function openImporter() {
   const u = new URL('../importer/index.html', import.meta.url); u.searchParams.set('receiver', location.origin);
-  importer = window.open(u.href, 'week08-material-importer');
-  if (!importer) toast('浏览器拦截了弹出窗口，请允许本站弹窗后再点“文献导入”。');
+  // 先同步开窗（避免被当作弹窗拦截），再确认导入页已构建；通用导入页是另行构建的产物（apps/week08/scripts/build_importer.sh），不入 Git
+  importer = window.open('', 'week08-material-importer');
+  if (!importer) { toast('浏览器拦截了弹出窗口，请允许本站弹窗后再点“文献导入”。'); return; }
+  try { const r = await fetch(u.href, { method: 'HEAD', cache: 'no-store' }); if (!r.ok) { importer.close(); importer = null; toast('通用导入页尚未构建（本机没有 importer/ 文件夹）。在终端运行 apps/week08/scripts/build_importer.sh 后再点；表格材料可先用顶栏“导入表格”。'); return; } } catch { /* 离线等：照常打开 */ }
+  importer.location.href = u.href;
 }
 window.addEventListener('message', async (e) => {
   if (e.origin !== location.origin || !importer || e.source !== importer) return;

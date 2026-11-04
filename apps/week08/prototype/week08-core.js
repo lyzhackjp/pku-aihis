@@ -21,8 +21,11 @@
     if (!p.materials || typeof p.materials !== 'object') throw new Error('材料包缺少 materials');
     return p;
   }
+  let BASE = null;
   const Pack = {
     hasLocal: () => !!LOCAL, hasPublic: () => !!PUB, local: () => LOCAL, pub: () => PUB,
+    /* 材料包旁的文件（如截图）：按 ?pack= 的地址取；从文件导入时默认在 ../local-only/ */
+    asset: (rel) => new URL(rel, BASE || new URL('../local-only/', location.href).href).href,
     async importFile(file) { const p = validateLocal(JSON.parse(await file.text())); const ok = await kvPut('local', p); LOCAL = p; LOCAL._persisted = ok; emit(); return p; },
     async clear() { await kvDel('local'); LOCAL = null; emit(); },
     loadPublic() {
@@ -35,7 +38,7 @@
     async init() {
       const pub = this.loadPublic();
       const u = new URLSearchParams(location.search).get('pack');
-      if (u) { try { const p = validateLocal(await (await fetch(u)).json()); LOCAL = p; LOCAL._persisted = await kvPut('local', p); } catch (e) { console.warn('材料包地址载入失败', e); } }
+      if (u) { try { const p = validateLocal(await (await fetch(u)).json()); LOCAL = p; LOCAL._persisted = await kvPut('local', p); BASE = new URL('.', new URL(u, location.href)).href; } catch (e) { console.warn('材料包地址载入失败', e); } }
       if (!LOCAL) { const p = await kvGet('local'); if (p) { LOCAL = p; LOCAL._persisted = true; } }
       USER = (await kvGet('user')) || {};
       await pub; emit();
@@ -350,7 +353,23 @@
   /* ================= 回原文：在本地《華陽集》卷次中找篇题 ================= */
   const VARIANT = [['巻', '卷'], ['誌', '志'], ['銘', '铭'], ['吕', '呂'], ['夘', '卯'], ['逺', '遠']];
   const norm = (s) => VARIANT.reduce((x, [a, b]) => x.split(a).join(b), String(s || ''));
+  /* 教师本机实际操作截图（本机材料包 extra.shots）：缩略图条＋大图；没有本机材料包时说明原因 */
+  function shotGallery(kind, cur, key = 'shot') {
+    const S = Pack.local()?.extra?.shots, L = S?.[kind] || [];
+    if (!L.length) return `<p class="sub">逐步截图是在教师电脑上实际操作所得，含 CHGIS 坐标与 CBDB 人名，只在本机材料包中；导入本机材料包后在此显示。</p>`;
+    const i = Math.max(0, L.findIndex((x) => x.file === cur)), c = L[i];
+    return `<div class="shots"><div class="shot-strip">${L.map((x, k) => `<button data-set="${key}:${esc(x.file)}" class="${k === i ? 'on' : ''}" title="${esc(x.caption)}">${String(k + 1).padStart(2, '0')}</button>`).join('')}</div>
+      <figure class="shot"><img src="${esc(Pack.asset(c.file))}" alt="${esc(c.caption)}" loading="lazy" data-shotzoom="1"><figcaption>${String(i + 1).padStart(2, '0')}　${esc(c.caption)}<br><span class="sub">${esc(S.machine)}，${esc(S.date)} 实际操作截图（本机材料包，不公开）</span></figcaption></figure></div>`;
+  }
+  document.addEventListener('click', (e) => { const im = e.target.closest('[data-shotzoom]'); if (!im) return; const d = document.createElement('dialog'); d.className = 'zoom'; d.innerHTML = `<img src="${im.src}" alt="" style="max-width:96vw;max-height:90vh"><p class="sub">点任意处关闭。</p>`; d.addEventListener('click', () => { d.close(); d.remove(); }); document.body.append(d); d.showModal(); });
+  /* 《華陽集》某卷：卷三十五至六十在 huayangji，卷一至三十四在 huayangji_early */
+  function hyJuan(j) { return Mat.text('huayangji')?.juan?.[j] || Mat.text('huayangji_early')?.juan?.[j] || null; }
+  /* CBDB 出处题名 → 四庫本的篇：先查课件逐条编写的对照（公开材料包只含练习材料三 30 行，本机材料包含全部 97 行），再退回全文检索 */
+  function hyRef(ref) { return Pack.local()?.extra?.hy_refmap?.[ref] || Mat.text('huayangji')?.refmap?.[ref] || null; }
   function findInHuayangji(ref) {
+    const m = hyRef(ref);
+    if (m && m.juan) { const v = hyJuan(m.juan); return v ? [{ juan: m.juan, line: m.line, pos: m.pos || 0, text: (v.lines[m.line] || '').slice(m.pos || 0) || m.head, evidence: m.evidence, mapped: true }] : []; }
+    if (m && !m.juan) return [{ juan: null, evidence: m.evidence, mapped: true }];
     const hy = Mat.text('huayangji'); if (!hy || !ref) return [];
     const head = String(ref).split(/\s*\/\s*/)[0].replace(/[《》“”"「」]/g, '').trim();
     if (!head || head === '[n/a]' || head.length < 3) return [];
@@ -511,6 +530,6 @@
   document.addEventListener('click', (e) => { const b = e.target.closest('button[data-open-import]'); if (b && !b.closest('.pack-bar')) Importer.open(b.dataset.openImport || undefined); });
 
   window.W8 = { FALLBACK, Pack, Mat, gate, card, rng, graph, adjacency, betweenness, allShortestPaths, clustering, components, pathStats, stats, rewire, modularity, communities,
-    layout, drawGraph, bars, PALETTE, NET, netMetrics, grams, jaccard, levenshtein, lcsRatio, cosine, chars, findInHuayangji, MEMORIAL, LECTURE_GROUPS, parseAny, buildMaterial, guessKind, guessMap, KINDS, Importer, matSelect, CBDB_CITE, kvGet, kvPut };
+    layout, drawGraph, bars, PALETTE, NET, netMetrics, grams, jaccard, levenshtein, lcsRatio, cosine, chars, findInHuayangji, hyJuan, shotGallery, MEMORIAL, LECTURE_GROUPS, parseAny, buildMaterial, guessKind, guessMap, KINDS, Importer, matSelect, CBDB_CITE, kvGet, kvPut };
   window.addEventListener('DOMContentLoaded', () => { Pack.init(); setTimeout(packBar, 0); });
 })();

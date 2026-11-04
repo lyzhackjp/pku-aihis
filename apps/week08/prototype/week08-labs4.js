@@ -35,15 +35,36 @@
     const ox = (w - (x1 - x0) * k * s) / 2, oy = (h - (y1 - y0) * s) / 2;
     const P = (lng, lat) => [ox + (lng - x0) * k * s, oy + (y1 - lat) * s];
     const kmPx = s / 111;
+    // 视野伸到南海时，北纬 20° 以南的海岸线不画：这一精度的 Natural Earth 海岸线不含南海诸岛，画出来会被看作漏绘（讲义 4.4 审图号）
+    const scs = coast && y0 < 20 && x1 > 108 && x0 < 122;
     const lines = coast ? (PUB().basemap?.coast || []).filter((l) => l.some(([a, b]) => a >= x0 - 2 && a <= x1 + 2 && b >= y0 - 2 && b <= y1 + 2)).map((l) => `<polyline points="${l.map(([a, b]) => P(a, b).map((v) => v.toFixed(1)).join(',')).join(' ')}"/>`).join('') : '';
     const pts = points.filter(okCoord).map((p) => { const [x, y] = P(p.lng, p.lat); return `<g class="mpt" data-pt="${esc(p.id ?? '')}">${p.r_km ? `<circle class="err" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${Math.max(2, p.r_km * kmPx).toFixed(1)}"/>` : ''}<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${p.size || dot}" fill="${p.color || '#164ec7'}" fill-opacity="${alpha}" ${p.ring ? 'stroke="#a33" stroke-width="2"' : ''}><title>${esc(p.label || '')} ${p.lat.toFixed(3)}, ${p.lng.toFixed(3)}</title></circle>${labels && p.label ? `<text x="${(x + 6).toFixed(1)}" y="${(y - 5).toFixed(1)}">${esc(p.label)}</text>` : ''}</g>`; }).join('');
     const arr = arrows.filter(([a, b]) => okCoord(a) && okCoord(b)).map(([a, b, c]) => { const [xa, ya] = P(a.lng, a.lat), [xb, yb] = P(b.lng, b.lat); return `<line x1="${xa.toFixed(1)}" y1="${ya.toFixed(1)}" x2="${xb.toFixed(1)}" y2="${yb.toFixed(1)}" stroke="${c || '#a33'}" stroke-width="1.6" marker-end="url(#ah${key})"/>`; }).join('');
     // 比例尺：取 100、200、500、1000 公里中最接近图宽四分之一的
     const sc = [50, 100, 200, 500, 1000].reduce((a, b) => (Math.abs(b * kmPx - w / 4) < Math.abs(a * kmPx - w / 4) ? b : a));
     return `<svg class="mapsvg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="地图"><defs><marker id="ah${key}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#a33"/></marker></defs>
-      <rect width="${w}" height="${h}" fill="#f7f9fa"/><g class="coast">${lines}</g>${arr}${pts}
+      <rect width="${w}" height="${h}" fill="#f7f9fa"/>${scs ? `<clipPath id="cl${key}"><rect width="${w}" height="${P(x0, 20)[1].toFixed(1)}"/></clipPath>` : ''}<g class="coast" ${scs ? `clip-path="url(#cl${key})"` : ''}>${lines}</g>${arr}${pts}
+      <text x="${w - 8}" y="${h - 6}" text-anchor="end" class="mapnote">示意图：只画 Natural Earth 海岸线轮廓，不表示疆域${scs ? '；北纬 20° 以南不画' : ''}</text>
       <g class="scale"><line x1="12" y1="${h - 14}" x2="${12 + sc * kmPx}" y2="${h - 14}"/><text x="12" y="${h - 18}">${sc} 公里</text></g><text x="${w - 8}" y="14" text-anchor="end" class="north">↑北</text></svg>`;
   }
+
+  /* 宽松解析模型回复中的 JSON：去掉代码围栏，取第一个“{”到最后一个“}”；截断时逐个补齐对象（与 scripts/run_llm_w8.py 的 parse_lenient 同理） */
+  function lenientJSON(text, key) {
+    const t = String(text || '').replace(/```(?:json)?/g, ''); const i = t.indexOf('{'); if (i < 0) return null;
+    try { return JSON.parse(t.slice(i, t.lastIndexOf('}') + 1)); } catch { /* 截断 */ }
+    const out = []; const re = /\{[^{}]*\}/g; let m; const body = t.slice(t.indexOf('[', i) + 1);
+    while ((m = re.exec(body))) { try { out.push(JSON.parse(m[0])); } catch { /* 跳过残缺项 */ } }
+    return out.length ? { [key]: out, truncated: true } : null;
+  }
+  /* 现场再跑一次：用“模型接入”中选定的引擎（API／本机服务，或浏览器内 Qwen3）发送与保存记录同一份提示词 */
+  async function liveRerun(lab, run, key, btn) {
+    if (!window.W8Live) { lab._liveErr = '浏览器内模型需经本机服务打开（file:// 下不可用）'; lab.render(); return; }
+    btn.disabled = true; btn.textContent = '运行中…（' + window.W8Live.engineLabel() + '）';
+    try { const r = await window.W8Live.chat([{ role: 'user', content: run.prompt }], { maxTokens: 2048, json: true }); const parsed = lenientJSON(r.text, key); lab._live = { parsed, raw: r.text, via: r.via, seconds: r.seconds, date: new Date().toLocaleString() }; lab._liveErr = parsed ? '' : '回复中没有可解析的 JSON，原文见下'; }
+    catch (e) { lab._liveErr = String(e.message || e).slice(0, 240); }
+    lab.render();
+  }
+  const liveBar = (lab) => `<p><button class="small" data-rerun="1">用模型现场再跑一次</button> <span class="sub">${window.W8Live ? '当前：' + esc(window.W8Live.engineLabel()) + '（在顶栏“模型接入”中切换）' : ''}</span>${lab._live ? ` <button class="small" data-rerun="back">回到保存的记录</button>` : ''}</p>${lab._liveErr ? `<p class="nil">${esc(lab._liveErr)}</p>${lab._live?.raw ? `<details><summary>模型原始回复</summary><pre class="code">${esc(lab._live.raw)}</pre></details>` : ''}` : ''}`;
 
   /* ================= CHGIS TGAZ：快照或在线查询 ================= */
   const TG = new Map();
@@ -190,22 +211,30 @@
       const has = (txt) => FIVE.map(([k, , , re]) => [k, re.test(txt || '')]);
       const mine = this.s.mine || tasks.bad || '';
       const hm = has(mine);
-      const col1 = `<p class="sub">差的提法（佛罗伦萨家族婚姻网${tasksC ? '；王珪边表一份在本机材料包' : ''}）：</p><div class="srcbox small-src">${esc(tasks.bad || '（公开材料载入中）')}</div>${tasksC ? `<div class="srcbox small-src">${esc(tasksC.bad)}</div>` : ''}
-        <p class="sub">它缺的五件事见第二栏。讲义 @fig-agent-net：每一步都要它交出可以核对的东西。</p>`;
-      const col2 = `<label class="field">在差的提法上改写（页面按关键词粗查五件事是否写到）<textarea data-ki="mine" rows="6">${esc(mine)}</textarea></label>
-        <table class="steps small">${FIVE.map(([k, n, d], i) => `<tr class="${hm[i][1] ? 'ok' : 'bad'}"><td><b>${n}</b></td><td>${esc(d)}</td><td>${hm[i][1] ? '已写到' : '缺'}</td></tr>`).join('')}</table>
-        <button class="small" data-check="1">重新检查</button> <span class="sub">关键词检查只是提醒，写到不等于写清楚。</span>`;
-      const col3 = `<div class="srcbox small-src">${esc(tasks.good || '')}</div>${tasksC ? `<details><summary>王珪边表的好提法（本机）</summary><div class="srcbox small-src">${esc(tasksC.good)}</div></details>` : ''}`;
+      const hb = has(tasks.bad || '');
+      const chips = (h) => `<p class="chk5">${FIVE.map(([, n, d], i) => `<span class="chk ${h[i][1] ? 'yes' : 'no'}" title="${esc(d)}">${h[i][1] ? '✓' : '✗'} ${esc(n)}</span>`).join('')}</p>`;
+      const items = (t) => { const parts = String(t || '').split(/\s*(?=\b\d\.\s)/); return parts.length > 2 ? `<p>${esc(parts[0])}</p><ol class="steps-ol">${parts.slice(1).map((x) => `<li>${esc(x.replace(/^\d\.\s*/, ''))}</li>`).join('')}</ol>` : `<p>${esc(t)}</p>`; };
+      const col1 = `<p class="sub">佛罗伦萨家族婚姻网${tasksC ? '（王珪边表一份见下，本机材料包）' : ''}</p>
+        <div class="prompt bad"><span class="who">提法</span>${esc(tasks.bad || '（公开材料载入中）')}</div>${tasksC ? `<div class="prompt bad"><span class="who">提法（王珪）</span>${esc(tasksC.bad)}</div>` : ''}
+        <p class="sub">五件事一件也没写：</p>${chips(hb)}<p class="sub">讲义 @fig-agent-net：每一步都要它交出可以核对的东西。</p>`;
+      const col2 = `<textarea data-ki="mine" rows="7" class="prompt-edit" placeholder="在差的提法上改写">${esc(mine)}</textarea>
+        ${chips(hm)}<p class="sub">鼠标停在每一项上看它要求什么。<button class="small" data-check="1">重新检查</button>　关键词检查只是提醒，写到不等于写清楚。</p>`;
+      const col3 = `<div class="prompt good"><span class="who">好的提法</span>${items(tasks.good || '')}</div>${chips(has(tasks.good || ''))}${tasksC ? `<details><summary>王珪边表的好提法（本机）</summary><div class="prompt good">${items(tasksC.good)}</div></details>` : ''}`;
       const run = R[this.s.run] || R[keys[0]];
       let col4 = '<p class="sub">运行记录在公开材料包中；若显示为空，说明课前尚未运行。</p>';
       if (run) {
         const fin = run.final || ''; const which = /cbdb/.test(this.s.run) ? 'cbdb' : 'padgett';
-        const steps = (run.calls || []).map((c, i) => `<details ${String(i) === this.s.step ? 'open' : ''}><summary>第 ${c.step} 步：${c.code ? '写代码并运行' : c.forced_final ? '步数用完，要求它不写代码、据已有输出作答' : '回答'}（${c.seconds} 秒${c.usage ? '，' + c.usage.completion_tokens + ' 个词元' : ''}）</summary>
-          ${c.code ? `<p class="sub">代码：</p><pre class="code">${esc(c.code)}</pre><p class="sub">输出（返回码 ${c.result?.returncode}，${c.result?.seconds} 秒）：</p><pre class="code">${esc((c.result?.stdout || '') + (c.result?.stderr ? '\n' + c.result.stderr : ''))}</pre>` : `<pre class="code">${esc(c.reply)}</pre>`}</details>`).join('');
-        col4 = `<p><select data-k="run">${keys.map((k) => `<option value="${k}" ${k === this.s.run ? 'selected' : ''}>${k.replace('agent_', '').replace('_', '｜')}</option>`).join('')}</select></p>
-          <p class="sub">${esc(run.model?.key || '')}（${esc(run.model?.file || '')}，SHA-256 ${esc((run.model?.sha256 || '').slice(0, 12))}…）；${esc(run.date || '')}；${run.finished ? `在 ${run.max_steps} 步内自行给出最终回答` : `${run.max_steps} 步内没有自行收尾（一直在写代码），最后一步是要求它作答`}。</p>
-          ${steps}<p class="sub">最终回答：</p><div class="srcbox small-src">${esc(fin || '（无）')}</div>
-          <p class="sub">核对（页面在最终回答中查找正确数字）：</p><table class="steps small">${TRUTH[which].map(([n, re]) => `<tr class="${re.test(fin) ? 'ok' : 'bad'}"><td>${esc(n)}</td><td>${re.test(fin) ? '回答中有' : '回答中没有'}</td></tr>`).join('')}</table>`;
+        const calls = run.calls || [], cur = calls[Number(this.s.step)] || null;
+        const tl = `<div class="timeline">${calls.map((c, i) => `<button data-set="step:${String(i) === this.s.step ? '' : i}" class="${String(i) === this.s.step ? 'on' : ''} ${c.forced_final ? 'forced' : c.code ? (c.result?.returncode ? 'err' : 'code') : 'ans'}" title="${c.seconds} 秒">${c.step}</button>`).join('')}</div>
+          <p class="sub">点步号看这一步：蓝＝写代码并运行，红＝代码出错，灰＝步数用完后被要求作答。</p>
+          ${cur ? `<div class="stepbox"><p class="sub">第 ${cur.step} 步，${cur.seconds} 秒${cur.usage ? '，' + cur.usage.completion_tokens + ' 个词元' : ''}</p>${cur.code ? `<pre class="code">${esc(cur.code)}</pre><p class="sub">输出（返回码 ${cur.result?.returncode}）：</p><pre class="code">${esc((cur.result?.stdout || '') + (cur.result?.stderr ? '\n' + cur.result.stderr : ''))}</pre>` : `<pre class="code">${esc(cur.reply)}</pre>`}</div>` : ''}`;
+        const truth = TRUTH[which].map(([n, re]) => [n, re.test(fin)]);
+        col4 = `<p><select data-k="run">${keys.map((k) => `<option value="${k}" ${k === this.s.run ? 'selected' : ''}>${k.replace('agent_', '').replace('_', '｜')}</option>`).join('')}</select>
+            <span class="tag ${run.finished ? '' : 'warn'}">${run.finished ? `${calls.length} 步内自行收尾` : `${run.max_steps} 步内没有收尾`}</span></p>
+          ${tl}
+          <div class="answer"><span class="who">最终回答</span>${esc(fin || '（无）')}</div>
+          <p class="sub">页面在回答中查正确数字：</p><p class="chk5">${truth.map(([n, ok]) => `<span class="chk ${ok ? 'yes' : 'no'}">${ok ? '✓' : '✗'} ${esc(n)}</span>`).join('')}</p>
+          <p class="sub small">${esc(run.model?.key || '')}（SHA-256 ${esc((run.model?.sha256 || '').slice(0, 12))}…），${esc((run.date || '').slice(0, 16))}，温度 0。</p>`;
       }
       rerender(this, flowShell(pageById('D15'), [{ title: '差的提法', body: col1 }, { title: '补五件事', body: col2 }, { title: '好的提法', body: col3 }, { title: '运行记录', body: col4 }]));
     }
@@ -278,7 +307,7 @@
         <p class="sub">图例：${cats.map((c, i) => `<span style="color:${W.PALETTE[i % W.PALETTE.length]}">●</span> ${esc(c)}`).join('　')}。颜色来自字段，和网络图一样不是额外的证据。</p>`;
       const out = this.s.out || {}; const need = [['legend', '图例'], ['scale', '比例尺'], ['north', '指北针'], ['src', '底图来源与地名出处'], ['crs', '坐标系'], ['shenshu', '公开发表时用有审图号的底图']];
       const col4 = `<table class="steps small">${QGIS_FLOW.map(([a, b, c], i) => `<tr><td><b>${a}</b></td><td>${esc(b)}</td><td class="sub">${esc(c)}</td></tr>`).join('')}</table>
-        <p class="sub">讲义 @fig-qgis-flow。逐步截图待课前在教室电脑的 QGIS 长期支持版上实际操作后补入（扩充部分丙二）。</p>
+        <p class="sub">讲义 @fig-qgis-flow；扩充部分丙二。</p><h4>实际操作截图</h4>${W.shotGallery('qgis', this.s.shot)}
         <p>出图前检查：</p>${need.map(([k, n]) => `<label class="check-row small"><input type="checkbox" data-out="${k}" ${out[k] ? 'checked' : ''}>${n}</label>`).join('')}
         <p><button class="small" data-svg="1">下载第二栏地图（SVG）</button></p>`;
       this._rows = rows;
@@ -299,16 +328,20 @@
   class GeoLlmLab extends Lab {
     defaults() { return { tol: '50', mode: 'fixed', sel: '' }; }
     render() {
-      const run = PUB().runs?.['geo_qwen3-4b']; const T = (W.Mat.text('songshi_w7')?.text || '') + '\n\n' + (W.Mat.text('practice2')?.text || '');
-      if (!run) { rerender(this, '<p class="sub">公开材料载入中，或课前尚未运行。</p>'); return; }
+      const run0 = PUB().runs?.['geo_qwen3-4b']; const T = (W.Mat.text('songshi_w7')?.text || '') + '\n\n' + (W.Mat.text('practice2')?.text || '');
+      if (!run0) { rerender(this, '<p class="sub">公开材料载入中，或课前尚未运行。</p>'); return; }
+      const run = this._live?.parsed ? { ...run0, parsed: this._live.parsed, model: { key: this._live.via }, date: this._live.date, calls: [{ seconds: this._live.seconds }], live: true } : run0;
       const places = (run.parsed?.places || []).map((p, i) => ({ ...p, i, inText: T.includes(p.name), quoteOk: p.quote && nrm(T).includes(nrm(p.quote)) }));
       const ref = gazetteerRef(); const tol = Number(this.s.tol); if (!Object.keys(ref).length && !this._asked) { this._asked = true; ensureTG().then(() => this.render()); }
       for (const p of places) { const r = ref[p.name] || Object.values(ref).find((x) => x.item.q.includes(p.name)) || Object.values(ref).find((x) => p.name.includes(x.item.name)); if (r) p.refName = r.item.name; p.ref = r; p.dist = r && Number.isFinite(+p.lat) && Number.isFinite(+p.lng) ? hav([+p.lng, +p.lat], [r.lng, r.lat]) : null; p.lim = this.s.mode === 'self' ? Number(p.radius_km) || 0 : tol; p.hit = p.dist != null && p.dist <= p.lim; }
       let hl = esc(T); for (const p of [...places].sort((a, b) => b.name.length - a.name.length)) if (p.inText) hl = hl.split(esc(p.name)).join(`<mark>${esc(p.name)}</mark>`);
       const col1 = `<div class="srcbox small-src">${hl}</div><p class="sub">黄底：模型列出的地名。原文为《宋史·王珪传》较长选段与练习材料二。</p>`;
-      const col2 = `<table class="steps small"><tr><th>原文写法</th><th>模型判为</th><th>引句</th><th>今地</th><th>坐标</th><th>自报误差</th></tr>${places.map((p) => `<tr data-geo="${p.i}" class="${String(p.i) === this.s.sel ? 'on' : ''} ${p.inText ? '' : 'bad'}"><td>${esc(p.name)}${p.inText ? '' : '<br><span class="nil">原文无此写法</span>'}</td><td>${esc(p.kind || '')}</td><td class="${p.quoteOk ? '' : 'nil'}">${esc(p.quote || '')}${p.quoteOk ? '' : '（原文中找不到）'}</td><td>${esc(p.modern || '')}</td><td>${Number.isFinite(+p.lat) ? `${f2(+p.lat, 2)}, ${f2(+p.lng, 2)}` : '—'}</td><td>${esc(p.radius_km ?? '')}</td></tr>`).join('')}</table>
+      const col2 = `<div class="geo-cards">${places.map((p) => `<div data-geo="${p.i}" class="geo-card ${String(p.i) === this.s.sel ? 'on' : ''} ${p.inText ? '' : 'bad'}">
+          <p><b>${esc(p.name)}</b> <span class="tag">${esc(p.kind || '')}</span>${p.inText ? '' : ' <span class="tag warn">原文中找不到这个写法</span>'}</p>
+          <p class="small">引句“${esc(p.quote || '')}”${p.quoteOk ? '' : ' <span class="nil">（原文中找不到）</span>'}</p>
+          <p class="sub">${esc(p.modern || p.today || '')}｜${f2(+p.lat, 2)}, ${f2(+p.lng, 2)}｜自报误差 ${esc(p.radius_km ?? '—')} 公里</p></div>`).join('')}</div>
         <p class="sub">${esc(run.model?.key)}（${esc(run.model?.file)}），${esc(run.date)}，用时 ${run.calls?.[0]?.seconds} 秒；温度 0。提示词要求逐字照抄引句、给出误差半径（照 His-Geo 的设计）。</p>
-        <details><summary>提示词</summary><pre class="code">${esc(run.prompt?.split('史料：')[0] || '')}</pre></details>`;
+        <details><summary>提示词</summary><pre class="code">${esc(run.prompt?.split('史料：')[0] || '')}</pre></details>${liveBar(this)}${run.live ? '<p class="note-box small">当前显示的是刚才现场运行的结果（浏览器实时），不是保存的记录；温度 0 也不保证每次相同。</p>' : ''}`;
       const pts = [...places.filter((p) => Number.isFinite(+p.lat)).map((p) => ({ id: 'm' + p.i, lng: +p.lng, lat: +p.lat, label: p.name, r_km: this.s.mode === 'self' ? Number(p.radius_km) || 0 : 0, color: '#b06d00' })),
         ...Object.entries(ref).map(([n, r]) => ({ id: 'r' + n, lng: r.lng, lat: r.lat, label: '', color: '#164ec7', size: 3 }))];
       const arrows = places.filter((p) => p.ref && p.dist != null).map((p) => [{ lng: p.ref.lng, lat: p.ref.lat }, { lng: +p.lng, lat: +p.lat }, p.hit ? '#2c6a3a' : '#a33']);
@@ -320,12 +353,12 @@
       const col4 = `<p>${seg('mode', [['fixed', '固定容限'], ['self', '用模型自报的误差半径']], this.s.mode)}</p>
         ${this.s.mode === 'fixed' ? `<p>容限 <input type="range" min="5" max="500" step="5" data-k="tol" value="${esc(this.s.tol)}"> <b>${esc(this.s.tol)} 公里</b></p>` : ''}
         <p class="okbox">有参照坐标可比的 ${scored.length} 个地名中，${hits} 个在容限内（${scored.length ? f2((hits / scored.length) * 100, 0) : '—'}%）。</p>
-        <table class="steps small"><tr><th>容限（公里）</th>${curve.map(([t]) => `<th>${t}</th>`).join('')}</tr><tr><td>算对</td>${curve.map(([, n]) => `<td>${n}／${scored.length}</td>`).join('')}</tr></table>
+        <table class="steps small curve"><tr><th>容限（公里）</th>${curve.map(([t]) => `<th>${t}</th>`).join('')}</tr><tr><td>算对</td>${curve.map(([, n]) => `<td>${n}／${scored.length}</td>`).join('')}</tr></table>
         <table class="steps small"><tr><th>地名（对到 D16 的）</th><th>距参照（公里）</th></tr>${scored.sort((a, b) => a.dist - b.dist).map((p) => `<tr class="${p.hit ? 'ok' : 'bad'}"><td>${esc(p.name)}${p.refName && p.refName !== p.name ? '（' + esc(p.refName) + '）' : ''}</td><td>${f2(p.dist, 0)}</td></tr>`).join('')}</table>
         ${missed.length ? `<p class="note-box">模型漏掉的史料地名：${missed.map(esc).join('、')}。</p>` : ''}<p class="sub">同一批结果，容限从 10 公里放到 100 公里，“算对”的数目就不同：分数取决于评价规则。${nonPlace.length ? `封号中的地名（${nonPlace.map((p) => esc(p.name)).join('、')}）模型也给了坐标；它们在原文里不指地点。` : ''}参照本身来自 CHGIS 的治所点，不等于史料所指的范围（讲义 4.3）。</p>`;
       rerender(this, flowShell(pageById('D18'), [{ title: '原文', body: col1 }, { title: '抽取', body: col2 }, { title: '上图', body: col3 }, { title: '计分', body: col4 }]));
     }
-    init() { this.addEventListener('click', (e) => { const r = e.target.closest('[data-geo]'); if (r) { this.s.sel = r.dataset.geo; this.save(); } }); }
+    init() { this.addEventListener('click', (e) => { const r = e.target.closest('[data-geo]'); if (r) { this.s.sel = r.dataset.geo; this.save(); } const x = e.target.dataset.rerun; if (x === 'back') { this._live = null; this._liveErr = ''; this.render(); } else if (x) liveRerun(this, PUB().runs?.['geo_qwen3-4b'], 'places', e.target); }); }
   }
   register('geollm-lab', GeoLlmLab);
 
@@ -334,7 +367,7 @@
     defaults() { return { mat: 'wang2022-shenzong', swap: false, coast: true, checks: {} }; }
     pointsOf(m) {
       if (!m) return [];
-      if (m.kind === 'points') return (m.rows || m.points || []).map((r, i) => ({ id: String(i), label: r.name, lat: Number(r.lat), lng: Number(r.lng), ref: r.ref }));
+      if (m.kind === 'points') return (m.rows || m.points || []).map((r, i) => ({ id: String(i), label: r.name, lat: Number(r.lat), lng: Number(r.lng), ref: r.ref, prec: r.precision }));
       return (m.nodes || []).map((n) => ({ id: n.id, label: n.label, lat: Number(n.attrs?.lat), lng: Number(n.attrs?.lng) }));
     }
     render() {
@@ -352,13 +385,14 @@
       const col1 = `${W.card(m, { compact: true })}<p class="sub">列：经度 lng、纬度 lat。导入自己的点表时，导入页会让你指明哪一栏是经度、哪一栏是纬度。</p>`;
       const col2 = `${mapSvg(good.map((p) => ({ ...p, size: 2.5 })), { key: 'd19', w: 380, h: 320, labels: false, alpha: 0.35, coast: this.s.coast === true || this.s.coast === 'true', bbox: good.length ? null : [60, -5, 160, 60] })}
         <p><label class="check-row small"><input type="checkbox" data-k="coast" ${this.s.coast === true || this.s.coast === 'true' ? 'checked' : ''}>底图：Natural Earth 海岸线（离线，公有领域）</label></p>
-        <p><button class="small" data-leaflet="1">下载 Leaflet 网页（联网底图）</button> <span class="sub">生成的网页用 OpenStreetMap 底图，没有审图号，只供课堂练习。</span></p>`;
+        <p><button class="small" data-leaflet="1">下载 Leaflet 网页</button> <span class="sub">网页里带离线海岸线；右上角可换 CARTO 联网底图（无审图号，只供课堂练习）。Leaflet 库本身仍从 unpkg 联网载入。</span></p>`;
       const col3 = `<p><button data-set="swap:${swap ? 'false' : 'true'}">${swap ? '换回经纬度' : '交换经纬度两栏'}</button></p>
         ${suspect ? '<p class="nil">疑似经纬度颠倒：多数点的“纬度”超出 ±90 度，或纬度普遍大于经度（在东亚不可能）。</p>' : '<p class="sub">交换以后再看：多数点的纬度会超出 ±90 度，无法上图。</p>'}
         <p class="sub">交换后可画的点 ${good.length}，无法画的 ${bad.length}。</p>`;
       const c = this.s.checks || {};
       const col4 = `<p class="okbox">表格 ${pts.length} 行，地图 ${good.length} 点。${bad.length ? `另有 ${bad.length} 行坐标缺失或越界，没有画出。` : ''}</p>
         <p class="sub">点落在同一位置的：${stacked.filter(([, n]) => n > 1).length} 处；最多的一处 ${stacked[0]?.[1] || 0} 个点叠在 ${esc(stacked[0]?.[0] || '')}${m.id === 'wang2022-shenzong' ? '（开封：籍贯记为京城或只知道到府州的人，都落在同一个点上）' : ''}。看上去只有 ${loc.size} 个点。</p>
+        ${pts.some((p) => p.prec) ? `<p class="sub">位置精度（Pleiades 的 locationPrecision 字段）：${Object.entries(pts.reduce((o, p) => ((o[p.prec || '未注'] = (o[p.prec || '未注'] || 0) + 1), o), {})).map(([k, v]) => `${esc(k)} ${v}`).join('、')}。rough 的点只是大致位置，上图时与 precise 的点看起来一样确定。</p>` : ''}
         ${[['n', '点数是否等于表格行数'], ['ll', '经纬度是否放反'], ['src', '每个点能否点开看到原文与出处'], ['base', '底图有无审图号（公开发表时）']].map(([k, n]) => `<label class="check-row small"><input type="checkbox" data-ck="${k}" ${c[k] ? 'checked' : ''}>${n}</label>`).join('')}
         <p class="sub">讲义 4.4：让智能体用 Leaflet 或 ECharts 写网页地图时，检查这四件事。</p>`;
       this._pts = good; this._title = m.title;
@@ -368,10 +402,17 @@
       this.addEventListener('change', (e) => { const k = e.target.dataset.ck; if (k) { this.s.checks = { ...this.s.checks, [k]: e.target.checked }; this.save(); } });
       this.addEventListener('click', (e) => {
         if (!e.target.dataset.leaflet) return;
-        const data = JSON.stringify((this._pts || []).map((p) => [p.lat, p.lng, p.label || '']));
-        download('webmap.html', `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(this._title)}</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><style>html,body,#m{height:100%;margin:0}</style></head><body><div id="m"></div><script>
-const pts=${data};const m=L.map('m');L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors（无审图号，只供课堂练习）'}).addTo(m);
+        const data = JSON.stringify((this._pts || []).map((p) => [p.lat, p.lng, (p.label || '') + (p.ref ? '｜' + p.ref : '')]));
+        // 离线海岸线（Natural Earth，公有领域）随网页一起写入，打开即可见；联网底图换用 CARTO（OpenStreetMap 的瓦片服务器拒绝 file:// 打开的网页，返回 403）
+        const pts0 = this._pts || [], lo = (k, f) => f(...pts0.map((q) => q[k])), bb = pts0.length ? [lo('lng', Math.min) - 5, lo('lat', Math.min) - 5, lo('lng', Math.max) + 5, lo('lat', Math.max) + 5] : [60, -5, 160, 60];
+        const coast = JSON.stringify((PUB().basemap?.coast || []).filter((l) => l.some(([x, y]) => x >= bb[0] && x <= bb[2] && y >= bb[1] && y <= bb[3])).map((l) => l.map(([x, y]) => [y, x])));
+        download('webmap.html', `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(this._title)}</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><style>html,body,#m{height:100%;margin:0}#m{background:#f7f9fa}</style></head><body><div id="m"></div><script>
+const pts=${data};const coast=${coast};const m=L.map('m',{preferCanvas:true});
+const off=L.layerGroup(coast.map(l=>L.polyline(l,{color:'#8aa0b4',weight:1,interactive:false})));off.addTo(m);
+const carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'&copy; OpenStreetMap contributors &copy; CARTO（无审图号，只供课堂练习）'});
+L.control.layers({'海岸线轮廓（离线，Natural Earth）':off,'CARTO 浅色底图（联网，无审图号）':carto},{},{collapsed:false}).addTo(m);
 const g=L.featureGroup(pts.map(([a,b,t])=>L.circleMarker([a,b],{radius:3}).bindPopup(t))).addTo(m);m.fitBounds(g.getBounds());
+m.attributionControl.addAttribution('示意图：海岸线轮廓不表示疆域');
 document.title+='：表格 '+pts.length+' 行，地图 '+pts.length+' 点';</script></body></html>`, 'text/html');
       });
     }
@@ -491,7 +532,8 @@ document.title+='：表格 '+pts.length+' 行，地图 '+pts.length+' 点';</scr
   class ChronoLab extends Lab {
     defaults() { return { sel: '' }; }
     render() {
-      const run = PUB().runs?.['chrono_qwen3-4b']; const T = W.Mat.text('songshi_w7')?.text || '';
+      const run0 = PUB().runs?.['chrono_qwen3-4b']; const T = W.Mat.text('songshi_w7')?.text || '';
+      const run = run0 && this._live?.parsed ? { ...run0, parsed: this._live.parsed, model: { key: this._live.via }, date: this._live.date, live: true } : run0;
       if (!run) { rerender(this, '<p class="sub">公开材料载入中，或课前尚未运行。</p>'); return; }
       const NT = nrm(T); let lastEra = null;
       const rows = (run.parsed?.rows || []).map((r, i) => {
@@ -504,7 +546,7 @@ document.title+='：表格 '+pts.length+' 行，地图 '+pts.length+' 点';</scr
       });
       const col1 = `<div class="srcbox small-src">${esc(T)}</div><p class="sub">《宋史·王珪传》较长选段（第七周练习材料一全文，维基文库）。</p>`;
       const col2 = `<table class="steps small"><tr><th>#</th><th>原文纪年</th><th>模型公元年</th><th>事件</th></tr>${rows.map((r) => `<tr data-cr="${r.i}" class="${String(r.i) === this.s.sel ? 'on' : ''}"><td>${r.i + 1}</td><td>${esc(r.date_raw || '')}</td><td>${r.ym ?? '—'}</td><td>${esc(r.event || '')}</td></tr>`).join('')}</table>
-        <p class="sub">${esc(run.model?.key)}（${esc(run.model?.file)}），${esc(run.date)}，用时 ${run.calls?.[0]?.seconds} 秒；温度 0；要求每行逐字照抄原文引句。${run.parsed?.truncated ? '<b>回复在词元上限（1,800）处被截断，只保留了截断前完整的 ' + rows.length + ' 行；后半段（元豐八年以后）没有排出来。</b>' : ''}原文纪年一栏，模型多把整句抄了进来，没有按要求只写纪年。</p>`;
+        <p class="sub">${esc(run.model?.key)}（${esc(run.model?.file)}），${esc(run.date)}，用时 ${run.calls?.[0]?.seconds} 秒；温度 0；要求每行逐字照抄原文引句。${run.parsed?.truncated ? '<b>回复在词元上限（1,800）处被截断，只保留了截断前完整的 ' + rows.length + ' 行；后半段（元豐八年以后）没有排出来。</b>' : ''}原文纪年一栏，模型多把整句抄了进来，没有按要求只写纪年。</p>${liveBar(this)}${run.live ? '<p class="note-box small">当前显示的是刚才现场运行的结果（浏览器实时），不是保存的记录。</p>' : ''}`;
       const bad = rows.filter((r) => !r.found), wrong = rows.filter((r) => r.ok === false), undated = rows.filter((r) => r.noDate || r.ym == null);
       const col3 = `<table class="steps small"><tr><th>#</th><th>引句在原文中？</th><th>页面换算</th><th>与模型一致？</th></tr>${rows.map((r) => `<tr class="${!r.found || r.ok === false ? 'bad' : ''}"><td>${r.i + 1}</td><td>${r.found ? '找到' : `<span class="nil">找不到</span>`}<br><span class="sub">${esc((r.quote || '（无）').slice(0, 30))}</span></td><td>${r.conv ? `${esc(r.conv.era)}${r.conv.n}年＝${r.conv.ad}` : '—'}</td><td>${r.ok == null ? '—' : r.ok ? '一致' : '<span class="nil">不一致</span>'}</td></tr>`).join('')}</table>`;
       const col4 = `<p class="okbox">共 ${rows.length} 行：引句在原文中找不到的 ${bad.length} 行；年份与页面换算不一致的 ${wrong.length} 行；原文无纪年或模型未给年份的 ${undated.length} 行。</p>
@@ -512,7 +554,7 @@ document.title+='：表格 '+pts.length+' 行，地图 '+pts.length+' 点';</scr
         <details><summary>时间序列（粮价）</summary><p class="sub">清代粮价部分按教师 2026-11-02 指示暂缓（扩充部分甲七、乙六）。</p></details>`;
       rerender(this, flowShell(pageById('D22'), [{ title: '事件表', body: col1 }, { title: '模型年表', body: col2 }, { title: '回原文', body: col3 }, { title: '粮价（暂缓）', body: col4 }]));
     }
-    init() { this.addEventListener('click', (e) => { const r = e.target.closest('[data-cr]'); if (r) { this.s.sel = r.dataset.cr; this.save(); } }); }
+    init() { this.addEventListener('click', (e) => { const r = e.target.closest('[data-cr]'); if (r) { this.s.sel = r.dataset.cr; this.save(); } const x = e.target.dataset.rerun; if (x === 'back') { this._live = null; this._liveErr = ''; this.render(); } else if (x) liveRerun(this, PUB().runs?.['chrono_qwen3-4b'], 'rows', e.target); }); }
   }
   register('chrono-lab', ChronoLab);
 

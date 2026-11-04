@@ -145,3 +145,47 @@ pre.code{white-space:pre-wrap;font-size:12px;background:#f5f7f8;border:1px solid
 gazetteer-lab tr[data-sel],geollm-lab tr[data-geo],chrono-lab tr[data-cr]{cursor:pointer}
 deck-slide .slide-body select{max-width:100%}diff-lab .sub,diff-lab p{overflow-wrap:anywhere}diff-lab input[type=number]{max-width:5em}
 .matbar{flex-wrap:wrap;max-width:100%}.matbar label{display:inline-flex;align-items:center;gap:4px;max-width:100%;min-width:0}.matbar select{min-width:0;flex:1 1 auto}
+/* D04 两份材料并排 */
+.side-mat { border-top: 1px solid var(--line, #d8dde6); padding-top: 6px; margin-top: 6px; }
+.side-mat:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+table.cmp4 td:first-child { white-space: nowrap; }
+table.cmp4 td { vertical-align: top; }
+/* D08 例子阶梯 */
+.exnav { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 8px; }
+.exnav button { font-size: 13px; padding: 3px 8px; }
+.exnav button.on { background: var(--accent, #164ec7); color: #fff; }
+.evid-card.ok{border-left-color:#2e7d32;background:#f3faf3}
+/* 页面组件撑满正文区：四栏各自滚动，不再整页溢出到页脚之下（2026-11-04） */
+@media (min-width: 761px) {
+  :is(wanggui-lab, source-lab, sim-lab, gephi-lab, metric-lab, compare-lab, two-net-lab, diary-lab, years-lab, verify-lab, agent-lab, gazetteer-lab, qgis-lab, geollm-lab, webmap-lab, diff-lab, chrono-lab, distant-stages, scale-sort, kwic-lab, topic-lab) { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  :is(wanggui-lab, source-lab, sim-lab, gephi-lab, metric-lab, compare-lab, two-net-lab, diary-lab, years-lab, verify-lab, agent-lab, gazetteer-lab, qgis-lab, geollm-lab, webmap-lab, diff-lab, chrono-lab, distant-stages, scale-sort, kwic-lab, topic-lab) > .flow-shell { flex: 1; min-height: 0; }
+}
+/* D15 提法、五件事、运行时间线；D18 抽取卡片（2026-11-04） */
+.prompt{position:relative;border-radius:10px;padding:22px 12px 10px;margin:6px 0 8px;font-size:14px;line-height:1.65;background:#f6f7f9;border:1px solid #d8dde6}
+.prompt .who,.answer .who{position:absolute;top:4px;left:10px;font:600 11px/1.4 Menlo,Consolas,monospace;letter-spacing:.04em;color:#6b7380}
+.prompt.bad{background:#fbf3f3;border-color:#e6c7c7}.prompt.good{background:#f2f8f3;border-color:#bcd9c2}
+.prompt ol.steps-ol{margin:6px 0 0;padding-left:1.4em}.prompt ol.steps-ol li{margin:3px 0}
+.prompt-edit{width:100%;box-sizing:border-box;border-radius:10px;border:1px solid #c5ccd6;padding:10px;font:14px/1.6 inherit;resize:vertical}
+.chk5{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+.chk{font-size:12.5px;padding:2px 8px;border-radius:999px;border:1px solid;white-space:nowrap;cursor:default}
+.chk.yes{color:#1f6b33;border-color:#9ccaa8;background:#eef7f0}.chk.no{color:#9a2b2b;border-color:#e2b3b3;background:#fbf1f1}
+.timeline{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.timeline button{width:34px;height:34px;border-radius:50%;padding:0;font-weight:600;border:2px solid #164ec7;background:#fff;color:#164ec7}
+.timeline button.err{border-color:#b33;color:#b33}.timeline button.forced{border-color:#888;color:#666}.timeline button.ans{border-color:#2e7d32;color:#2e7d32}
+.timeline button.on{background:#164ec7;color:#fff}.timeline button.err.on{background:#b33}.timeline button.forced.on{background:#888}
+.stepbox{border:1px solid #d8dde6;border-radius:8px;padding:6px 8px;margin:6px 0;background:#fafbfc}.stepbox pre.code{max-height:220px;overflow:auto}
+.answer{position:relative;border-left:4px solid #164ec7;background:#f3f6fd;padding:20px 10px 8px;margin:8px 0;font-size:14px;line-height:1.6;border-radius:0 8px 8px 0}
+.tag.warn{background:#fbecd9;color:#8a4b00}
+.geo-cards{display:flex;flex-direction:column;gap:6px}
+.geo-card{border:1px solid #d8dde6;border-radius:8px;padding:6px 9px;cursor:pointer;background:#fff}
+.geo-card p{margin:2px 0}.geo-card.on{border-color:#164ec7;box-shadow:0 0 0 2px #164ec733}.geo-card.bad{border-left:4px solid #c0392b}
+deck-slide[slide-id="D18"] .srcbox{font-size:13.5px;line-height:1.75}
+deck-slide[slide-id="D18"] .flow-grid{grid-template-columns:1.1fr 1fr 1.05fr .95fr}
+table.curve td,table.curve th{white-space:nowrap;padding:3px 4px;text-align:center}
+.mapsvg .mapnote{font-size:10px;fill:#7a828c}
+/* 实际操作截图 */
+.shots{margin-top:6px}.shot-strip{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px}.shot-strip button{font:600 12px Menlo,monospace;padding:2px 6px}.shot-strip button.on{background:#164ec7;color:#fff}
+figure.shot{margin:0}figure.shot img{width:100%;border:1px solid #d8dde6;border-radius:6px;cursor:zoom-in}figure.shot figcaption{font-size:13px;margin-top:4px}
+@media (max-width: 760px) { table.cmp4 { table-layout: fixed; width: 100%; } table.cmp4 td, table.cmp4 th { word-break: break-all; } .chk { white-space: normal; } }
+@media (min-width: 761px) { deck-slide[slide-id="D04"] .flow-grid { grid-template-columns: .95fr 1.75fr .95fr .8fr; } }
+table.cmp4 { table-layout: fixed; width: 100%; } table.cmp4 th:first-child, table.cmp4 td:first-child { width: 6.5em; } table.cmp4 td, table.cmp4 th { overflow-wrap: anywhere; font-size: 13px; }

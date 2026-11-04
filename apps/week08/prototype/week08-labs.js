@@ -90,10 +90,11 @@
         col4 = `<p><b>${esc(nm(selE.s))} — ${esc(nm(selE.t))}</b>（${selE.w} 条记录）</p>${selE.recs.map((r) => {
           const hits = W.findInHuayangji(r.ref);
           return `<div class="evid-card"><p>${esc(r.type || '')}｜年份原值 <span class="mono">${esc(r.time_raw ?? '')}</span>｜边表第 ${esc(r.row ?? '—')} 行</p><p class="src-line small">${esc(r.ref || '（无出处）')}</p>${r.note ? `<p class="sub">${esc(r.note)}</p>` : ''}
-            ${hits.length ? `<p class="sub">本地《華陽集》中找到篇题：</p>${hits.map((h) => `<p class="lab-quote">卷${h.juan}：${esc(h.text.slice(0, 80))}${h.text.length > 80 ? '……' : ''} <button class="small" data-hy="${h.juan}:${h.line}">读这一卷原文</button></p>`).join('')}`
-              : /華陽集/.test(r.ref || '') ? '<p class="sub">出处为《華陽集》，但本地卷三十五至六十中未找到此篇题（或在卷四十五至四十八，本地文本为空，只在教师影像中）。</p>' : ''}</div>`;
+            ${hits.length && hits[0].juan ? `<p class="sub">四庫本《華陽集》中的篇${hits[0].mapped ? `（课件对照：${esc(hits[0].evidence)}；待核）` : '（按篇题全文检索）'}：</p>${hits.map((h) => `<p class="lab-quote">卷${h.juan}：${esc(String(h.text).slice(0, 80))}${String(h.text).length > 80 ? '……' : ''} <button class="small" data-hy="${h.juan}:${h.line}:${h.pos || 0}">读这一篇原文</button></p>`).join('')}`
+              : hits.length ? `<p class="sub">${esc(hits[0].evidence)}。CBDB 的出处题名是简称，与四庫本的全衔篇题不同，课件已逐条对照（待核）。</p>`
+              : /華陽集/.test(r.ref || '') ? '<p class="sub">出处为《華陽集》，在四庫本中未找到此篇题。</p>' : '<p class="sub">出处不是《華陽集》，本课件没有这部书的原文，请按出处题名去查。</p>'}</div>`;
         }).join('')}`;
-        if (this.s.hy) { const [j, l] = this.s.hy.split(':').map(Number); const v = W.Mat.text('huayangji')?.juan?.[j]; if (v) col4 += `<div class="srcbox small-src">${v.lines.slice(Math.max(0, l), l + 6).map((x, i) => i === 0 ? `<mark>${esc(x)}</mark>` : esc(x)).join('\n')}</div><p class="sub">《華陽集》卷${j}（四庫全書本，维基文库源码）。</p>`; }
+        if (this.s.hy) { const [j, l, o] = this.s.hy.split(':').map(Number); const v = W.hyJuan(j); if (v) col4 += `<div class="srcbox small-src">${v.lines.slice(Math.max(0, l), l + 8).map((x, i) => i === 0 ? `<mark>${esc(x.slice(o || 0, (o || 0) + 400))}</mark>${x.length > (o || 0) + 400 ? '……' : ''}` : esc(x.slice(0, 400)) + (x.length > 400 ? '……' : '')).join('\n')}</div><p class="sub">《華陽集》卷${j}（四庫全書本，维基文库源码）；只显示篇首几行。</p>`; }
       }
       rerender(this, `${W.matSelect('network', this.s.mat)}${flowShell(pageById('D01'), [{ title: '全部关系画成网', body: col1 }, { title: '按类型计数', body: col2 }, { title: '打开过滤开关', body: col3 }, { title: '点边回原文', body: col4 }])}`);
     }
@@ -116,14 +117,17 @@
     defaults() { return { a: 'cbdb-wanggui', b: 'wang2022-shenzong', q: 'material', miss: 'absent' }; }
     render() {
       const A = this.mat(this.s.a), B = this.mat(this.s.b);
-      const side = (m, k) => {
+      // 第一栏：选两份材料并看它们的构成（出处、时间栏）；第二栏：两份材料的四栏说明并排对照，不再重复
+      const comp = (m, k) => {
         if (!m) return `${W.matSelect('network', this.s[k], k)}${this.s[k] === 'cbdb-wanggui' ? W.gate('CBDB 1845 号社会关系边表', 'CBDB 王珪记录') : '<p class="nil">材料缺</p>'}`;
         const refs = {}; m.edges.forEach((e) => { const r = e.ref ? (/華陽集/.test(e.ref) ? '《華陽集》' : e.ref === '[n/a]' ? '无出处（[n/a]）' : (e.ref.split(/\s*\/\s*/)[1] || e.ref.replace(/第\s*\d+\s*行/, '').trim().slice(0, 24) || '其他出处')) : '无出处'; refs[r] = (refs[r] || 0) + 1; });
         const times = {}; m.edges.forEach((e) => { const t = e.time_raw ?? '（无时间栏）'; times[t] = (times[t] || 0) + 1; });
-        return `${W.matSelect('network', this.s[k], k)}${W.card(m, { compact: true })}
-          <p class="sub">材料构成（出处来自哪里）：</p>${W.bars(Object.entries(refs).sort((a, b) => b[1] - a[1]).slice(0, 6))}
-          <p class="sub">时间一栏的原值（编码约定）：</p>${W.bars(Object.entries(times).sort((a, b) => b[1] - a[1]).slice(0, 6))}`;
+        return `<div class="side-mat">${W.matSelect('network', this.s[k], k)}<p class="sub">${m.edges.length} 条边。出处来自哪里：</p>${W.bars(Object.entries(refs).sort((a, b) => b[1] - a[1]).slice(0, 5))}
+          <p class="sub">时间一栏的原值：</p>${W.bars(Object.entries(times).sort((a, b) => b[1] - a[1]).slice(0, 4))}</div>`;
       };
+      const ROWS = [['nature', '材料性质'], ['unit', '单位'], ['edge_meaning', '一行是什么'], ['missing', '缺在哪里'], ['time_precision', '时间精度'], ['author', '编者'], ['version', '版本'], ['license', '许可']];
+      const four = A || B ? `<table class="steps small cmp4"><tr><th></th><th>${esc(A?.title || '—')}</th><th>${esc(B?.title || '—')}</th></tr>${ROWS.map(([k, n]) => `<tr><td><b>${n}</b></td><td>${A?.card?.[k] ? esc(A.card[k]) : '<span class="nil">未说明</span>'}</td><td>${B?.card?.[k] ? esc(B.card[k]) : '<span class="nil">未说明</span>'}</td></tr>`).join('')}</table>
+        <p class="sub">四栏说明（单位、边的含义、缺失、时间精度）照各数据的原始说明录入，未说明的地方空着，空着本身就是要问的。</p>` : '<p class="nil">先在第一栏选材料。</p>';
       const Q = [['fact', '史实', '格局来自过去发生的事？要回到原文逐条读出处。', `去 ${pageLink('D23', 'D23 回读')}、${pageLink('D14', 'D14 核验')}`],
         ['material', '材料构成', '格局来自材料收了什么、没收什么？看出处的分布：王珪的 97 条中 63 条出自他自己的《華陽集》。', `本页左右两栏；${pageLink('D01', 'D01 过滤开关')}`],
         ['coding', '编码约定', '格局来自编者怎样记？看时间栏的 0、-1、1085，看同一件事是否两个方向各记一条。', `${pageLink('D20', 'D20 年份')}、${pageLink('D08', 'D08 查重')}`],
@@ -139,7 +143,7 @@
         <table class="steps"><tr><th>政体</th><th>复杂化之后</th><th>复杂化之前</th></tr>${rows.map(([n, a, b]) => `<tr class="${b == null ? 'dim' : ''}"><td>${n}</td><td>${a}</td><td>${b == null ? '（剔除）' : b === 'absent*' ? '<span class="nil">absent（原为 unknown）</span>' : b}</td></tr>`).join('')}</table>
         <p class="okbox">参与计算 ${used.length} 个政体：复杂化之前有道德神 ${beforeYes} 个，之后 ${afterYes} 个。结论：${esc(concl)}。</p>
         <p class="sub">这是人工构造的小表，只用来说明“未知按不存在处理”会怎样把结论推向一边；真实争议见 Whitehouse 等 2019 及其撤稿与批评（扩充部分甲八）。</p></details>`;
-      rerender(this, flowShell(pageById('D04'), [{ title: '选材料', body: side(A, 'a') }, { title: '四栏材料说明', body: side(B, 'b') }, { title: '四问逐项', body: qbox }, { title: '缺失值的处理', body: adv }]));
+      rerender(this, flowShell(pageById('D04'), [{ title: '选两份材料，看构成', body: comp(A, 'a') + comp(B, 'b') }, { title: '四栏材料说明（并排）', body: four }, { title: '四问逐项', body: qbox }, { title: '缺失值的处理', body: adv }]));
     }
     init() { this.addEventListener('toggle', (e) => { if (e.target.matches('[data-adv]')) { this.s.adv = e.target.open; store.set(this.key, this.s); } }, true); }
   }
@@ -157,12 +161,13 @@
       const ek = Object.keys(emb)[0];
       const n = Number(this.s.n) || 1;
       for (const r of rows) { r.jac = W.jaccard(r.a, r.b, n); r.lev = W.levenshtein(r.a, r.b); r.lcs = W.lcsRatio(r.a, r.b); r.cos = emb[ek]?.[r.a + '|' + r.b]; }
-      const scoreOf = (r) => this.s.score === 'model' ? r.model : this.s.score === 'cos' ? r.cos : this.s.score === 'lev' ? r.lev.sim : this.s.score === 'lcs' ? r.lcs.r : r.jac.j;
+      const noModel = rows.every((r) => r.model == null); const sc = this.s.score === 'model' && noModel ? 'lcs' : this.s.score;
+      const scoreOf = (r) => sc === 'model' ? r.model : sc === 'cos' ? r.cos : sc === 'lev' ? r.lev.sim : sc === 'lcs' ? r.lcs.r : r.jac.j;
       const th = Number(this.s.th);
       const sel = rows.find((r) => r.id === this.s.sel) || rows[0];
       const table = `<table class="steps simtable"><tr><th>句甲</th><th>句乙</th><th>字 ${n}-gram 杰卡德</th><th>1−编辑距离／较长句字数</th><th>2×LCS／总字数</th><th>论文“编辑距离”栏</th><th>论文模型分</th><th>浏览器内余弦</th></tr>
         ${rows.map((r) => { const v = scoreOf(r), kept = v != null && v >= th; return `<tr data-row="${esc(r.id)}" class="${r.id === sel?.id ? 'on' : ''} ${v == null ? '' : kept ? '' : 'out'}"><td class="src-line small">${esc(r.a)}</td><td class="src-line small">${esc(r.b)}</td><td>${f2(r.jac.j)}</td><td class="${r.paper_edit != null && Math.abs(r.paper_edit - r.lev.sim) > 0.015 ? 'diff' : ''}">${f2(r.lev.sim)}</td><td class="${r.paper_edit != null && Math.abs(r.paper_edit - r.lcs.r) > 0.015 ? 'diff' : ''}">${f2(r.lcs.r)}</td><td>${r.paper_edit == null ? '—' : f2(r.paper_edit)}</td><td>${r.model == null ? '—' : f2(r.model)}</td><td>${r.cos == null ? '—' : f2(r.cos)}</td></tr>`; }).join('')}</table>
-        <p class="sub">灰色行为按所选分数低于阈值、被排除的句对；红底为与论文原值不同的现场计算。论文“编辑距离”一栏数值在 0—1 之间、字面全异为 0，实为一种相似度：${(() => { const pr = rows.filter((r) => r.paper_edit != null), a = pr.filter((r) => Math.abs(r.paper_edit - r.lcs.r) <= 0.015).length, d = pr.filter((r) => Math.abs(r.paper_edit - r.lev.sim) > 0.015); return `${pr.length} 组中有 ${a} 组与“2×最长公共子序列／两句总字数”（python-Levenshtein 的 ratio）相同；按“1−编辑距离／较长句字数”算，有 ${d.length} 组不同（${d.map((r) => esc(r.a)).join('、')}），因为两句共有的字次序相反或错位，替换操作救不回来。`; })()}同叫“编辑距离”，算法不同，数值就不同。</p>`;
+        <p class="sub">灰色行为按所选分数低于阈值、被排除的句对；红底为与论文原值不同的现场计算。论文“编辑距离”一栏数值在 0—1 之间、字面全异为 0，实为一种相似度：${(() => { const pr = rows.filter((r) => r.paper_edit != null), a = pr.filter((r) => Math.abs(r.paper_edit - r.lcs.r) <= 0.015).length, d = pr.filter((r) => Math.abs(r.paper_edit - r.lev.sim) > 0.015); return `${pr.length} 组中有 ${a} 组与“2×最长公共子序列／两句总字数”（python-Levenshtein 的 ratio）相同；按“1−编辑距离／较长句字数”算，有 ${d.length} 组不同（${d.map((r) => esc(r.a)).join('、')}），因为两句共有的字次序相反或错位，替换操作救不回来。`; })()}同叫“编辑距离”，算法不同，数值就不同。</p>${m?.id === 'topic-only' ? '<p class="note-box small">这一组从字面全同排到字面全异：后三组一个字也不相同，所以字面分数都是 0，这正是要看的——字面方法看不见“题材相近”，只有语义模型（第四栏的浏览器内余弦）可能给它们高分；而第四组字面分数不为 0，两句却毫无关系。点任一行看说明。</p>' : ''}`;
       const det = sel ? (() => { const L = sel.lev; return `<p class="src-line">${esc(sel.a)}　｜　${esc(sel.b)}</p>
         <p>共有字：${L.A.filter((c) => L.B.includes(c)).map(esc).join('、') || '无'}；编辑距离 ${L.d}（较长句 ${Math.max(L.A.length, L.B.length)} 字），1−距离／字数 = ${f2(L.sim)}；最长公共子序列 ${sel.lcs.lcs} 字，2×${sel.lcs.lcs}／${sel.lcs.total} = ${f2(sel.lcs.r)}</p>
         <p class="ops">${L.ops.map(([o, x, y]) => `<span class="op op-${o === '=' ? 'eq' : o === '~' ? 'sub' : o === '-' ? 'del' : 'ins'}" title="${o === '=' ? '相同' : o === '~' ? '替换' : o === '-' ? '删除' : '插入'}">${esc(x || '∅')}→${esc(y || '∅')}</span>`).join('')}</p>
@@ -178,9 +183,9 @@
       rerender(this, `${W.matSelect('pairs', this.s.mat)}${flowShell(pageById('D06'), [
         { title: '选句对', body: `${table}<p class="sub">自己输入一对：<input data-ki="a" value="${esc(this.s.a)}" placeholder="句甲" size="10"> <input data-ki="b" value="${esc(this.s.b)}" placeholder="句乙" size="10"> <button class="small" data-set="sel:MINE">加入</button></p>` },
         { title: '三种相似度', body: det + `<p>字切分：${seg('n', [['1', '按字'], ['2', '按二字串']], this.s.n)}</p>` },
-        { title: '拖动阈值', body: `<p>按哪一种分数筛选：${seg('score', [['model', '论文模型分'], ['cos', '浏览器内余弦'], ['lev', '1−编辑距离／字数'], ['lcs', '2×LCS／总字数'], ['jac', '杰卡德']], this.s.score)}</p>
+        { title: '拖动阈值', body: `<p>按哪一种分数筛选：${seg('score', [['model', '论文模型分'], ['cos', '浏览器内余弦'], ['lev', '1−编辑距离／字数'], ['lcs', '2×LCS／总字数'], ['jac', '杰卡德']], sc)}</p>${noModel && this.s.score === 'model' ? '<p class="sub">这份材料没有论文模型分，暂按“2×LCS／总字数”筛选。</p>' : ''}
           <p>阈值 <input type="range" min="0" max="1" step="0.01" value="${esc(this.s.th)}" data-k="th"> <b>${f2(th)}</b></p>
-          <p class="okbox">保留 ${rows.filter((r) => { const v = scoreOf(r); return v != null && v >= th; }).length} ／ ${rows.filter((r) => scoreOf(r) != null).length} 组。${this.s.score === 'model' ? '论文取 0.9：“落霞沉绿绮／余霞散成绮”0.88 被排除，而仇兆鳌注杜正引谢朓此句。' : ''}</p>${live}
+          <p class="okbox">保留 ${rows.filter((r) => { const v = scoreOf(r); return v != null && v >= th; }).length} ／ ${rows.filter((r) => scoreOf(r) != null).length} 组。${sc === 'model' ? '论文取 0.9：“落霞沉绿绮／余霞散成绮”0.88 被排除，而仇兆鳌注杜正引谢朓此句。' : ''}</p>${live}
           <p class="sub">浏览器内余弦用的是通用中文或多语句向量模型（见“模型接入”），不是论文所用的 BERT-CCPoem；数值不可与表 2 直接比，只看排序与阈值的作用。</p>` },
         { title: '小样本定阈值', body: prBox + `<p class="sub">阈值是研究者的选择：先在一个标好对错的小样本上看精确率与召回率随阈值怎样变化，再决定。</p>` },
       ])}`);
@@ -202,21 +207,48 @@
   register('sim-lab', SimLab);
 
   /* ================= D08 网络建模：边表、矩阵、方向、查重 ================= */
+  /* D08 由简到繁的教学构造例子（人名均为虚构的甲乙丙……；“讲义”两例即讲义 @fig-adj、@fig-toy） */
+  const D08_EX = [
+    { id: 'chain3', title: '一：三人一线', note: '最简单的网：三个人、两条边。边表两行，矩阵 3×3。乙在两人之间，是唯一的“中间人”。', nodes: '甲乙丙', edges: [['甲', '乙', '书信'], ['乙', '丙', '书信']], pos: [[60, 100], [190, 100], [320, 100]] },
+    { id: 'adj4', title: '二：四人网络（讲义 @fig-adj）', mat: 'adj4', note: '加入第一种有方向的关系“推荐”：切换有向／无向，看矩阵是否对称。', pos: [[60, 40], [60, 160], [200, 100], [330, 100]] },
+    { id: 'star5', title: '三：一人为中心（自我中心网络）', note: '只从甲的文集录关系：边表里每一行都有甲，乙丙丁戊彼此有没有关系，材料里根本没有。画出来必然是星形——王珪的 97 条就是这一类（D01）。', nodes: '甲乙丙丁戊', edges: [['甲', '乙', '墓志'], ['甲', '丙', '祭文'], ['甲', '丁', '书信'], ['甲', '戊', '推荐']], pos: [[190, 100], [80, 40], [300, 40], [80, 165], [300, 165]] },
+    { id: 'multi', title: '四：同一对人有几条记录', note: '甲为乙写了墓志，又写了祭文，还有书信往来：边表三行，网络里是一条边、权重 3。合并之前要问：这三行是三件事，还是同一件事记了三次（下一个标签“查重查向”）？', nodes: '甲乙丙', edges: [['甲', '乙', '墓志'], ['甲', '乙', '祭文'], ['乙', '甲', '书信'], ['乙', '丙', '同僚']], pos: [[60, 100], [190, 100], [320, 100]], weighted: true },
+    { id: 'toy7', title: '五：七人小网（讲义 @fig-toy）', mat: 'toy7', note: '两个小团体由丙—丁—戊一线相连：度最高的不一定是“桥”（D10 介数）。', pos: [[40, 50], [40, 160], [120, 105], [200, 105], [280, 105], [350, 50], [350, 160]] },
+    { id: 'bip', title: '六：人与文献（二部网络）', note: '边连的是“人”和“文献”：甲乙同见于文一，乙丙丁同见于文二。把它投影成人与人的网，“同见于一篇”就变成一条边——这就是共现网络（D14）：边的意思从“明载的关系”变成了“在同一篇里出现”。', nodes: '甲乙丙丁', texts: ['文一', '文二'], inc: [['甲', '文一'], ['乙', '文一'], ['乙', '文二'], ['丙', '文二'], ['丁', '文二']], pos: [[60, 50], [60, 120], [60, 190], [60, 260]] },
+  ];
   class ModelLab extends Lab {
-    defaults() { return { tab: 'adj', mat: 'cbdb-wanggui', dir: true, sent: {} }; }
+    defaults() { return { tab: 'adj', ex: 'chain3', mat: 'cbdb-wanggui', dir: true, sent: {} }; }
+    exMat(ex) {
+      if (ex.mat) return this.mat(ex.mat);
+      return { id: 'd08-' + ex.id, nodes: [...ex.nodes].map((n) => ({ id: n, label: n })), edges: (ex.edges || []).map(([s, t, type]) => ({ s, t, type })) };
+    }
     render() {
-      const toy = this.mat('adj4'), t = this.s.tab;
+      const t = this.s.tab; const ex = D08_EX.find((x) => x.id === this.s.ex) || D08_EX[0];
       let body = '';
-      if (t === 'adj' && !toy) body = '<p class="sub">公开材料载入中……</p>';
-      else if (t === 'adj') {
-        const dir = this.s.dir === true || this.s.dir === 'true'; const g = W.graph(toy, { directed: dir }), ids = toy.nodes.map((n) => n.id), A = ids.map(() => ids.map(() => 0));
-        g.edges.forEach((e) => { A[ids.indexOf(e.s)][ids.indexOf(e.t)] = 1; if (!dir) A[ids.indexOf(e.t)][ids.indexOf(e.s)] = 1; });
-        const sym = A.every((r, i) => r.every((v, j) => v === A[j][i]));
-        body = `<div class="split2"><div><p class="sub">边表（讲义 @fig-adj，教学构造）</p><table class="steps"><tr><th>起点</th><th>终点</th><th>类型</th></tr>${toy.edges.map((e) => `<tr><td>${e.s}</td><td>${e.t}</td><td>${e.type}</td></tr>`).join('')}</table>
-          <p>${seg('dir', [['true', '有向'], ['false', '无向']], String(dir))}</p></div>
-          <div><p class="sub">邻接矩阵（行为起点、列为终点）</p><table class="dp"><tr><th></th>${ids.map((i) => `<th>${i}</th>`).join('')}</tr>${A.map((r, i) => `<tr><th>${ids[i]}</th>${r.map((v) => `<td class="${v ? 'one' : ''}">${v}</td>`).join('')}</tr>`).join('')}</table>
-          <p class="okbox">${sym ? '矩阵沿对角线对称：无向网络中，甲连乙即乙连甲。' : '矩阵不对称：有向网络中，“甲推荐丙”不等于“丙推荐甲”。'}</p></div></div>
-          ${W.drawGraph(g, [[60, 40], [60, 160], [200, 100], [330, 100]], { w: 380, h: 200, labels: 'all', arrows: dir })}`;
+      const exNav = `<div class="exnav">${D08_EX.map((x) => `<button data-set="ex:${x.id}" class="${x.id === ex.id ? 'on' : ''}">${esc(x.title)}</button>`).join('')}</div>`;
+      if (t === 'adj' && ex.id === 'bip') {
+        const P = [...ex.nodes], T = ex.texts, has = (p, d) => ex.inc.some(([a, b]) => a === p && b === d);
+        const proj = P.map((a) => P.map((b) => (a === b ? '—' : T.filter((d) => has(a, d) && has(b, d)).length)));
+        const pm = { id: 'd08-bipproj', nodes: P.map((n) => ({ id: n, label: n })), edges: [] };
+        P.forEach((a, i) => P.forEach((b, j) => { if (j > i && proj[i][j]) pm.edges.push({ s: a, t: b, type: '同见' }); }));
+        const g = W.graph(pm);
+        body = `${exNav}<p class="note-box small">${esc(ex.note)}</p><div class="split2"><div><p class="sub">人×文献（关联矩阵，教学构造）</p><table class="dp"><tr><th></th>${T.map((d) => `<th>${d}</th>`).join('')}</tr>${P.map((p) => `<tr><th>${p}</th>${T.map((d) => `<td class="${has(p, d) ? 'one' : ''}">${has(p, d) ? 1 : 0}</td>`).join('')}</tr>`).join('')}</table>
+          <p class="sub">投影成人×人（数字为同见于几篇）</p><table class="dp"><tr><th></th>${P.map((p) => `<th>${p}</th>`).join('')}</tr>${proj.map((r, i) => `<tr><th>${P[i]}</th>${r.map((v) => `<td class="${v && v !== '—' ? 'one' : ''}">${v}</td>`).join('')}</tr>`).join('')}</table></div>
+          <div>${W.drawGraph(g, [[60, 110], [170, 110], [310, 45], [310, 175]], { w: 380, h: 220, labels: 'all', arrows: false, key: 'D08|bip' })}<p class="okbox">投影后 ${g.edges.length} 条边：甲乙因同见于文一相连；乙丙丁三人两两相连，只因为同见于文二。乙成了两群之间的“桥”，这也只是投影的结果。</p></div></div>`;
+      } else if (t === 'adj') {
+        const toy = this.exMat(ex);
+        if (!toy) body = exNav + '<p class="sub">公开材料载入中……</p>';
+        else {
+          const dir = this.s.dir === true || this.s.dir === 'true'; const g = W.graph(toy, { directed: dir }), ids = toy.nodes.map((n) => n.id), A = ids.map(() => ids.map(() => 0));
+          g.edges.forEach((e) => { const w = ex.weighted ? e.w : 1; A[ids.indexOf(e.s)][ids.indexOf(e.t)] = w; if (!dir) A[ids.indexOf(e.t)][ids.indexOf(e.s)] = w; });
+          const sym = A.every((r, i) => r.every((v, j) => v === A[j][i]));
+          const st = W.stats(g);
+          body = `${exNav}<p class="note-box small">${esc(ex.note)}</p><div class="split2"><div><p class="sub">边表（${toy.edges.length} 行，教学构造）</p><table class="steps small"><tr><th>起点</th><th>终点</th><th>类型</th></tr>${toy.edges.map((e) => `<tr><td>${esc(e.s)}</td><td>${esc(e.t)}</td><td>${esc(e.type || '—')}</td></tr>`).join('')}</table>
+            <p>${seg('dir', [['true', '有向'], ['false', '无向']], String(dir))}</p></div>
+            <div><p class="sub">邻接矩阵（行为起点、列为终点${ex.weighted ? '；数字为记录条数，即权重' : ''}）</p><table class="dp"><tr><th></th>${ids.map((i) => `<th>${esc(i)}</th>`).join('')}</tr>${A.map((r, i) => `<tr><th>${esc(ids[i])}</th>${r.map((v) => `<td class="${v ? 'one' : ''}">${v}</td>`).join('')}</tr>`).join('')}</table>
+            <p class="okbox">${sym ? '矩阵沿对角线对称：无向网络中，甲连乙即乙连甲。' : '矩阵不对称：有向网络中，“甲推荐丙”不等于“丙推荐甲”。'} 节点 ${st.n}、边 ${st.m}${ex.weighted ? `（记录 ${toy.edges.length} 行）` : ''}。</p></div></div>
+            ${W.drawGraph(g, ex.pos, { w: 380, h: 210, labels: 'all', arrows: dir, key: 'D08|' + ex.id + dir })}`;
+        }
       } else {
         const m = this.mat(this.s.mat);
         if (!m) body = this.s.mat === 'cbdb-wanggui' ? W.gate('CBDB 1845 号社会关系边表', 'CBDB 王珪记录') : '<p class="nil">材料缺</p>';
@@ -255,7 +287,7 @@
       const conv = `<table class="steps"><tr><th>本材料字段</th><th>Gephi 表头</th></tr><tr><td>s（起点编号）</td><td>Source</td></tr><tr><td>t（终点编号）</td><td>Target</td></tr><tr><td>${g.directed ? '有向' : '无向'}</td><td>Type＝${g.directed ? 'Directed' : 'Undirected'}</td></tr><tr><td>type（关系类型）</td><td>Label</td></tr><tr><td>同一对人的记录条数</td><td>Weight</td></tr><tr><td>节点编号／名称</td><td>节点表 Id／Label</td></tr></table>
         <p class="sub">本材料原有字段：${head.map(esc).join('、')}。</p>`;
       const exp = `<p><button class="small" data-exp="edges">下载边表 CSV（Gephi 表头）</button> <button class="small" data-exp="nodes">下载节点表 CSV</button> <button class="small" data-exp="svg">下载当前图 SVG</button></p>
-        <p class="sub">Gephi 桌面版：文件 › 导入电子表格，先导节点表、再导边表，选“追加到现有工作区”；Gephi Lite：Import › Spreadsheet。逐步截图待课前环境实际操作（扩充部分丙一）。</p>`;
+        <p class="sub">Gephi 桌面版：文件 › 导入电子表格，先导节点表、再导边表，选“添加到现有工作区”；Gephi Lite：Import › Spreadsheet（扩充部分丙一）。</p><details ${this.s.shot ? 'open' : ''}><summary>Gephi 实际操作截图（王珪 97 条）</summary>${W.shotGallery('gephi', this.s.shot)}</details>`;
       const ctl = `<label>随机种子 <input type="number" data-k="seed" value="${esc(this.s.seed)}" style="width:5em"></label>
         <label>斥力 <input type="range" min="0.3" max="3" step="0.1" data-k="rep" value="${esc(this.s.rep)}"> ${esc(this.s.rep)}</label>
         <label>向心力 <input type="range" min="0" max="0.5" step="0.01" data-k="grav" value="${esc(this.s.grav)}"> ${esc(this.s.grav)}</label>
