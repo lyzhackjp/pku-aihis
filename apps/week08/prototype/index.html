@@ -73,7 +73,7 @@
 <deck-slide slide-id="D18" data-status="prototype" kicker="D18 / 教案 4.3" header-title="大语言模型提取地点：距离容限怎样改变得分" transition="大模型可以从文字中抽地点并给坐标；得分取决于怎样算“对”。" theme="light" layout="flow4" mode="保存结果回放（本地 Qwen3-4B 对公开文本的一次实际抽取）＋浏览器实时（按距离容限计分；可用 API、本机服务或浏览器内模型现场再跑一次）" notes="目的：模型结果要回原文。
 范例引导：拖容限。
 机制背景：提示要求列出地名、原文引句、今地、坐标与误差半径（照 His-Geo）；页面检查原文中有无此写法、引句能否找到；参照为 D16 选定的 CHGIS 记录；固定容限或模型自报误差两种计分。封号中的地名（延安郡王、岐國公）单独提示。"><geollm-lab></geollm-lab><div slot="footer">D18 · 保存结果回放＋浏览器实时；抽取由本地 Qwen3-4B-Instruct-2507 在课前环境实际运行，参照据 CHGIS TGAZ。</div></deck-slide>
-<deck-slide slide-id="D19" data-status="prototype" kicker="D19 / 教案 4.4" header-title="智能体做空间分析：网页地图与审图号" transition="让智能体画一张网页地图很容易；检查它要看四件事。" theme="light" layout="flow4" mode="浏览器实时（课堂本机版：Natural Earth 海岸线示意，不表示疆域；公开版不画底图，配置天地图密钥后可在天地图上看）" notes="目的：能检查一张网页地图。
+<deck-slide slide-id="D19" data-status="prototype" kicker="D19 / 教案 4.4" header-title="智能体做空间分析：网页地图与审图号" transition="让智能体画一张网页地图很容易；检查它要看四件事。" theme="light" layout="flow4" mode="浏览器实时（课堂本机版：Natural Earth 海岸线示意，不表示疆域；公开版不画底图；可在天地图上看，密钥由教师申请，只在本机材料包与发布构建中，不入 Git）" notes="目的：能检查一张网页地图。
 范例引导：交换经纬度。
 机制背景：默认点表为王裕华神宗朝官员及亲属的籍贯坐标（2,106 人）；“表格 N 行，地图 N 点”；交换经纬度后越界点计数；同一坐标上叠放的点计数（开封 338 人）；另有 Pleiades 罗马时代意大利圆形剧场、族群两张公开点表（带位置精度字段）；可下载一个 Leaflet 网页（内含离线海岸线，可换 CARTO 联网底图；OpenStreetMap 瓦片拒绝 file:// 打开的网页，故不用；无审图号，只供练习）。"><webmap-lab></webmap-lab><div slot="footer">D19 · 浏览器实时；点表据王裕华 2022 复制数据（CC0）与 Pleiades（CC BY 3.0），底图：本机版 Natural Earth（只画海岸线，北纬 20° 以南不画），公开版不画底图、可选天地图（有审图号）。</div></deck-slide>
 <deck-slide slide-id="D20" data-status="prototype" kicker="D20 / 教案 5.1" header-title="缺省的年份与时序切片" transition="第四种方法把记录排在时间轴上；先看时间这一栏本身。" theme="light" layout="flow4" mode="浏览器实时（在本机材料包的 CBDB 边表上切片）＋教学构造（小型时序网，演示时间顺序路径）；CBDB 课堂导入" notes="目的：知道缺省年份会制造假的变化，时间原值要另存。

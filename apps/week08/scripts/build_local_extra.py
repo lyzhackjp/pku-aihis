@@ -38,6 +38,9 @@ if sh.exists():
     for f in sorted(sh.glob('*.jpg')):
         shutil.copy2(f, dst / f.name); reg(f, '教师本机操作截图')
         x['shots']['gephi' if f.name.startswith('G') else 'qgis'].append({'file': 'shots/' + f.name, 'caption': CAP.get(f.stem, f.stem)})
+# 天地图浏览器端密钥与审图号（教师账号申请；只在本机：local-only/tianditu.json，不入 Git）
+td = packp.parent / 'tianditu.json'
+if td.exists(): x['tianditu'] = json.loads(td.read_text(encoding='utf-8'))
 # CBDB 出处题名 → 四庫本《華陽集》的篇（D01、D23 回原文）；行号按公开材料包中的《華陽集》文本
 pub = pathlib.Path(__file__).resolve().parents[1] / 'prototype/data/public/week08-public-pack.js'
 cb = pack.get('materials', {}).get('cbdb-wanggui')

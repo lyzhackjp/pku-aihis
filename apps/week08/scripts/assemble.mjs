@@ -27,6 +27,7 @@ await fs.rm(path.join(app, 'www'), {recursive: true, force: true});
 await fs.cp(proto, out, {recursive: true, filter: s => { const rel = path.relative(proto, s); if (!rel) return true; const top = rel.split(path.sep)[0]; return !['importer', 'local-only'].includes(top) && !/\.(map|zip|tgz|gguf|onnx|typ|py)$/i.test(s) && path.basename(s) !== 'week08-pack.json'; }});
 if (!skipImporter) await fs.cp(path.join(root, 'apps/material-importer/dist'), path.join(out, 'importer'), {recursive: true, filter: s => !s.endsWith('.map')});
 // 公开站点：不画无审图号的底图；天地图浏览器端密钥与审图号在发布时由环境变量给出（不入 Git）
-await fs.writeFile(path.join(out, 'data/site.js'), '/* 由 scripts/assemble.mjs 在发布构建时生成。 */\nwindow.W8_SITE = ' + JSON.stringify({public: true, tianditu: {tk: process.env.WEEK08_TIANDITU_TK || '', gs: process.env.WEEK08_TIANDITU_GS || ''}}) + ';\n');
+let tdtLocal = {}; try { tdtLocal = JSON.parse(await fs.readFile(path.join(app, 'local-only/tianditu.json'), 'utf8')); } catch { /* 无本机配置 */ }
+await fs.writeFile(path.join(out, 'data/site.js'), '/* 由 scripts/assemble.mjs 在发布构建时生成。 */\nwindow.W8_SITE = ' + JSON.stringify({public: true, tianditu: {tk: process.env.WEEK08_TIANDITU_TK || tdtLocal.tk || '', gs: process.env.WEEK08_TIANDITU_GS || tdtLocal.gs || '', credit: process.env.WEEK08_TIANDITU_CREDIT || tdtLocal.credit || ''}}) + ';\n');
 const sha = createHash('sha256').update(pub).digest('hex');
 console.log(`Assembled week08: ${map.length} pages; public pack ${(pub.length / 1e6).toFixed(2)} MB sha256 ${sha.slice(0, 16)}…; importer ${skipImporter ? 'skipped' : 'embedded'}`);

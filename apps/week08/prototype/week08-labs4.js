@@ -31,14 +31,14 @@
   /* 底图政策：公开站点（W8_SITE.public）不画无审图号的底图；有天地图浏览器端密钥时，可在天地图（有审图号）上看同一批点。 */
   const SITE = window.W8_SITE || {};
   const lsGet = (k) => { try { return localStorage.getItem(k) || ''; } catch { return ''; } };
-  const TDT = () => ({ tk: SITE.tianditu?.tk || lsGet('w8/tdt-tk'), gs: SITE.tianditu?.gs || lsGet('w8/tdt-gs') });
+  const TDT = () => { const L = W.Pack.local()?.extra?.tianditu || {}; return { tk: SITE.tianditu?.tk || L.tk || lsGet('w8/tdt-tk'), gs: SITE.tianditu?.gs || L.gs || lsGet('w8/tdt-gs'), credit: SITE.tianditu?.credit || L.credit || '' }; };
   const MAPS = new Map();
-  const tdtLayers = (tk, gs) => `const tdt=(t)=>L.tileLayer('https://t{s}.tianditu.gov.cn/DataServer?T='+t+'&x={x}&y={y}&l={z}&tk=${tk}',{subdomains:'01234567',maxZoom:18,attribution:'© 天地图${gs ? '　审图号：' + gs : ''}'});const tdtVec=L.layerGroup([tdt('vec_w'),tdt('cva_w')]);`;
+  const tdtLayers = (tk, gs, credit = '') => `const tdt=(t)=>L.tileLayer('https://t{s}.tianditu.gov.cn/DataServer?T='+t+'&x={x}&y={y}&l={z}&tk=${tk}',{subdomains:'01234567',maxZoom:18,attribution:'© 天地图（国家地理信息公共服务平台）${gs ? '　审图号：' + gs : ''}${credit ? '　' + credit : ''}'});const tdtVec=L.layerGroup([tdt('vec_w'),tdt('cva_w')]);`;
   function openTdt(key) {
     const pts = MAPS.get(key) || [], { tk, gs } = TDT(); if (!tk) return;
     const d = document.createElement('dialog'); d.className = 'zoom tdt'; d.innerHTML = `<div class="tdt-map" style="width:min(92vw,1100px);height:72vh"></div><p class="sub">底图：天地图${gs ? '（审图号：' + esc(gs) + '）' : ''}；点为本页数据。<button class="small" data-close="1">关闭</button></p>`;
     document.body.append(d); d.showModal(); d.addEventListener('click', (e) => { if (e.target.dataset.close) { d.close(); d.remove(); } });
-    const go = () => { const L = window.L, m = L.map(d.querySelector('.tdt-map'), { preferCanvas: true }); (new Function('L', 'm', tdtLayers(tk, gs) + 'tdtVec.addTo(m);'))(L, m);
+    const go = () => { const L = window.L, m = L.map(d.querySelector('.tdt-map'), { preferCanvas: true }); (new Function('L', 'm', tdtLayers(tk, gs, TDT().credit) + 'tdtVec.addTo(m);'))(L, m);
       const g = L.featureGroup(pts.filter(okCoord).map((p) => L.circleMarker([p.lat, p.lng], { radius: 4, color: p.color || '#164ec7' }).bindPopup(esc(p.label || p.id || '')))).addTo(m); if (pts.length) m.fitBounds(g.getBounds(), { maxZoom: 9 }); else m.setView([34, 110], 4); };
     if (window.L) go(); else { const c = document.createElement('link'); c.rel = 'stylesheet'; c.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.append(c); const sc = document.createElement('script'); sc.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; sc.onload = go; document.head.append(sc); }
   }
@@ -427,7 +427,7 @@
 const pts=${data};const coast=${coast};const m=L.map('m',{preferCanvas:true});
 const B={};${SITE.public ? '' : `const off=L.layerGroup(coast.map(l=>L.polyline(l,{color:'#8aa0b4',weight:1,interactive:false})));B['海岸线轮廓（离线，Natural Earth；示意）']=off;
 B['CARTO 浅色底图（联网，无审图号，只供课堂练习）']=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'&copy; OpenStreetMap contributors &copy; CARTO（无审图号）'});`}
-${tdtK.tk ? tdtLayers(tdtK.tk, tdtK.gs) + "B['天地图（审图号：" + (tdtK.gs || '见天地图网站') + "）']=tdtVec;" : ''}
+${tdtK.tk ? tdtLayers(tdtK.tk, tdtK.gs, tdtK.credit) + "B['天地图（审图号：" + (tdtK.gs || '见天地图网站') + "）']=tdtVec;" : ''}
 const first=Object.values(B).pop();if(first)first.addTo(m);if(Object.keys(B).length>1)L.control.layers(B,{},{collapsed:false}).addTo(m);
 const g=L.featureGroup(pts.map(([a,b,t])=>L.circleMarker([a,b],{radius:3}).bindPopup(t))).addTo(m);m.fitBounds(g.getBounds());
 m.attributionControl.addAttribution(${SITE.public && !tdtK.tk ? "'未加底图：没有审图号的底图不公开发布'" : "'海岸线轮廓为示意，不表示疆域'"});
