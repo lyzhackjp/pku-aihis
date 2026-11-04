@@ -90,8 +90,8 @@
         col4 = `<p><b>${esc(nm(selE.s))} — ${esc(nm(selE.t))}</b>（${selE.w} 条记录）</p>${selE.recs.map((r) => {
           const hits = W.findInHuayangji(r.ref);
           return `<div class="evid-card"><p>${esc(r.type || '')}｜年份原值 <span class="mono">${esc(r.time_raw ?? '')}</span>｜边表第 ${esc(r.row ?? '—')} 行</p><p class="src-line small">${esc(r.ref || '（无出处）')}</p>${r.note ? `<p class="sub">${esc(r.note)}</p>` : ''}
-            ${hits.length && hits[0].juan ? `<p class="sub">四庫本《華陽集》中的篇${hits[0].mapped ? `（课件对照：${esc(hits[0].evidence)}；待核）` : '（按篇题全文检索）'}：</p>${hits.map((h) => `<p class="lab-quote">卷${h.juan}：${esc(String(h.text).slice(0, 80))}${String(h.text).length > 80 ? '……' : ''} <button class="small" data-hy="${h.juan}:${h.line}:${h.pos || 0}">读这一篇原文</button></p>`).join('')}`
-              : hits.length ? `<p class="sub">${esc(hits[0].evidence)}。CBDB 的出处题名是简称，与四庫本的全衔篇题不同，课件已逐条对照（待核）。</p>`
+            ${hits.length && hits[0].juan ? `<p class="sub">四庫本《華陽集》中的篇${hits[0].mapped ? `（课件对照：${esc(hits[0].evidence)}；<b>存疑</b>，见待核实事项 A-45）` : '（按篇题全文检索）'}：</p>${hits.map((h) => `<p class="lab-quote">卷${h.juan}：${esc(String(h.text).slice(0, 80))}${String(h.text).length > 80 ? '……' : ''} <button class="small" data-hy="${h.juan}:${h.line}:${h.pos || 0}">读这一篇原文</button></p>`).join('')}`
+              : hits.length ? `<p class="sub">${esc(hits[0].evidence)}。CBDB 的出处题名是简称，与四庫本的全衔篇题不同，课件已逐条对照，对照结果<b>存疑</b>（待核实事项 A-45）。</p>`
               : /華陽集/.test(r.ref || '') ? '<p class="sub">出处为《華陽集》，在四庫本中未找到此篇题。</p>' : '<p class="sub">出处不是《華陽集》，本课件没有这部书的原文，请按出处题名去查。</p>'}</div>`;
         }).join('')}`;
         if (this.s.hy) { const [j, l, o] = this.s.hy.split(':').map(Number); const v = W.hyJuan(j); if (v) col4 += `<div class="srcbox small-src">${v.lines.slice(Math.max(0, l), l + 8).map((x, i) => i === 0 ? `<mark>${esc(x.slice(o || 0, (o || 0) + 400))}</mark>${x.length > (o || 0) + 400 ? '……' : ''}` : esc(x.slice(0, 400)) + (x.length > 400 ? '……' : '')).join('\n')}</div><p class="sub">《華陽集》卷${j}（四庫全書本，维基文库源码）；只显示篇首几行。</p>`; }

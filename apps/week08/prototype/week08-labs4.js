@@ -1,5 +1,5 @@
 /* 第八周页面组件（四）：D14、D15、D16、D17、D18、D19、D21、D22。依赖 deck-core.js、week08-core.js、week08-labs.js（W8L）。
- * 地图只用 Natural Earth 海岸线作离线底图（公有领域，不画国界与政区界）；地名候选来自 CHGIS TGAZ 公开接口（浏览器在线查询，或本机材料包中的查询快照）。 */
+ * 底图：有天地图密钥时用天地图标准地图（有审图号）；没有密钥时，本机版只画 Natural Earth 海岸线示意（公有领域，不画国界与政区界），公开版不画底图；地名候选来自 CHGIS TGAZ 公开接口（浏览器在线查询，或本机材料包中的查询快照）。 */
 (() => {
   'use strict';
   const { esc, store, pageById, pageLink, download, flowShell, rerender, register } = window.Deck;
@@ -43,25 +43,52 @@
     if (window.L) go(); else { const c = document.createElement('link'); c.rel = 'stylesheet'; c.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.append(c); const sc = document.createElement('script'); sc.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; sc.onload = go; document.head.append(sc); }
   }
   document.addEventListener('click', (e) => { const b = e.target.closest('[data-tdt]'); if (b) openTdt(b.dataset.tdt); });
-  /* 等距圆柱投影，按中纬度的余弦校正东西比例。points：{id,lng,lat,label,r_km,color,ring}；arrows：[[from,to,color]] */
+  /* 投影：有天地图密钥时用 Web 墨卡托，并以天地图标准地图（vec_w＋cva_w，有审图号）作底；
+     没有密钥时用等距圆柱投影（按中纬度余弦校正东西比例），本机版只画 Natural Earth 海岸线示意，公开版不画底图。
+     points：{id,lng,lat,label,r_km,color,ring}；arrows：[[from,to,color]] */
+  const MERC = (lng, lat) => { const t = Math.max(-85, Math.min(85, lat)) * Math.PI / 180; return [(lng + 180) / 360 * 256, (1 - Math.log(Math.tan(t) + 1 / Math.cos(t)) / Math.PI) / 2 * 256]; };
+  function tdtTiles(tk, z, sf, minX, minY, w, h, key) {
+    const n = 2 ** z, T = 256 * sf, out = [];
+    for (const lyr of ['vec_w', 'cva_w']) for (let ty = Math.floor(minY / T); ty * T < minY + h; ty++) { if (ty < 0 || ty >= n) continue;
+      for (let tx = Math.floor(minX / T); tx * T < minX + w; tx++) { const xx = ((tx % n) + n) % n;
+        out.push(`<image href="https://t${(xx + ty) % 8}.tianditu.gov.cn/DataServer?T=${lyr}&amp;x=${xx}&amp;y=${ty}&amp;l=${z}&amp;tk=${encodeURIComponent(tk)}" x="${(tx * T - minX).toFixed(1)}" y="${(ty * T - minY).toFixed(1)}" width="${(T + 0.5).toFixed(1)}" height="${(T + 0.5).toFixed(1)}" preserveAspectRatio="none"/>`); } }
+    return `<clipPath id="tc${key}"><rect width="${w}" height="${h}"/></clipPath><g class="tdt" clip-path="url(#tc${key})">${out.join('')}</g>`;
+  }
   function mapSvg(points, { w = 520, h = 380, bbox = null, labels = true, arrows = [], key = '', alpha = 0.85, dot = 4, coast = true } = {}) {
     if (SITE.public) coast = false; MAPS.set(key, points);
-    const B = bbox || fitBox(points); const [x0, y0, x1, y1] = B; const k = Math.cos(((y0 + y1) / 2) * Math.PI / 180);
-    const sx = w / ((x1 - x0) * k), sy = h / (y1 - y0), s = Math.min(sx, sy);
-    const ox = (w - (x1 - x0) * k * s) / 2, oy = (h - (y1 - y0) * s) / 2;
-    const P = (lng, lat) => [ox + (lng - x0) * k * s, oy + (y1 - lat) * s];
-    const kmPx = s / 111;
+    const B = bbox || fitBox(points); const [x0, y0, x1, y1] = B; const td = TDT();
+    let P, kmPx, tiles = '';
+    if (td.tk) {
+      // 先在 0 级（256 像素见全球）的墨卡托坐标中求范围，再取能放下范围的级别；整数级别取瓦片，小数部分用来放大瓦片
+      const [ax, ay] = MERC(x0, y1), [bx, by] = MERC(x1, y0); const bw = Math.max(bx - ax, 1e-6), bh = Math.max(by - ay, 1e-6);
+      const f = Math.min(18, Math.log2(Math.min(w / bw, h / bh))), z = Math.max(1, Math.min(17, Math.floor(f))), sf = 2 ** (f - z), S = 2 ** f;
+      const cx = (ax + bx) / 2 * S, cy = (ay + by) / 2 * S, minX = cx - w / 2, minY = cy - h / 2;
+      P = (lng, lat) => { const [mx, my] = MERC(lng, lat); return [mx * S - minX, my * S - minY]; };
+      kmPx = 1000 / (40075016.7 * Math.cos(((y0 + y1) / 2) * Math.PI / 180) / (256 * S));
+      tiles = tdtTiles(td.tk, z, sf, minX, minY, w, h, key);
+    } else {
+      const k = Math.cos(((y0 + y1) / 2) * Math.PI / 180);
+      const sx = w / ((x1 - x0) * k), sy = h / (y1 - y0), s = Math.min(sx, sy);
+      const ox = (w - (x1 - x0) * k * s) / 2, oy = (h - (y1 - y0) * s) / 2;
+      P = (lng, lat) => [ox + (lng - x0) * k * s, oy + (y1 - lat) * s];
+      kmPx = s / 111;
+    }
     // 视野伸到南海时，北纬 20° 以南的海岸线不画：这一精度的 Natural Earth 海岸线不含南海诸岛，画出来会被看作漏绘（讲义 4.4 审图号）
+    // 有天地图底图时不再叠画海岸线
+    if (td.tk) coast = false;
     const scs = coast && y0 < 20 && x1 > 108 && x0 < 122;
     const lines = coast ? (PUB().basemap?.coast || []).filter((l) => l.some(([a, b]) => a >= x0 - 2 && a <= x1 + 2 && b >= y0 - 2 && b <= y1 + 2)).map((l) => `<polyline points="${l.map(([a, b]) => P(a, b).map((v) => v.toFixed(1)).join(',')).join(' ')}"/>`).join('') : '';
     const pts = points.filter(okCoord).map((p) => { const [x, y] = P(p.lng, p.lat); return `<g class="mpt" data-pt="${esc(p.id ?? '')}">${p.r_km ? `<circle class="err" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${Math.max(2, p.r_km * kmPx).toFixed(1)}"/>` : ''}<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${p.size || dot}" fill="${p.color || '#164ec7'}" fill-opacity="${alpha}" ${p.ring ? 'stroke="#a33" stroke-width="2"' : ''}><title>${esc(p.label || '')} ${p.lat.toFixed(3)}, ${p.lng.toFixed(3)}</title></circle>${labels && p.label ? `<text x="${(x + 6).toFixed(1)}" y="${(y - 5).toFixed(1)}">${esc(p.label)}</text>` : ''}</g>`; }).join('');
     const arr = arrows.filter(([a, b]) => okCoord(a) && okCoord(b)).map(([a, b, c]) => { const [xa, ya] = P(a.lng, a.lat), [xb, yb] = P(b.lng, b.lat); return `<line x1="${xa.toFixed(1)}" y1="${ya.toFixed(1)}" x2="${xb.toFixed(1)}" y2="${yb.toFixed(1)}" stroke="${c || '#a33'}" stroke-width="1.6" marker-end="url(#ah${key})"/>`; }).join('');
-    // 比例尺：取 100、200、500、1000 公里中最接近图宽四分之一的
+    // 比例尺：取 50、100、200、500、1000 公里中最接近图宽四分之一的（墨卡托下按图中心纬度计）
     const sc = [50, 100, 200, 500, 1000].reduce((a, b) => (Math.abs(b * kmPx - w / 4) < Math.abs(a * kmPx - w / 4) ? b : a));
-    return `<svg class="mapsvg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="地图"><defs><marker id="ah${key}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#a33"/></marker></defs>
-      <rect width="${w}" height="${h}" fill="#f7f9fa"/>${scs ? `<clipPath id="cl${key}"><rect width="${w}" height="${P(x0, 20)[1].toFixed(1)}"/></clipPath>` : ''}<g class="coast" ${scs ? `clip-path="url(#cl${key})"` : ''}>${lines}</g>${arr}${pts}
-      <text x="${w - 8}" y="${h - 6}" text-anchor="end" class="mapnote">${SITE.public ? '公开版不画底图（没有审图号的底图不公开发布）' : `示意图：只画 Natural Earth 海岸线轮廓，不表示疆域${scs ? '；北纬 20° 以南不画' : ''}`}</text>
-      <g class="scale"><line x1="12" y1="${h - 14}" x2="${12 + sc * kmPx}" y2="${h - 14}"/><text x="12" y="${h - 18}">${sc} 公里</text></g><text x="${w - 8}" y="14" text-anchor="end" class="north">↑北</text></svg>${TDT().tk ? `<p class="mapbar"><button class="small" data-tdt="${esc(key)}">在天地图上看（有审图号）</button></p>` : SITE.public ? '<p class="sub">要看底图：天地图需要浏览器端密钥，尚未配置。</p>' : ''}`;
+    const note = td.tk
+      ? `<rect x="${w - 250}" y="${h - 30}" width="250" height="30" fill="#fff" fill-opacity=".8"/><text x="${w - 6}" y="${h - 18}" text-anchor="end" class="mapnote credit">© 天地图${td.gs ? '　审图号：' + esc(td.gs) : ''}</text><text x="${w - 6}" y="${h - 6}" text-anchor="end" class="mapnote credit">${esc(td.credit || '国家地理信息公共服务平台')}</text>`
+      : `<text x="${w - 8}" y="${h - 6}" text-anchor="end" class="mapnote">${SITE.public ? '公开版不画底图（没有审图号的底图不公开发布）' : `示意图：只画 Natural Earth 海岸线轮廓，不表示疆域${scs ? '；北纬 20° 以南不画' : ''}`}</text>`;
+    return `<svg class="mapsvg${td.tk ? ' tdtmap' : ''}" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="地图"><defs><marker id="ah${key}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#a33"/></marker></defs>
+      <rect width="${w}" height="${h}" fill="#f7f9fa"/>${tiles}${scs ? `<clipPath id="cl${key}"><rect width="${w}" height="${P(x0, 20)[1].toFixed(1)}"/></clipPath>` : ''}<g class="coast" ${scs ? `clip-path="url(#cl${key})"` : ''}>${lines}</g>${arr}${pts}
+      ${note}
+      <g class="scale"><line x1="12" y1="${h - 14}" x2="${12 + sc * kmPx}" y2="${h - 14}"/><text x="12" y="${h - 18}">${sc} 公里</text></g><text x="${w - 8}" y="14" text-anchor="end" class="north">↑北</text></svg>${td.tk ? `<p class="mapbar"><button class="small" data-tdt="${esc(key)}">在天地图上放大看（有审图号）</button></p>` : SITE.public ? '<p class="sub">要看底图：天地图需要浏览器端密钥，尚未配置。</p>' : ''}`;
   }
 
   /* 宽松解析模型回复中的 JSON：去掉代码围栏，取第一个“{”到最后一个“}”；截断时逐个补齐对象（与 scripts/run_llm_w8.py 的 parse_lenient 同理） */
@@ -108,7 +135,7 @@
   const D16_ITEMS = [
     { name: '成都', q: ['成都'], quote: '成都華陽人', src: '宋史', kind: '地名' }, { name: '華陽', q: ['華陽'], quote: '成都華陽人', src: '宋史', kind: '地名' },
     { name: '舒', q: ['舒州', '舒'], quote: '後徙舒', src: '宋史', kind: '地名' }, { name: '揚州', q: ['揚州'], quote: '通判揚州', src: '宋史', kind: '地名' },
-    { name: '淮南', q: ['淮南'], quote: '王倫犯淮南', src: '宋史', kind: '地区' }, { name: '魏', q: ['魏', '大名'], prefer: '大名', hint: '“魏”指北宋北京大名府（唐魏州，时贾昌朝判大名府）：课件判断，待核；前缀“魏”带出的魏县、魏城县不是此地，所以初选改取“大名”查得的记录。', quote: '北使過魏', src: '宋史', kind: '地名（古称）' },
+    { name: '淮南', q: ['淮南'], quote: '王倫犯淮南', src: '宋史', kind: '地区' }, { name: '魏', q: ['魏', '大名'], prefer: '大名', hint: '“魏”指北宋北京大名府（唐魏州，时贾昌朝判大名府）：课件判断，存疑（待核实事项 A-44）；前缀“魏”带出的魏县、魏城县不是此地，所以初选改取“大名”查得的记录。', quote: '北使過魏', src: '宋史', kind: '地名（古称）' },
     { name: '開封', q: ['開封'], quote: '知開封府', src: '宋史', kind: '地名' }, { name: '靈武', q: ['靈武', '靈州'], quote: '久欲收靈武', src: '宋史', kind: '地名' },
     { name: '慶', q: ['慶州', '慶'], noDefault: true, hint: '“帥慶”指环庆路的庆州（今甘肃庆阳一带）。CHGIS 在 1050 年没有庆州的记录（不限年份只有隋唐的庆州，接口以简体“庆州”才查得到）；前缀“慶”带出的庆甸在云南、庆远府在广西，都不是此地，所以页面不作初选。', quote: '珪薦俞充帥慶', src: '宋史', kind: '地名（简称）' }, { name: '永樂', q: ['永樂'], quote: '永樂之敗', src: '宋史', kind: '地名（城寨）' },
     { name: '延安', q: ['延安'], quote: '請立延安郡王為太子', src: '宋史', kind: '封号中的地名' }, { name: '岐', q: ['岐'], quote: '封岐國公', src: '宋史', kind: '封号中的地名' },
@@ -282,7 +309,7 @@
         ${cs.length ? `<table class="steps small"><tr><th></th><th>CHGIS 记录</th><th>起讫</th><th>坐标</th></tr>${cs.slice(0, 30).map((p) => `<tr class="${p.sys_id === pick ? 'on' : ''}"><td><input type="radio" name="pk" data-pick="${esc(p.sys_id)}" ${p.sys_id === pick ? 'checked' : ''}></td><td>${esc(p.name)} <span class="sub">${esc(p['feature type'])}｜${esc(p['object type'])}</span><br><span class="sub">${esc(p['parent name'] || '')} ${esc(p.sys_id)}</span></td><td>${esc(p.years)}</td><td class="${okCoord(p) ? '' : 'nil'}">${okCoord(p) ? `${f2(p.lat, 2)}<br>${f2(p.lng, 2)}` : '缺<br>' + esc(p['xy coordinates'])}</td></tr>`).join('')}</table>${cs.length > 30 ? `<p class="sub">只列前 30 条。</p>` : ''}` : '<p class="nil">CHGIS 中查无此名（或年份内无记录）。只能回到史料与研究文献去考订。</p>'}
         <p class="sub">“POLYGON”一类记录的坐标常为 0（缺），要另取治所的点。页面初选查询年份内有效、点状、有坐标的第一条（“魏”“慶”两处另作处理，见上），请逐条改正。</p>`;
       const ref = gazetteerRef(); const pts = Object.entries(ref).filter(([n]) => !this.s.notPlace?.[n]).map(([n, p]) => ({ id: n, lng: p.lng, lat: p.lat, label: n, r_km: TYPE_R(p['feature type'], p['object type']), color: n === it.name ? '#a33' : '#164ec7' }));
-      const col4 = `${mapSvg(pts, { key: 'd16', w: 360, h: 320 })}<p class="sub">${pts.length} 个地名上图；圆圈为课件按类型设的示意误差（县 5、州府军 15、路 150 公里），不是 CHGIS 给的数。底图为 Natural Earth 海岸线。</p>`;
+      const col4 = `${mapSvg(pts, { key: 'd16', w: 360, h: 320 })}<p class="sub">${pts.length} 个地名上图；圆圈为课件按类型设的示意误差（县 5、州府军 15、路 150 公里），不是 CHGIS 给的数。${TDT().tk ? '底图为天地图标准地图（审图号见图右下角）。' : SITE.public ? '公开版未配置天地图密钥时不画底图。' : '底图为 Natural Earth 海岸线示意。'}</p>`;
       rerender(this, flowShell(pageById('D16'), [{ title: '史料地名', body: col1 }, { title: '候选', body: col2 }, { title: '选定', body: col3 }, { title: '上图', body: col4 }]));
     }
     init() {
@@ -400,7 +427,7 @@
       const suspect = outLat.length > pts.length / 2 || (good.length && medLat > medLng && medLng < 60 && medLat > 60);
       const col1 = `${W.card(m, { compact: true })}<p class="sub">列：经度 lng、纬度 lat。导入自己的点表时，导入页会让你指明哪一栏是经度、哪一栏是纬度。</p>`;
       const col2 = `${mapSvg(good.map((p) => ({ ...p, size: 2.5 })), { key: 'd19', w: 380, h: 320, labels: false, alpha: 0.35, coast: this.s.coast === true || this.s.coast === 'true', bbox: good.length ? null : [60, -5, 160, 60] })}
-        ${SITE.public ? '' : `<p><label class="check-row small"><input type="checkbox" data-k="coast" ${this.s.coast === true || this.s.coast === 'true' ? 'checked' : ''}>底图：Natural Earth 海岸线（离线，公有领域；示意）</label></p>`}
+        ${SITE.public || TDT().tk ? '' : `<p><label class="check-row small"><input type="checkbox" data-k="coast" ${this.s.coast === true || this.s.coast === 'true' ? 'checked' : ''}>底图：Natural Earth 海岸线（离线，公有领域；示意）</label></p>`}
         <p><button class="small" data-leaflet="1">下载 Leaflet 网页</button> <span class="sub">${SITE.public ? (TDT().tk ? '网页用天地图底图（有审图号）。' : '公开版下载的网页不带底图；配置天地图密钥后用天地图。') : '网页里带离线海岸线；右上角可换 CARTO 联网底图（无审图号，只供课堂练习）' + (TDT().tk ? '，或天地图（有审图号）' : '') + '。'}Leaflet 库本身仍从 unpkg 联网载入。</span></p>`;
       const col3 = `<p><button data-set="swap:${swap ? 'false' : 'true'}">${swap ? '换回经纬度' : '交换经纬度两栏'}</button></p>
         ${suspect ? '<p class="nil">疑似经纬度颠倒：多数点的“纬度”超出 ±90 度，或纬度普遍大于经度（在东亚不可能）。</p>' : '<p class="sub">交换以后再看：多数点的纬度会超出 ±90 度，无法上图。</p>'}
@@ -430,7 +457,7 @@ B['CARTO 浅色底图（联网，无审图号，只供课堂练习）']=L.tileLa
 ${tdtK.tk ? tdtLayers(tdtK.tk, tdtK.gs, tdtK.credit) + "B['天地图（审图号：" + (tdtK.gs || '见天地图网站') + "）']=tdtVec;" : ''}
 const first=Object.values(B).pop();if(first)first.addTo(m);if(Object.keys(B).length>1)L.control.layers(B,{},{collapsed:false}).addTo(m);
 const g=L.featureGroup(pts.map(([a,b,t])=>L.circleMarker([a,b],{radius:3}).bindPopup(t))).addTo(m);m.fitBounds(g.getBounds());
-m.attributionControl.addAttribution(${SITE.public && !tdtK.tk ? "'未加底图：没有审图号的底图不公开发布'" : "'海岸线轮廓为示意，不表示疆域'"});
+m.attributionControl.addAttribution(${SITE.public ? (tdtK.tk ? "''" : "'未加底图：没有审图号的底图不公开发布'") : "'海岸线轮廓为示意，不表示疆域'"});
 document.title+='：表格 '+pts.length+' 行，地图 '+pts.length+' 点';</script></body></html>`, 'text/html');
       });
     }
