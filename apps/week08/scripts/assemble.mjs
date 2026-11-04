@@ -28,6 +28,6 @@ await fs.cp(proto, out, {recursive: true, filter: s => { const rel = path.relati
 if (!skipImporter) await fs.cp(path.join(root, 'apps/material-importer/dist'), path.join(out, 'importer'), {recursive: true, filter: s => !s.endsWith('.map')});
 // 公开站点：不画无审图号的底图；天地图浏览器端密钥与审图号在发布时由环境变量给出（不入 Git）
 let tdtLocal = {}; try { tdtLocal = JSON.parse(await fs.readFile(path.join(app, 'local-only/tianditu.json'), 'utf8')); } catch { /* 无本机配置 */ }
-await fs.writeFile(path.join(out, 'data/site.js'), '/* 由 scripts/assemble.mjs 在发布构建时生成。 */\nwindow.W8_SITE = ' + JSON.stringify({public: true, tianditu: {tk: process.env.WEEK08_TIANDITU_TK || tdtLocal.tk || '', gs: process.env.WEEK08_TIANDITU_GS || tdtLocal.gs || '', credit: process.env.WEEK08_TIANDITU_CREDIT || tdtLocal.credit || ''}}) + ';\n');
+await fs.writeFile(path.join(out, 'data/site.js'), '/* 由 scripts/assemble.mjs 在发布构建时生成。 */\nwindow.W8_SITE = ' + JSON.stringify({public: true, tianditu: {tk: process.env.WEEK08_TIANDITU_TK || tdtLocal.tk || '', gs: process.env.WEEK08_TIANDITU_GS || tdtLocal.gs || 'GS（2026）4921号', credit: process.env.WEEK08_TIANDITU_CREDIT || tdtLocal.credit || '数据来源：自然资源部 & NavInfo；甲测资字1100471'}}) + ';\n');
 const sha = createHash('sha256').update(pub).digest('hex');
 console.log(`Assembled week08: ${map.length} pages; public pack ${(pub.length / 1e6).toFixed(2)} MB sha256 ${sha.slice(0, 16)}…; importer ${skipImporter ? 'skipped' : 'embedded'}`);
