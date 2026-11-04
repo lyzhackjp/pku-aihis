@@ -10,4 +10,8 @@ URL="http://127.0.0.1:$PORT/prototype/index.html"
 ( sleep 1; open -a "Google Chrome" "$URL" 2>/dev/null || open "$URL" ) &
 echo "第八周演示：$URL"
 echo "关闭本窗口即停止服务。"
-exec python3 -m http.server "$PORT" --bind 127.0.0.1
+# 不让浏览器缓存课件文件：更新代码后刷新即用新版本（否则 Chrome 可能把新旧文件混在一起，页面停在“公开材料载入中”）
+exec python3 -c 'import sys, http.server as h
+class H(h.SimpleHTTPRequestHandler):
+    def end_headers(self): self.send_header("Cache-Control", "no-store"); super().end_headers()
+h.ThreadingHTTPServer(("127.0.0.1", int(sys.argv[1])), H).serve_forever()' "$PORT"
