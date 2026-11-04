@@ -28,8 +28,24 @@
     const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, sx = Math.max(min, x1 - x0 + 2 * pad), sy = Math.max(min * 0.7, y1 - y0 + 2 * pad);
     return [cx - sx / 2, cy - sy / 2, cx + sx / 2, cy + sy / 2];
   }
+  /* 底图政策：公开站点（W8_SITE.public）不画无审图号的底图；有天地图浏览器端密钥时，可在天地图（有审图号）上看同一批点。 */
+  const SITE = window.W8_SITE || {};
+  const lsGet = (k) => { try { return localStorage.getItem(k) || ''; } catch { return ''; } };
+  const TDT = () => ({ tk: SITE.tianditu?.tk || lsGet('w8/tdt-tk'), gs: SITE.tianditu?.gs || lsGet('w8/tdt-gs') });
+  const MAPS = new Map();
+  const tdtLayers = (tk, gs) => `const tdt=(t)=>L.tileLayer('https://t{s}.tianditu.gov.cn/DataServer?T='+t+'&x={x}&y={y}&l={z}&tk=${tk}',{subdomains:'01234567',maxZoom:18,attribution:'© 天地图${gs ? '　审图号：' + gs : ''}'});const tdtVec=L.layerGroup([tdt('vec_w'),tdt('cva_w')]);`;
+  function openTdt(key) {
+    const pts = MAPS.get(key) || [], { tk, gs } = TDT(); if (!tk) return;
+    const d = document.createElement('dialog'); d.className = 'zoom tdt'; d.innerHTML = `<div class="tdt-map" style="width:min(92vw,1100px);height:72vh"></div><p class="sub">底图：天地图${gs ? '（审图号：' + esc(gs) + '）' : ''}；点为本页数据。<button class="small" data-close="1">关闭</button></p>`;
+    document.body.append(d); d.showModal(); d.addEventListener('click', (e) => { if (e.target.dataset.close) { d.close(); d.remove(); } });
+    const go = () => { const L = window.L, m = L.map(d.querySelector('.tdt-map'), { preferCanvas: true }); (new Function('L', 'm', tdtLayers(tk, gs) + 'tdtVec.addTo(m);'))(L, m);
+      const g = L.featureGroup(pts.filter(okCoord).map((p) => L.circleMarker([p.lat, p.lng], { radius: 4, color: p.color || '#164ec7' }).bindPopup(esc(p.label || p.id || '')))).addTo(m); if (pts.length) m.fitBounds(g.getBounds(), { maxZoom: 9 }); else m.setView([34, 110], 4); };
+    if (window.L) go(); else { const c = document.createElement('link'); c.rel = 'stylesheet'; c.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.append(c); const sc = document.createElement('script'); sc.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; sc.onload = go; document.head.append(sc); }
+  }
+  document.addEventListener('click', (e) => { const b = e.target.closest('[data-tdt]'); if (b) openTdt(b.dataset.tdt); });
   /* 等距圆柱投影，按中纬度的余弦校正东西比例。points：{id,lng,lat,label,r_km,color,ring}；arrows：[[from,to,color]] */
   function mapSvg(points, { w = 520, h = 380, bbox = null, labels = true, arrows = [], key = '', alpha = 0.85, dot = 4, coast = true } = {}) {
+    if (SITE.public) coast = false; MAPS.set(key, points);
     const B = bbox || fitBox(points); const [x0, y0, x1, y1] = B; const k = Math.cos(((y0 + y1) / 2) * Math.PI / 180);
     const sx = w / ((x1 - x0) * k), sy = h / (y1 - y0), s = Math.min(sx, sy);
     const ox = (w - (x1 - x0) * k * s) / 2, oy = (h - (y1 - y0) * s) / 2;
@@ -44,8 +60,8 @@
     const sc = [50, 100, 200, 500, 1000].reduce((a, b) => (Math.abs(b * kmPx - w / 4) < Math.abs(a * kmPx - w / 4) ? b : a));
     return `<svg class="mapsvg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="地图"><defs><marker id="ah${key}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#a33"/></marker></defs>
       <rect width="${w}" height="${h}" fill="#f7f9fa"/>${scs ? `<clipPath id="cl${key}"><rect width="${w}" height="${P(x0, 20)[1].toFixed(1)}"/></clipPath>` : ''}<g class="coast" ${scs ? `clip-path="url(#cl${key})"` : ''}>${lines}</g>${arr}${pts}
-      <text x="${w - 8}" y="${h - 6}" text-anchor="end" class="mapnote">示意图：只画 Natural Earth 海岸线轮廓，不表示疆域${scs ? '；北纬 20° 以南不画' : ''}</text>
-      <g class="scale"><line x1="12" y1="${h - 14}" x2="${12 + sc * kmPx}" y2="${h - 14}"/><text x="12" y="${h - 18}">${sc} 公里</text></g><text x="${w - 8}" y="14" text-anchor="end" class="north">↑北</text></svg>`;
+      <text x="${w - 8}" y="${h - 6}" text-anchor="end" class="mapnote">${SITE.public ? '公开版不画底图（没有审图号的底图不公开发布）' : `示意图：只画 Natural Earth 海岸线轮廓，不表示疆域${scs ? '；北纬 20° 以南不画' : ''}`}</text>
+      <g class="scale"><line x1="12" y1="${h - 14}" x2="${12 + sc * kmPx}" y2="${h - 14}"/><text x="12" y="${h - 18}">${sc} 公里</text></g><text x="${w - 8}" y="14" text-anchor="end" class="north">↑北</text></svg>${TDT().tk ? `<p class="mapbar"><button class="small" data-tdt="${esc(key)}">在天地图上看（有审图号）</button></p>` : SITE.public ? '<p class="sub">要看底图：天地图需要浏览器端密钥，尚未配置。</p>' : ''}`;
   }
 
   /* 宽松解析模型回复中的 JSON：去掉代码围栏，取第一个“{”到最后一个“}”；截断时逐个补齐对象（与 scripts/run_llm_w8.py 的 parse_lenient 同理） */
@@ -384,8 +400,8 @@
       const suspect = outLat.length > pts.length / 2 || (good.length && medLat > medLng && medLng < 60 && medLat > 60);
       const col1 = `${W.card(m, { compact: true })}<p class="sub">列：经度 lng、纬度 lat。导入自己的点表时，导入页会让你指明哪一栏是经度、哪一栏是纬度。</p>`;
       const col2 = `${mapSvg(good.map((p) => ({ ...p, size: 2.5 })), { key: 'd19', w: 380, h: 320, labels: false, alpha: 0.35, coast: this.s.coast === true || this.s.coast === 'true', bbox: good.length ? null : [60, -5, 160, 60] })}
-        <p><label class="check-row small"><input type="checkbox" data-k="coast" ${this.s.coast === true || this.s.coast === 'true' ? 'checked' : ''}>底图：Natural Earth 海岸线（离线，公有领域）</label></p>
-        <p><button class="small" data-leaflet="1">下载 Leaflet 网页</button> <span class="sub">网页里带离线海岸线；右上角可换 CARTO 联网底图（无审图号，只供课堂练习）。Leaflet 库本身仍从 unpkg 联网载入。</span></p>`;
+        ${SITE.public ? '' : `<p><label class="check-row small"><input type="checkbox" data-k="coast" ${this.s.coast === true || this.s.coast === 'true' ? 'checked' : ''}>底图：Natural Earth 海岸线（离线，公有领域；示意）</label></p>`}
+        <p><button class="small" data-leaflet="1">下载 Leaflet 网页</button> <span class="sub">${SITE.public ? (TDT().tk ? '网页用天地图底图（有审图号）。' : '公开版下载的网页不带底图；配置天地图密钥后用天地图。') : '网页里带离线海岸线；右上角可换 CARTO 联网底图（无审图号，只供课堂练习）' + (TDT().tk ? '，或天地图（有审图号）' : '') + '。'}Leaflet 库本身仍从 unpkg 联网载入。</span></p>`;
       const col3 = `<p><button data-set="swap:${swap ? 'false' : 'true'}">${swap ? '换回经纬度' : '交换经纬度两栏'}</button></p>
         ${suspect ? '<p class="nil">疑似经纬度颠倒：多数点的“纬度”超出 ±90 度，或纬度普遍大于经度（在东亚不可能）。</p>' : '<p class="sub">交换以后再看：多数点的纬度会超出 ±90 度，无法上图。</p>'}
         <p class="sub">交换后可画的点 ${good.length}，无法画的 ${bad.length}。</p>`;
@@ -405,14 +421,16 @@
         const data = JSON.stringify((this._pts || []).map((p) => [p.lat, p.lng, (p.label || '') + (p.ref ? '｜' + p.ref : '')]));
         // 离线海岸线（Natural Earth，公有领域）随网页一起写入，打开即可见；联网底图换用 CARTO（OpenStreetMap 的瓦片服务器拒绝 file:// 打开的网页，返回 403）
         const pts0 = this._pts || [], lo = (k, f) => f(...pts0.map((q) => q[k])), bb = pts0.length ? [lo('lng', Math.min) - 5, lo('lat', Math.min) - 5, lo('lng', Math.max) + 5, lo('lat', Math.max) + 5] : [60, -5, 160, 60];
-        const coast = JSON.stringify((PUB().basemap?.coast || []).filter((l) => l.some(([x, y]) => x >= bb[0] && x <= bb[2] && y >= bb[1] && y <= bb[3])).map((l) => l.map(([x, y]) => [y, x])));
+        const tdtK = TDT();
+        const coast = SITE.public ? '[]' : JSON.stringify((PUB().basemap?.coast || []).filter((l) => l.some(([x, y]) => x >= bb[0] && x <= bb[2] && y >= bb[1] && y <= bb[3])).map((l) => l.map(([x, y]) => [y, x])));
         download('webmap.html', `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(this._title)}</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><style>html,body,#m{height:100%;margin:0}#m{background:#f7f9fa}</style></head><body><div id="m"></div><script>
 const pts=${data};const coast=${coast};const m=L.map('m',{preferCanvas:true});
-const off=L.layerGroup(coast.map(l=>L.polyline(l,{color:'#8aa0b4',weight:1,interactive:false})));off.addTo(m);
-const carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'&copy; OpenStreetMap contributors &copy; CARTO（无审图号，只供课堂练习）'});
-L.control.layers({'海岸线轮廓（离线，Natural Earth）':off,'CARTO 浅色底图（联网，无审图号）':carto},{},{collapsed:false}).addTo(m);
+const B={};${SITE.public ? '' : `const off=L.layerGroup(coast.map(l=>L.polyline(l,{color:'#8aa0b4',weight:1,interactive:false})));B['海岸线轮廓（离线，Natural Earth；示意）']=off;
+B['CARTO 浅色底图（联网，无审图号，只供课堂练习）']=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'&copy; OpenStreetMap contributors &copy; CARTO（无审图号）'});`}
+${tdtK.tk ? tdtLayers(tdtK.tk, tdtK.gs) + "B['天地图（审图号：" + (tdtK.gs || '见天地图网站') + "）']=tdtVec;" : ''}
+const first=Object.values(B).pop();if(first)first.addTo(m);if(Object.keys(B).length>1)L.control.layers(B,{},{collapsed:false}).addTo(m);
 const g=L.featureGroup(pts.map(([a,b,t])=>L.circleMarker([a,b],{radius:3}).bindPopup(t))).addTo(m);m.fitBounds(g.getBounds());
-m.attributionControl.addAttribution('示意图：海岸线轮廓不表示疆域');
+m.attributionControl.addAttribution(${SITE.public && !tdtK.tk ? "'未加底图：没有审图号的底图不公开发布'" : "'海岸线轮廓为示意，不表示疆域'"});
 document.title+='：表格 '+pts.length+' 行，地图 '+pts.length+' 点';</script></body></html>`, 'text/html');
       });
     }

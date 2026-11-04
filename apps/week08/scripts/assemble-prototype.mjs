@@ -8,7 +8,7 @@ const app = path.resolve(import.meta.dirname, '..'), root = path.resolve(app, '.
 execFileSync(process.execPath, [path.join(root, '.agents/skills/history-demo-courseware/scripts/assemble-prototype.mjs'), proto], {stdio: 'inherit'});
 const f = path.join(proto, 'index.html');
 let html = await fs.readFile(f, 'utf8');
-html = html.replace('<link rel="stylesheet" href="deck.css">', '<link rel="stylesheet" href="deck.css">\n<link rel="stylesheet" href="week08.css">')
+html = html.replace('<script src="data/data.js"></script>', '<script src="data/site.js"></script>\n<script src="data/data.js"></script>').replace('<link rel="stylesheet" href="deck.css">', '<link rel="stylesheet" href="deck.css">\n<link rel="stylesheet" href="week08.css">')
   .replace('</head>', '<!-- 浏览器内模型与通用导入页握手（ES 模块；须经 HTTP 打开：本机服务或 GitHub Pages）。由 scripts/assemble-prototype.mjs 补入。 -->\n<script type="module" src="live/w8-live.js"></script>\n</head>');
 await fs.writeFile(f, html);
 console.log('已补入 week08.css 与 live/w8-live.js');
