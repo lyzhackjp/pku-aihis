@@ -190,7 +190,10 @@
       "语义切分"
     ],
     "status": "implemented",
-    "component": "revision-lab"
+    "component": "revision-lab",
+    "aliases": [
+      "D07"
+    ]
   },
   {
     "id": "D08",
