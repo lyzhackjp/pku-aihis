@@ -100,9 +100,10 @@ for (const s of sims.filter((x) => want(x.group))) {
       const c = { id: `sim-${SIM.sim_id}-r${round.id}-${name}`, person: name, timepoint: actor.timepoint, sources: actor.sources, temperature: 0.7, system_prompt: `${actor.persona}${SIM.rule_text}\n\n此前的对话：\n${mem || '（尚无）'}`, user_prompt: `本轮话题：${round.topic}` };
       const id = `R-${simId}-r${round.id}-${name}`;
       try {
-        const r = await callCard(c, s.preset, id, 1);
+        /* 可续跑：本步已有记录就沿用（记忆据已存回答重建），不重新调用 */
+        const r = exists(id) ? JSON.parse(fs.readFileSync(path.join(outDir, id + '.json'), 'utf8')) : await callCard(c, s.preset, id, 1);
         if (dry) { memory.push({ actor: name, reply: '（试运行）' }); continue; }
-        save({ ...r, sim_id: simId }, id); index.push(r);
+        if (!exists(id)) { save({ ...r, sim_id: simId }, id); index.push(r); }
         if (r.error) { failures.push(id); broke = true; break; }
         const max = round.max_chars || SIM.moderator.rules.max_chars || 300, reply = (r.reply || '').slice(0, max), accepted = (r.reply || '').length <= max;
         memory.push({ actor: name, reply });
