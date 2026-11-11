@@ -101,7 +101,9 @@
   function buildMessages(card, entries) {
     const gate = sourceGate(entries, card.timepoint, card.sources || [], card.confirm || []);
     const used = gate.prompt_sources.map((id) => entries.find((e) => e.id === id)).filter((e) => e && e.text);
-    const material = used.map((e, i) => `【史料 ${i + 1}】${e.title}（${e.written_date_raw}；${e.citation}，${e.page?.value || ''}）\n${e.text}`).join('\n\n');
+    /* 送模型的标题与纪年可与页面显示的不同（prompt_title、prompt_date_raw）：页面上给教师看的"含署年／删去署年，对照组"一类说明不得进入提示，
+     * 否则对照组等于被告知"这里删了署年"（2026-11-11 课前记录中即出现"末段已删去署年"的回答）。 */
+    const material = used.map((e, i) => { const d = e.prompt_date_raw ?? e.written_date_raw; return `【史料 ${i + 1}】${e.prompt_title || e.title}（${d ? d + '；' : ''}${e.citation}，${e.page?.value || ''}）\n${e.text}`; }).join('\n\n');
     const sys = (card.system_prompt || '') + (material ? `\n\n下面是所给的文字：\n\n${material}` : '');
     return { messages: [{ role: 'system', content: sys }, { role: 'user', content: card.user_prompt || '' }], source_ids: used.map((e) => e.id), gate, empty: gate.prompt_sources.filter((id) => !used.some((e) => e.id === id)) };
   }

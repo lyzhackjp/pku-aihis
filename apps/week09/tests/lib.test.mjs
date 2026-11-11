@@ -142,3 +142,12 @@ test('小框架一步：记忆进入提示；超长发言截断并记说明', ()
   assert.deepEqual(L.simAccept(SIM, { id: 1 }, '一二三四五六'), { reply: '一二三四五', accepted: false, moderator_note: '超过 5 字，截断后写入记忆' });
   assert.equal(L.simAccept(SIM, { id: 1 }, '一二').accepted, true);
 });
+
+test('页面上的对照说明不进提示：prompt_title、prompt_date_raw 优先', () => {
+  const es = [{ id: 'a', title: '客帝匡謬（末段，删去署年，对照组）', prompt_title: '客帝匡謬（末段）', prompt_date_raw: '', written_date_raw: '（删去署年）', written_date: '1904', layer: 1, sendable: true, citation: '全集第三卷', page: { value: '120' }, text: '章炳麟曰' },
+    { id: 'b', title: '文野三界之別', written_date_raw: '光緒二十五年', written_date: '1899', layer: 1, sendable: true, citation: '合集', page: { value: '8' }, text: '泰西學者' }];
+  const m = L.buildMessages({ timepoint: '1904', sources: ['a', 'b'], system_prompt: 'S', user_prompt: 'U' }, es).messages[0].content;
+  assert.ok(!m.includes('删去署年') && !m.includes('对照组'));
+  assert.ok(m.includes('【史料 1】客帝匡謬（末段）（全集第三卷，120）'));
+  assert.ok(m.includes('【史料 2】文野三界之別（光緒二十五年；合集，8）'));
+});

@@ -53,6 +53,7 @@ with open(os.path.join(APP, 'prototype/data/w09-kinds.js'), 'w', encoding='utf-8
 replays = []
 if runs_dir and os.path.isdir(runs_dir):
     for fn in sorted(glob.glob(os.path.join(runs_dir, '**', '*.json'), recursive=True)):
+        if any(part.startswith('_') for part in os.path.relpath(fn, runs_dir).split(os.sep)): continue  # 以 _ 开头的子目录是已替换的旧记录，留档不回放
         j = json.load(open(fn, encoding='utf-8'))
         for r in (j if isinstance(j, list) else [j]):
             s = json.dumps(r)
