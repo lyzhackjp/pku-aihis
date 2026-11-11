@@ -1,7 +1,8 @@
 /* 第九周页面组件（三）：D02、D03、D04、D06、D10、D15、D16、D19、D20、D21、D24、D25、D26｜候选，未经教师确认｜2026-11-11 */
 (() => {
   'use strict';
-  const { esc, store, rerender, register, download } = window.Deck;
+  const { esc, store, register, download } = window.Deck;
+  const rerender = window.W9.render;
   const { L, Mat, Through, Model, badge, Lab, latestRun } = window.W9;
   const CARDS = window.W9_CARDS;
   const card = (id) => CARDS.find((c) => c.id === id);
@@ -16,38 +17,34 @@
   };
   const flow = (host, cols, active = 0) => paint(host, window.Deck.flowShell(host.page(), cols, { active }));
   const poly = (pts, W, H, ymin, ymax, color, xmax) => { const n = xmax ?? pts.length - 1; return `<polyline fill="none" stroke="${color}" stroke-width="2" points="${pts.map((y, i) => `${((i / Math.max(1, n)) * W).toFixed(1)},${(H - ((y - ymin) / (ymax - ymin)) * H).toFixed(1)}`).join(' ')}"/>`; };
-  /* 同一卡、同一服务的全部采样：课前回放与本机记录（不区分来源时也保留各自的模式标记） */
-  const samplesOf = (cid, preset) => {
-    const seen = new Set(), out = [];
-    [...Mat.replays({ card_id: cid, preset }), ...Through.get().runs.filter((r) => r.card_id === cid && r.preset === preset && !r.error)].forEach((r) => { if (!seen.has(r.run_id)) { seen.add(r.run_id); out.push(r); } });
-    return out.sort((a, b) => (a.sample_index || 1) - (b.sample_index || 1));
-  };
+  const samplesOf = (cid, preset) => window.W9.candidates(cid, preset); // 与各页回答格同一来源
 
   /* ================= D02 模拟者与角色 ================= */
   const AGREE = ['', '三者一致', '两者一致', '各说各话'];
   class RolesLab extends Lab {
-    defaults() { return { preset: 'deepseek', marks: {}, msg: '' }; }
+    defaults() { return { preset: 'deepseek', cid: 'card-1a', marks: {}, msg: '' }; }
     render() {
-      const rs = samplesOf('card-1a', this.s.preset), show = rs.slice(0, 4);
+      const rs = samplesOf(this.s.cid, this.s.preset), show = rs.slice(0, 4), c = card(this.s.cid);
       const tally = { 三者一致: 0, 两者一致: 0, 各说各话: 0 };
       Object.entries(this.s.marks).forEach(([k, v]) => { if (show.some((r) => k.startsWith(r.run_id + '|')) && tally[v] !== undefined) tally[v]++; });
-      const col = (r, i) => `<section class="w9-col"><header><b>第 ${r.sample_index || i + 1} 次</b> ${badge(r, r.mode)}</header><div class="w9-reply">${L.splitSentences(r.reply || '').map((s, j) => { const k = r.run_id + '|' + j, m = this.s.marks[k] || ''; return `<span class="sent ${m ? 'circled' : ''}" data-mark="${esc(k)}" title="点击切换：三者一致 → 两者一致 → 各说各话 → 取消">${esc(s)}${m ? `<sup class="sub">［${esc(m)}］</sup>` : ''}</span>`; }).join('')}</div></section>`;
-      const cols = [
-        { title: '同一提示', why: '1899 年卡：同一人设、同一史料、同一温度。', body: `<p class="mono">${esc(card('card-1a').label)}</p><p>服务 <select data-k="preset"><option value="deepseek" ${this.s.preset === 'deepseek' ? 'selected' : ''}>DeepSeek</option><option value="kimi" ${this.s.preset === 'kimi' ? 'selected' : ''}>Kimi</option></select></p><p class="sub">数据直接取运行记录中同一卡、同一服务的各次采样，不另存副本。</p>` },
-        { title: '三次采样', why: '模拟者不先定下一个角色；每次采样抽出一个。', body: rs.length ? `<p>已有 ${rs.length} 次采样。</p>` : `<p>${B.none}</p><p class="sub">依赖 D01 的课前三次采样（课前环境方案 C-03）。导入本机材料包后这里出现三列。</p>` },
-        { title: '并排比较', why: '点句子标"三者一致／两者一致／各说各话"。', body: show.length ? `<div class="w9-two" style="grid-template-columns:repeat(${Math.min(show.length, 3)},1fr)">${show.map(col).join('')}</div>` : '<p class="sub">（暂无回答）</p>' },
-        { title: '统计与再采样', why: '任何一个角色都不比另一个更"真"。', body: `<table class="items">${Object.entries(tally).map(([k, v]) => `<tr><td>${k}</td><td>${v} 句</td></tr>`).join('')}</table><p>${B.calc}（勾选统计）</p>
-          <p><button data-x="again" ${Model.state().mode === 'live' && Model.ready(this.s.preset) ? '' : 'disabled'}>进阶：现场再采样一次</button></p><p class="sub">${Model.state().mode === 'live' ? (Model.ready(this.s.preset) ? '将按 D01 的同一卡发出一次请求，结果标"实际调用"。' : '现场模式下需先在模型面板输入 Key。') : '当前为预存回放模式；切到现场调用后可用。'}</p><p class="${this.s.msg.startsWith('已') ? 'ok' : 'nil'}">${esc(this.s.msg)}</p>` },
-      ];
-      flow(this, cols, show.length ? 2 : 0);
+      const col = (r, i) => `<section class="w9-col"><header><b>第 ${i + 1} 次</b>　${badge(r, r.mode)}</header><div class="w9-reply">${L.splitSentences(r.reply || '').map((s, j) => { const k = r.run_id + '|' + j, m = this.s.marks[k] || ''; return `<span class="sent ${m ? 'circled' : ''}" data-mark="${esc(k)}" title="点击切换：三者一致 → 两者一致 → 各说各话 → 取消">${esc(s)}${m ? `<sup class="sub">［${esc(m)}］</sup>` : ''}</span>`; }).join('')}</div><p class="sub">${(r.reply || '').length} 字</p></section>`;
+      const liveOk = Model.state().mode === 'live' && Model.ready(this.s.preset);
+      this.activeStep = show.length ? (Object.keys(this.s.marks).length ? 3 : 2) : 0;
+      rerender(this, `<div class="w9-toolbar"><label>条件卡 <select data-k="cid">${['card-1a', 'card-1b', 'card-2a', 'card-3a'].map((id) => `<option value="${id}" ${id === this.s.cid ? 'selected' : ''}>${esc(card(id).label)}</option>`).join('')}</select></label>
+          <label>服务 <select data-k="preset"><option value="deepseek" ${this.s.preset === 'deepseek' ? 'selected' : ''}>DeepSeek</option><option value="kimi" ${this.s.preset === 'kimi' ? 'selected' : ''}>Kimi</option></select></label>
+          <span><b>问：</b>${esc(c.user_prompt)}</span>
+          <button class="small" data-x="again" ${liveOk ? '' : 'disabled'} title="${liveOk ? '按同一张卡再发一次请求，结果标实际调用' : '在顶栏"模型接入"切到现场调用并输入 Key 后可用'}">进阶：现场再采样一次</button> <span class="${this.s.msg.startsWith('已') ? 'ok' : 'nil'}">${esc(this.s.msg)}</span></div>
+        <p class="sub">同一人设、同一史料、同一温度，只是再生成一次。模拟者不先定下一个角色；每次采样抽出一个，任何一个都不比另一个更"真"（讲义 1.1，本课推论）。数据直接取运行记录，不另存副本。</p>
+        ${show.length ? `<div class="w9-cols" style="--n:${Math.min(show.length, 4)}">${show.map(col).join('')}</div>` : `<p>${B.none}</p><p class="sub">这一格还没有采样记录：依赖课前三次采样（课前环境方案 C-01），载入本机材料包后这里并排出现。</p>`}
+        <p class="w9-sum">点句子标注：${Object.entries(tally).map(([k, v]) => `${k} <b>${v}</b> 句`).join('　')}　${B.calc}${rs.length > 4 ? `　另有 ${rs.length - 4} 次未显示` : ''}</p>`);
     }
-    onChange(e) { if (e.target.dataset.k === 'preset') this.set({ preset: e.target.value }); }
+    onChange(e) { const k = e.target.dataset.k; if (k === 'preset' || k === 'cid') this.set({ [k]: e.target.value, msg: '' }); }
     async onClick(e) {
       const m = e.target.closest('[data-mark]');
       if (m) { const k = m.dataset.mark, cur = AGREE.indexOf(this.s.marks[k] || ''), nx = AGREE[(cur + 1) % AGREE.length], marks = { ...this.s.marks }; if (nx) marks[k] = nx; else delete marks[k]; return this.set({ marks }); }
       if (e.target.dataset.x === 'again') {
         this.set({ msg: '运行中…' });
-        try { const n = samplesOf('card-1a', this.s.preset).length + 1, r = await Model.run(card('card-1a'), this.s.preset, { sample: n }); this.set({ msg: r.kind === 'live' ? `已完成第 ${n} 次采样（实际调用）。` : (r.error || '未得到现场结果') }); } catch (err) { this.set({ msg: String(err.message || err) }); }
+        try { const n = samplesOf(this.s.cid, this.s.preset).length + 1, r = await Model.run(card(this.s.cid), this.s.preset, { sample: n }); this.set({ msg: r.kind === 'live' ? `已完成第 ${n} 次采样（实际调用）。` : (r.error || '未得到现场结果') }); } catch (err) { this.set({ msg: String(err.message || err) }); }
       }
     }
   }
@@ -68,10 +65,10 @@
       const c = COND.find((x) => x.id === this.s.on), r = latestRun('card-1a', 'deepseek');
       const sents = r.run ? L.splitSentences(r.run.reply || '') : [], tagged = sents.map((_, i) => this.s.tags[(r.run?.run_id || '') + '|' + i]).filter(Boolean);
       const imag = tagged.filter((t) => t === '想象').length;
-      paint(this, `<div class="w9-two" style="grid-template-columns:minmax(220px,1fr) 2fr">
+      paint(this, `<div class="w9-two" style="grid-template-columns:270px minmax(0,1fr)">
         <div><svg viewBox="0 0 260 230" class="w9-svg" role="group" aria-label="三种条件">${COND.map((x, i) => `<g data-cond="${x.id}" style="cursor:pointer"><rect x="${20 + i * 12}" y="${20 + i * 64}" width="${220 - i * 24}" height="54" rx="6" fill="${x.id === this.s.on ? '#164ec7' : '#e7edf1'}" stroke="#164ec7"/><text x="130" y="${52 + i * 64}" text-anchor="middle" font-size="15" fill="${x.id === this.s.on ? '#fff' : '#123'}">${esc(x.name)}</text></g>`).join('')}</svg>
           <p class="sub">点选一层。上层最容易改，下层使用者通常改不了（讲义 @fig-conditions，本课整理）。${B.st}</p></div>
-        <div><table class="items"><tr><th>它规定什么</th><td>${esc(c.can)}</td></tr><tr><th>它管不住什么</th><td>${esc(c.cannot)}</td></tr><tr><th>本讲的例子</th><td>${esc(c.eg)}（见 ${c.link}）</td></tr></table>
+        <div><table class="items w9-cond"><tr><th>条件</th><th>它规定什么</th><th>它管不住什么</th><th>本讲的例子</th></tr>${COND.map((x) => `<tr class="${x.id === c.id ? 'on' : ''}" data-cond="${x.id}"><th>${esc(x.name)}</th><td>${esc(x.can)}</td><td>${esc(x.cannot)}</td><td>${esc(x.eg)}（见 ${x.link}）</td></tr>`).join('')}</table>
           ${c.cards.map(([t, f, s]) => `<div class="w9-formula"><b>${esc(t)}</b><p>${esc(f)}</p><p class="sub">${esc(s)}</p></div>`).join('')}
           ${c.id === 'base' ? '<p class="sub">改模型本身的几条路（时代锁定、知识编辑、激活引导）见 D10、D11。</p>' : ''}</div></div>
         <details class="w9-check"><summary>进阶：逐句标"有据／想象"</summary>
@@ -150,8 +147,8 @@
   /* ================= D10 知识编辑的涟漪（教学构造） ================= */
   const NET = {
     nodes: [
-      ['rev', '1917 年俄国发生革命', 130, 120], ['tsar', '尼古拉二世 1917 年退位', 30, 40], ['sov', '苏维埃政权成立', 240, 40], ['brest', '1918 年布列斯特和约', 260, 150],
-      ['lenin', '列宁成为政府首脑', 220, 230], ['inoue', '井上 1918 年版改写"国体"一段', 40, 230], ['jp', '日本出兵西伯利亚（1918）', 120, 260],
+      ['rev', '1917 年俄国发生革命', 160, 120], ['tsar', '尼古拉二世 1917 年退位', 20, 20], ['sov', '苏维埃政权成立', 300, 20], ['brest', '1918 年布列斯特和约', 320, 120],
+      ['lenin', '列宁成为政府首脑', 300, 220], ['inoue', '井上 1918 年版删去俄国一段', 20, 220], ['jp', '日本出兵西伯利亚（1918）', 160, 270],
     ],
     edges: [['rev', 'tsar'], ['rev', 'sov'], ['rev', 'brest'], ['sov', 'lenin'], ['rev', 'inoue'], ['brest', 'jp'], ['rev', 'jp']],
     /* 示意：RippleEdits 的总体结论是"目标事实改得掉、相关事实不能一致改变"。哪几条"没有改变"是本页构造，不代表任何具体模型的实验结果。 */
@@ -163,7 +160,8 @@
     render() {
       const N = Object.fromEntries(NET.nodes.map((n) => [n[0], n])), e = this.s.edited;
       const col = (id) => (!e ? '#e7edf1' : id === 'rev' ? '#c0392b' : NET.stuck.includes(id) ? '#c9a400' : '#f2c6c0');
-      const svg = `<svg viewBox="0 0 330 290" class="w9-svg">${NET.edges.map(([a, b]) => `<line x1="${N[a][2] + 40}" y1="${N[a][3] + 12}" x2="${N[b][2] + 40}" y2="${N[b][3] + 12}" stroke="#999"/>`).join('')}${NET.nodes.map(([id, t, x, y]) => `<g ${id === 'rev' ? 'data-x="edit" style="cursor:pointer"' : ''}><rect x="${x - 20}" y="${y}" width="120" height="26" rx="5" fill="${col(id)}" stroke="#555"/><text x="${x + 40}" y="${y + 17}" font-size="9.5" text-anchor="middle">${esc(id === 'rev' && e ? '（改为）1917 年俄国仍为帝制' : t)}</text></g>`).join('')}</svg>`;
+      const NW = 150, NH = 30;
+      const svg = `<svg viewBox="0 0 480 310" class="w9-svg wide">${NET.edges.map(([a, b]) => `<line x1="${N[a][2] + NW / 2}" y1="${N[a][3] + NH / 2}" x2="${N[b][2] + NW / 2}" y2="${N[b][3] + NH / 2}" stroke="#999"/>`).join('')}${NET.nodes.map(([id, t, x, y]) => `<g ${id === 'rev' ? 'data-x="edit" style="cursor:pointer"' : ''}><rect x="${x}" y="${y}" width="${NW}" height="${NH}" rx="5" fill="${col(id)}" stroke="${id === 'rev' ? '#c0392b' : '#555'}" stroke-width="${id === 'rev' ? 2 : 1}"/><text x="${x + NW / 2}" y="${y + 19}" font-size="11" text-anchor="middle" fill="${e && id === 'rev' ? '#fff' : '#123'}">${esc(id === 'rev' && e ? '（改为）1917 年俄国仍为帝制' : t)}</text></g>`).join('')}</svg>`;
       const cols = [
         { title: '时代锁定的模型', why: '从头用某一年以前的文本训练。', body: `<ul><li>GPT-1914（C-02）：7.74 亿参数，HathiTrust 1880—1914 年约 265 亿词元。</li><li>History LLMs（Ranke-4B，C-06）：计划以 ${LOCKS.join('、')} 年为截止；截至 2026-11-10 权重、数据、代码均未公开，也无正式评测（课前再核）。</li><li>「からまる」：现代模型上继续训练，现代知识仍在。</li></ul><p>${B.st}</p>` },
         { title: '改一条事实', why: 'ROME、MEMIT 能改掉目标事实。', body: `${svg}<p><button data-x="edit">${e ? '撤销编辑' : '点红框：改掉"1917 年俄国革命"'}</button></p><p class="sub">${B.tc} 事实小网为本课构造。</p>` },

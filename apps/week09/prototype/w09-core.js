@@ -256,7 +256,8 @@
     return `<div class="w9-model"><p><b>运行模式</b>　<label><input type="radio" name="w9mode" value="replay" ${MS.mode !== 'live' ? 'checked' : ''}> 预存回放（断网时用）</label>　<label><input type="radio" name="w9mode" value="live" ${MS.mode === 'live' ? 'checked' : ''} ${live ? '' : 'disabled'}> 现场调用</label>${live ? '' : '　<span class="sub">现场调用须经本机服务打开（start_week09.command）。</span>'}</p>
       <table class="items"><tr><th>服务</th><th>Key</th><th>型号</th><th>温度</th><th>状态</th></tr>
       ${row('deepseek', 'DeepSeek', '非思考模式，温度可调（默认 0.7）')}${row('kimi', 'Kimi', '只有思考模式，温度固定 1.0')}</table>
-      <p class="sub">Key 不写入浏览器存储、记录与导出；刷新页面即清空。网页版（Gemini、ChatGPT）只粘贴回各页，不经这里。</p></div>`;
+      ${Object.keys(MS.base || {}).filter((k) => MS.base[k]).length ? `<p class="nil">接口地址已改为非默认：${Object.entries(MS.base).filter(([, v]) => v).map(([k, v]) => `${esc(k)} → ${esc(v)}`).join('；')}　<button class="small" data-x="resetbase">恢复默认</button></p>` : ''}
+      <p class="sub">Key 不写入浏览器存储、记录与导出；刷新页面即清空。预存回放模式下各页只读课前记录，不发请求。网页版（Gemini、ChatGPT）只粘贴回各页，不经这里。</p></div>`;
   }
   document.addEventListener('change', (e) => {
     const t = e.target;
@@ -264,6 +265,47 @@
     if (t.dataset.mk) Model.setKey(t.dataset.mk, t.value.trim());
     if (t.dataset.mm) Model.setModel(t.dataset.mm, t.value.trim());
   });
+  document.addEventListener('click', (e) => { if (e.target.dataset?.x === 'resetbase') { MS.base = {}; store.set('model-base', {}); emit('w9-model'); } });
 
-  window.W9 = { L, Mat, Through, Model, Confirm, Importer, badge, gateList, sourceBox, modelPanel, MODE_LABEL, emit, parseAny };
+  /* ================= 页面外壳：与第三至八周一致的"问题—步骤—动手观察"三件 ================= */
+  /* 四栏流程页：页表的步骤数与实际栏数不一致时，步骤条按实际栏名显示，免得步骤条上有一步在页面上找不到 */
+  const flow0 = window.Deck.flowShell;
+  window.Deck.flowShell = (page, columns, rail = {}) => flow0(page && (page.steps || []).length !== columns.length ? { ...page, steps: columns.map((c) => c.title) } : page, columns, rail);
+  /* 非四栏页（并排对照、表格、卡片）：同样先给本页问题与步骤条，正文在中间滚动，底部固定"动手观察" */
+  function shell(page, html, { active } = {}) {
+    if (!page) return html;
+    const steps = page.steps || [];
+    const rail = steps.map((t, i) => `<span class="${active === i ? 'active' : ''}">${String(i + 1).padStart(2, '0')} · ${esc(t)}</span>${i < steps.length - 1 ? '<b aria-hidden="true">→</b>' : ''}`).join('');
+    return `<div class="flow-shell w9-shell"><div class="flow-head"><p class="flow-question">${esc(page.question || '')}</p><div class="flow-rail" aria-label="教学步骤">${rail}</div></div><div class="w9-shell-body">${html}</div>${page.student_operation ? `<p class="flow-try">动手观察：${esc(page.student_operation)}</p>` : ''}</div>`;
+  }
+  /* 各组件文件用它替换 Deck.rerender：不是四栏流程、也没有声明 noShell 的页，自动套上外壳 */
+  function render(el, html) { window.Deck.rerender(el, el.page && !el.noShell && !html.startsWith('<div class="flow-shell') ? shell(el.page(), html, { active: el.activeStep }) : html); }
+
+  /* ================= 顶栏：材料包、导入表格、模型接入（位置与第八周相同） ================= */
+  function modelDialog() {
+    if (document.querySelector('.model-shade.w9-modeldlg')) return;
+    const shade = document.createElement('div'); shade.className = 'model-shade w9-modeldlg';
+    const draw = () => { if (shade.contains(document.activeElement) && /INPUT/.test(document.activeElement.tagName) && document.activeElement.type !== 'radio') return; shade.innerHTML = `<div class="model-panel" role="dialog" aria-label="模型接入"><header><b>模型接入</b><button data-x="close">关闭</button></header>${modelPanel()}</div>`; };
+    const on = () => (shade.isConnected ? draw() : document.removeEventListener('w9-model', on));
+    document.addEventListener('w9-model', on);
+    shade.addEventListener('click', (e) => { if (e.target.dataset.x === 'close' || e.target === shade) shade.remove(); });
+    document.body.append(shade); draw();
+  }
+  function topBar() {
+    const top = document.querySelector('.deck-top'); if (!top) return false; if (top.querySelector('.pack-bar')) return true;
+    const span = document.createElement('span'); span.className = 'pack-bar';
+    const draw = () => {
+      const live = MS.mode === 'live', keys = ['deepseek', 'kimi'].filter((p) => MS.keys[p]).length;
+      span.innerHTML = (M.local ? `<span class="pack-ok" title="${esc(M.localMsg)}">本机材料包已载入（回放 ${M.replays.length} 条）</span>` : `<label class="pack-btn small" title="${esc(M.localMsg || '教师材料录文与课前运行记录')}">导入本机材料包<input type="file" accept=".json" data-local hidden></label>`)
+        + ` <button class="small" data-w9-import="">导入表格</button> <button class="small ${live ? 'on' : ''}" data-open-model title="运行模式与 Key">模型接入：${live ? `现场调用（Key ${keys}/2）` : '预存回放'}</button>`;
+    };
+    draw(); ['w9-materials', 'w9-model'].forEach((n) => document.addEventListener(n, draw));
+    span.addEventListener('click', (e) => { if (e.target.closest('[data-open-model]')) modelDialog(); });
+    top.insertBefore(span, top.querySelector('[data-act="presenter"]') || null);
+    return true;
+  }
+  document.addEventListener('change', async (e) => { if (e.target.dataset?.local !== undefined && e.target.files?.[0]) { const err = await Mat.loadLocalFile(e.target.files[0]); e.target.value = ''; if (err) { M.localMsg = '本机材料包未载入：' + err; emit('w9-materials'); alert('未载入：' + err + '（原有材料未改动）'); } } });
+  (function waitTop(n) { if (!topBar() && n > 0) setTimeout(() => waitTop(n - 1), 100); })(50);
+
+  window.W9 = { L, Mat, Through, Model, Confirm, Importer, badge, gateList, sourceBox, modelPanel, modelDialog, shell, render, MODE_LABEL, emit, parseAny };
 })();

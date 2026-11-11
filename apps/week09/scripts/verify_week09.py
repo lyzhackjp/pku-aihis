@@ -37,7 +37,7 @@ BASE = 'http://127.0.0.1:18791/' + os.path.basename(PROTO) + '/index.html'
 # 测试用本机材料包：一条合成的回放记录（标明为验收构造）
 TESTPACK = {'format': 'w09-pack/v1', 'generated': 'verify', 'packs': [], 'replays': [
     {'run_id': 'R-verify-replay', 'card_id': 'card-1a', 'preset': 'kimi', 'sample_index': 1, 'mode': 'live', 'model': 'kimi-k3', 'temperature': '固定 1.0', 'date': '2026-11-11T09:00:00+08:00',
-     'prompt': {'messages': []}, 'reply': '（验收构造的回放记录，不是模型输出。）吾辈今日所论，在开民智。'}]}
+     'prompt': {'messages': [{'role': 'system', 'content': '（验收构造）课前的旧提示'}, {'role': 'user', 'content': '民权与国权，何者为先？'}]}, 'reply': '（验收构造的回放记录，不是模型输出。）吾辈今日所论，在开民智。'}]}
 with open(os.path.join(os.path.dirname(PROTO), 'verify-pack.json'), 'w', encoding='utf-8') as f: json.dump(TESTPACK, f, ensure_ascii=False)
 
 results = []
@@ -57,6 +57,13 @@ with sync_playwright() as p:
     def go(pid):
         page.evaluate(f"location.hash='#{pid}'"); page.wait_for_timeout(500)
         return page.locator(f'deck-slide[slide-id="{pid}"]')
+    def set_live():
+        # 运行模式与 Key 在顶栏"模型接入"对话框（与第八周位置相同）
+        page.locator('[data-open-model]').click(); d = page.locator('.w9-modeldlg')
+        d.locator('input[name="w9mode"][value="live"]').check(); page.wait_for_timeout(150)
+        for p_ in ['deepseek', 'kimi']:
+            d.locator(f'input[data-mk="{p_}"]').fill(FAKE_KEY); d.locator(f'input[data-mk="{p_}"]').press('Enter'); d.locator(f'input[data-mk="{p_}"]').dispatch_event('change')
+        page.locator('.w9-modeldlg [data-x="close"]').click(); page.wait_for_timeout(150)
     for pid, st in pages:
         s = go(pid); page.screenshot(path=os.path.join(OUT, f'{pid}_1440.png'))
     check('全部页遍历无 pageerror、无 console.error（桌面）', not errors, errors[:5])
@@ -103,15 +110,13 @@ with sync_playwright() as p:
     # 现场调用：失败 → 切回放并写明原因；成功 → 实际调用＋时间戳
     page.evaluate(f"""localStorage.setItem('week09-prototype/model-base', JSON.stringify({{deepseek:'http://127.0.0.1:18792/fail/v1', kimi:'http://127.0.0.1:18792/fail/v1'}}))""")
     page.reload(); page.wait_for_timeout(1500)
-    s = go('D00'); s.locator('input[name="w9mode"][value="live"]').check(); s.locator('input[data-mk="deepseek"]').fill(FAKE_KEY); s.locator('input[data-mk="deepseek"]').dispatch_event('change')
-    s.locator('input[data-mk="kimi"]').fill(FAKE_KEY); s.locator('input[data-mk="kimi"]').dispatch_event('change')
+    set_live()
     s = go('D01'); s.locator('[data-run="card-1a|kimi"]').click(); page.wait_for_timeout(1500)
     t = s.inner_text()
     check('现场调用失败时切到预存回放并如实标明', '现场调用失败' in t and '预存回放' in t, [l for l in t.split('\n') if '失败' in l][:2])
     page.evaluate("""localStorage.setItem('week09-prototype/model-base', JSON.stringify({deepseek:'http://127.0.0.1:18792/v1', kimi:'http://127.0.0.1:18792/v1'}))""")
     page.reload(); page.wait_for_timeout(1500)
-    s = go('D00'); s.locator('input[name="w9mode"][value="live"]').check(); s.locator('input[data-mk="deepseek"]').fill(FAKE_KEY); s.locator('input[data-mk="deepseek"]').dispatch_event('change')
-    s.locator('input[data-mk="kimi"]').fill(FAKE_KEY); s.locator('input[data-mk="kimi"]').dispatch_event('change')
+    set_live()
     s = go('D01'); s.locator('[data-run="card-1a|deepseek"]').click(); page.wait_for_timeout(1500)
     check('现场调用成功时标"实际调用"', '实际调用' in s.inner_text() and '模拟接口的固定回答' in s.inner_text())
     s.locator('[data-run="card-1b|kimi"]').click(); page.wait_for_timeout(1500)
@@ -195,6 +200,32 @@ with sync_playwright() as p:
     check('D06 揭示后显示三段出处', '大村哲太郎' in s.inner_text() and '見城悌治' in s.inner_text())
     check('第二批交互无 pageerror、无 console.error', not errors, errors[:5])
     if errors: open(os.path.join(OUT, 'errors.txt'), 'w').write('\n\n'.join(errors))
+
+    # ---------- 设计复查后（2026-11-11）----------
+    tb = page.locator('.deck-top .pack-bar').inner_text()
+    check('顶栏有"导入表格""模型接入"，并显示当前运行模式', '导入表格' in tb and '模型接入：现场调用（Key 2/2）' in tb, tb)
+    check('顶栏显示本机材料包已载入', '本机材料包已载入' in tb, tb)
+    page.locator('[data-open-model]').click(); dt = page.locator('.w9-modeldlg').inner_text(); page.locator('.w9-modeldlg [data-x="close"]').click()
+    check('模型接入对话框如实显示接口地址被改为非默认', '接口地址已改为非默认' in dt and '127.0.0.1:18792' in dt)
+    over2 = []
+    for pid, st in pages:
+        go(pid); r = page.evaluate(f"""(()=>{{const b=document.querySelector('deck-slide[slide-id="{pid}"] .slide-body');return b.scrollHeight-b.clientHeight}})()""")
+        if r > 12: over2.append((pid, r))
+    check('桌面 1440×900：各页正文不溢出到页脚之下（各栏自己滚动）', not over2, over2)
+    heads = page.evaluate("""[...document.querySelectorAll('deck-slide')].filter(s=>!['D00','D23','D27'].includes(s.getAttribute('slide-id'))&&!s.querySelector('.flow-question')).map(s=>s.getAttribute('slide-id'))""")
+    check('除封面、贯穿记录、概念表外，各页都有"本页问题＋步骤条"', not heads, heads)
+    s = go('D01'); s.locator('[data-run="card-1a|deepseek"]').click(); page.wait_for_timeout(1500)
+    cell = s.locator('.w9-cell', has=page.locator('[data-run="card-1a|deepseek"]')); n0 = cell.locator('[data-pick]').count()
+    check('D01 一格有多次记录时出现采样切换，新一次现场调用自动选中', n0 >= 2 and cell.locator('[data-pick].on').inner_text().startswith('现'), n0)
+    cell.locator('[data-pick]').first.click(); page.wait_for_timeout(200)
+    check('D01 点"1"切回第 1 次采样', s.locator('.w9-cell', has=page.locator('[data-run="card-1a|deepseek"]')).locator('[data-pick]').first.get_attribute('class').find('on') >= 0)
+    s = go('D05'); s.locator('select[data-o="cid"]').select_option('card-2c'); page.wait_for_timeout(200)
+    check('D05 可选章太炎署年检验卡（乙一卡二问二）', '这些文字写于哪一年' in s.inner_text())
+    s.locator('select[data-o="cid"]').select_option('card-3a')
+    # 回放提示与当前条件卡不同：测试包里的回放用的是一份旧提示
+    s = go('D01'); ct = s.locator('.w9-cell', has=page.locator('[data-run="card-1a|kimi"]')).inner_text()
+    check('回放的提示与当前条件卡不同时如实标出', '提示与当前条件卡拼出的不同' in ct, ct[:160])
+    check('设计复查后各项交互无 pageerror', not [e for e in errors if e.startswith('pageerror')], errors[:3])
 
     # 窄屏
     errors.clear(); page.set_viewport_size({'width': 390, 'height': 844}); over = []

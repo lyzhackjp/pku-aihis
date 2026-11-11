@@ -270,6 +270,31 @@
     return { mother: x[0], aunt: x[1], school: x[2] };
   }
 
+
+  /* ---------------- 回放与当前条件卡是否同一份提示；采样的选取（2026-11-11 设计复查后加） ---------------- */
+  const normMsgs = (ms) => (ms || []).map((m) => `${m.role}\u0001${String(m.content || '').replace(/\s+/g, ' ').trim()}`).join('\u0002');
+  /* 回放记录的提示与当前拼出的提示逐字相同（只忽略空白差别）才算同一份；网页版粘贴记录不比（它没有经页面拼提示） */
+  function samePrompt(a, b) { return normMsgs(a) === normMsgs(b); }
+  /* 候选记录的排序与选取：先按采样序号，再按时间；sel 指定 run_id 时取它，否则取最近一次本机现场调用，再否则取第 1 次采样 */
+  function orderRuns(runs) { return runs.slice().sort((x, y) => (x.sample_index || 1) - (y.sample_index || 1) || String(x.date || '').localeCompare(String(y.date || ''))); }
+  function pickRun(cands, sel) {
+    if (!cands.length) return null;
+    const hit = sel && cands.find((r) => r.run_id === sel); if (hit) return hit;
+    const live = cands.filter((r) => r.mode === 'live' || r.mode === 'web-paste'); if (live.length) return live[live.length - 1];
+    return orderRuns(cands)[0];
+  }
+  /* ---------------- 演示④小框架的一步（页面与课前脚本共用，避免两处各写一遍） ---------------- */
+  function simStepCard(SIM, round, actor, memory) {
+    const mem = memory.map((m) => `${m.actor}：${m.reply}`).join('\n');
+    return { id: `sim-${SIM.sim_id}-r${round.id}-${actor.name}`, person: actor.name, timepoint: actor.timepoint, sources: actor.sources, temperature: 0.7,
+      system_prompt: `${actor.persona}${SIM.rule_text}\n\n此前的对话：\n${mem || '（尚无）'}`, user_prompt: `本轮话题：${round.topic}` };
+  }
+  /* 主持人只做字数检查：超出上限的发言截断后写入记忆，并记下说明 */
+  function simAccept(SIM, round, reply) {
+    const max = round.max_chars || SIM.moderator.rules.max_chars || 300, text = String(reply || ''), accepted = text.length <= max;
+    return { reply: text.slice(0, max), accepted, moderator_note: accepted ? '' : `超过 ${max} 字，截断后写入记忆` };
+  }
+
   /* ---------------- 贯穿记录：导出与恢复（D23） ---------------- */
   const SECRET_KEYS = /^(api[_-]?key|key|authorization|token|secret|password)$/i;
   function stripSecrets(v) {
@@ -300,7 +325,7 @@
 
   const api = { parseDate, cmpToTimepoint, sourceGate, splitSentences, timepointScore, lRange, checkCard, buildMessages, CARD_REQUIRED,
     rng, sameShare, schellingInit, schellingStep, schellingMetrics, schellingRun, schellingSweep, neighborsOf,
-    nashBargain, playMatch, populationPayoffs, PAY, cuspDiscriminant, cuspRoots, cuspState, sqError, normalizedAccuracy, diffEq, logistic, cuspV, cuspSettle, SURFACES, gaRun, fitWeights,
+    nashBargain, playMatch, populationPayoffs, PAY, cuspDiscriminant, cuspRoots, cuspState, sqError, normalizedAccuracy, samePrompt, orderRuns, pickRun, simStepCard, simAccept, diffEq, logistic, cuspV, cuspSettle, SURFACES, gaRun, fitWeights,
     stripSecrets, emptyThrough, exportThrough, importThrough };
   root.W9Lib = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

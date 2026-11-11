@@ -1,7 +1,8 @@
 /* 第九周页面组件（二）：D11、D12、D13、D14、D17、D18、D22、D23｜候选，未经教师确认｜2026-11-11 */
 (() => {
   'use strict';
-  const { esc, store, rerender, register, download } = window.Deck;
+  const { esc, store, register, download } = window.Deck;
+  const rerender = window.W9.render;
   const { L, Mat, Through, Model, badge, gateList, sourceBox, Lab, answerCell, handleCellClick, latestRun } = window.W9;
   const CARDS = window.W9_CARDS, SIM = window.W9_SIM, RES = (window.W9_PUBLIC || {}).resources || {};
   const fmt = (x, d = 3) => (x == null || Number.isNaN(x) ? '—' : (Math.round(x * 10 ** d) / 10 ** d).toString());
@@ -88,16 +89,13 @@
       this.busy = true; this.err = ''; this.render();
       for (const round of SIM.rounds) for (const name of SIM.moderator.order) {
         const actor = SIM.actors.find((a) => a.name === name);
-        const mem = memory.map((m) => `${m.actor}：${m.reply}`).join('\n');
-        const card = { id: `sim-${SIM.sim_id}-r${round.id}-${name}`, person: name, timepoint: actor.timepoint, sources: actor.sources, temperature: 0.7,
-          system_prompt: `${actor.persona}${SIM.rule_text}\n\n此前的对话：\n${mem || '（尚无）'}`, user_prompt: `本轮话题：${round.topic}` };
+        const card = L.simStepCard(SIM, round, actor, memory); // 与课前脚本共用同一段
         let run, kind;
         if (this.s.rule) { const reply = ruleActorReply(actor, round.topic); run = Through.add('runs', { run_id: `RULE-${simId}-${round.id}-${name}`, card_id: card.id, mode: 'teaching-construct', model: '规则式行动者', preset: 'rule', prompt: { messages: L.buildMessages(card, Mat.entries()).messages }, reply, date: new Date().toISOString() }, 'run_id'); kind = 'teaching-construct'; }
         else { const out = await Model.run(card, this.s.driver); run = out.run; kind = out.kind; if (!run) { this.err = out.error || '无记录'; break; } if (out.error) this.err = out.error; }
-        const reply = (run.reply || '').slice(0, round.max_chars || SIM.moderator.rules.max_chars || 300);
-        const accepted = (run.reply || '').length <= (SIM.moderator.rules.max_chars || 300);
-        memory.push({ actor: name, reply });
-        steps.push({ round: round.id, actor: name, run_id: run.run_id, kind, memory_len: memory.length, accepted, moderator_note: accepted ? '' : `超过 ${SIM.moderator.rules.max_chars} 字，截断后写入记忆` });
+        const acc = L.simAccept(SIM, round, run.reply);
+        memory.push({ actor: name, reply: acc.reply });
+        steps.push({ round: round.id, actor: name, run_id: run.run_id, kind, memory_len: memory.length, accepted: acc.accepted, moderator_note: acc.moderator_note });
         this.render();
       }
       const sim = { format: 'w09-sim/v1', sim_id: simId, setup: { actors: SIM.actors, moderator: SIM.moderator, rounds: SIM.rounds, driver: { preset: this.s.rule ? 'rule' : this.s.driver, model: this.s.rule ? '规则式' : Model.state().models[this.s.driver] } }, steps };
@@ -256,6 +254,7 @@
   const STAGES = [['史料包与时点', 'D09', (T) => T.packs.length], ['条件卡', 'D12', (T) => T.cards.length], ['运行记录', 'D01', (T) => T.runs.length], ['逐句标注', 'D08', (T) => T.labels.filter((l) => l.score != null || l.source_ref || l.type || l.circled).length], ['仿真记录', 'D13', (T) => T.sims.length], ['机制卡', 'D22', (T) => T.mech_cards.length], ['有限论断', 'D23', (T) => (T.claim.text ? 1 : 0)]];
   const CHECKLIST = ['论断只说到所用史料能支持的程度', '每条模拟输出都附了条件卡', '至少有一段回答做了逐句检查', '没有把模拟输出当作史料引用', '机制卡的每一栏都标了来源'];
   class Through9 extends Lab {
+    get noShell() { return true; }
     defaults() { return { stage: 0, msg: '' }; }
     render() {
       const T = Through.get(), [name, page, cnt] = STAGES[this.s.stage];

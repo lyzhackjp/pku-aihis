@@ -119,3 +119,26 @@ test('族谱简表：不删记录时母亲权重约 0.28；删去一半后变小
   const a = L.fitWeights(0), b = L.fitWeights(0.5);
   assert.ok(Math.abs(a.mother - 0.28) < 0.03); assert.ok(b.mother < a.mother - 0.05);
 });
+
+test('回放提示与当前条件卡：逐字相同才算同一份（忽略空白）', () => {
+  const a = [{ role: 'system', content: '你是 1899 年的梁启超。\n\n史料' }, { role: 'user', content: '民权与国权，孰当为先？' }];
+  assert.equal(L.samePrompt(a, [{ role: 'system', content: '你是 1899 年的梁启超。 史料' }, { role: 'user', content: '民权与国权，孰当为先？' }]), true);
+  assert.equal(L.samePrompt(a, [{ role: 'system', content: '你是 1903 年的梁启超。 史料' }, a[1]]), false);
+  assert.equal(L.samePrompt(a, [a[0]]), false);
+});
+test('采样选取：指定者优先；否则最近一次现场调用；否则第 1 次采样', () => {
+  const rs = [{ run_id: 'b', sample_index: 2, mode: 'replay' }, { run_id: 'a', sample_index: 1, mode: 'replay' }, { run_id: 'c', sample_index: 3, mode: 'replay' }];
+  assert.equal(L.pickRun(rs).run_id, 'a'); assert.equal(L.pickRun(rs, 'c').run_id, 'c'); assert.equal(L.pickRun(rs, 'zz').run_id, 'a');
+  assert.equal(L.pickRun([...rs, { run_id: 'L', sample_index: 1, mode: 'live', date: '2026-11-12' }]).run_id, 'L');
+  assert.equal(L.pickRun([]), null);
+  assert.deepEqual(L.orderRuns(rs).map((r) => r.run_id), ['a', 'b', 'c']);
+});
+test('小框架一步：记忆进入提示；超长发言截断并记说明', () => {
+  const SIM = { sim_id: 'S', rule_text: '规则。', moderator: { rules: { max_chars: 5 } } }, actor = { name: '甲', persona: '你是甲。', timepoint: '1906', sources: ['x'] };
+  const c0 = L.simStepCard(SIM, { id: 1, topic: '题' }, actor, []);
+  assert.match(c0.system_prompt, /（尚无）/); assert.equal(c0.user_prompt, '本轮话题：题'); assert.equal(c0.id, 'sim-S-r1-甲');
+  const c1 = L.simStepCard(SIM, { id: 2, topic: '题' }, actor, [{ actor: '乙', reply: '前言' }]);
+  assert.match(c1.system_prompt, /乙：前言/);
+  assert.deepEqual(L.simAccept(SIM, { id: 1 }, '一二三四五六'), { reply: '一二三四五', accepted: false, moderator_note: '超过 5 字，截断后写入记忆' });
+  assert.equal(L.simAccept(SIM, { id: 1 }, '一二').accepted, true);
+});

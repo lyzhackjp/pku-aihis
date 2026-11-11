@@ -1,7 +1,8 @@
 /* 第九周页面组件（一）：D00、D01、D05、D07、D08、D09｜候选，未经教师确认｜2026-11-11 */
 (() => {
   'use strict';
-  const { esc, store, rerender, register } = window.Deck;
+  const { esc, store, register } = window.Deck;
+  const rerender = window.W9.render; // 非四栏页自动套"问题—步骤—动手观察"外壳
   const { L, Mat, Through, Model, badge, gateList, sourceBox, modelPanel } = window.W9;
   const CARDS = window.W9_CARDS;
   const card = (id) => CARDS.find((c) => c.id === id);
@@ -13,6 +14,7 @@
   class Lab extends HTMLElement {
     connectedCallback() {
       this.key = 'page/' + (this.closest('deck-slide')?.getAttribute('slide-id') || this.tagName);
+      this.classList.add('w9-lab'); // 撑满正文区，各栏自己滚动（样式见 w09.css）
       this.s = Object.assign(this.defaults(), store.get(this.key, {}));
       ['w9-materials', 'w9-through', 'w9-model'].forEach((n) => document.addEventListener(n, () => this.isConnected && this.render()));
       this.addEventListener('click', (e) => this.onClick && this.onClick(e));
@@ -28,11 +30,15 @@
 
   /* ---------- 回答格：一张卡 × 一个服务 ---------- */
   const busy = new Set();
+  /* 一格的全部候选记录：课前回放＋本机记录（去重）；选哪一条由 L.pickRun 决定，学生可在格内切换第几次采样 */
+  function candidates(cardId, preset) {
+    const seen = new Set(), out = [];
+    [...Mat.replays({ card_id: cardId, preset }), ...Through.get().runs.filter((r) => r.card_id === cardId && r.preset === preset && !r.error)].forEach((r) => { if (!seen.has(r.run_id)) { seen.add(r.run_id); out.push(r); } });
+    return L.orderRuns(out);
+  }
   function latestRun(cardId, preset) {
-    const rs = Through.get().runs.filter((r) => r.card_id === cardId && r.preset === preset && !r.error);
-    if (rs.length) return { kind: rs[rs.length - 1].mode, run: rs[rs.length - 1] };
-    const rp = Mat.replays({ card_id: cardId, preset });
-    return rp.length ? { kind: 'replay', run: rp[0] } : { kind: 'none', run: null };
+    const all = candidates(cardId, preset), run = L.pickRun(all, store.get('sample-sel', {})[cardId + '|' + preset]);
+    return run ? { kind: run.mode, run, all } : { kind: 'none', run: null, all };
   }
   function sentencesHtml(run, { circle = false } = {}) {
     if (!run || !run.reply) return '';
@@ -40,19 +46,30 @@
     return `<div class="w9-reply">${L.splitSentences(run.reply).map((s, i) => { const m = marks.find((x) => x.sentence_index === i); return `<span class="sent ${m?.circled ? 'circled' : ''}" ${circle ? `data-circle="${esc(run.run_id)}" data-i="${i}"` : ''}>${esc(s)}</span>`; }).join('')}</div>`;
   }
   function answerCell(cardId, preset, { circle = true, note = '' } = {}) {
-    const k = cardId + '|' + preset, st = latestRun(cardId, preset), err = AnswerErr.get(k);
+    const k = cardId + '|' + preset, st = latestRun(cardId, preset), err = AnswerErr.get(k), c = card(cardId);
     const runBtn = isWeb(preset) ? `<button class="small" data-paste="${esc(k)}">粘贴网页版回答</button>`
-      : `<button class="small" data-run="${esc(k)}" ${busy.has(k) ? 'disabled' : ''}>${busy.has(k) ? '运行中…' : (Model.state().mode === 'live' ? '现场调用' : '取预存回放')}</button>`;
-    return `<div class="w9-cell"><div class="w9-cell-head">${badge(st.run, st.kind)} ${runBtn}</div>${err ? `<p class="nil small">${esc(err)}</p>` : ''}${note}${sentencesHtml(st.run, { circle })}</div>`;
+      : `<button class="small" data-run="${esc(k)}" ${busy.has(k) ? 'disabled' : ''}>${busy.has(k) ? '运行中…' : (Model.state().mode === 'live' ? '现场调用' : (st.run ? '重取回放' : '取预存回放'))}</button>`;
+    /* 多次采样：格内列出"第几次"，回放与现场各有标记；讲义要求以多次采样为单位比较 */
+    const picker = st.all.length > 1 ? `<span class="w9-pick" role="group" aria-label="采样">${st.all.map((r, i) => `<button class="small ${r.run_id === st.run.run_id ? 'on' : ''}" data-pick="${esc(k)}" data-id="${esc(r.run_id)}" title="${esc(MODE_LABEL_[r.mode] || r.mode)}｜${esc((r.date || '').slice(0, 16))}">${r.mode === 'live' ? '现' : r.mode === 'web-paste' ? '贴' : ''}${i + 1}</button>`).join('')}<span class="sub">共 ${st.all.length} 次</span></span>` : '';
+    /* 回放的提示若与当前条件卡拼出的不同，如实标出：回放的是课前那份提示的回答 */
+    let drift = '';
+    if (st.run && st.run.mode === 'replay' && c && st.run.prompt?.messages?.length) {
+      const cur = L.buildMessages({ ...c, confirm: [...(c.confirm || []), ...window.W9.Confirm.get(c.id), ...(st.run.prompt.gate?.confirmed_late || [])] }, Mat.entries()).messages;
+      if (!L.samePrompt(cur, st.run.prompt.messages)) drift = '<p class="w9-drift">这条回放所用的提示与当前条件卡拼出的不同（课前之后改过卡或史料）；它回答的是课前那份提示。</p>';
+    }
+    return `<div class="w9-cell"><div class="w9-cell-head">${badge(st.run, st.kind)} ${runBtn} ${picker}</div>${err ? `<p class="nil small">${esc(err)}</p>` : ''}${drift}${note}${sentencesHtml(st.run, { circle })}</div>`;
   }
+  const MODE_LABEL_ = window.W9.MODE_LABEL;
   const AnswerErr = new Map();
   async function handleCellClick(e, host) {
     const c = e.target.closest('[data-circle]');
     if (c) { const id = c.dataset.circle, i = +c.dataset.i, cur = Through.labelsFor(id).find((x) => x.sentence_index === i); Through.setLabel(id, i, c.textContent, { circled: !(cur && cur.circled) }); return true; }
+    const pk = e.target.closest('[data-pick]');
+    if (pk) { const sel = store.get('sample-sel', {}); sel[pk.dataset.pick] = pk.dataset.id; store.set('sample-sel', sel); host.render(); return true; }
     const r = e.target.closest('[data-run]');
     if (r) {
       const [cid, preset] = r.dataset.run.split('|'); const k = r.dataset.run; busy.add(k); host.render();
-      try { const out = await Model.run(card(cid), preset); AnswerErr.set(k, out.error || ''); if (out.kind === 'replay' && out.run && !Through.get().runs.some((x) => x.run_id === out.run.run_id)) Through.add('runs', out.run, 'run_id'); }
+      try { const out = await Model.run(card(cid), preset, { sample: candidates(cid, preset).length + 1 }); AnswerErr.set(k, out.error || ''); if (out.kind === 'live') { const sel = store.get('sample-sel', {}); delete sel[k]; store.set('sample-sel', sel); } }
       catch (err) { AnswerErr.set(k, String(err.message || err)); }
       busy.delete(k); host.render(); return true;
     }
@@ -83,30 +100,29 @@
     });
     document.body.append(shade);
   }
-  window.W9.answerCell = answerCell; window.W9.handleCellClick = handleCellClick; window.W9.latestRun = latestRun;
+  window.W9.answerCell = answerCell; window.W9.handleCellClick = handleCellClick; window.W9.latestRun = latestRun; window.W9.candidates = candidates;
 
   /* ================= D00 封面 ================= */
   class HeroCover9 extends Lab {
+    get noShell() { return true; }
     render() {
-      const M = Mat.state(), ents = Mat.entries();
+      const M = Mat.state(), ents = Mat.entries(), T = Through.get();
       const withText = ents.filter((e) => e.text).length, pending = ents.filter((e) => !e.text && e.sendable).length;
-      const runs = Through.get().runs, replays = M.replays.length;
+      const acts = [['定条件', '第一节 角色', 'D02', T.cards.length], ['查错置', '第二节 三误', 'D05', T.labels.length], ['划边界', '第三节 边界', 'D09', T.packs.length], ['验格局', '第四、五节 仿真与机制', 'D14', T.mech_cards.length + T.sims.length]];
       rerender(this, `<div class="hero-lab w9-hero"><div><p class="hero-title">让模型替古人说话、替社会推演，得到的是什么？</p>
-        <p class="hero-lead">凭什么可以进入历史解释？——这一讲的四个动作：定条件，查错置，划边界，验格局。</p>
-        <div class="hero-path">${[['定条件', '第一节 角色', 'D02'], ['查错置', '第二节 三误', 'D05'], ['划边界', '第三节 边界', 'D09'], ['验格局', '第四、五节 仿真与机制', 'D14']].map(([a, b, p]) => `<a href="#${p}"><b>${a}</b> <small>${b}</small></a>`).join('')}</div>
-        <table class="items w9-legend"><tr><th>运行性质</th><th>页面上的标签</th><th>意思</th></tr>
-          <tr><td>实际计算</td><td><span class="w9-badge calc">实际计算</span></td><td>页面内现场算出</td></tr>
-          <tr><td>实际调用</td><td><span class="w9-badge live">实际调用</span></td><td>此刻经接口调用模型，附时间戳</td></tr>
-          <tr><td>预存回放</td><td><span class="w9-badge replay">预存回放</span></td><td>课前真实运行的保存结果，非史料；注明模型、日期、提示、温度</td></tr>
-          <tr><td>网页版粘贴</td><td><span class="w9-badge web-paste">网页版粘贴</span></td><td>教师在网页版运行后粘贴回来，附平台、界面型号、截图</td></tr>
-          <tr><td>教学构造</td><td><span class="w9-badge teaching-construct">教学构造</span></td><td>人工示意，规则简化或数字为示例</td></tr></table></div>
-        <div class="hero-claim"><small>材料与模型状态</small>
-          <p>史料条目 ${ents.length} 条：有录文 ${withText} 条，录文待接入 ${pending} 条，不可送模型 ${ents.filter((e) => !e.sendable).length} 条（只给页码）。</p>
-          <p>预存回放 ${replays} 条；本机运行与粘贴记录 ${runs.length} 条。${esc(M.localMsg || '本机材料包未载入（章太炎全集录文与课前运行记录在本机材料包中）。')}</p>
-          <p><label class="pack-btn small">载入本机材料包<input type="file" accept=".json" data-local hidden></label> <button class="small" data-w9-import="">导入表格</button></p>
-          ${modelPanel()}</div></div>`);
+        <p class="hero-lead">陈寅恪说"了解之同情"最易流于"穿凿傅会"。模型的输出只能作待检验的解释候选：不是史料，不是历史人物的发言，也不能替代对语境的理解。</p></div>
+        <div class="hero-claim"><small>本讲的四个动作（记录汇到贯穿记录 D23）</small>
+          <div class="hero-path">${acts.map(([a, b, p, n]) => `<a href="#${p}"><b>${a}</b> <small>${b}</small><span class="dot ${n ? 'on' : ''}"></span></a>`).join('')}</div>
+          <p class="w9-hero-line">页面上每一处结果都标明来历：</p>
+          <ul class="w9-legend">
+            <li><span class="w9-badge calc">实际计算</span>页面内现场算出</li>
+            <li><span class="w9-badge live">实际调用</span>此刻经接口调用模型，附时间</li>
+            <li><span class="w9-badge replay">预存回放</span>课前真实运行的保存结果，非史料</li>
+            <li><span class="w9-badge web-paste">网页版粘贴</span>教师在网页版运行后粘贴，附界面型号与截图</li>
+            <li><span class="w9-badge teaching-construct">教学构造</span>人工示意，规则简化或数字为示例</li></ul>
+          <p class="w9-hero-status">史料 ${ents.length} 条（有录文 ${withText}，待接入 ${pending}，不可送模型 ${ents.filter((e) => !e.sendable).length}）；预存回放 ${M.replays.length} 条；本机记录 ${T.runs.length} 条。${esc(M.local ? '' : '本机材料包未载入：章太炎全集录文与课前运行记录在其中，由顶栏"导入本机材料包"载入。')}${esc(M.local ? M.localMsg : (M.localMsg.startsWith('本机材料包未载入：') ? M.localMsg : ''))}</p>
+          <p class="w9-hero-status">运行模式与 Key 在顶栏"模型接入"；现场调用${Model.liveAvailable() ? '可用' : '须经本机服务打开（start_week09.command），当前只能回放'}。</p></div></div>`);
     }
-    async onChange(e) { if (e.target.dataset.local !== undefined && e.target.files?.[0]) { const err = await Mat.loadLocalFile(e.target.files[0]); if (err) alert('未载入：' + err); } }
   }
   register('hero-cover9', HeroCover9);
 

@@ -2,7 +2,7 @@
 // 复用课件本身的提示组装（w09-lib.js buildMessages、条件卡 data/w09-cards.js）与调用模块（live/w9-live.js），
 // 在 Node 中发出与页面相同的请求；记录格式与页面"现场调用"一致（mode: live），另写明运行环境。
 //
-// 用法：node apps/week09/scripts/run_preclass.mjs <输出目录> [--only R-1,R-3] [--base-deepseek URL] [--base-kimi URL] [--dry]
+// 用法：node apps/week09/scripts/run_preclass.mjs <输出目录> [--only R-1,R-3,R-3b] [--base-deepseek URL] [--base-kimi URL] [--dry]
 //   Key 只从 apps/week09/local-only/keys.env 读（DEEPSEEK_API_KEY=… / KIMI_API_KEY=…），只在内存；
 //   记录写入前用 redact 去掉 Key，写完再逐个文件检查。已存在的 run_id 跳过（可中断后续跑）。
 //   材料：apps/week09/local-only/week09-pack.json（本机材料包，含录文）；没有时只用公开包。
@@ -59,9 +59,11 @@ async function callCard(card, preset, runId, sample) {
   if (built.empty.length) console.warn(`  注意：${card.id} 的 ${built.empty.join('、')} 没有录文${hasLocal ? '' : '（未找到本机材料包）'}`);
   if (dry) return { run_id: runId, dry: true, messages: built.messages };
   if (!keys[preset]) throw new Error(`缺 ${preset} 的 Key（local-only/keys.env）`);
-  const out = await Live.call({ presetId: preset, model: MODELS[preset], baseUrl: BASE[preset] || undefined, apiKey: keys[preset], messages: built.messages, temperature: preset === 'kimi' ? undefined : (typeof card.temperature === 'number' ? card.temperature : 0.7) });
+  const req = { presetId: preset, model: MODELS[preset], baseUrl: BASE[preset] || undefined, apiKey: keys[preset], messages: built.messages, temperature: preset === 'kimi' ? undefined : (typeof card.temperature === 'number' ? card.temperature : 0.7) };
+  let out = await Live.call(req), attempts = 1;
+  if (!out.ok) { await new Promise((r) => setTimeout(r, 3000)); out = await Live.call(req); attempts = 2; } // 失败只重试一次；两次都失败就如实记失败
   const { request_body, ...o } = out;
-  return { run_id: runId, card_id: card.id, sample_index: sample, prompt: { messages: built.messages, source_ids: built.source_ids, gate: built.gate }, mode: 'live', model: o.model, model_returned: o.model_returned, preset, endpoint: o.endpoint, temperature: o.temperature, reasoning_effort: o.reasoning_effort, reply: o.reply, finish_reason: o.finish_reason, usage: o.usage, ms: o.ms, date: new Date().toISOString(), error: o.ok ? null : o.error, environment: ENV, batch: 'preclass-' + DAY };
+  return { run_id: runId, card_id: card.id, sample_index: sample, prompt: { messages: built.messages, source_ids: built.source_ids, gate: built.gate }, mode: 'live', model: o.model, model_returned: o.model_returned, preset, endpoint: o.endpoint, temperature: o.temperature, reasoning_effort: o.reasoning_effort, reply: o.reply, finish_reason: o.finish_reason, usage: o.usage, ms: o.ms, date: new Date().toISOString(), error: o.ok ? null : o.error, environment: ENV, batch: 'preclass-' + DAY, attempts };
 }
 
 /* ---------- 清单（第一步文件第六节） ---------- */
@@ -70,6 +72,7 @@ const plan = [];
 const grid = (group, ids, presets, samples) => { for (const id of ids) for (const p of presets) for (const n of samples) plan.push({ group, card: id, preset: p, sample: n }); };
 grid('R-1', ['card-1a', 'card-1b'], ['deepseek', 'kimi'], [2, 3]); // 第 1 次为教师 2026-11-11 页面现场调用
 grid('R-3', ['card-2a', 'card-2b'], ['deepseek', 'kimi'], [2, 3]);
+grid('R-3b', ['card-2c', 'card-2d'], ['deepseek', 'kimi'], [1, 2, 3]); // 署年检验（扩充部分乙一卡二问二），2026-11-11 设计复查后补
 grid('R-4', ['card-3a', 'card-3b'], ['deepseek'], [1, 2, 3]);
 grid('R-5', ['card-3a', 'card-3b'], ['kimi'], [1, 2, 3]);
 grid('R-6', ['card-4-1', 'card-4-2', 'card-4-3'], ['deepseek', 'kimi'], [1, 2, 3]);
@@ -96,8 +99,8 @@ for (const s of sims.filter((x) => want(x.group))) {
   const memory = [], steps = []; let broke = false;
   for (const round of SIM.rounds) {
     for (const name of SIM.moderator.order) {
-      const actor = SIM.actors.find((a) => a.name === name), mem = memory.map((m) => `${m.actor}：${m.reply}`).join('\n');
-      const c = { id: `sim-${SIM.sim_id}-r${round.id}-${name}`, person: name, timepoint: actor.timepoint, sources: actor.sources, temperature: 0.7, system_prompt: `${actor.persona}${SIM.rule_text}\n\n此前的对话：\n${mem || '（尚无）'}`, user_prompt: `本轮话题：${round.topic}` };
+      const actor = SIM.actors.find((a) => a.name === name);
+      const c = L.simStepCard(SIM, round, actor, memory); // 与页面 DialogueLab 共用
       const id = `R-${simId}-r${round.id}-${name}`;
       try {
         /* 可续跑：本步已有记录就沿用（记忆据已存回答重建），不重新调用 */
@@ -105,9 +108,9 @@ for (const s of sims.filter((x) => want(x.group))) {
         if (dry) { memory.push({ actor: name, reply: '（试运行）' }); continue; }
         if (!exists(id)) { save({ ...r, sim_id: simId }, id); index.push(r); }
         if (r.error) { failures.push(id); broke = true; break; }
-        const max = round.max_chars || SIM.moderator.rules.max_chars || 300, reply = (r.reply || '').slice(0, max), accepted = (r.reply || '').length <= max;
-        memory.push({ actor: name, reply });
-        steps.push({ round: round.id, actor: name, run_id: id, kind: 'live', memory_len: memory.length, accepted, moderator_note: accepted ? '' : `超过 ${max} 字，截断后写入记忆` });
+        const acc = L.simAccept(SIM, round, r.reply), accepted = acc.accepted;
+        memory.push({ actor: name, reply: acc.reply });
+        steps.push({ round: round.id, actor: name, run_id: id, kind: 'live', memory_len: memory.length, accepted, moderator_note: acc.moderator_note });
         console.log(`${s.group} ${id} 完成 ${r.ms} ms${accepted ? '' : '（超长，截断）'}`);
       } catch (e) { console.log(`${s.group} ${id} 未运行：${scrub(String(e.message || e))}`); failures.push(id); broke = true; break; }
     }
