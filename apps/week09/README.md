@@ -34,3 +34,5 @@ python3 apps/week09/scripts/verify_week09.py apps/week09/prototype <输出目录
 2026-11-11 验收：单元测试 16/16（教师电脑的会话环境）；浏览器 34/34（云端容器的 Chromium，只用公开文件与一份合成的测试材料包；模型调用用本机模拟接口，只回固定文字，不是真实模型调用）。结果见 `docs/week09/verification/20261111/`。
 
 2026-11-11 第二批验收：单元测试 20/20；浏览器 60/60（同上环境与条件；新增 D02—D26 十三页的固定例子与交互检查，以及"输入 Key 时重绘重入"的修复检查）。结果见 `docs/week09/verification/20261111-batch2/`。`deck-core.js` 在第八周版本上加了一处重入保护（替换 DOM 时焦点控件的 blur／change 再次触发重绘）。
+
+2026-11-11 设计复查：改动与理由见 `docs/week09/design-review-20261111.md`。单元测试 24/24；浏览器 70/70（`docs/week09/verification/20261111-review/`）。课前接口记录由 `scripts/run_preclass.mjs` 生成（清单 R-1、R-3、R-3b、R-4、R-5、R-6、R-8、R-9），存教师本机，不入库。

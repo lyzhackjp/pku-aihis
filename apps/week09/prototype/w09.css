@@ -113,3 +113,6 @@ table.w9-cond th{white-space:nowrap;background:#f4f3ee;border:1px solid #d5dce2;
 @media (min-width:761px){.w9-lab{display:flex;flex-direction:column;flex:1;min-height:0}.w9-lab>.flow-shell{flex:1;min-height:0}.w9-lab>.hero-lab{flex:1}}
 table.w9-qin label{display:inline-flex;align-items:center;gap:3px;margin-right:8px;font-size:12px;white-space:nowrap}
 table.w9-qin input:not([type=radio]){width:3.2em;font-size:12px;padding:1px 4px}
+/* D05 逐句评分：句子一栏不被出处下拉框挤成一字宽 */
+@media (min-width:1101px){deck-slide[slide-id="D05"] .flow-grid{grid-template-columns:.85fr .95fr 1.7fr .9fr}}
+table.w9-score td:first-child{min-width:10em}table.w9-score select{max-width:8em}
