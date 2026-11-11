@@ -71,7 +71,7 @@ const card = (id) => CARDS.find((c) => c.id === id);
 const plan = [];
 const grid = (group, ids, presets, samples) => { for (const id of ids) for (const p of presets) for (const n of samples) plan.push({ group, card: id, preset: p, sample: n }); };
 grid('R-1', ['card-1a', 'card-1b'], ['deepseek', 'kimi'], [2, 3]); // 第 1 次为教师 2026-11-11 页面现场调用
-grid('R-3', ['card-2a', 'card-2b'], ['deepseek', 'kimi'], [2, 3]);
+grid('R-3', ['card-2a', 'card-2b'], ['deepseek', 'kimi'], [1, 2, 3]); // 2026-11-11 晚重跑：此前的提示含"含署年／删去署年，对照组"字样，旧记录移入 _已替换 子目录
 grid('R-3b', ['card-2c', 'card-2d'], ['deepseek', 'kimi'], [1, 2, 3]); // 署年检验（扩充部分乙一卡二问二），2026-11-11 设计复查后补
 grid('R-4', ['card-3a', 'card-3b'], ['deepseek'], [1, 2, 3]);
 grid('R-5', ['card-3a', 'card-3b'], ['kimi'], [1, 2, 3]);
