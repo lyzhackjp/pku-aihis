@@ -1,0 +1,63 @@
+/* 第九周新增样式；通用部分见 week09-base.css（第八周样式的副本）与 deck.css */
+.w9-badge{display:inline-block;font-size:12px;padding:1px 7px;border:1px solid #9aa7b2;margin-right:6px;white-space:nowrap}
+.w9-badge.live{background:#164ec7;color:#fff;border-color:#164ec7}
+.w9-badge.replay{background:#fff6dd;border-color:#c9a400;color:#6b5400}
+.w9-badge.web-paste{background:#eef4f0;border-color:#7fa38a;color:#2c6a3a}
+.w9-badge.teaching-construct{background:#f3eef7;border-color:#9b7fb5;color:#5a3e78}
+.w9-badge.calc{background:#e6f0e4;border-color:#2c6a3a;color:#2c6a3a}
+.w9-badge.static{background:#f4f3ee}
+.w9-badge.none{background:#f6e3df;border-color:#c0392b;color:#a33}
+.w9-toolbar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:0 0 8px;font-size:14px}
+.w9-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.w9-col{border-top:2px solid #164ec7;padding-top:6px;min-width:0}
+.w9-col h4{margin:10px 0 2px;font-size:14px}
+.w9-cell{border:1px solid #d5dce2;padding:6px;margin:4px 0;background:#fff}
+.w9-cell-head{display:flex;flex-wrap:wrap;align-items:center;gap:4px;font-size:12px}
+.w9-reply{font-size:15px;line-height:1.7;margin-top:4px;font-family:"Songti SC","Noto Serif CJK SC",serif}
+.w9-reply .sent{cursor:pointer;border-bottom:1px dotted transparent}
+.w9-reply .sent:hover{border-bottom-color:#999}
+.w9-reply .sent.circled{outline:2px solid #c0392b;border-radius:10px;padding:0 2px}
+ul.gate{list-style:none;padding:0;margin:6px 0;font-size:13px}
+ul.gate li{padding:2px 6px;margin:2px 0;border-left:3px solid #999}
+ul.gate li.ok{border-color:#2c6a3a;background:#eef4f0}
+ul.gate li.late{border-color:#c0392b;background:#f6e3df}
+ul.gate li.blocked{border-color:#666;background:#e9e9e9;color:#555}
+tr.late td{background:#f6e3df}tr.blocked td{background:#e9e9e9;color:#666}tr.nosrc td:first-child{border-left:3px solid #c0392b}
+.ok{color:#2c6a3a}.nowrap{white-space:nowrap}
+details.srcbox{margin:4px 0;font-size:13px}details.srcbox summary{cursor:pointer}
+table.w9-grid{border-collapse:collapse;width:100%;font-size:13px}
+table.w9-grid td,table.w9-grid th{border:1px solid #d5dce2;padding:4px;vertical-align:top;text-align:left}
+table.w9-grid th{background:#f4f3ee;width:12%}
+.w9-ticks label{display:block;font-size:12px}
+.w9-sum{font-size:14px;background:#fffaf0;border:1px solid #e3d3a8;padding:4px 8px}
+.w9-formula{border-left:3px solid #164ec7;background:#eef3fb;padding:6px 8px;margin:6px 0;font-size:14px}
+.w9-field{display:block;margin:6px 0}.w9-field>span{display:block;font-size:13px;color:#5d6b78}
+.w9-field input,.w9-field textarea{width:100%}
+.w9-field.missing>span{color:#a33;font-weight:bold}.w9-field.late textarea{background:#f6e3df}
+.w9-kv{display:block;font-size:13px;margin:3px 0}.w9-kv input{margin-left:6px}
+.w9-confirm{display:block;font-size:13px}
+.w9-svg{width:100%;max-width:300px;background:#fff;border:1px solid #e1e5e8}
+.w9-grid-canvas{max-width:100%;image-rendering:pixelated;border:1px solid #cbd2d7}
+.w9-qr{width:110px;height:110px}
+.w9-shots{display:grid;grid-template-columns:1fr 1fr;gap:6px}.w9-shots img{max-width:100%}
+.w9-check{margin-top:10px;font-size:14px}
+.w9-model table input{font-size:13px}
+.w9-hero .w9-legend{font-size:13px;margin-top:10px}
+.w9-score button.on,.small.on{background:#164ec7;color:#fff}
+.w9-report{border:1px solid #cbd2d7;background:#f7f9fb;padding:6px 10px;margin:6px 0;font-size:13px}
+.w9-importer .model-panel{max-width:900px}
+@media (max-width:760px){.w9-two{grid-template-columns:1fr}}
+.w9-field input,.w9-field textarea,.w9-formula textarea,.w9-check textarea{box-sizing:border-box;max-width:100%}
+@media (max-width:760px){
+  .w9-hero{display:block}
+  table.items,table.w9-grid,table.w9-checktable,table.w9-qin{display:block;overflow-x:auto;max-width:100%}
+  .w9-toolbar select{max-width:100%}
+  .w9-model input{width:9em}
+  pre.srcbox,pre.answer{max-width:100%}
+}
+.w9-toolbar input{max-width:100%;box-sizing:border-box}
+.w9-field input[type=checkbox],.w9-field input[type=radio]{width:auto;margin-right:3px}
+.w9-field div label{display:inline-block;margin-right:10px;font-size:13px}
+.w9-toolbar label{max-width:100%;display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}
+.w9-toolbar input[size]{width:auto;min-width:0;flex:1 1 12em}
+.w9-reply .sent{display:inline;border:0;padding:0 1px;margin:0;background:none}

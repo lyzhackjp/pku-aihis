@@ -1,0 +1,38 @@
+{
+  "title": "第九周 · 历史人物模拟、历史共情与历史仿真",
+  "pageMap": "../../../docs/week09/page-map.json",
+  "glossary": "../../../docs/week09/glossary.json",
+  "scripts": [
+    "deck-core.js",
+    "w09-lib.js",
+    "w09-core.js",
+    "w09-labs1.js",
+    "w09-labs2.js"
+  ],
+  "deck": {
+    "name": "第九周 · 历史人物模拟、历史共情与历史仿真",
+    "channel": "pku-aihis-week09-prototype-20261111",
+    "store": "week09-prototype/",
+    "entries": {
+      "through": { "label": "贯穿记录", "page": "D23" },
+      "concepts": { "label": "概念表", "page": "D27" }
+    }
+  },
+  "bodies": {
+    "D00": "hero-cover9",
+    "D01": "demo1-lab",
+    "D05": "timepoint-lab",
+    "D07": "induce-lab",
+    "D08": "check-lab",
+    "D09": "gate-lab",
+    "D11": "steer-lab",
+    "D12": "card-lab",
+    "D13": "dialogue-lab",
+    "D14": "schelling-lab",
+    "D17": "diplomacy-lab",
+    "D18": "qin-lab",
+    "D22": "mech-lab",
+    "D23": "w9-through",
+    "D27": "concept-table"
+  }
+}

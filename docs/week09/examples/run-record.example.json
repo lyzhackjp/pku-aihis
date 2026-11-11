@@ -1,0 +1,40 @@
+{
+ "_note": "结构示例，未运行。mode=teaching-construct；真实记录由课前运行产生，见 第九周/课前环境方案.md。不含 Key。",
+ "run_id": "R-example-1",
+ "card_id": "card-3a",
+ "sample_index": 1,
+ "mode": "teaching-construct",
+ "model": "deepseek-flash",
+ "model_returned": null,
+ "preset": "deepseek",
+ "endpoint": "https://api.deepseek.com/chat/completions",
+ "temperature": null,
+ "reasoning_effort": "low",
+ "prompt": {
+  "messages": [
+   {
+    "role": "system",
+    "content": "（系统提示全文）"
+   },
+   {
+    "role": "user",
+    "content": "俄国的国体与日本相似吗？"
+   }
+  ],
+  "source_ids": [
+   "inoue-1912-p82"
+  ],
+  "gate": {
+   "late": [],
+   "blocked": [],
+   "confirmed_late": []
+  }
+ },
+ "reply": "（未运行）",
+ "finish_reason": null,
+ "usage": null,
+ "ms": null,
+ "date": "2026-11-10T00:00:00+08:00",
+ "error": null,
+ "environment": "（课前填：运行者、机器、浏览器、网络）"
+}

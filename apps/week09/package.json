@@ -1,0 +1,10 @@
+{
+  "name": "pku-aihis-week09",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "assemble": "node scripts/assemble-prototype.mjs"
+  },
+  "engines": { "node": ">=22" }
+}

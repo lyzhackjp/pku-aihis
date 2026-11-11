@@ -1,0 +1,23 @@
+{
+ "_note": "教学构造的错卡（扩充部分乙一）：时点 1899，却放入 1920 年的《清代学术概论》。D09、D12 必须报出。",
+ "id": "card-bad",
+ "person": "梁启超",
+ "timepoint_raw": "1899",
+ "timepoint": "1899",
+ "sources": [
+  "liang-wenye",
+  "liang-qingdai"
+ ],
+ "pack_id": "pack-liang",
+ "model": {
+  "channel": "api",
+  "preset": "deepseek",
+  "name": "（不运行）"
+ },
+ "system_prompt": "你是 1899 年的梁启超……",
+ "user_prompt": "民权与国权，孰当为先？",
+ "temperature": "—",
+ "samples": 1,
+ "purpose": "错例：演示后见之明怎样带着出处进来",
+ "construct": true
+}

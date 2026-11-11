@@ -1,0 +1,56 @@
+{
+ "_note": "结构示例，未运行（演示④，扩充部分乙二）。steps 由小框架运行时写入，每步的提示与回复全文在运行记录里。",
+ "format": "w09-sim/v1",
+ "sim_id": "S-1906-deepseek",
+ "setup": {
+  "actors": [
+   {
+    "name": "梁启超",
+    "persona": "1906 年的梁启超（《新民丛报》）",
+    "timepoint": "1906",
+    "sources": [
+     "liang-kaiming"
+    ],
+    "kind": "llm"
+   },
+   {
+    "name": "章太炎",
+    "persona": "1906 年的章太炎（《民报》）",
+    "timepoint": "1906",
+    "sources": [
+     "zhang-qiushu-1904"
+    ],
+    "kind": "llm"
+   }
+  ],
+  "moderator": {
+   "order": [
+    "梁启超",
+    "章太炎"
+   ],
+   "rules": {
+    "max_chars": 300
+   }
+  },
+  "rounds": [
+   {
+    "id": 1,
+    "topic": "革命在今日中国是否可行？"
+   },
+   {
+    "id": 2,
+    "topic": "（第二轮话题，课前定）"
+   },
+   {
+    "id": 3,
+    "topic": "（第三轮话题，课前定）"
+   }
+  ],
+  "driver": {
+   "preset": "deepseek",
+   "model": "（课前填）",
+   "temperature": null
+  }
+ },
+ "steps": []
+}
