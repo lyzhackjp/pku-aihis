@@ -101,3 +101,21 @@ test('贯穿记录：导出不含 Key，恢复后一致，坏文件保留旧记�
   const cur = { keep: 1 }; const bad = L.importThrough('{"format":"x"}', cur); assert.equal(bad.ok, false); assert.equal(bad.record, cur);
   assert.equal(L.importThrough('不是 JSON', cur).record, cur);
 });
+
+test('差分方程第一步 0.495／0.117，第 60 步 0.130／0.039（甲四 @tab-a4）', () => {
+  const r = L.diffEq(); const R = (v) => Math.round(v * 1000) / 1000;
+  assert.equal(R(r.xs[1]), 0.495); assert.equal(R(r.ys[1]), 0.117); assert.equal(R(r.xs[10]), 0.258); assert.equal(R(r.xs[60]), 0.13); assert.equal(R(r.ys[60]), 0.039);
+});
+test('折叠：w 从 0 拖到 2 以上，右洼消失，小球跳到左洼（甲五）', () => {
+  const S = L.cuspSettle(Math.sqrt(3), -3, 1.5); assert.ok(S > 0.5);
+  const S2 = L.cuspSettle(S, -3, 2.2); assert.ok(S2 < -1.5);
+});
+test('遗传算法：单谷收敛到 (0.6,0.4)；双谷十次分落两处（甲六）', () => {
+  const g = L.gaRun('single', { seed: 5 }); assert.ok(Math.abs(g.best[0] - 0.6) < 0.05 && Math.abs(g.best[1] - 0.4) < 0.05);
+  const ends = Array.from({ length: 10 }, (_, i) => L.gaRun('double', { seed: i + 1 }).best[0] < 0.5 ? 'L' : 'R');
+  assert.ok(ends.includes('L') && ends.includes('R'));
+});
+test('族谱简表：不删记录时母亲权重约 0.28；删去一半后变小（教学构造）', () => {
+  const a = L.fitWeights(0), b = L.fitWeights(0.5);
+  assert.ok(Math.abs(a.mother - 0.28) < 0.03); assert.ok(b.mother < a.mother - 0.05);
+});

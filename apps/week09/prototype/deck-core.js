@@ -56,6 +56,13 @@
     setTimeout(() => { for (const [el, html] of [...pending]) { pending.delete(el); if (el.isConnected) rerender(el, html); } }, 0);
   }, true);
   function rerender(el, html) {
+    /* 重入：替换 DOM 时被移走的焦点控件会触发 blur／change，处理函数可能再次重绘同一元素；此时只记下最新内容，外层结束后补绘（第九周加，2026-11-11） */
+    if (el.__rr) { el.__rrNext = html; return; }
+    el.__rr = true;
+    try { rerenderNow(el, html); } finally { el.__rr = false; }
+    if (el.__rrNext != null) { const h = el.__rrNext; el.__rrNext = null; rerender(el, h); }
+  }
+  function rerenderNow(el, html) {
     if (composing && el.contains(composing)) { pending.set(el, html); return; }
     pending.delete(el);
     const a = document.activeElement;

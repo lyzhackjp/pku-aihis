@@ -1,6 +1,6 @@
 # 第九周 · 历史人物模拟、历史共情与历史仿真（测试原型）
 
-候选，未经教师确认。2026-11-11。28 页（D00—D27），第一批实现 15 页（P0 与概念页）：D00、D01、D05、D07、D08、D09、D11、D12、D13、D14、D17、D18、D22、D23、D27；其余为规划页。页表、数据结构与第一步待决事项见 [docs/week09](../../docs/week09/)。分支 `week9`（自 `week8` 拉出），未合并 main，不在 `published-weeks.json` 中，未部署。
+候选，未经教师确认。2026-11-11。28 页（D00—D27）全部有原型组件：第一批 15 页（P0 与概念页）D00、D01、D05、D07、D08、D09、D11、D12、D13、D14、D17、D18、D22、D23、D27；第二批 13 页（P1、P2）D02、D03、D04、D06、D10、D15、D16、D19、D20、D21、D24、D25、D26（`w09-labs3.js`）。依赖课前运行记录的格子在没有记录时显示"待课前运行"。页表、数据结构与第一步待决事项见 [docs/week09](../../docs/week09/)。分支 `week9`（自 `week8` 拉出），未合并 main，不在 `published-weeks.json` 中，未部署。
 
 ## 打开
 
@@ -27,8 +27,10 @@ python3 docs/week09/plan-src/make_page_map.py docs/week09/page-map.json
 node .agents/skills/history-demo-courseware/scripts/typ-concepts-to-md.mjs <第九周/概念讲解表.typ> docs/week09/page-map.json docs/week09
 python3 apps/week09/scripts/build_packs.py <第九周/demo/史料包/week09-sources.json> [<第九周/demo/运行记录>]
 node apps/week09/scripts/assemble-prototype.mjs
-cd apps/week09 && node --test tests/*.test.mjs        # 16 项固定例子
+cd apps/week09 && node --test tests/*.test.mjs        # 20 项固定例子
 python3 apps/week09/scripts/verify_week09.py apps/week09/prototype <输出目录>   # 浏览器验收（Playwright）
 ```
 
 2026-11-11 验收：单元测试 16/16（教师电脑的会话环境）；浏览器 34/34（云端容器的 Chromium，只用公开文件与一份合成的测试材料包；模型调用用本机模拟接口，只回固定文字，不是真实模型调用）。结果见 `docs/week09/verification/20261111/`。
+
+2026-11-11 第二批验收：单元测试 20/20；浏览器 60/60（同上环境与条件；新增 D02—D26 十三页的固定例子与交互检查，以及"输入 Key 时重绘重入"的修复检查）。结果见 `docs/week09/verification/20261111-batch2/`。`deck-core.js` 在第八周版本上加了一处重入保护（替换 DOM 时焦点控件的 blur／change 再次触发重绘）。

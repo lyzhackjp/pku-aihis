@@ -239,7 +239,7 @@
   "batch": 2,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "through": "",
   "checks": [],
   "formula": "",
@@ -312,14 +312,15 @@
   ],
   "missing": [
    "C-03 一条场景示例（需从论文取，开放获取）",
-   "C-04 BaiJia 来源构成（仓库许可未见，只作静态说明）"
+   "C-04 BaiJia 来源构成（仓库许可未见，只作静态说明）",
+   "C-03 一条场景示例（本轮以 D01 回答代替逐句标注）"
   ],
   "merge_note": "与 D10 都讲\"改模型\"，分属 1.2 与 3.2 两个时段，分开做，交叉链接（方案第三节）。",
   "priority": "P1",
   "batch": 2,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "through": "",
   "presets": [],
   "checks": [],
@@ -384,7 +385,7 @@
   "batch": 2,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "extension": [],
   "presets": [],
   "checks": [],
@@ -563,7 +564,7 @@
   "batch": 2,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "through": "",
   "extension": [],
   "presets": [],
@@ -914,7 +915,7 @@
   "batch": 2,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "through": "",
   "presets": [],
   "checks": [],
@@ -1424,7 +1425,7 @@
   "batch": 2,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "through": "",
   "missing": [],
   "merge_note": ""
@@ -1508,7 +1509,7 @@
   "batch": 2,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "through": "",
   "missing": []
  },
@@ -1757,7 +1758,7 @@
   "batch": 2,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "through": "",
   "missing": [],
   "merge_note": ""
@@ -1838,10 +1839,12 @@
   "batch": 2,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "concepts": [],
   "through": "",
-  "missing": [],
+  "missing": [
+   "原书图 11.11 六条轨线的朝代标签（待从纸本扫描本录入，只录标签与页码）"
+  ],
   "merge_note": ""
  },
  {
@@ -1860,9 +1863,9 @@
    "落点分布",
    "对照吕鹏"
   ],
-  "student_operation": "在双谷曲面上重复运行遗传算法十次，看落点；对照吕鹏、陈典涵 2024 的参数挑选。",
+  "student_operation": "在双谷曲面上重复运行遗传算法十次，看落点；对照吕鹏、李浩 2024 的参数挑选。",
   "observable_output": "十次落点分落两谷；页面标出\"同一格局由两组参数长出\"。",
-  "lesson_evidence": "讲义 5.2；扩充部分甲六（双谷）；案例 C-27（吕鹏与陈典涵 2024，教师提供）。",
+  "lesson_evidence": "讲义 5.2；扩充部分甲六（双谷）；案例 C-27（吕鹏、李浩 2024，教师提供）。",
   "mode": "教学构造（页面内浏览器实时计算）；吕鹏模型为静态内容",
   "nature": [
    {
@@ -1915,7 +1918,7 @@
   "batch": 2,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "through": "",
   "missing": [],
   "formula": "",
@@ -2094,7 +2097,7 @@
     "what": "学生导入后的曲线"
    }
   ],
-  "formula": "（c）背约 7、困惑度 21 对（b）背约 6、困惑度 20：可归于倾向；（c）背约 9、困惑度 48：可能来自\"变笨\"。",
+  "formula": "（c）背约 7、困惑度 21 对（b）背约 6、困惑度 20：倾向可由提示设定；（c）背约 9、困惑度 48：可能来自\"变笨\"。",
   "notes": {
    "purpose": "课后进阶：对照仿真设计的思路。",
    "guide": "课后自学页。",
@@ -2122,11 +2125,13 @@
   "batch": 3,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "concepts": [],
   "through": "",
   "presets": [],
-  "missing": [],
+  "missing": [
+   "（a）（d）两组示意数字为页面补的示例，扩充部分只给（b）（c）两组"
+  ],
   "checks": [],
   "merge_note": ""
  },
@@ -2178,7 +2183,7 @@
   "batch": 3,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "concepts": [],
   "through": "",
   "cases": [],
@@ -2231,7 +2236,7 @@
   "batch": 2,
   "aliases": [],
   "theme": "light",
-  "status": "planned",
+  "status": "prototype",
   "concepts": [],
   "through": "",
   "cases": [],

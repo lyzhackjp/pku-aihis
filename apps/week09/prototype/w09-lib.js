@@ -228,6 +228,48 @@
     return { per, mean: ok.length === per.length && per.length ? ok.reduce((a, p) => a + p.na, 0) / ok.length : null };
   }
 
+
+  /* ---------------- 两变量差分方程（甲四） ---------------- */
+  function diffEq({ r = 0.10, K = 1, c = 0.6, a = 0.5, d = 0.08, x0 = 0.5, y0 = 0.1, steps = 60 } = {}) {
+    const xs = [x0], ys = [y0]; let x = x0, y = y0;
+    for (let t = 1; t <= steps; t++) { const nx = x + r * x * (1 - x / K) - c * x * y, ny = y + a * x * y - d * y; x = nx; y = ny; xs.push(x); ys.push(y); }
+    return { xs, ys, status: xs.some((v) => !(v >= 0) || v > 10) || ys.some((v) => !(v >= 0) || v > 10) ? '崩溃或发散' : (Math.abs(xs[steps] - xs[steps - 1]) < 1e-4 && Math.abs(ys[steps] - ys[steps - 1]) < 1e-4 ? '趋于平衡' : '起伏') };
+  }
+  function logistic({ r = 0.10, K = 1, x0 = 0.5, steps = 60 } = {}) { const xs = [x0]; let x = x0; for (let t = 1; t <= steps; t++) { x = x + r * x * (1 - x / K); xs.push(x); } return xs; }
+
+  /* ---------------- 折叠型势函数（甲五）：V(S) = S^4/4 + u S^2/2 + w S ---------------- */
+  const cuspV = (S, u, w) => S ** 4 / 4 + (u * S * S) / 2 + w * S;
+  // 小球沿梯度滑到最近的洼底（从 S0 出发），用来演示"洼消失时突然跳变"
+  function cuspSettle(S0, u, w, iters = 4000, lr = 0.01) { let S = S0; for (let k = 0; k < iters; k++) S -= lr * (S ** 3 + u * S + w); return S; }
+
+  /* ---------------- 误差曲面与遗传算法（甲六；教学构造） ---------------- */
+  const SURFACES = {
+    single: (p, q) => (p - 0.6) ** 2 + (q - 0.4) ** 2,
+    double: (p, q) => Math.min((p - 0.25) ** 2 + (q - 0.7) ** 2, (p - 0.75) ** 2 + (q - 0.3) ** 2),
+  };
+  function gaRun(surface, { seed = 1, pop = 30, keep = 10, gens = 40, sigma = 0.05 } = {}) {
+    const r = rng(seed), f = SURFACES[surface] || surface, clip = (v) => Math.min(1, Math.max(0, v));
+    const gauss = () => { const u = Math.max(1e-12, r()), v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+    let P = Array.from({ length: pop }, () => [r(), r()]); const history = [P.map((x) => x.slice())];
+    for (let g = 0; g < gens; g++) {
+      P.sort((A, B) => f(A[0], A[1]) - f(B[0], B[1])); const elite = P.slice(0, keep), next = elite.map((x) => x.slice());
+      while (next.length < pop) { const A = elite[Math.floor(r() * keep)], B = elite[Math.floor(r() * keep)], w = r(); next.push([clip(w * A[0] + (1 - w) * B[0] + sigma * gauss()), clip(w * A[1] + (1 - w) * B[1] + sigma * gauss())]); }
+      P = next; history.push(P.map((x) => x.slice()));
+    }
+    P.sort((A, B) => f(A[0], A[1]) - f(B[0], B[1]));
+    return { best: P[0], E: f(P[0][0], P[0][1]), history };
+  }
+  /* 族谱简表（教学构造）：成功 = 0.28·母 + 0.06·姑 + 0.03·学 + 噪声；随机删去 m 比例的母亲记录（记为 0）后用最小二乘重估 */
+  function fitWeights(m, { n = 600, seed = 3 } = {}) {
+    const r = rng(seed), rows = [];
+    for (let i = 0; i < n; i++) { const mo = r() < 0.5 ? 1 : 0, au = r() < 0.4 ? 1 : 0, sc = r() < 0.6 ? 1 : 0; const y = 0.28 * mo + 0.06 * au + 0.03 * sc + (r() - 0.5) * 0.1; rows.push([r() < m ? 0 : mo, au, sc, 1, y]); }
+    const k = 4, A = Array.from({ length: k }, () => new Array(k).fill(0)), b = new Array(k).fill(0);
+    for (const row of rows) for (let i = 0; i < k; i++) { b[i] += row[i] * row[4]; for (let j = 0; j < k; j++) A[i][j] += row[i] * row[j]; }
+    for (let i = 0; i < k; i++) { let p = i; for (let j = i + 1; j < k; j++) if (Math.abs(A[j][i]) > Math.abs(A[p][i])) p = j; [A[i], A[p]] = [A[p], A[i]]; [b[i], b[p]] = [b[p], b[i]]; for (let j = i + 1; j < k; j++) { const f = A[j][i] / A[i][i]; for (let l = i; l < k; l++) A[j][l] -= f * A[i][l]; b[j] -= f * b[i]; } }
+    const x = new Array(k).fill(0); for (let i = k - 1; i >= 0; i--) { let s = b[i]; for (let j = i + 1; j < k; j++) s -= A[i][j] * x[j]; x[i] = s / A[i][i]; }
+    return { mother: x[0], aunt: x[1], school: x[2] };
+  }
+
   /* ---------------- 贯穿记录：导出与恢复（D23） ---------------- */
   const SECRET_KEYS = /^(api[_-]?key|key|authorization|token|secret|password)$/i;
   function stripSecrets(v) {
@@ -258,7 +300,7 @@
 
   const api = { parseDate, cmpToTimepoint, sourceGate, splitSentences, timepointScore, lRange, checkCard, buildMessages, CARD_REQUIRED,
     rng, sameShare, schellingInit, schellingStep, schellingMetrics, schellingRun, schellingSweep, neighborsOf,
-    nashBargain, playMatch, populationPayoffs, PAY, cuspDiscriminant, cuspRoots, cuspState, sqError, normalizedAccuracy,
+    nashBargain, playMatch, populationPayoffs, PAY, cuspDiscriminant, cuspRoots, cuspState, sqError, normalizedAccuracy, diffEq, logistic, cuspV, cuspSettle, SURFACES, gaRun, fitWeights,
     stripSecrets, emptyThrough, exportThrough, importThrough };
   root.W9Lib = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

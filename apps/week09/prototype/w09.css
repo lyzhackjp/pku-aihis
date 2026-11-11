@@ -61,3 +61,9 @@ table.w9-grid th{background:#f4f3ee;width:12%}
 .w9-toolbar label{max-width:100%;display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}
 .w9-toolbar input[size]{width:auto;min-width:0;flex:1 1 12em}
 .w9-reply .sent{display:inline;border:0;padding:0 1px;margin:0;background:none}
+
+/* 第二批（2026-11-11）：带内联列宽的双栏在窄屏改为单栏；页内表格可横向滚动 */
+@media (max-width: 760px) {
+  .w9-two[style] { grid-template-columns: 1fr !important; }
+  .w9-checktable input { width: 6em; }
+}
