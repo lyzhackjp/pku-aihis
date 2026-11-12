@@ -1,0 +1,75 @@
+{
+ "_note": "候选，未经教师确认；结构示例（2026-11-10）。正文录文待做的条目 text 为空、text_kind=仅元数据。 第三条为讲义 3.1 所说\"最容易混进来\"的晚年回顾，放在 1899 年的包里是故意的错例（教学构造），供 D09 校验。",
+ "format": "w09-sourcepack/v1",
+ "id": "pack-liang",
+ "title": "梁启超史料包（演示①、2.4）",
+ "calendar_note": "梁启超诸篇原刊用光绪纪年或公元，页面统一换算为公元，原写法存 written_date_raw。",
+ "entries": [
+  {
+   "id": "liang-wenye",
+   "person": "梁启超",
+   "title": "自由书·文野三界之别",
+   "author": "梁启超",
+   "layer": 1,
+   "written_date_raw": "1899",
+   "written_date": "1899",
+   "date_precision": "year",
+   "date_kind": "初刊",
+   "citation": "《梁启超全集》，北京出版社，1999",
+   "page": {
+    "system": "全集连续页码",
+    "value": "340"
+   },
+   "text": "",
+   "text_kind": "仅元数据",
+   "sendable": true,
+   "sendable_basis": "教师 2026-11-10 答方案第七节第 1 项：梁、章全集录文可送",
+   "visibility": "本机材料包",
+   "note": "录文待做（待核实事项 B-04）"
+  },
+  {
+   "id": "liang-guojia",
+   "person": "梁启超",
+   "title": "国家思想变迁异同论",
+   "author": "梁启超",
+   "layer": 1,
+   "written_date_raw": "1901",
+   "written_date": "1901",
+   "date_precision": "year",
+   "date_kind": "初刊",
+   "citation": "《梁启超全集》，北京出版社，1999",
+   "page": {
+    "system": "全集连续页码",
+    "value": "455"
+   },
+   "text": "",
+   "text_kind": "仅元数据",
+   "sendable": true,
+   "sendable_basis": "同上",
+   "visibility": "本机材料包",
+   "note": "对 1899 时点而言晚出，source-gate 应标红"
+  },
+  {
+   "id": "liang-qingdai",
+   "person": "梁启超",
+   "title": "清代学术概论",
+   "author": "梁启超",
+   "layer": 3,
+   "written_date_raw": "1920",
+   "written_date": "1920",
+   "date_precision": "year",
+   "date_kind": "初刊",
+   "citation": "（版本待定）",
+   "page": {
+    "system": "无",
+    "value": ""
+   },
+   "text": "",
+   "text_kind": "仅元数据",
+   "sendable": true,
+   "sendable_basis": "公有领域（不需要录文：本条只用于校验演示）",
+   "visibility": "公开材料包",
+   "note": "教学构造的错放：讲义 3.1 \"以今日之我难昔日之我\""
+  }
+ ]
+}

@@ -52,3 +52,9 @@ GitHub Pages不能设置自定义隔离头；第三周使用限定本周作用�
 教师于2026-11-04授权在全面检查后将week08合入main并发布。第八周课件为无构建原型，`apps/week08` 为无依赖pnpm包：`pnpm test` 核对页码与公开包边界，`pnpm build` 复制原型、内嵌相对路径导入器到 `www/pku-aihis/week08/`，并写入 `data/site.js`（公开模式）；`pnpm run check` 在build之后运行。PR与Pages工作流加入week08，published-weeks.json新增week08。全站检查核对26页、公开材料包不含CBDB全表、梅颸日記、JBDB与Kanripo，站点内无本机材料包、截图、PDF或模型权重，site.js为公开模式。
 
 底图：公开站点只用有审图号的天地图标准地图。浏览器端密钥由教师申请（域名白名单），发布时由仓库Secret `WEEK08_TIANDITU_TK` 给出，审图号与数据来源署名默认写在 assemble.mjs 中（公开信息，天地图地图页所示），也可由仓库Variables `WEEK08_TIANDITU_GS`、`WEEK08_TIANDITU_CREDIT` 覆盖，均不入Git源码；密钥会出现在发布的 site.js 中，这是浏览器端密钥的正常用法。未配置密钥时，公开站点不画任何底图。
+
+## 2026-11-12 第九周发布
+
+教师于2026-11-12授权将week9的演示合入main并发布。第九周课件为无构建原型，`apps/week09` 为无依赖pnpm包：`pnpm test` 含计算回归（越界率、谢林模型、纳什议价、折叠判别式、差分方程等）与发布测试（28页三处页码、公开包边界、密钥不落盘），`pnpm build` 复制原型并内嵌相对路径导入器到 `www/pku-aihis/week09/`，`pnpm run check` 在build之后运行。PR与Pages工作流加入week09，published-weeks.json新增week09。
+
+公开站点只带公开本文字（梁启超《飲冰室合集》公开扫描本录文与维基文库本、井上哲次郎NDL公开本录文、《脱亜論》维基文库本）与书目；《章太炎全集》录文、DeepSeek与Kimi的课前运行记录、网页版记录、Neuronpedia截图都在教师本机材料包（`local-only/`，不入Git、不发布）。因此线上依赖课前记录的格子显示“待课前运行”，教师课上用顶栏“导入本机材料包”载入；现场调用的Key只存页面内存。全站检查核对28页、公开包不含章太炎全集录文与运行记录、内嵌导入器，以及站点内无本机材料包、截图、密钥文件或模型权重。

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width"
+  /><link rel="icon" href="data:," /><title>Scribe.js 比较</title
+  ><style>
+    body {
+      font: 18px system-ui;
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f7f5ee;
+    }
+    button,
+    select,
+    input {
+      font: inherit;
+      margin: 10px;
+      padding: 10px;
+    }
+    textarea {
+      width: 100%;
+      height: 420px;
+      font: 16px monospace;
+    }
+    progress {
+      width: 100%;
+    }
+  </style>
+  <h1>Scribe.js 文本与识读比较</h1>
+  <p>
+    另选同一张选页 PDF 或图像。提取文字层与启动 OCR
+    是两种操作；这里的结果是待核转录。Scribe.js 使用
+    AGPL-3.0，作为可选比较组件单独加载。
+  </p>
+  <input type="file" id="file" accept=".pdf,.png,.jpg,.jpeg" /><select
+    id="lang"
+  >
+    <option value="jpn">日文</option>
+    <option value="chi_sim">简体中文</option>
+    <option value="eng">英文</option></select
+  ><button id="extract">提取已有文字层</button
+  ><button id="ocr">启动本页 OCR</button>
+  <p id="status" role="status">
+    等待选择文件；请用一页材料比较，避免整本识读。
+  </p>
+  <textarea id="result" aria-label="实际处理结果" readonly></textarea>
+  <p>
+    <a href="/comparison/scribe-package/LICENSE">许可证</a> ·
+    <a href="https://github.com/scribeocr/scribe.js">原始代码库</a>
+  </p>
+  <script type="module" src="./scribe.js"></script>
+</html>

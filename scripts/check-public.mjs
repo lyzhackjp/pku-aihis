@@ -229,3 +229,20 @@ if (manifest4.weeks?.includes('week08')) {
   assert(home.includes('href="week08/"') && home.includes('第八周 · 数字人文方法与人工智能'));
   console.log('Week08: 26 pages, public pack without CBDB full table/梅颸/JBDB/Kanripo, public map mode (天地图 key ' + (/"tk":"[0-9a-f]{32}"/.test(site8) ? 'set' : 'not set: no basemap') + '), embedded importer; no material pack, screenshots or weights');
 }
+if (manifest4.weeks?.includes('week09')) {
+  const week = path.join(site, 'week09');
+  const html9 = await fs.readFile(path.join(week, 'index.html'), 'utf8');
+  const map9 = JSON.parse(await fs.readFile(path.join(root, 'docs/week09/page-map.json'), 'utf8'));
+  assert.equal(map9.length, 28);
+  assert.deepEqual([...html9.matchAll(/<deck-slide\b[^>]*slide-id="([^"]+)"/g)].map(m => m[1]), map9.map(p => p.id));
+  const files9 = manifest4.files.filter(f => f.path.startsWith('week09/'));
+  assert(!files9.some(f => (/\.(pdf|zip|sqlite|db|onnx|safetensors|gguf|pt|pth|ckpt|bin|typ|py|jpe?g|png|env)$/i.test(f.path) && !f.path.startsWith('week09/importer/')) || /week09-pack\.json$|local-only|keys\.env/.test(f.path)), 'week09: 本机材料、截图、密钥文件或权重进入站点');
+  const pub9 = await fs.readFile(path.join(week, 'data/w09-public.js'), 'utf8');
+  for (const marker of ['飾苟且之心', '浸微浸削', '"model_returned"', 'preclass-2026', 'teacher-web-2026']) assert(!pub9.includes(marker), 'week09 public pack: ' + marker);
+  assert(/"replays":\s*\[\]/.test(pub9), 'week09: 公开包不得带运行记录');
+  const importer9 = await fs.readFile(path.join(week, 'importer/index.html'), 'utf8');
+  assert(importer9.includes('./assets/') && !importer9.includes('/pku-aihis/material-importer/assets/'));
+  const home = await fs.readFile(path.join(site, 'index.html'), 'utf8');
+  assert(home.includes('href="week09/"') && home.includes('第九周 · 历史人物模拟、历史共情与历史仿真'));
+  console.log('Week09: 28 pages, public pack with public-domain texts only (no 章太炎全集 transcription, no run records), embedded importer; no material pack, screenshots, keys or weights');
+}

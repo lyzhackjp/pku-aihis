@@ -1,0 +1,51 @@
+{
+ "_note": "教学构造：前两句取自讲义 @fig-check 的两行构造句；后两句为占位。四句分数 0、0、1、2 → L = 0.375（D05 固定例）。",
+ "labels": [
+  {
+   "run_id": "R-construct",
+   "sentence_index": 0,
+   "sentence": "吾国之国体，乃万世一系，与他国截然不同。",
+   "score": 0,
+   "source_ref": "inoue-1912-p82 第 82 页",
+   "beyond_timepoint": "否",
+   "type": "无",
+   "induced": "否",
+   "omission": "原文先承认俄国『少し日本と似た処がある』",
+   "construct": true
+  },
+  {
+   "run_id": "R-construct",
+   "sentence_index": 1,
+   "sentence": "（构造句：守住时点的一句）",
+   "score": 0,
+   "source_ref": null,
+   "beyond_timepoint": "否",
+   "type": "无",
+   "induced": "否",
+   "construct": true
+  },
+  {
+   "run_id": "R-construct",
+   "sentence_index": 2,
+   "sentence": "（构造句：用了当时不可能有的概念的一句）",
+   "score": 1,
+   "source_ref": null,
+   "beyond_timepoint": "待定",
+   "type": "概念",
+   "induced": "否",
+   "construct": true
+  },
+  {
+   "run_id": "R-construct",
+   "sentence_index": 3,
+   "sentence": "俄国虽曾与我国体相似，然其帝室已为革命所覆。",
+   "score": 2,
+   "source_ref": null,
+   "beyond_timepoint": "是",
+   "type": "知识",
+   "induced": "否",
+   "omission": "原文『政体以外に露国の国体は有る』的推想",
+   "construct": true
+  }
+ ]
+}
