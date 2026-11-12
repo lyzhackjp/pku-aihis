@@ -29,3 +29,10 @@
 ```
 python3 check_prototype.py ../prototype/index.html screenshots
 ```
+
+## v5 补充
+
+- 第五周固定数值（24 页版）：D11 3/18、4/17；D12 森鴎外／森鷗外 1；D16 0.75／0.50；D14 阿克顿对校文本与 Gutenberg J=1。
+- 线上发布后复核：对照教师报告的问题逐条在 Pages 地址上重测；嵌入模型在“本站失败”“Hugging Face 不通”两种模拟下的表现。
+- 引文：`scripts/check-quotes.mjs` 通过；无法自动核对的（公式符号补出、扫描 OCR）在注释中写明。
+- 云端方法见 [cloud-verification](cloud-verification.md)。
