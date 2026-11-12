@@ -59,26 +59,34 @@
     { id: 'base', name: '基座模型', can: '训练语料的构成、后期对齐的取向，从而决定"可能的角色"的范围', cannot: '使用者通常无法改变；网页版的系统设置也不由使用者决定', eg: 'DeepSeek、Kimi（经接口）与 Gemini、ChatGPT（网页版）的对照', link: 'D10',
       cards: [['C-03 Character-LLM（邵云帆等 2023）', '据人物档案让大模型扩写"场景"，微调 70 亿参数模型；加入"保护性经验"，每个人物不到一百个场景即可明显减轻幻觉。用来微调的场景本身是模型编出来的。', 'EMNLP 2023，读摘要、引言与第 3.2、4.6.2 节'], ['C-04 BaiJia（Bai 等 2025）', '收唐至清 19,281 位人物（唐 3,020、宋 5,964、元 972、明 4,564、清 4,761），材料来自 CBDB、维基百科与古诗文网；CBDB 的著录偏向会原样进入。仓库未见许可证，只作静态说明。', 'arXiv:2412.20024，读摘要与第 2 节'], ['C-05 からまる（Sakana AI 2025）', '在 Llama-3-ELYZA-JP-8B 上用约 2,500 万字江户文本继续训练；底子仍是现代模型（"现代知识不会因此被移走"是讲义的推断）。只引模型卡，不调用。', 'Hugging Face 模型卡']] },
   ];
+  /* C-03 场景的组成部分与来源：据论文正文（导言、第 3 节）对流程的说明整理，不是场景原文 */
+  const SCENE = [
+    ['事实底子：父亲约翰是乐师，早年严厉地教他音乐', '有据', '取自维基百科的人物档案（论文导言脚注）。'],
+    ['"背景"一行：这一幕发生在何时何地、谁在场', '想象', '由 gpt-3.5-turbo 据档案片段扩写。'],
+    ['贝多芬"说"的台词', '想象', '对话由模型编写，不是贝多芬的话。'],
+    ['贝多芬"想"的内心活动（格式里专有一种"想"）', '想象', '内心独白同样由模型编写。'],
+    ['"保护性场景"：有人拿后世的东西来问，角色表示不懂', '想象', '整幕由模型编写，用来教角色"不知道"；评测中被问到用 Python 写快速排序时，角色答不懂并请对方解释。'],
+  ];
   class CondLab extends Lab {
     defaults() { return { on: 'prompt', tags: {} }; }
     render() {
-      const c = COND.find((x) => x.id === this.s.on), r = latestRun('card-1a', 'deepseek');
-      const sents = r.run ? L.splitSentences(r.run.reply || '') : [], tagged = sents.map((_, i) => this.s.tags[(r.run?.run_id || '') + '|' + i]).filter(Boolean);
-      const imag = tagged.filter((t) => t === '想象').length;
+      const c = COND.find((x) => x.id === this.s.on), done = SCENE.filter((_, i) => this.s.tags['scene|' + i]);
       paint(this, `<div class="w9-two" style="grid-template-columns:270px minmax(0,1fr)">
         <div><svg viewBox="0 0 260 230" class="w9-svg" role="group" aria-label="三种条件">${COND.map((x, i) => `<g data-cond="${x.id}" style="cursor:pointer"><rect x="${20 + i * 12}" y="${20 + i * 64}" width="${220 - i * 24}" height="54" rx="6" fill="${x.id === this.s.on ? '#164ec7' : '#e7edf1'}" stroke="#164ec7"/><text x="130" y="${52 + i * 64}" text-anchor="middle" font-size="15" fill="${x.id === this.s.on ? '#fff' : '#123'}">${esc(x.name)}</text></g>`).join('')}</svg>
           <p class="sub">点选一层。上层最容易改，下层使用者通常改不了（讲义 @fig-conditions，本课整理）。${B.st}</p></div>
         <div><table class="items w9-cond"><tr><th>条件</th><th>它规定什么</th><th>它管不住什么</th><th>本讲的例子</th></tr>${COND.map((x) => `<tr class="${x.id === c.id ? 'on' : ''}" data-cond="${x.id}"><th>${esc(x.name)}</th><td>${esc(x.can)}</td><td>${esc(x.cannot)}</td><td>${esc(x.eg)}（见 ${x.link}）</td></tr>`).join('')}</table>
           ${c.cards.map(([t, f, s]) => `<div class="w9-formula"><b>${esc(t)}</b><p>${esc(f)}</p><p class="sub">${esc(s)}</p></div>`).join('')}
           ${c.id === 'base' ? '<p class="sub">改模型本身的几条路（时代锁定、知识编辑、激活引导）见 D10、D11。</p>' : ''}</div></div>
-        <details class="w9-check"><summary>进阶：逐句标"有据／想象"</summary>
-          <p class="sub">讲义设想以 C-03 的一条场景示例作材料；场景原文待从论文取（开放获取），本轮先用 D01 的 1899 年卡回答代替。点句子切换：有据 → 想象 → 取消。</p>
-          ${r.run ? `<p>${badge(r.run, r.kind)}</p><div class="w9-reply">${sents.map((s, i) => { const k = r.run.run_id + '|' + i, t = this.s.tags[k]; return `<span class="sent ${t === '想象' ? 'circled' : ''}" data-tag="${esc(k)}">${esc(s)}${t ? `<sup class="sub">［${t}］</sup>` : ''}</span>`; }).join('')}</div><p class="mono">已标 ${tagged.length} 句，想象 ${imag} 句，想象句比例 ${tagged.length ? fmt(imag / tagged.length, 2) : '—'}　${B.calc}</p>` : `<p>${B.none}</p>`}
+        <details class="w9-check"><summary>进阶：C-03 的"场景"里，哪些有据、哪些是模型编的</summary>
+          <p class="sub">Character-LLM（邵云帆等 2023）用来微调的不是人物原话，而是让模型据人物档案扩写出的"场景"。下面按论文正文对场景格式与来源的说明列出各部分（arXiv:2310.10158v2 网页版，读前半篇；论文附录里的完整训练样例未读，这里不转录场景原文）。逐项判断它来自档案还是模型编写：</p>
+          <table class="items"><tr><th>场景的组成部分（以贝多芬为例）</th><th>你的判断</th><th></th></tr>${SCENE.map(([t, ans, why], i) => { const v = this.s.tags['scene|' + i]; return `<tr><td>${esc(t)}</td><td class="nowrap">${['有据', '想象'].map((x) => `<button class="small ${v === x ? 'on' : ''}" data-tag="scene|${i}" data-v="${x}">${x}</button>`).join(' ')}</td><td class="sub">${v ? (v === ans ? '<span class="ok">与论文说明一致。</span>' : '<span class="nil">论文说明相反。</span>') + esc(why) : ''}</td></tr>`; }).join('')}</table>
+          <p class="mono">已判断 ${done.length}/${SCENE.length} 项；按论文说明，"想象"占 ${SCENE.filter((x) => x[1] === '想象').length}/${SCENE.length}　${B.calc}</p>
+          <p class="sub">用来微调的材料大半出自另一个模型之手：微调改得了口吻，材料本身却不是史料（讲义 1.2）。${B.st}</p>
         </details>`);
     }
     onClick(e) {
       const g = e.target.closest('[data-cond]'); if (g) return this.set({ on: g.dataset.cond });
-      const t = e.target.closest('[data-tag]'); if (t) { const k = t.dataset.tag, cur = this.s.tags[k], tags = { ...this.s.tags }; const nx = !cur ? '有据' : cur === '有据' ? '想象' : null; if (nx) tags[k] = nx; else delete tags[k]; this.set({ tags }); }
+      const t = e.target.closest('[data-tag]'); if (t) { const tags = { ...this.s.tags }; if (tags[t.dataset.tag] === t.dataset.v) delete tags[t.dataset.tag]; else tags[t.dataset.tag] = t.dataset.v; this.set({ tags }); }
     }
   }
   register('cond-lab', CondLab);
@@ -311,7 +319,15 @@
         { title: '拖动 w', why: '洼消失的一刻，小球只能跳到另一个洼。', body: `${curve}<label>w <input type="range" min="-3" max="3" step="0.05" value="${w}" data-k="w"> ${fmt(w, 2)}</label><br><label>u <input type="range" min="-4" max="1" step="0.1" value="${u}" data-k="u"> ${fmt(u, 1)}</label><p><button data-x="right">小球放回右洼</button> <button data-x="left">放回左洼</button></p><p>${B.calc}</p>` },
         { title: '边界验证', why: '判别式 4u³ + 27w² 为零时，两根合并。', body: `<p class="mono">4u³ + 27w² = ${fmt(st.D, 3)}　${st.region}</p><p class="mono">平衡点 S = ${st.roots.map((x) => fmt(x)).join('，')}</p>${st.onBoundary ? '<p class="ok"><b>在边界上</b></p>' : ''}<p class="sub">u = −3、w = 0：S = −√3、0、√3；w = 2：4·(−27) + 27·4 = 0。</p>` },
         { title: '轨线与朝代标签', why: '哪些推论来自数学，哪些来自已知结局？', body: `${plane}<p class="sub">点底面加一个轨线点（按顺序连成轨线），小球随之移动；红线：w &gt; 0 一侧的边界，蓝线：w &lt; 0 一侧。</p><p><button data-x="clrtraj">清空轨线</button></p>
-            <details><summary>进阶：给轨线贴朝代标签</summary><p class="sub">原书图 11.11"各种王朝的轨线"（教师 2026-11-12 提供图影，只录标记）：纵轴 ψ，横轴 Φ；两条边界线"建朝边界""动乱边界"；六条轨线各从 a₁—a₆ 出发，越过建朝边界（b₁—b₄ 有标记），落到动乱边界上的 d₁—d₆。<b>图上只有字母，没有朝代名</b>；哪条对应哪个朝代在正文里，页码待核。</p><label class="w9-kv">标签<input data-k="lab" value="${esc(this.s.labels.name || '')}" size="10"></label> 依据 <select data-k="basis"><option value="">选</option>${['史料', '理论', '已知结局'].map((b) => `<option ${this.s.labels.basis === b ? 'selected' : ''}>${b}</option>`).join('')}</select>${this.s.labels.basis === '已知结局' ? '<p class="sub">把朝代放上哪条轨线，依据的是已知的朝代寿命与建朝方式：规则与结局没有分开（扩充部分甲五，本课推论）。</p>' : ''}</details>
+            <details><summary>进阶：原书怎样把朝代放上轨线（图 11.11）</summary>
+              <p class="sub">原书图 11.11"各种王朝的轨线"（2010 年版第 416 页）：纵轴 ψ，横轴 Φ，两条边界"建朝边界""动乱边界"；六条轨线从 a₁—a₆ 出发，落到动乱边界 d₁—d₆。图上只有字母，没有朝代名；朝代是在正文里按类放上去的（第 416—419 页）：</p>
+              <table class="items"><tr><th>类</th><th>轨线</th><th>原书举的朝代</th></tr>
+                <tr><td>长周期（盛大）王朝</td><td>a₁b₁d₁—a₄b₄d₄：再次越过建朝边界，有一段"太平盛世"</td><td>西汉、东汉、唐、明、清（农民大起义后建立）</td></tr>
+                <tr><td>短周期王朝</td><td>a₅d₅、a₆d₆：一直在尖角形内</td><td>秦、晋、隋（由割据统一而来）</td></tr>
+                <tr><td>后期王朝</td><td>建朝时就在 b 点一带，没有上升阶段</td><td>宋（原书称只此一例）</td></tr></table>
+              <p class="sub">原书第 417 页自己说明：各王朝建朝时无组织力量的大小没有统计资料，只能举"众所周知的历史事实"来印证。</p>
+              <p>把某个朝代归入哪一类，依据是什么？<select data-k="basis"><option value="">选</option>${['史料', '理论', '已知结局'].map((b) => `<option ${this.s.labels.basis === b ? 'selected' : ''}>${b}</option>`).join('')}</select></p>
+              ${this.s.labels.basis ? `<p class="sub">${this.s.labels.basis === '已知结局' ? '归类用的是朝代寿命长短与建朝方式，这些正是模型要解释的结局：规则与结局没有分开。' : '可以再想：没有建朝时的统计，"无组织力量小"是从哪里知道的？多半是从"寿命长"倒推回来的。'}（扩充部分甲五，本课推论）</p>` : ''}</details>
             <p class="sub">${B.st} 原书式（11.4）纸本第 413 页印作"&gt;"，与紧接其上的文字说明方向相反；按文字说明理解（B-19）。</p>` },
       ];
       flow(this, cols, st.onBoundary ? 2 : 1);

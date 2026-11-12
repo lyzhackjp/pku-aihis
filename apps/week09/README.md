@@ -36,3 +36,5 @@ python3 apps/week09/scripts/verify_week09.py apps/week09/prototype <输出目录
 2026-11-11 第二批验收：单元测试 20/20；浏览器 60/60（同上环境与条件；新增 D02—D26 十三页的固定例子与交互检查，以及"输入 Key 时重绘重入"的修复检查）。结果见 `docs/week09/verification/20261111-batch2/`。`deck-core.js` 在第八周版本上加了一处重入保护（替换 DOM 时焦点控件的 blur／change 再次触发重绘）。
 
 2026-11-11 设计复查：改动与理由见 `docs/week09/design-review-20261111.md`。单元测试 24/24；浏览器 70/70（`docs/week09/verification/20261111-review/`）。课前接口记录由 `scripts/run_preclass.mjs` 生成（清单 R-1、R-3、R-3b、R-4、R-5、R-6、R-8、R-9），存教师本机，不入库。
+
+2026-11-12：接入课程通用导入页（`apps/material-importer`）。顶栏"文献导入"打开 `prototype/importer/`（构建产物，不入 Git；`scripts/build_importer.sh` 构建并复制，需 Node>=22 与 pnpm），握手与第五至八周相同（`PKU_IMPORT_READY`／`PKU_PROJECT`，`pku-history-project/v1`）。送回的正文片段在接收时由导入者声明成文时间、层次与可否送模型（默认不可送），成为史料包，在 D09、D12 选用。网页版课前记录与 Neuronpedia 课前截图经 `build_packs.py` 并入本机材料包。浏览器验收 80/80（含导入握手、拒收、刷新后保留）；另在云端用真实构建的导入页走通一次"读入文本—送回—声明—接收"。

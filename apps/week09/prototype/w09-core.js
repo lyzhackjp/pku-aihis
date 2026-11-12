@@ -28,9 +28,10 @@
     try { mergeLocal(await (await fetch(q, { cache: 'no-store' })).json(), q); } catch (e) { M.localMsg = '本机材料包未载入：' + e.message; emit('w9-materials'); }
   })();
   const Mat = {
-    packs: () => M.packs,
-    pack: (id) => M.packs.find((p) => p.id === id),
-    entries: (packId) => (packId ? (Mat.pack(packId)?.entries || []) : M.packs.flatMap((p) => p.entries)),
+    /* 内置与本机包之外，学生导入的史料包存在贯穿记录里（T.packs）：刷新或恢复记录后仍在 */
+    packs: () => [...M.packs, ...T.packs.filter((p) => !M.packs.some((x) => x.id === p.id))],
+    pack: (id) => Mat.packs().find((p) => p.id === id),
+    entries: (packId) => (packId ? (Mat.pack(packId)?.entries || []) : Mat.packs().flatMap((p) => p.entries)),
     entry: (id) => Mat.entries().find((e) => e.id === id),
     replays: (filter = {}) => M.replays.filter((r) => Object.entries(filter).every(([k, v]) => r[k] === v)),
     state: () => M,
@@ -239,7 +240,7 @@
         if (x === 'close' || e.target === shade) shade.remove();
         if (x === 'check') { try { st.built = buildImported(st.kind, st.parsed, st.map, st.decl); st.msg = ''; } catch (err) { st.built = null; st.msg = err.message; } draw(); }
         if (x === 'accept' && st.built) {
-          if (st.built.pack) { M.packs.push(st.built.pack); Through.add('packs', st.built.pack, 'id'); emit('w9-materials'); }
+          if (st.built.pack) { Through.add('packs', st.built.pack, 'id'); emit('w9-materials'); }
           else { const map = { labels: 'labels', settinglabels: 'setting_labels', runs: 'runs' }; const kk = map[st.kind];
             if (kk) for (const r of st.built.rows) Through.add(kk, kk === 'runs' ? { ...r, origin_mode: r.mode, mode: 'replay', prompt: { messages: [{ role: 'user', content: r.prompt }] } } : { ...r, sentence_index: Number(r.sentence_index) || 0, score: r.score === '' ? null : Number(r.score) });
             else { const imp = store.get('imports', {}); (imp[st.kind] = imp[st.kind] || []).push({ name: st.name, rows: st.built.rows }); store.set('imports', imp); emit('w9-materials'); } }
@@ -288,7 +289,12 @@
     return `<div class="flow-shell w9-shell"><div class="flow-head"><p class="flow-question">${esc(page.question || '')}</p><div class="flow-rail" aria-label="教学步骤">${rail}</div></div><div class="w9-shell-body">${html}</div>${page.student_operation ? `<p class="flow-try">动手观察：${esc(page.student_operation)}</p>` : ''}</div>`;
   }
   /* 各组件文件用它替换 Deck.rerender：不是四栏流程、也没有声明 noShell 的页，自动套上外壳 */
-  function render(el, html) { window.Deck.rerender(el, el.page && !el.noShell && !html.startsWith('<div class="flow-shell') ? shell(el.page(), html, { active: el.activeStep }) : html); }
+  function render(el, html) {
+    /* 重绘会把展开的"进阶"折叠块收起来：记下重绘前展开的是第几个，重绘后照原样展开（否则在折叠块里每点一下都得重新展开） */
+    const open = [...el.querySelectorAll('details')].map((d) => d.open);
+    window.Deck.rerender(el, el.page && !el.noShell && !html.startsWith('<div class="flow-shell') ? shell(el.page(), html, { active: el.activeStep }) : html);
+    const now = el.querySelectorAll('details'); if (now.length === open.length) now.forEach((d, i) => { if (open[i]) d.open = true; });
+  }
 
   /* ================= 顶栏：材料包、导入表格、模型接入（位置与第八周相同） ================= */
   function modelDialog() {
@@ -300,21 +306,80 @@
     shade.addEventListener('click', (e) => { if (e.target.dataset.x === 'close' || e.target === shade) shade.remove(); });
     document.body.append(shade); draw();
   }
+  /* ================= 课程通用导入页（apps/material-importer；握手同第五至八周：PKU_IMPORT_READY／PKU_PROJECT，pku-history-project/v1） =================
+   * 送回的是正文片段。第九周要把它当史料包用，还缺三样导入页不知道的东西：成文时间、层次、可否送模型——收到后由导入者声明，默认"不可送模型"。 */
+  let importerWin = null;
+  function toast(msg) { let n = document.querySelector('.live-toast'); if (!n) { n = document.createElement('div'); n.className = 'live-toast'; n.setAttribute('role', 'status'); document.body.append(n); } n.textContent = msg; n.hidden = false; clearTimeout(n._t); n._t = setTimeout(() => { n.hidden = true; }, 8000); }
+  async function openImporter() {
+    const u = new URL('importer/index.html', location.href); u.searchParams.set('receiver', location.origin);
+    if (location.protocol === 'file:') { toast('通用导入页须经本机服务打开（start_week09.command）；直接打开 HTML 文件时不可用。表格材料可用顶栏"导入表格"。'); return; }
+    importerWin = window.open('', 'week09-material-importer'); // 先同步开窗，免得被当作弹窗拦截
+    if (!importerWin) { toast('浏览器拦截了弹出窗口，请允许本站弹窗后再点"文献导入"。'); return; }
+    try { const r = await fetch(u.href, { method: 'HEAD', cache: 'no-store' }); if (!r.ok) { importerWin.close(); importerWin = null; toast('通用导入页尚未构建（本机没有 prototype/importer/ 文件夹）。在终端运行 apps/week09/scripts/build_importer.sh 后再点；表格材料可先用"导入表格"。'); return; } } catch { /* 离线等：照常打开 */ }
+    importerWin.location.href = u.href;
+  }
+  function projectToEntries(p) {
+    if (!p || p.schema !== 'pku-history-project/v1' || !Array.isArray(p.sources) || !Array.isArray(p.segments)) throw new Error('不是 pku-history-project/v1 项目');
+    const ids = new Set(p.sources.map((x) => x.id)); for (const x of p.segments) if (!ids.has(x.sourceId) || typeof x.text !== 'string') throw new Error('正文片段无法回到材料');
+    const segs = p.segments.filter((x) => x.text.trim() && !x.derived && !x.supersededBy), src = (id) => p.sources.find((x) => x.id === id) || {};
+    if (!segs.length) throw new Error('没有可用的正文片段');
+    return segs.map((x) => { const so = src(x.sourceId); return { seg: x.id, title: so.title || x.sourceId, text: x.text,
+      page: x.printedPage ? { system: '原书页', value: String(x.printedPage) } : x.pdfPage ? { system: 'PDF页序', value: String(x.pdfPage) } : { system: '电子文本段落', value: String(x.locator || '') } }; });
+  }
+  function receiveDialog(p, rows, done) {
+    const shade = document.createElement('div'); shade.className = 'model-shade w9-importer';
+    shade.innerHTML = `<div class="model-panel" role="dialog" aria-label="接收通用导入页送回的材料"><header><b>通用导入页送回 ${rows.length} 个正文片段</b><button data-x="cancel">不接收</button></header>
+      <p class="sub">来自：${esc([...new Set(rows.map((r) => r.title))].slice(0, 4).join('；'))}${new Set(rows.map((r) => r.title)).size > 4 ? ' 等' : ''}。导入页不知道下面三项，请声明后再加入史料包；不声明成文时间的条目，各页会标"成文时间不详"并要求确认。</p>
+      <p><label>名称 <input data-d="title" size="18" value="${esc(p.title || '导入的史料')}"></label> <label>人物 <input data-d="person" size="8"></label></p>
+      <p><label>成文时间（公元，如 1899 或 1903-12；不知道留空）<input data-d="date" size="10"></label> <label>原文纪年（照录）<input data-d="raw" size="12"></label></p>
+      <p><label>层次 <select data-d="layer"><option value="">未定</option><option value="1">第一层：时点前本人文字</option><option value="2">第二层：时点前他人文字</option><option value="3">第三层：晚年回忆、后人研究</option></select></label></p>
+      <p><label><input type="checkbox" data-d="send"> 这些文字可以送给模型（公开文本，或已得到许可）。不勾则只在本机显示，任何提示都不会带上它。</label></p>
+      <p><button data-x="ok">加入史料包</button> <span class="nil" data-msg></span></p></div>`;
+    shade.addEventListener('click', (e) => {
+      const x = e.target.dataset.x; if (!x) return;
+      if (x === 'cancel') { shade.remove(); done(null); return; }
+      const v = (k) => shade.querySelector(`[data-d="${k}"]`).value.trim(), iso = v('date');
+      if (iso && !/^-?\d{1,4}(-\d{1,2}){0,2}$/.test(iso)) { shade.querySelector('[data-msg]').textContent = '成文时间请写成 1899、1903-12 或 1885-03-16，或留空。'; return; }
+      const stamp = Date.now().toString(36), send = shade.querySelector('[data-d="send"]').checked;
+      const pack = { format: 'w09-sourcepack/v1', id: 'pack-importer-' + stamp, title: v('title') || '导入的史料', calendar_note: '', origin: '通用导入页送回 ' + new Date().toISOString().slice(0, 16),
+        entries: rows.map((r, i) => ({ id: `impg-${stamp}-${i}`, person: v('person'), title: `${r.title}${r.page.value ? '（' + r.page.value + '）' : ''}`, prompt_title: r.title, author: '', layer: Number(v('layer')) || null,
+          written_date_raw: v('raw') || iso, written_date: iso, date_precision: iso ? (iso.length > 7 ? 'day' : iso.length > 4 ? 'month' : 'year') : 'unknown', date_kind: '导入者声明',
+          citation: r.title, page: r.page, text: r.text, text_kind: '通用导入页识读或提取，未必经过校订', sendable: send, sendable_basis: send ? '导入者声明可送' : '导入者未声明可送', visibility: '本浏览器', note: '片段 ' + r.seg })) };
+      Through.add('packs', pack, 'id'); emit('w9-materials'); shade.remove(); done(pack);
+    });
+    document.body.append(shade);
+  }
+  window.addEventListener('message', (e) => {
+    if (e.origin !== location.origin || !importerWin || e.source !== importerWin) return;
+    if (e.data?.type === 'PKU_IMPORT_READY') importerWin.postMessage({ type: 'PKU_IMPORT_HELLO' }, location.origin);
+    if (e.data?.type === 'PKU_PROJECT') {
+      try {
+        const rows = projectToEntries(e.data.project), w = importerWin;
+        receiveDialog(e.data.project, rows, (pack) => {
+          if (!pack) { w.postMessage({ type: 'PKU_IMPORT_REJECTED', message: '第九周课件一侧选择了不接收。' }, location.origin); return; }
+          const msg = `第九周已接收 ${pack.entries.length} 个正文片段，作为史料包"${pack.title}"（${pack.entries[0].sendable ? '可送模型' : '不可送模型'}）；在 D09、D12 中选用。`;
+          w.postMessage({ type: 'PKU_IMPORT_ACCEPTED', message: msg }, location.origin); toast(msg);
+        });
+        window.focus();
+      } catch (err) { importerWin.postMessage({ type: 'PKU_IMPORT_REJECTED', message: err.message }, location.origin); toast('导入失败，原有材料保留：' + err.message); }
+    }
+  });
+
   function topBar() {
     const top = document.querySelector('.deck-top'); if (!top) return false; if (top.querySelector('.pack-bar')) return true;
     const span = document.createElement('span'); span.className = 'pack-bar';
     const draw = () => {
       const live = MS.mode === 'live', keys = ['deepseek', 'kimi'].filter((p) => MS.keys[p]).length;
       span.innerHTML = (M.local ? `<span class="pack-ok" title="${esc(M.localMsg)}">本机材料包已载入（回放 ${M.replays.length} 条）</span>` : `<label class="pack-btn small" title="${esc(M.localMsg || '教师材料录文与课前运行记录')}">导入本机材料包<input type="file" accept=".json" data-local hidden></label>`)
-        + ` <button class="small" data-w9-import="">导入表格</button> <button class="small ${live ? 'on' : ''}" data-open-model title="运行模式与 Key">模型接入：${live ? `现场调用（Key ${keys}/2）` : '预存回放'}</button>`;
+        + ` <button class="small" data-w9-import="">导入表格</button> <button class="small" data-open-importer title="打开课程通用导入页（PDF、Word、图像）；处理后送回本课件">文献导入</button> <button class="small ${live ? 'on' : ''}" data-open-model title="运行模式与 Key">模型接入：${live ? `现场调用（Key ${keys}/2）` : '预存回放'}</button>`;
     };
     draw(); ['w9-materials', 'w9-model'].forEach((n) => document.addEventListener(n, draw));
-    span.addEventListener('click', (e) => { if (e.target.closest('[data-open-model]')) modelDialog(); });
+    span.addEventListener('click', (e) => { if (e.target.closest('[data-open-model]')) modelDialog(); if (e.target.closest('[data-open-importer]')) openImporter(); });
     top.insertBefore(span, top.querySelector('[data-act="presenter"]') || null);
     return true;
   }
   document.addEventListener('change', async (e) => { if (e.target.dataset?.local !== undefined && e.target.files?.[0]) { const err = await Mat.loadLocalFile(e.target.files[0]); e.target.value = ''; if (err) { M.localMsg = '本机材料包未载入：' + err; emit('w9-materials'); alert('未载入：' + err + '（原有材料未改动）'); } } });
   (function waitTop(n) { if (!topBar() && n > 0) setTimeout(() => waitTop(n - 1), 100); })(50);
 
-  window.W9 = { L, Mat, Through, Model, Confirm, Importer, badge, gateList, sourceBox, modelPanel, modelDialog, shell, render, MODE_LABEL, emit, parseAny };
+  window.W9 = { L, Mat, Through, Model, Confirm, Importer, badge, gateList, sourceBox, modelPanel, modelDialog, shell, render, openImporter, projectToEntries, MODE_LABEL, emit, parseAny };
 })();

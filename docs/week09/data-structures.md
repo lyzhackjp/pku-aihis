@@ -159,3 +159,11 @@ D01、D05、D07、D12、D13 在发出请求前都调用它，结果写入运行�
    - 出处列（citation、page）没有映射时不拒绝导入，但每行记一次"无出处"，与第八周的 `noRef` 计数相同。逐句检查表的"依据"栏遇到这类条目，显示"无出处"。
 
 条件卡、仿真设置这类嵌套结构，只接受 JSON。CSV 中的条件卡用 `source_ids` 一列，以"；"分隔，引用已导入史料包的条目。
+
+## 五、2026-11-11—12 增补的字段（候选）
+
+- 史料条目 `prompt_title`、`prompt_date_raw`：送模型时用的标题与纪年。页面显示用的 `title` 可以带"含署年／删去署年，对照组"一类给教师看的说明，这类说明不得进入提示；有 `prompt_title` 时提示只用它，`prompt_date_raw` 为空串表示提示里不写纪年。
+- 运行记录 `origin_mode`：并入本机材料包后 `mode` 一律是 `replay`，`origin_mode` 保留原来的 `live`／`web-paste`。`origin_mode: web-paste` 的记录在页面上标"网页版·课前"，`web` 字段记平台、入口、记忆、联网、界面型号、截图文件名；`transcription` 记回答文字是怎样录入的（据截图目验、据 PDF 提取）。这类记录的提示是整段粘贴的一条用户消息，不与接口提示逐字比对。
+- 运行记录 `attempts`：课前脚本的调用次数（失败重试一次时为 2）。
+- 本机材料包 `resources.steer_shots`：Neuronpedia 课前截图清单（`file`、`caption`、`setting`、`date`、`source`），由 `运行记录/<日期>/截图/R10_manifest.json` 并入；图片在 `apps/week09/local-only/steer/`，不入库。
+- 通用导入页送回的材料：成为一个 `w09-sourcepack/v1`（id 以 `pack-importer-` 开头），每个正文片段一条；页码体系取导入页给的原书页、PDF 页序或段落定位；成文时间、层次、可否送模型由导入者在接收时声明，`sendable` 默认 `false`。学生导入的史料包存在贯穿记录的 `packs` 里，随记录导出与恢复。

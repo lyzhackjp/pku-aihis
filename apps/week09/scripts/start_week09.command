@@ -9,6 +9,7 @@ URL="http://127.0.0.1:$PORT/prototype/index.html"
 [ -f local-only/week09-pack.json ] && URL="$URL?pack=../local-only/week09-pack.json"
 ( sleep 1; open -a "Google Chrome" "$URL" 2>/dev/null || open "$URL" ) &
 echo "第九周演示：$URL"
+[ -d prototype/importer ] || echo "提示：顶栏“文献导入”用的通用导入页尚未构建（运行 scripts/build_importer.sh）；其余功能不受影响。"
 echo "关闭本窗口即停止服务。"
 # 不让浏览器缓存课件文件：更新代码后刷新即用新版本（否则 Chrome 可能把新旧文件混在一起，页面停在“公开材料载入中”）
 exec python3 -c 'import sys, http.server as h

@@ -227,6 +227,42 @@ with sync_playwright() as p:
     check('回放的提示与当前条件卡不同时如实标出', '提示与当前条件卡拼出的不同' in ct, ct[:160])
     check('设计复查后各项交互无 pageerror', not [e for e in errors if e.startswith('pageerror')], errors[:3])
 
+    # ---------- 通用导入页握手（2026-11-12）：用一页替身代替真正的导入页，只验课件一侧的接收 ----------
+    STUB = """<!doctype html><meta charset=utf-8><title>stub</title><script>
+      const r=new URLSearchParams(location.search).get('receiver');window.results=[];
+      addEventListener('message',e=>{if(e.data.type==='PKU_IMPORT_HELLO')opener.postMessage({type:'PKU_PROJECT',project:%s},r);else window.results.push(e.data)});
+      opener.postMessage({type:'PKU_IMPORT_READY'},r);</script>"""
+    good = {'schema': 'pku-history-project/v1', 'title': '验收项目', 'sources': [{'id': 's1', 'title': '验收文献'}], 'segments': [{'id': 'g1', 'sourceId': 's1', 'text': '第一段。', 'printedPage': 12}, {'id': 'g2', 'sourceId': 's1', 'text': '第二段。', 'pdfPage': 3}, {'id': 'g3', 'sourceId': 's1', 'text': '  '}]}
+    state = {'proj': good}
+    ctx.route('**/prototype/importer/index.html*', lambda route: route.fulfill(status=200, content_type='text/html', body=STUB % json.dumps(state['proj'], ensure_ascii=False)))
+    go('D09')
+    with ctx.expect_page() as pi: page.locator('[data-open-importer]').click()
+    imp = pi.value; page.wait_for_selector('.w9-importer [data-d="date"]', timeout=5000)
+    dlg = page.locator('.w9-importer .model-panel').inner_text()
+    check('文献导入：握手后弹出声明框（2 个非空片段）', '送回 2 个正文片段' in dlg, dlg[:60])
+    check('文献导入："可送模型"默认不勾', not page.locator('.w9-importer [data-d="send"]').is_checked())
+    page.locator('.w9-importer [data-d="date"]').fill('1899'); page.locator('.w9-importer [data-d="layer"]').select_option('1'); page.locator('.w9-importer [data-x="ok"]').click(); page.wait_for_timeout(500)
+    got = page.evaluate("window.W9.Mat.packs().filter(p=>p.id.startsWith('pack-importer')).map(p=>p.entries.map(e=>[e.page.system,e.page.value,e.sendable,e.written_date,e.layer]))")
+    check('文献导入：片段成为史料条目，带页码体系、成文时间、层次，默认不可送', got and got[-1] == [['原书页', '12', False, '1899', 1], ['PDF页序', '3', False, '1899', 1]], got)
+    check('文献导入：导入页收到"已接收"', imp.evaluate("window.results.map(x=>x.type)") == ['PKU_IMPORT_ACCEPTED'])
+    pid = page.evaluate("window.W9.Mat.packs().filter(p=>p.id.startsWith('pack-importer')).pop().id")
+    s = go('D09'); s.locator('select[data-o="pack"]').select_option(pid); page.wait_for_timeout(300); s.locator('input[data-sel]').first.check(); page.wait_for_timeout(300)
+    check('文献导入：未声明可送的条目在 D09 被拦截，不进提示', '拦截（不可送模型）' in s.inner_text() and '第一段。' not in s.locator('pre.srcbox').last.inner_text())
+    imp.close(); state['proj'] = {'schema': 'other/v1', 'sources': [], 'segments': []}
+    n_before = page.evaluate("window.W9.Mat.packs().length")
+    with ctx.expect_page() as pi: page.locator('[data-open-importer]').click()
+    imp = pi.value; page.wait_for_timeout(800)
+    check('文献导入：格式不对的项目被拒收，原有材料不变', imp.evaluate("window.results.map(x=>x.type)") == ['PKU_IMPORT_REJECTED'] and page.evaluate("window.W9.Mat.packs().length") == n_before)
+    imp.close(); page.reload(); page.wait_for_timeout(1500)
+    check('导入的史料包刷新后仍在', page.evaluate("window.W9.Mat.packs().some(p=>p.id.startsWith('pack-importer'))"))
+    check('文献导入各步无 pageerror', not [e for e in errors if e.startswith('pageerror')], errors[:3])
+
+    s = go('D03'); s.locator('details.w9-check summary').click(); s.locator('button[data-tag="scene|0"][data-v="有据"]').click(); page.wait_for_timeout(200)
+    s.locator('button[data-tag="scene|2"][data-v="有据"]').click(); page.wait_for_timeout(200); t = s.inner_text()
+    check('D03 场景来源判断：折叠块点选后保持展开，判对判错各有反馈', '已判断 2/5' in t and '与论文说明一致' in t and '论文说明相反' in t)
+    s = go('D20'); s.locator('details summary').last.click(); s.locator('select[data-k="basis"]').select_option('已知结局'); page.wait_for_timeout(300); t = s.inner_text()
+    check('D20 图 11.11 三类王朝与页码；选"已知结局"给出说明', '西汉、东汉、唐、明、清' in t and '第 416 页' in t and '规则与结局没有分开' in t)
+
     # 窄屏
     errors.clear(); page.set_viewport_size({'width': 390, 'height': 844}); over = []
     for pid, st in pages:
