@@ -51,15 +51,17 @@ with open(os.path.join(APP, 'prototype/data/w09-kinds.js'), 'w', encoding='utf-8
     f.write('/* 由 scripts/build_packs.py 据 docs/week09/schemas/importer-kinds.w09.json 生成。 */\nwindow.W9_KINDS = ' + json.dumps(kinds, ensure_ascii=False) + ';\n')
 
 replays = []
+local_resources = {}  # 课前截图清单等（只进本机包）
 if runs_dir and os.path.isdir(runs_dir):
     for fn in sorted(glob.glob(os.path.join(runs_dir, '**', '*.json'), recursive=True)):
         if any(part.startswith('_') for part in os.path.relpath(fn, runs_dir).split(os.sep)): continue  # 以 _ 开头的子目录是已替换的旧记录，留档不回放
         j = json.load(open(fn, encoding='utf-8'))
+        if os.path.basename(fn) == 'R10_manifest.json': local_resources['steer_shots'] = j['shots']; continue  # Neuronpedia 课前截图清单
         for r in (j if isinstance(j, list) else [j]):
             s = json.dumps(r)
             assert 'apiKey' not in s and 'Bearer ' not in s, fn
             replays.append(r)
 os.makedirs(os.path.join(APP, 'local-only'), exist_ok=True)
-json.dump({'format': 'w09-pack/v1', 'generated': src.get('generated'), 'note': '本机材料包：教师材料录文与课前运行记录。不入 Git、不发布。', 'packs': loc_packs, 'replays': replays},
+json.dump({'format': 'w09-pack/v1', 'generated': src.get('generated'), 'note': '本机材料包：教师材料录文与课前运行记录。不入 Git、不发布。', 'packs': loc_packs, 'replays': replays, 'resources': local_resources},
           open(os.path.join(APP, 'local-only/week09-pack.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print('公开：', {p['id']: sum(1 for e in p['entries'] if e.get('text')) for p in pub_packs}, '本机：', {p['id']: len(p['entries']) for p in loc_packs}, '回放', len(replays))

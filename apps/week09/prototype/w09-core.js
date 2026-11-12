@@ -8,7 +8,7 @@
 
   /* ================= 材料 ================= */
   const PUB = window.W9_PUBLIC || { packs: [], replays: [], resources: {} };
-  const M = { packs: PUB.packs.slice(), replays: (PUB.replays || []).slice(), local: null, localMsg: '' };
+  const M = { packs: PUB.packs.slice(), replays: (PUB.replays || []).slice(), resources: { ...(PUB.resources || {}) }, local: null, localMsg: '' };
   const emit = (n, d) => document.dispatchEvent(new CustomEvent(n, { detail: d }));
   function mergeLocal(j, from) {
     if (!j || j.format !== 'w09-pack/v1') throw new Error('不是第九周本机材料包（format 应为 w09-pack/v1）');
@@ -17,6 +17,7 @@
       if (!cur) M.packs.push(p); else for (const e of p.entries) { const i = cur.entries.findIndex((x) => x.id === e.id); if (i >= 0) cur.entries[i] = e; else cur.entries.push(e); }
     }
     M.replays.push(...(j.replays || []).map((r) => ({ ...r, origin_mode: r.origin_mode || r.mode, mode: 'replay' })));
+    Object.assign(M.resources, j.resources || {}); // 本机包可带课前截图等资源（不入库）
     M.local = { from, generated: j.generated, n: (j.packs || []).reduce((n, p) => n + p.entries.length, 0), runs: (j.replays || []).length };
     M.localMsg = `已载入本机材料包（${M.local.n} 条史料、${M.local.runs} 条运行记录；${from}）。`;
     emit('w9-materials');
@@ -103,6 +104,7 @@
   function badge(run, kind) {
     if (!run) return `<span class="w9-badge none">${esc(kind === 'none' ? '待课前运行' : '无记录')}</span>`;
     const m = run.mode, lab = MODE_LABEL[m] || m;
+    if (m === 'replay' && run.origin_mode === 'web-paste') { const d = `课前在网页版运行，非史料｜${run.web?.platform || ''}｜界面型号 ${run.web?.model_shown || run.model || ''}｜${run.web?.entry_type || ''}｜记忆${run.web?.memory || '不详'}、联网${run.web?.search || '不详'}｜${(run.date || '').slice(0, 10)}｜截图 ${run.web?.screenshot || '—'}`; return `<span class="w9-badge web-paste" title="${esc(d)}">网页版·课前</span><span class="sub">${esc(d)}</span>`; }
     const detail = m === 'replay' ? `课前运行，非史料｜${run.model || ''}｜${(run.date || '').slice(0, 10)}｜温度 ${run.temperature ?? '—'}` : m === 'live' ? `${run.model || ''}｜${(run.date || '').replace('T', ' ').slice(0, 19)}` : m === 'web-paste' ? `${run.web?.platform || ''}｜${run.web?.model_shown || ''}｜${(run.date || '').slice(0, 16)}` : '人工示意';
     return `<span class="w9-badge ${esc(m)}" title="${esc(detail)}">${esc(lab)}</span><span class="sub">${esc(detail)}</span>`;
   }

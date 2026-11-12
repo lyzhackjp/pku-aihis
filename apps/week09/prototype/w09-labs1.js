@@ -53,7 +53,7 @@
     const picker = st.all.length > 1 ? `<span class="w9-pick" role="group" aria-label="采样">${st.all.map((r, i) => `<button class="small ${r.run_id === st.run.run_id ? 'on' : ''}" data-pick="${esc(k)}" data-id="${esc(r.run_id)}" title="${esc(MODE_LABEL_[r.mode] || r.mode)}｜${esc((r.date || '').slice(0, 16))}">${r.mode === 'live' ? '现' : r.mode === 'web-paste' ? '贴' : ''}${i + 1}</button>`).join('')}<span class="sub">共 ${st.all.length} 次</span></span>` : '';
     /* 回放的提示若与当前条件卡拼出的不同，如实标出：回放的是课前那份提示的回答 */
     let drift = '';
-    if (st.run && st.run.mode === 'replay' && c && st.run.prompt?.messages?.length) {
+    if (st.run && st.run.mode === 'replay' && st.run.origin_mode !== 'web-paste' && c && st.run.prompt?.messages?.length) { // 网页版记录是整段粘贴，不与接口提示逐字比
       const cur = L.buildMessages({ ...c, confirm: [...(c.confirm || []), ...window.W9.Confirm.get(c.id), ...(st.run.prompt.gate?.confirmed_late || [])] }, Mat.entries()).messages;
       if (!L.samePrompt(cur, st.run.prompt.messages)) drift = '<p class="w9-drift">这条回放所用的提示与当前条件卡拼出的不同（课前之后改过卡或史料）；它回答的是课前那份提示。</p>';
     }
