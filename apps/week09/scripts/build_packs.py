@@ -50,13 +50,22 @@ kinds = json.load(open(os.path.join(ROOT, 'docs/week09/schemas/importer-kinds.w0
 with open(os.path.join(APP, 'prototype/data/w09-kinds.js'), 'w', encoding='utf-8') as f:
     f.write('/* 由 scripts/build_packs.py 据 docs/week09/schemas/importer-kinds.w09.json 生成。 */\nwindow.W9_KINDS = ' + json.dumps(kinds, ensure_ascii=False) + ';\n')
 
+def embed_shot(shot):
+    """把课前截图读成 data URI 写进本机包：线上页面取不到 local-only/ 下的文件，只能随包带入。"""
+    import base64
+    path = os.path.normpath(os.path.join(APP, 'prototype', shot.get('path') or shot['file']))
+    out = dict(shot, path=shot.get('path') or shot['file'])
+    if os.path.isfile(path):
+        out['file'] = 'data:image/jpeg;base64,' + base64.b64encode(open(path, 'rb').read()).decode('ascii')
+    return out
+
 replays = []
 local_resources = {}  # 课前截图清单等（只进本机包）
 if runs_dir and os.path.isdir(runs_dir):
     for fn in sorted(glob.glob(os.path.join(runs_dir, '**', '*.json'), recursive=True)):
         if any(part.startswith('_') for part in os.path.relpath(fn, runs_dir).split(os.sep)): continue  # 以 _ 开头的子目录是已替换的旧记录，留档不回放
         j = json.load(open(fn, encoding='utf-8'))
-        if os.path.basename(fn) == 'R10_manifest.json': local_resources['steer_shots'] = j['shots']; continue  # Neuronpedia 课前截图清单
+        if os.path.basename(fn) == 'R10_manifest.json': local_resources['steer_shots'] = [embed_shot(x) for x in j['shots']]; continue  # Neuronpedia 课前截图清单；图片内嵌，线上页面导入本机包后也能显示
         for r in (j if isinstance(j, list) else [j]):
             s = json.dumps(r)
             assert 'apiKey' not in s and 'Bearer ' not in s, fn
