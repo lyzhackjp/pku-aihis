@@ -267,6 +267,13 @@
     if (t.dataset.mk) Model.setKey(t.dataset.mk, t.value.trim());
     if (t.dataset.mm) Model.setModel(t.dataset.mm, t.value.trim());
   });
+  /* 截图点开放大（课前截图在栏内只是缩略图） */
+  document.addEventListener('click', (e) => {
+    const im = e.target.closest('img[data-zoom]'); if (!im) return;
+    const shade = document.createElement('div'); shade.className = 'model-shade w9-zoom';
+    shade.innerHTML = `<figure><img src="${esc(im.getAttribute('src'))}" alt="${esc(im.alt)}"><figcaption>${esc(im.alt)}　<button data-x="close">关闭</button></figcaption></figure>`;
+    shade.addEventListener('click', () => shade.remove()); document.body.append(shade);
+  });
   document.addEventListener('click', (e) => { if (e.target.dataset?.x === 'resetbase') { MS.base = {}; store.set('model-base', {}); emit('w9-model'); } });
 
   /* ================= 页面外壳：与第三至八周一致的"问题—步骤—动手观察"三件 ================= */

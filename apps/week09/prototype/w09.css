@@ -116,3 +116,8 @@ table.w9-qin input:not([type=radio]){width:3.2em;font-size:12px;padding:1px 4px}
 /* D05 逐句评分：句子一栏不被出处下拉框挤成一字宽 */
 @media (min-width:1101px){deck-slide[slide-id="D05"] .flow-grid{grid-template-columns:.85fr .95fr 1.7fr .9fr}}
 table.w9-score td:first-child{min-width:10em}table.w9-score select{max-width:8em}
+/* 课前截图：栏内一列缩略图，点开看大图 */
+.w9-shots{grid-template-columns:1fr 1fr;gap:8px}.w9-shots figure{margin:0;font-size:12px;line-height:1.4}.w9-shots img{cursor:zoom-in;border:1px solid #cbd2d7;width:100%}
+.w9-shots figcaption .sub{font-size:11px}
+.w9-zoom figure{margin:0;background:#fff;padding:10px;max-width:94vw;max-height:94vh;overflow:auto}.w9-zoom img{max-width:90vw;max-height:82vh;display:block}.w9-zoom figcaption{font-size:14px;padding-top:6px}
+@media (min-width:1101px){deck-slide[slide-id="D11"] .flow-grid{grid-template-columns:.9fr .9fr 1.5fr .8fr}}
