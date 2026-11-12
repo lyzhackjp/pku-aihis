@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pku-aihis/week09/w09-structures.schema.json",
+  "title": "第九周演示的通用输入结构（候选，未经教师确认，2026-11-10）",
+  "description": "页面按这些结构读入数据；预置材料只是其中一份实例。说明与表头映射见 ../data-structures.md。凡日期，原文纪年（*_raw）与公元换算值分列，换算值不覆盖原值。",
+  "$defs": {
+    "dateRaw": { "type": "string", "description": "原文写法，照录：如『共和二千七百四十一年』『明治四十五年』『建国二五七一年』『1903年底』" },
+    "dateIso": { "type": "string", "pattern": "^-?\\d{4}(-\\d{2}(-\\d{2})?)?$", "description": "公元年、年月或年月日；精度由 date_precision 说明" },
+    "precision": { "enum": ["day", "month", "year", "approx-year", "range", "unknown"] },
+    "pageRef": {
+      "type": "object",
+      "required": ["system", "value"],
+      "properties": {
+        "system": { "enum": ["全集连续页码", "原书页", "PDF页序", "扫描图编号", "NDL コマ", "电子文本段落", "无"], "description": "页码体系分清（AGENTS.md 约定）" },
+        "value": { "type": "string" }
+      }
+    },
+
+    "sourceEntry": {
+      "title": "史料包条目",
+      "type": "object",
+      "required": ["id", "person", "title", "layer", "written_date_raw", "written_date", "date_precision", "citation", "page", "sendable", "text_kind"],
+      "properties": {
+        "id": { "type": "string" },
+        "person": { "type": "string", "description": "这条史料归在哪位人物的史料包里" },
+        "title": { "type": "string" },
+        "author": { "type": "string", "description": "作者；无署名写『无署名』，归属有争议写在 note" },
+        "layer": { "enum": [1, 2, 3], "description": "1 时点之前本人所作；2 同时代他人所记、所编；3 身后的回顾与评价。相对于 timepoint 判断，导入时由使用者填写，页面另按成文时间复核" },
+        "written_date_raw": { "$ref": "#/$defs/dateRaw" },
+        "written_date": { "$ref": "#/$defs/dateIso" },
+        "written_date_end": { "$ref": "#/$defs/dateIso", "description": "成文时间为区间时的终点（如重订本：写作 1900—1903，刊行 1904）" },
+        "date_precision": { "$ref": "#/$defs/precision" },
+        "date_kind": { "enum": ["写作", "初刊", "编定", "再版", "署年（未必是写作年）"], "description": "这个日期是什么日期；《訄书》重订本署年即属末项" },
+        "citation": { "type": "string", "description": "版本：书名、出版者、年份、卷次；或网址与取得日期" },
+        "page": { "$ref": "#/$defs/pageRef" },
+        "text": { "type": "string", "description": "录文或原文片段。sendable=false 的条目在公开材料包中必须为空" },
+        "text_kind": { "enum": ["原文", "录文", "转写", "教学转述", "仅元数据"], "description": "原文、转写、翻译、概括分别标识" },
+        "transcriber": { "type": "string", "description": "录文者与日期；据影像录入时写影像位置" },
+        "sendable": { "type": "boolean", "description": "可否送模型（含接口与网页版）" },
+        "sendable_basis": { "type": "string", "description": "依据：教师某日同意／公有领域／NDL 个人送信本不可送 等" },
+        "visibility": { "enum": ["公开材料包", "本机材料包"], "description": "能否随课件发布" },
+        "rights": { "type": "string" },
+        "note": { "type": "string" }
+      },
+      "allOf": [
+        { "if": { "properties": { "sendable": { "const": false } } }, "then": { "properties": { "visibility": { "const": "本机材料包" } } } }
+      ]
+    },
+    "sourcePack": {
+      "title": "史料包",
+      "type": "object",
+      "required": ["format", "id", "title", "entries"],
+      "properties": {
+        "format": { "const": "w09-sourcepack/v1" },
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "calendar_note": { "type": "string", "description": "原文纪年的种类与换算依据" },
+        "entries": { "type": "array", "items": { "$ref": "#/$defs/sourceEntry" } }
+      }
+    },
+
+    "conditionCard": {
+      "title": "模拟条件卡（讲义 @fig-card 七栏＋乙一）",
+      "type": "object",
+      "required": ["id", "person", "timepoint_raw", "timepoint", "sources", "model", "system_prompt", "user_prompt", "temperature", "samples", "purpose"],
+      "properties": {
+        "id": { "type": "string" },
+        "person": { "type": "string", "description": "人物；不设人物身份的问法（演示③第二、三种）写『不设』" },
+        "timepoint_raw": { "$ref": "#/$defs/dateRaw" },
+        "timepoint": { "$ref": "#/$defs/dateIso" },
+        "sources": { "type": "array", "items": { "type": "string" }, "description": "史料包条目 id；发出前由 source-gate 校验" },
+        "pack_id": { "type": "string" },
+        "model": {
+          "type": "object",
+          "required": ["channel", "name"],
+          "properties": {
+            "channel": { "enum": ["api", "web"] },
+            "preset": { "type": "string", "description": "api-presets.json 的 id，如 deepseek、kimi" },
+            "name": { "type": "string", "description": "实际型号；课前按账号核对后填" },
+            "platform_entry": { "type": "string", "description": "网页版：Gem、自定义 GPT、普通对话" }
+          }
+        },
+        "date": { "$ref": "#/$defs/dateIso" },
+        "system_prompt": { "type": "string" },
+        "user_prompt": { "type": "string" },
+        "temperature": { "type": ["number", "string"], "description": "数值；接口不接受温度时写『接口不接受（推理型号）』，不得写一个未生效的数" },
+        "reasoning_effort": { "type": "string" },
+        "max_tokens": { "type": "integer" },
+        "samples": { "type": "integer", "minimum": 1 },
+        "check_plan": { "type": "string", "description": "逐句核对：用哪张表、查什么" },
+        "purpose": { "type": "string", "description": "用途：用来提出什么问题（讲义 3.3 最要紧的一栏）" },
+        "construct": { "type": "boolean", "description": "true 表示教学构造的卡（如错卡）" }
+      }
+    },
+
+    "runRecord": {
+      "title": "运行记录（一次模型调用或一次网页版粘贴）",
+      "type": "object",
+      "required": ["run_id", "card_id", "mode", "model", "prompt", "reply", "date"],
+      "properties": {
+        "run_id": { "type": "string" },
+        "card_id": { "type": "string" },
+        "sample_index": { "type": "integer", "minimum": 1 },
+        "mode": { "enum": ["live", "replay", "web-paste", "teaching-construct"], "description": "现场调用／预存回放／网页版粘贴／教学构造。回放的记录保留原始 mode=live 于 origin_mode，显示时一律标『预存回放』" },
+        "origin_mode": { "enum": ["live", "web-paste"] },
+        "model": { "type": "string", "description": "请求时的型号" },
+        "model_returned": { "type": ["string", "null"], "description": "响应中返回的型号" },
+        "preset": { "type": "string" },
+        "endpoint": { "type": "string" },
+        "temperature": { "type": ["number", "string", "null"] },
+        "reasoning_effort": { "type": ["string", "null"] },
+        "prompt": {
+          "type": "object",
+          "required": ["messages"],
+          "properties": {
+            "messages": { "type": "array", "items": { "type": "object", "required": ["role", "content"] } },
+            "source_ids": { "type": "array", "items": { "type": "string" }, "description": "实际拼进提示的史料条目" },
+            "gate": { "type": "object", "description": "source-gate 的结果：late[]、blocked[]、confirmed_late[]" }
+          }
+        },
+        "reply": { "type": "string" },
+        "finish_reason": { "type": ["string", "null"] },
+        "usage": { "type": ["object", "null"] },
+        "ms": { "type": ["number", "null"] },
+        "date": { "type": "string", "description": "ISO 8601 时间戳，含时区" },
+        "error": { "type": ["string", "null"], "description": "现场失败的原因；失败时 reply 为空，页面改显回放并保留本字段" },
+        "web": {
+          "type": "object",
+          "description": "网页版粘贴的附加信息（扩充部分丙三）",
+          "properties": {
+            "platform": { "type": "string" }, "entry_type": { "type": "string" }, "memory": { "type": "string" },
+            "search": { "type": "string" }, "model_shown": { "type": "string" }, "screenshot": { "type": "string" }
+          }
+        },
+        "environment": { "type": "string", "description": "运行者、机器、浏览器、网络（课前环境方案规定格式）" }
+      },
+      "not": { "anyOf": [ { "required": ["apiKey"] }, { "required": ["key"] }, { "required": ["authorization"] } ] }
+    },
+
+    "sentenceLabel": {
+      "title": "句子标注（讲义 @fig-check 五栏＋甲一评分＋共情三部分）",
+      "type": "object",
+      "required": ["run_id", "sentence_index", "sentence"],
+      "properties": {
+        "run_id": { "type": "string" },
+        "sentence_index": { "type": "integer", "minimum": 0 },
+        "sentence": { "type": "string" },
+        "score": { "enum": [0, 1, 2, null], "description": "甲一：0 守住；1 含糊越界；2 明确越界" },
+        "source_ref": { "type": ["string", "null"], "description": "依据：史料包条目 id＋页码；无依据为 null" },
+        "beyond_timepoint": { "enum": ["是", "否", "待定", null] },
+        "type": { "enum": ["知识", "概念", "规范", "文体", "无", null], "description": "错置类型，据讲义 2.1 的四种：知识、概念、规范、文体；@fig-check 表中写作『知识』" },
+        "induced": { "enum": ["是", "否", null] },
+        "omission": { "type": ["string", "null"], "description": "遗漏了什么" },
+        "empathy_part": { "enum": ["历史语境化", "视角采择", "情感联结", null], "description": "Endacott 与 Brooks 2013 的三部分，中文名据讲义 1.3" },
+        "annotator": { "type": "string" },
+        "construct": { "type": "boolean" },
+        "note": { "type": "string" }
+      }
+    },
+
+    "simRecord": {
+      "title": "仿真设置与记录（演示④小框架，扩充部分乙二）",
+      "type": "object",
+      "required": ["format", "sim_id", "setup", "steps"],
+      "properties": {
+        "format": { "const": "w09-sim/v1" },
+        "sim_id": { "type": "string" },
+        "setup": {
+          "type": "object",
+          "required": ["actors", "moderator", "rounds", "driver"],
+          "properties": {
+            "actors": { "type": "array", "items": { "type": "object", "required": ["name", "persona", "timepoint", "sources"],
+              "properties": { "name": { "type": "string" }, "persona": { "type": "string" }, "timepoint": { "$ref": "#/$defs/dateIso" },
+                "sources": { "type": "array", "items": { "type": "string" } }, "kind": { "enum": ["llm", "rule"], "description": "rule 为教学构造的规则式行动者" } } } },
+            "moderator": { "type": "object", "required": ["order", "rules"], "properties": { "order": { "type": "array", "items": { "type": "string" } }, "rules": { "type": "object", "properties": { "max_chars": { "type": "integer" } } } } },
+            "rounds": { "type": "array", "items": { "type": "object", "required": ["id", "topic"], "properties": { "id": { "type": "integer" }, "topic": { "type": "string" }, "max_chars": { "type": "integer" } } } },
+            "driver": { "type": "object", "description": "两个角色由同一模型驱动（讲义 4.1）", "properties": { "preset": { "type": "string" }, "model": { "type": "string" }, "temperature": { "type": ["number", "string", "null"] } } }
+          }
+        },
+        "steps": { "type": "array", "items": { "type": "object", "required": ["round", "actor", "run_id", "accepted"],
+          "properties": { "round": { "type": "integer" }, "actor": { "type": "string" }, "run_id": { "type": "string", "description": "指向运行记录，提示与回复全文在那里" },
+            "memory_len": { "type": "integer" }, "accepted": { "type": "boolean" }, "moderator_note": { "type": "string" } } } }
+      }
+    },
+
+    "timepointQuestion": {
+      "title": "时点题（扩充部分甲一）",
+      "type": "object",
+      "required": ["person", "timepoint", "question", "type"],
+      "properties": {
+        "person": { "type": "string" }, "timepoint_raw": { "$ref": "#/$defs/dateRaw" }, "timepoint": { "$ref": "#/$defs/dateIso" },
+        "question": { "type": "string" },
+        "type": { "enum": ["future", "past-absence", "past-presence", "past-only"] },
+        "hint": { "type": "string", "description": "出题者的提示，不交给模型" },
+        "expected": { "type": "string" }
+      }
+    },
+    "settingLabel": {
+      "title": "设定标注（D18 Q 国）",
+      "type": "object",
+      "required": ["sentence_id", "sentence", "label"],
+      "properties": { "setting": { "type": "string" }, "field": { "type": "string" }, "sentence_id": { "type": "string" }, "sentence": { "type": "string" }, "translation": { "type": "string" },
+        "label": { "enum": ["史料", "理论", "已知结局"] }, "annotator": { "type": "string" } }
+    },
+    "steeringSetting": {
+      "title": "引导设置（D11，只作记录，不发出请求）",
+      "type": "object",
+      "required": ["model", "method"],
+      "properties": { "model": { "type": "string" }, "layer": { "type": ["integer", "null"] }, "source_type": { "enum": ["contrastive", "sae_feature", "neuron", "preset"] },
+        "preset": { "type": "string" }, "index": { "type": ["integer", "null"] }, "strength": { "type": ["number", "null"] }, "method": { "type": "string" },
+        "question": { "type": "string", "description": "只限通用问题，不接受课程史料" }, "screenshot": { "type": "string" }, "date": { "type": "string" } }
+    },
+    "mechCard": {
+      "title": "机制卡（讲义 @fig-mech）",
+      "type": "object",
+      "required": ["id", "fields"],
+      "properties": { "id": { "type": "string" }, "authors": { "type": "string" },
+        "fields": { "type": "object", "properties": {
+          "pattern": { "$ref": "#/$defs/mechField" }, "actors": { "$ref": "#/$defs/mechField" }, "environment": { "$ref": "#/$defs/mechField" },
+          "rules": { "$ref": "#/$defs/mechField" }, "schedule": { "$ref": "#/$defs/mechField" }, "observation": { "$ref": "#/$defs/mechField" } } },
+        "odd": { "type": "object", "description": "ODD 七项 → 机制卡栏目名的映射，空项为 null" } }
+    },
+    "mechField": { "type": "object", "properties": { "text": { "type": "string" }, "origin": { "type": "array", "items": { "enum": ["史料", "理论", "已知结局"] } } } },
+    "sweepRow": { "title": "参数扫描表一行", "type": "object", "required": ["run"], "additionalProperties": true, "properties": { "run": { "type": "integer" } } },
+    "observedRow": { "title": "观察值表一行", "type": "object", "required": ["pattern", "value"], "properties": { "pattern": { "type": "string" }, "value": { "type": "number" }, "ref": { "type": "string" } } },
+    "payoffRow": { "title": "收益表一行", "type": "object", "required": ["action_a", "action_b", "payoff_a", "payoff_b"], "properties": { "action_a": { "type": "string" }, "action_b": { "type": "string" }, "payoff_a": { "type": "number" }, "payoff_b": { "type": "number" } } },
+    "populationRow": { "title": "种群一行", "type": "object", "required": ["type", "share"], "properties": { "type": { "enum": ["守约者", "背约者", "制裁者"] }, "share": { "type": "number", "minimum": 0, "maximum": 1 } } },
+    "surveyRow": { "title": "作答表一行（甲七）", "type": "object", "required": ["respondent", "item", "answer_agent", "answer_self"], "properties": { "respondent": { "type": "string" }, "item": { "type": "string" }, "answer_agent": { "type": "string" }, "answer_self": { "type": "string" }, "answer_retest": { "type": ["string", "null"] } } },
+
+    "throughRecord": {
+      "title": "贯穿记录（D23 导出与恢复）",
+      "type": "object",
+      "required": ["format", "saved_at", "packs", "cards", "runs", "labels", "sims", "mech_cards", "claim"],
+      "properties": {
+        "format": { "const": "w09-through/v1" },
+        "saved_at": { "type": "string" },
+        "packs": { "type": "array", "items": { "$ref": "#/$defs/sourcePack" } },
+        "cards": { "type": "array", "items": { "$ref": "#/$defs/conditionCard" } },
+        "runs": { "type": "array", "items": { "$ref": "#/$defs/runRecord" } },
+        "labels": { "type": "array", "items": { "$ref": "#/$defs/sentenceLabel" } },
+        "sims": { "type": "array", "items": { "$ref": "#/$defs/simRecord" } },
+        "setting_labels": { "type": "array", "items": { "$ref": "#/$defs/settingLabel" } },
+        "mech_cards": { "type": "array", "items": { "$ref": "#/$defs/mechCard" } },
+        "claim": { "type": "object", "properties": { "text": { "type": "string" }, "checklist": { "type": "object" } } }
+      }
+    }
+  }
+}

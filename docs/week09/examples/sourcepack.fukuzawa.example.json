@@ -1,0 +1,54 @@
+{
+ "_note": "候选，未经教师确认；结构示例（2026-11-10）。正文录文待做的条目 text 为空、text_kind=仅元数据。 维基文库页面同时收《时事新报》原报（漢字カタカナ）、漢字かな改写与《福澤諭吉著作集》版三种文本，送模型用哪一种须在条件卡写明（第一步待决事项 9）。",
+ "format": "w09-sourcepack/v1",
+ "id": "pack-fukuzawa",
+ "title": "福沢史料包（演示③）",
+ "calendar_note": "原报日期为明治十八年三月十六日，换算 1885-03-16。",
+ "entries": [
+  {
+   "id": "datsuaron-ws",
+   "person": "福沢諭吉",
+   "title": "脱亜論",
+   "author": "无署名（《时事新报》社说；作者归属有争论，见讲义 2.3）",
+   "layer": 2,
+   "written_date_raw": "明治十八年三月十六日",
+   "written_date": "1885-03-16",
+   "date_precision": "day",
+   "date_kind": "初刊",
+   "citation": "日文维基文库「脱亜論」，底本《時事新報》1885 年 3 月 16 日（917 号）；2026-11-08 取得原始 wikitext",
+   "page": {
+    "system": "电子文本段落",
+    "value": "第 1 段"
+   },
+   "text": "世界交通の道、便にして、西洋文明の風、東に漸し、到る處、草も木も此風に靡かざるはなし。",
+   "text_kind": "原文",
+   "transcriber": "维基文库（漢字かな、句读本）",
+   "sendable": true,
+   "sendable_basis": "公有领域；教师 2026-11-08 同意用公开本",
+   "visibility": "公开材料包",
+   "rights": "公有领域",
+   "note": "layer 取 2：无署名社说，按讲义 @fig-layers 归入『同时代他人所记、他人所编』一栏；若教师认定为福沢本人所作，改为 1"
+  },
+  {
+   "id": "fukuzawa-zenshu-10-238",
+   "person": "福沢諭吉",
+   "title": "脱亜論（岩波版全集）",
+   "author": "福沢諭吉（全集所收）",
+   "layer": 2,
+   "written_date_raw": "明治十八年三月十六日",
+   "written_date": "1885-03-16",
+   "date_precision": "day",
+   "date_kind": "初刊",
+   "citation": "《福沢諭吉全集》第十卷，岩波书店，1970 年再版",
+   "page": {
+    "system": "原书页",
+    "value": "238"
+   },
+   "text": "",
+   "text_kind": "仅元数据",
+   "sendable": false,
+   "sendable_basis": "NDL 个人送信本，带教师姓名水印：只引页码，不放页影，不送模型",
+   "visibility": "本机材料包"
+  }
+ ]
+}

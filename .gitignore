@@ -96,3 +96,6 @@ apps/week06/src/assets/modules/
 # 本机材料包（CBDB、梅颸日記、JBDB）与验收截图只在教师电脑。
 /apps/week08/prototype/importer/
 /apps/week08/local-only/
+# Week09：通用导入页构建产物与本机材料（录文、课前运行记录、截图、Key）不入库
+/apps/week09/prototype/importer/
+/apps/week09/local-only/

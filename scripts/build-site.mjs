@@ -40,6 +40,7 @@ const weekTitles = {
   week06: "第六周 · 文从何来",
   week07: "第七周 · 条目重构、实体识别与结构化输出",
   week08: "第八周 · 数字人文方法与人工智能",
+  week09: "第九周 · 历史人物模拟、历史共情与历史仿真",
 };
 for (const tool of releases.tools || []) {
   if (tool !== 'material-importer') throw Error('Unapproved public tool');

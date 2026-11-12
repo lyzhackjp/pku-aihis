@@ -52,6 +52,10 @@ jobs:
           WEEK08_TIANDITU_TK: ${{ secrets.WEEK08_TIANDITU_TK }}
           WEEK08_TIANDITU_GS: ${{ vars.WEEK08_TIANDITU_GS }}
           WEEK08_TIANDITU_CREDIT: ${{ vars.WEEK08_TIANDITU_CREDIT }}
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+        working-directory: apps/week09
+      - run: pnpm test && pnpm build && pnpm run check
+        working-directory: apps/week09
       - run: pnpm test && pnpm run check && pnpm build
         working-directory: apps/material-importer
       - run: python3 -m unittest discover -s local/tests
