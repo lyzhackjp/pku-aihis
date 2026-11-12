@@ -58,3 +58,5 @@ GitHub Pages不能设置自定义隔离头；第三周使用限定本周作用�
 教师于2026-11-12授权将week9的演示合入main并发布。第九周课件为无构建原型，`apps/week09` 为无依赖pnpm包：`pnpm test` 含计算回归（越界率、谢林模型、纳什议价、折叠判别式、差分方程等）与发布测试（28页三处页码、公开包边界、密钥不落盘），`pnpm build` 复制原型并内嵌相对路径导入器到 `www/pku-aihis/week09/`，`pnpm run check` 在build之后运行。PR与Pages工作流加入week09，published-weeks.json新增week09。
 
 公开站点只带公开本文字（梁启超《飲冰室合集》公开扫描本录文与维基文库本、井上哲次郎NDL公开本录文、《脱亜論》维基文库本）与书目；《章太炎全集》录文、DeepSeek与Kimi的课前运行记录、网页版记录、Neuronpedia截图都在教师本机材料包（`local-only/`，不入Git、不发布）。因此线上依赖课前记录的格子显示“待课前运行”，教师课上用顶栏“导入本机材料包”载入；现场调用的Key只存页面内存。全站检查核对28页、公开包不含章太炎全集录文与运行记录、内嵌导入器，以及站点内无本机材料包、截图、密钥文件或模型权重。
+
+部署记录：PR #24 以squash合入main（35bc878），检查`build-week03`通过；`Publish classroom`运行43160739927（2026-11-12）build与deploy均成功。线上回查：首页列出第九周；`/pku-aihis/week09/` 28页逐页打开无脚本错误、无404，内嵌导入页可达；`week09/local-only/` 返回404；release-manifest.json列week03—week09，week09共257个文件。未在线上做真实模型调用。
