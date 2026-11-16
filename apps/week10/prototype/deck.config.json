@@ -1,0 +1,16 @@
+{
+  "title": "第十周 · 人工智能辅助文献阅读",
+  "pageMap": "../../../docs/week10/page-map.json",
+  "glossary": "../../../docs/week10/glossary.json",
+  "scripts": ["deck-core.js", "w10-lib.js", "w10-core.js", "w10-labs1.js", "w10-labs2.js", "w10-labs3.js"],
+  "deck": {
+    "name": "第十周 · 人工智能辅助文献阅读",
+    "channel": "pku-aihis-week10-prototype-20261116",
+    "store": "week10-prototype/",
+    "entries": { "through": { "label": "阅读对照单", "page": "D15" }, "concepts": { "label": "概念表", "page": "D22" } }
+  },
+  "bodies": {
+    "D00": "hero-cover10", "D01": "demo1-lab", "D03": "three-lab", "D04": "claims-lab", "D06": "chain-lab", "D07": "layers-lab",
+    "D08": "align8-lab", "D10": "ems-lab", "D11": "views-lab", "D12": "table3-lab", "D14": "split4-lab", "D15": "sheet-lab", "D16": "closing-lab", "D22": "concept-table"
+  }
+}

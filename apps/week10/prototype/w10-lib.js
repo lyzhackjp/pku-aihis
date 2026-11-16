@@ -541,7 +541,122 @@
     return obj;
   }
 
+  /* =====================================================================
+   * 九、解析模型回答（宽松；解析不出的部分如实报告，由教师手工对应）
+   * ===================================================================== */
+
+  // 拆句：。！？!? 与换行；保留句末标点
+  function splitSentences(text) {
+    return String(text ?? '').replace(/\r/g, '').split(/(?<=[。！？!?])|\n+/).map((s) => s.trim()).filter((s) => s && !/^[#>*\-|\s]+$/.test(s));
+  }
+  // Markdown 表格 → {head, rows}；接受 | 分隔与全角｜。没有表格时返回 null
+  function parseMdTable(text) {
+    const lines = String(text ?? '').split(/\r?\n/).map((l) => l.trim()).filter((l) => /^[|｜].*[|｜]$/.test(l) || (l.match(/[|｜]/g) || []).length >= 2);
+    const cells = (l) => l.replace(/^[|｜]|[|｜]$/g, '').split(/[|｜]/).map((c) => c.trim().replace(/\*\*/g, ''));
+    const body = lines.filter((l) => !/^[|｜]?\s*:?-{2,}/.test(l.replace(/[|｜]\s*/, '')) && !/^[|｜\s:\-]+$/.test(l));
+    if (body.length < 2) return null;
+    const head = cells(body[0]);
+    return { head, rows: body.slice(1).map((l) => { const c = cells(l); return Object.fromEntries(head.map((h, i) => [h, c[i] ?? ''])); }) };
+  }
+  // 时间线：每行一个步骤；行首或行内取第一个日期写法；方括号内的出处标注另取
+  const DATE_IN_LINE = /((?:明治二十三年|1890\s*年)?\s*(?:[0-9]{1,2}|[一二三四五六七八九十]{1,3})\s*月(?:\s*(?:[0-9]{1,2}|[一二三四五六七八九十]{1,3})\s*日?(?:\s*[—\-－~～至到]\s*(?:[0-9]{1,2}|[一二三四五六七八九十]{1,3})\s*日)?)?(?:前后|左右|ごろ|頃|以后|以後|上旬|中旬|下旬|底|末|初)?)/u;
+  const LABEL_RE = /[［\[]\s*(材料|自知|推测)(?:\s*[：:]\s*([^］\]]*))?\s*[］\]]/u;
+  function parseTimeline(text, { run_id = null } = {}) {
+    const out = [];
+    for (const raw of String(text ?? '').split(/\r?\n/)) {
+      const line = raw.replace(/^\s*(?:[-*•·]|\d+[.、)）]|[（(]\d+[）)])\s*/, '').replace(/\*\*/g, '').trim();
+      if (!line || /^[#|｜]/.test(line)) continue;
+      const m = line.match(DATE_IN_LINE);
+      if (!m) { if (out.length && !/[：:]$/.test(line)) out[out.length - 1].action += ' ' + line; continue; }
+      const lab = line.match(LABEL_RE);
+      const action = line.replace(m[0], '').replace(LABEL_RE, '').replace(/^[\s：:，,—\-]+/, '').trim();
+      out.push({ step_id: `${run_id || 'paste'}-s${out.length + 1}`, run_id, date_raw: m[1].replace(/\s+/g, ''), action, label: lab ? lab[1] : null, label_by: lab ? 'model' : null, label_date: lab && lab[2] ? lab[2].trim() : null, base_row: null, match: null });
+    }
+    return out;
+  }
+  // 阿拉伯数字月日 → 稲田录文里的写法（六月二十日）；用于在年表录文中抽查［材料：月日］
+  const KN = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+  function toKanjiNum(n) { n = +n; if (n < 10) return KN[n]; if (n === 10) return '十'; if (n < 20) return '十' + KN[n - 10]; return KN[Math.floor(n / 10)] + '十' + (n % 10 ? KN[n % 10] : ''); }
+  function monthDayForms(raw) {
+    const s = String(raw ?? '').normalize('NFKC');
+    const m = s.match(/([0-9]{1,2}|[一二三四五六七八九十]{1,3})\s*月\s*(?:([0-9]{1,2}|[一二三四五六七八九十]{1,3})\s*日)?/);
+    if (!m) return [];
+    const mo = kanjiToInt(m[1]), d = m[2] ? kanjiToInt(m[2]) : null;
+    return d ? [`${toKanjiNum(mo)}月${toKanjiNum(d)}日`, `${mo}月${d}日`] : [`${toKanjiNum(mo)}月`, `${mo}月`];
+  }
+  function checkLabelDate(step, sourceText) {
+    if (step.label !== '材料') return { status: 'n/a' };
+    const forms = monthDayForms(step.label_date || step.date_raw);
+    if (!forms.length) return { status: 'no-date', forms };
+    const t = String(sourceText ?? '');
+    const at = forms.map((f) => t.indexOf(f)).filter((i) => i >= 0);
+    return at.length ? { status: 'found', forms, at: Math.min(...at), snippet: t.slice(Math.max(0, Math.min(...at) - 10), Math.min(...at) + 60) } : { status: 'not-found', forms };
+  }
+
+  // C02B：模型列出的异文与程序对齐表逐一匹配。两边文字（甲／乙）合起来按词的 Jaccard，≥ minSim 视为同一处
+  function matchVariants(programVariants, modelRows, { minSim = 0.5 } = {}) {
+    const words = (s) => new Set(String(s ?? '').toLowerCase().normalize('NFKC').match(/[\p{L}\p{N}]+/gu) || []);
+    const used = new Set();
+    const pairs = modelRows.map((r, i) => {
+      const w = words(`${r.a || ''} ${r.b || ''}`);
+      let best = null, bs = 0;
+      programVariants.forEach((v) => { if (used.has(v.variant_id)) return; const s = jaccard(w, words(`${v.a_text} ${v.b_text}`)) || 0; if (s > bs) { bs = s; best = v.variant_id; } });
+      if (bs >= minSim) { used.add(best); return { model_row: i, variant_id: best, sim: bs }; }
+      return { model_row: i, variant_id: null, sim: bs };
+    });
+    const hit = pairs.filter((p) => p.variant_id).length;
+    return { pairs, hit, recall: programVariants.length ? hit / programVariants.length : null, over: pairs.filter((p) => !p.variant_id).length, missed: programVariants.filter((v) => !used.has(v.variant_id)).map((v) => v.variant_id) };
+  }
+  // 宽松地从表格行中取"甲本／乙本"两栏
+  function variantRowsFromTable(t) {
+    if (!t) return [];
+    const pick = (row, re) => { const k = Object.keys(row).find((h) => re.test(h)); return k ? row[k] : ''; };
+    return t.rows.map((r) => ({ id: pick(r, /编号|序号|No|#/i), a: pick(r, /甲/), b: pick(r, /乙/), type: pick(r, /类型/), category: pick(r, /类别/), reason: pick(r, /理由/) })).map((r) => ({ ...r, a: r.a.replace(/^[（(]?(无|—|-|空)[）)]?$/, ''), b: r.b.replace(/^[（(]?(无|—|-|空)[）)]?$/, '') }));
+  }
+
+  /* =====================================================================
+   * 十、运行记录与贯穿记录
+   * ===================================================================== */
+  // 同一格的多条记录排序：课前回放按次序，其后是本机现场、网页版
+  function orderRuns(rs) { const w = { replay: 0, 'web-paste': 1, live: 2 }; return rs.slice().sort((a, b) => (w[a.mode] ?? 3) - (w[b.mode] ?? 3) || (a.sample_index || 0) - (b.sample_index || 0) || String(a.date).localeCompare(String(b.date))); }
+  function pickRun(rs, selId) { return rs.find((r) => r.run_id === selId) || rs[0] || null; }
+  const THROUGH_KEYS = ['runs', 'labels', 'claims', 'points', 'timeline', 'varlabels', 'effects', 'cellchecks', 'namechecks', 'sheet', 'packs', 'matrix', 'chengwen', 'arguments'];
+  function emptyThrough() { const t = { format: 'w10-through/v1' }; for (const k of THROUGH_KEYS) t[k] = []; t.page_state = {}; return t; }
+  function exportThrough(T, secrets = [], { restricted = false } = {}) {
+    const o = stripSecrets({ ...T, format: 'w10-through/v1', exported_at: new Date().toISOString(), contains_restricted_text: !!restricted }, secrets);
+    const s = JSON.stringify(o, null, 1);
+    for (const k of secrets.filter(Boolean)) if (s.includes(k)) throw new Error('导出中出现了 Key，已中止');
+    return s;
+  }
+  // 导入先验证；失败时返回 {ok:false}，调用者保留旧记录
+  function importThrough(text) {
+    let j;
+    try { j = JSON.parse(text); } catch (e) { return { ok: false, error: '不是 JSON：' + e.message }; }
+    if (!j || j.format !== 'w10-through/v1') return { ok: false, error: '不是第十周贯穿记录（format 应为 w10-through/v1）' };
+    if (/"(apiKey|api_key|authorization)"\s*:/i.test(text)) return { ok: false, error: '文件含 Key 一类的字段，整份拒绝' };
+    for (const k of THROUGH_KEYS) if (j[k] != null && !Array.isArray(j[k])) return { ok: false, error: `字段 ${k} 应为数组` };
+    const rec = emptyThrough();
+    for (const k of THROUGH_KEYS) rec[k] = j[k] || [];
+    rec.page_state = j.page_state || {};
+    // 载入的运行记录一律作回放显示，原模式存 origin_mode
+    rec.runs = rec.runs.map((r) => (r.mode === 'replay' || r.mode === 'pending' ? r : { ...r, origin_mode: r.origin_mode || r.mode, mode: 'replay' }));
+    return { ok: true, record: rec };
+  }
+
+  /* 课前运行：按条件卡排队列；已有成功记录的跳过（续跑） */
+  function planPreclass(cards, presets, samples, done = []) {
+    const ok = new Set(done.filter((r) => r.reply && !r.error).map((r) => r.run_id));
+    const jobs = [];
+    for (const c of cards) for (const p of presets) for (let s = 1; s <= samples; s++) {
+      const run_id = `${c.card_id}_${p}_${s}`;
+      jobs.push({ run_id, card_id: c.card_id, preset: p, sample_index: s, state: ok.has(run_id) ? '完成' : '待运行', error: null, attempts: 0 });
+    }
+    return { format: 'w10-preclass/v1', jobs };
+  }
+
   const api = {
+    splitSentences, parseMdTable, parseTimeline, monthDayForms, checkLabelDate, toKanjiNum, matchVariants, variantRowsFromTable,
+    orderRuns, pickRun, emptyThrough, exportThrough, importThrough, planPreclass, THROUGH_KEYS,
     hasCJK, KYUJITAI, tokenize, normalizeUnits, units,
     SequenceMatcher, lcsTable, lcsBacktrack, lcsOpcodes, align, toTEI,
     splitPages, quoteUnits, quoteCheck, QUOTE_STATUS_ZH,

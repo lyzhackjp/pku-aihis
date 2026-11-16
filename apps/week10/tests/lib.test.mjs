@@ -230,3 +230,50 @@ test('stripSecrets：去掉 Key 键，字符串里的 Key 值替换', () => {
   assert.equal(JSON.stringify(o).includes('sk-123'), false);
   assert.equal(o.apiKey, undefined);
 });
+
+/* ---------------- 第一批：解析、记录、课前运行队列 ---------------- */
+test('解析：时间线逐行取日期与［材料：月日］标注（D06、D07）', () => {
+  const t = '1. **6月20日**：井上毅致书山県有朋，附初稿［材料：六月二十日］\n2. 6月下旬 井上把初稿送元田征求意见［推测］\n说明文字\n- 10月30日 天皇下赐勅語［自知］';
+  const s = L.parseTimeline(t, { run_id: 'R1' });
+  assert.equal(s.length, 3);
+  assert.deepEqual(s.map((x) => x.date_raw), ['6月20日', '6月下旬', '10月30日']);
+  assert.deepEqual(s.map((x) => x.label), ['材料', '推测', '自知']);
+  assert.equal(s[0].label_date, '六月二十日');
+  assert.ok(s[1].action.includes('说明文字'), '无日期的行并入上一步');
+});
+test('解析：［材料：月日］到年表录文中抽查（D07）', () => {
+  const src = '六月二十日井上毅山県首相に書を送り……';
+  assert.equal(L.checkLabelDate({ label: '材料', label_date: '6月20日' }, src).status, 'found');
+  assert.equal(L.checkLabelDate({ label: '材料', label_date: '7月3日' }, src).status, 'not-found');
+  assert.equal(L.checkLabelDate({ label: '自知', date_raw: '6月20日' }, src).status, 'n/a');
+  assert.deepEqual(L.monthDayForms('10 月 24 日'), ['十月二十四日', '10月24日']);
+});
+test('解析：Markdown 表格与 C02B 召回、多报（D10）', () => {
+  const md = '| 编号 | 甲本文字 | 乙本文字 | 类型 |\n|---|---|---|---|\n| 1 | zu sagen | mitzuteilen | 改 |\n| 2 | （无） | vom Dienst | 增 |\n| 3 | Ems | Paris | 改 |';
+  const t = L.parseMdTable(md);
+  assert.equal(t.rows.length, 3);
+  const rows = L.variantRowsFromTable(t);
+  assert.equal(rows[1].a, '');
+  const r = L.align(EMS_A, EMS_B, { unit: 'word' });
+  const m = L.matchVariants(r.variants, rows);
+  assert.equal(m.hit, 2); assert.equal(m.over, 1); assert.equal(m.recall, 2 / 20);
+  assert.ok(m.missed.includes('V01'));
+});
+test('拆句', () => { assert.deepEqual(L.splitSentences('甲。乙！\n丙？'), ['甲。', '乙！', '丙？']); });
+test('贯穿记录：导出再导入一致；导出中无 Key；坏文件不替换旧记录（D16）', () => {
+  const T = L.emptyThrough();
+  T.sheet.push({ row_id: 'r1', verdict: '一致' }); T.runs.push({ run_id: 'x', mode: 'live', reply: 'ok', request: { headers: { Authorization: 'Bearer sk-abc123' } } });
+  const s = L.exportThrough(T, ['sk-abc123']);
+  assert.equal(s.includes('sk-abc123'), false);
+  const back = L.importThrough(s);
+  assert.equal(back.ok, true); assert.deepEqual(back.record.sheet, T.sheet);
+  assert.equal(back.record.runs[0].mode, 'replay'); assert.equal(back.record.runs[0].origin_mode, 'live');
+  assert.equal(L.importThrough('{bad').ok, false);
+  assert.equal(L.importThrough('{"format":"w09-through/v1"}').ok, false);
+  assert.equal(L.importThrough('{"format":"w10-through/v1","sheet":{}}').ok, false);
+});
+test('课前运行队列：条件 × 模型 × 次数；已成功的跳过（续跑）', () => {
+  const q = L.planPreclass([{ card_id: 'C02B' }], ['deepseek', 'kimi'], 2, [{ run_id: 'C02B_kimi_1', reply: 'x' }, { run_id: 'C02B_deepseek_2', reply: '', error: 'timeout' }]);
+  assert.equal(q.jobs.length, 4);
+  assert.deepEqual(q.jobs.filter((j) => j.state === '完成').map((j) => j.run_id), ['C02B_kimi_1']);
+});

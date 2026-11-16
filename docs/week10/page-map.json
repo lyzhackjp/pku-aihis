@@ -1,6 +1,6 @@
 [
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "贯穿记录入口",
@@ -74,7 +74,7 @@
   "footer": "D00 · 静态内容；讲义导入\"中心问题\"与四个动作"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "对照单（圈词送入，判定预填\"过度概括\"）",
@@ -86,7 +86,8 @@
    "C-18"
   ],
   "changes": [
-   "无实质出入；案例 C-09 的\"汇总全班圈词\"与方案一致。"
+   "无实质出入；案例 C-09 的\"汇总全班圈词\"与方案一致。",
+   "第一批：全班圈词汇总按教师 2026-11-16 定（课上举手数口头统计）；页面只统计本浏览器。追问\"学界对此有共识吗\"不预存（教师 2026-11-16）。"
   ],
   "missing": [
    "D1A、D1B 课前记录（C-01）：2 条件 × 2 模型 × 3 次",
@@ -275,7 +276,7 @@
   "footer": "D02 · 浏览器实时（篇幅估算）／静态内容（研究数字）；讲义 1.1"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [
    "遗漏",
@@ -366,7 +367,7 @@
   "footer": "D03 · 浏览器实时（定类汇总）／保存结果回放（示例句）；讲义 1.2 @fig-three"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [
    "原子主张",
@@ -563,7 +564,7 @@
   "footer": "D05 · 浏览器实时（距离与标签）／静态内容（材料）；讲义 2.1"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "对照单（时间线对照的行）",
@@ -574,7 +575,8 @@
    "C-24"
   ],
   "changes": [
-   "无实质出入。方案的\"拖到对应行\"改为\"页面按日期与文字预填、学生改\"，以节省课上时间；预填规则写在页上。"
+   "无实质出入。方案的\"拖到对应行\"改为\"页面按日期与文字预填、学生改\"，以节省课上时间；预填规则写在页上。",
+   "第一批：加\"粘贴一份时间线\"作通用输入（没有课前记录、或学生用自己的时间线时可用）。"
   ],
   "missing": [
    "D2A、D2B、D2C 课前记录",
@@ -662,7 +664,7 @@
   "footer": "D06 · 保存结果回放／浏览器实时（timeline-match）；讲义 2.2 @fig-chain、演示②"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [
    "参数知识",
@@ -678,7 +680,8 @@
   ],
   "changes": [
    "据扩充部分甲五增 κ（方案只有一致率与混淆矩阵）。",
-   "据案例 C-11 增进阶条件卡；材料缺，先做框架。"
+   "据案例 C-11 增进阶条件卡；材料缺，先做框架。",
+   "第一批：讲义写在 D2B 的时间线上标、再与 D2C 比；两次运行的步骤不一一对应，页面改为学生先给 D2C 的步骤标（模型标注先遮住），再揭开逐项比较。"
   ],
   "missing": [
    "D2B、D2C 课前记录",
@@ -763,7 +766,7 @@
   "footer": "D07 · 浏览器实时（label-agree）／保存结果回放（D2B、D2C）／教学构造（κ 小例子）；讲义 2.3"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [
    "见证本",
@@ -781,7 +784,8 @@
    "C-23"
   ],
   "changes": [
-   "据扩充部分甲三：\"词\"单位在中日文上用浏览器内置的 Intl.Segmenter 分词（离线可用，结果随浏览器的 ICU 版本可能略有差别，页上注明）；西文仍用与 ems_align.py 相同的切分。"
+   "据扩充部分甲三：\"词\"单位在中日文上用浏览器内置的 Intl.Segmenter 分词（离线可用，结果随浏览器的 ICU 版本可能略有差别，页上注明）；西文仍用与 ems_align.py 相同的切分。",
+   "第一批：井上初稿录文只进本机材料包（教师 2026-11-16）；稲田所定初稿不录入，只给两说理由（教师 2026-11-16）。"
   ],
   "missing": [
    "井上初稿录文的公开范围（待决）与人工复核（B-02）"
@@ -961,7 +965,7 @@
   "footer": "D09 · 静态内容（两项研究）／浏览器实时（一致率、κ）／教学构造（练习规则）；讲义 3.2 @fig-division"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "对照单（三处效果句）",
@@ -1062,7 +1066,7 @@
   "footer": "D10 · 浏览器实时（seq-align 复现）／保存结果回放（C02A、C02B）；讲义 3.3 与附录\"埃姆斯电报两本\""
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",
@@ -1139,7 +1143,7 @@
   "footer": "D11 · 静态内容（九家表）／浏览器实时（归栏对照）；讲义 4.1 @fig-views"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "对照单（逐格核对的行）",
@@ -1151,7 +1155,8 @@
    "C-18"
   ],
   "changes": [
-   "无实质出入。"
+   "无实质出入。",
+   "第一批：页码核对规则——回答格里写的\"第×页\"，到茅文节录该页里找学者名的前两字；节录之外的页如实标\"不在节录\"。"
   ],
   "missing": [
    "D3 课前记录",
@@ -1329,7 +1334,7 @@
   "footer": "D13 · 静态内容（四行对照）／浏览器实时（归类汇总）／教学构造（删去自我限定一句）；讲义 4.3 @fig-debate"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "对照单（点名核对的行）",
@@ -1430,7 +1435,7 @@
   "footer": "D14 · 保存结果回放／浏览器实时（set-overlap）；讲义 4.4 演示④"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [
    "阅读对照单"
@@ -1509,7 +1514,7 @@
   "footer": "D15 · 浏览器实时（汇总、quote-check）；讲义第五节 @fig-sheet（示例行待教师例子）"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "总导出",
@@ -1926,7 +1931,7 @@
   "footer": "D21 · 静态内容／保存结果回放（CollateX 输出）；讲义附录\"工具与资源\""
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",
