@@ -36,27 +36,26 @@
   W.marked = marked;
 
   /* ================= D00 封面 ================= */
+  /* 照第三至九周的封面：问题、一句引子、四个动作、运行性质图例。材料说明与导入办法在顶栏"材料说明"里 */
   class Cover10 extends Lab {
+    get noShell() { return true; }
     render() {
-      const m = S.matrix, st = Mat.state(), runs = Mat.replays().length + Through.get().runs.filter((r) => r.mode === 'replay').length;
-      const own = this.s.own || {};
-      const cell = (a, c) => { const [t, p] = m.cells[`${a}|${c}`]; return `<td><a href="#${esc(p)}" title="跳到 ${esc(p)}">${esc(t)}</a><span class="sub"> ${esc(p)}</span></td>`; };
-      this.out(`<div class="w10-hero">
-        <p class="w10-q">模型替我们读过的东西，<b>哪些可以直接用，哪些必须回到原文？</b></p>
-        <table class="items w10-matrix"><tr><th>四个动作</th>${m.cases.map(([, n]) => `<th>${esc(n)}</th>`).join('')}<th>我的材料（课后自填）</th></tr>
-        ${m.actions.map(([a, n, sec]) => `<tr><th>${esc(n)}<span class="sub">　讲义 ${esc(sec)}</span></th>${m.cases.map(([c]) => cell(a, c)).join('')}<td><input data-own="${a}" value="${esc(own[a] || '')}" placeholder="做什么、用什么材料" size="22"><span class="sub">${(own[a] || '').length >= 8 ? '✓' : ''}</span></td></tr>`).join('')}</table>
-        <p class="sub">${esc(m.source)}。自填一列只存本浏览器，随贯穿记录导出。</p>
-        <div class="w10-legend"><b>运行性质</b>
-          <span class="w9-badge live">实际调用</span> 现场或课前运行面板发出的请求，带时间戳
-          <span class="w9-badge replay">预存回放</span> 课前运行的记录，注明模型、日期、温度；"课前运行，非史料"
-          <span class="w9-badge web-paste">网页版粘贴</span> Gemini、ChatGPT 网页版，据截图录入
-          <span class="w9-badge teaching-construct">教学构造</span> 人工示意，页面上标出
-          <span class="w9-badge none">待课前运行</span> 尚无记录，不放构造的回答</div>
-        <p class="w10-status"><b>状态</b>　本机材料包：${st.local ? `已载入（${st.local.n} 条材料）` : '未载入（受限材料只显示页码与短引）'}　｜　课前记录：${runs} 条　｜　模型接入：${W.Model.state().mode === 'live' ? `现场调用（Key ${['deepseek', 'kimi'].filter((p) => W.Model.state().keys[p]).length}/2）` : '预存回放'}　｜　<button class="small" data-open="model">模型接入</button> <button class="small" data-open="preclass">课前运行</button></p>
-        <p class="w10-hushi">"${esc(S.hushi.text)}"<span class="sub">　${esc(S.hushi.source)}</span></p></div>`);
+      const T = Through.get();
+      const acts = S.fourActions.map(([a, p]) => [a, p]);
+      const counts = { D02: 0, D04: T.claims.length, D08: T.effects.length, D14: T.namechecks.length };
+      this.out(`<div class="hero-lab w9-hero"><div><p class="hero-title">模型替我们读过的东西，哪些可以直接用，哪些必须回到原文？</p>
+        <p class="hero-lead">胡适说："${esc(S.hushi.text)}"有了替我们读书的模型，这句话也要说给读的人听。</p></div>
+        <div class="hero-claim"><small>本讲的四个动作（核对结果汇到阅读对照单 D15）</small>
+          <div class="hero-path">${acts.map(([a, p]) => `<a href="#${p}"><b>${esc(a)}</b> <small>${p}</small><span class="dot ${counts[p] ? 'on' : ''}"></span></a>`).join('')}</div>
+          <p class="w9-hero-line">页面上每一处结果都标明来历：</p>
+          <ul class="w9-legend">
+            <li><span class="w9-badge calc">实际计算</span>页面内现场算出</li>
+            <li><span class="w9-badge live">实际调用</span>此刻经接口调用模型，附时间</li>
+            <li><span class="w9-badge replay">预存回放</span>课前真实运行的保存结果，非史料</li>
+            <li><span class="w9-badge web-paste">网页版粘贴</span>教师在网页版运行后录入，附界面型号与截图</li>
+            <li><span class="w9-badge teaching-construct">教学构造</span>人工示意，规则简化或数字为示例</li></ul>
+          <p class="w9-hero-status">材料、导入与模型接入见顶栏"材料说明"。</p></div></div>`);
     }
-    onChange(e) { const a = e.target.dataset.own; if (a) this.set({ own: { ...(this.s.own || {}), [a]: e.target.value } }); }
-    onClick(e) { const o = e.target.dataset.open; if (o === 'model') W.modelDialog(); if (o === 'preclass') W.Preclass.dialog(); }
   }
   register('hero-cover10', Cover10);
 
@@ -132,7 +131,7 @@
   const VERD = ['有据', '无据', '说宽'];
   class Claims extends Lab {
     defaults() { return { src: 'mao', threshold: null, preset: 'deepseek', claims: Array.from({ length: 5 }, () => ({ text: '', verdict: null, quote: '' })), points: Array.from({ length: 3 }, () => ({ text: '', in: null })) }; }
-    srcText() { const s = SOURCES.find((x) => x[0] === this.s.src); return s[2].map((id) => Mat.text(id)).join('\n'); }
+    srcText() { const s = SOURCES.find((x) => x[0] === this.s.src); return s[2].map((id) => Mat.text(id)).filter(Boolean).join('\n'); }
     render() {
       const s = this.s, src = this.srcText(), srcMissing = !src;
       const opts = s.threshold == null ? {} : { threshold: s.threshold };

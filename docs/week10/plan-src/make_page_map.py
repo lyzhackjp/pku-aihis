@@ -18,11 +18,11 @@ def page(**kw):
                 presets=[], comparisons=[], inputs=[], formula="", merge_note="", theme="light")
     base.update(kw); P.append(base)
 
-page(id="D00", section="全讲", anchor="导入；中心问题；乙〇 @fig-matrix", slot="—", minutes=0, layout="hero",
+page(id="D00", section="全讲", anchor="导入；中心问题；乙〇 @fig-matrix", slot="—", minutes=0, layout="hero", theme="dark",
      title="模型替我们读过的东西", question="哪些可以直接用，哪些必须回到原文？",
      steps=["四个动作", "三个案例", "运行性质图例", "材料与模型状态"],
-     student_operation="点选 3×4 矩阵（三个案例 × 四个动作）中的一格，跳到对应演示页；课后在空白列填自己的材料，页面检查每格是否写了\"做什么、用什么材料\"。",
-     observable_output="四个动作作为目录；矩阵每格链到演示页与讲义节次；运行性质四档图例；本机材料包、模型接入（Key 0/2）、课前记录条数的状态条。",
+     student_operation="点四个动作之一，进入对应页；顶栏\"材料说明\"里有三个案例 × 四个动作的矩阵，课后可在空白列填自己的材料。",
+     observable_output="中心问题、胡适一句、四个动作（链到页）、运行性质图例；材料清单、导入办法、模型接入、课前运行与矩阵放在顶栏\"材料说明\"面板里。",
      lesson_evidence="讲义导入\"中心问题\"与四个动作；扩充部分乙〇 @fig-matrix。",
      extension=["乙〇"], inputs=["矩阵表（action, case, task, page）"],
      layers={"basic": "四个动作目录；矩阵入口。", "advanced": "学生自填一列（自己研究中的一份材料）。"},
@@ -31,7 +31,7 @@ page(id="D00", section="全讲", anchor="导入；中心问题；乙〇 @fig-mat
      mode="静态；学生自填部分为页面内记录",
      nature=[{"tier": "静态", "what": "矩阵与图例"}, {"tier": "实际计算", "what": "自填列完成度"}],
      priority="P0", batch=1, through="贯穿记录入口",
-     changes=["据扩充部分乙〇增：封面放 3×4 矩阵作导航，并加学生自填一列（方案只写\"中心问题、四个动作、图例、状态\"）。"])
+     changes=["据扩充部分乙〇增 3×4 矩阵与学生自填一列。", "教师 2026-11-16：封面照其他周，不放太多字；材料说明与导入改放顶栏\"材料说明\"标签，矩阵也移到那里。"])
 
 page(id="D01", section="导入", anchor="导入：几分证据；演示①", slot="0—10", minutes=10, layout="workbench",
      title="几分证据：茅海建怎样看袁世凯告密", question="同一个问题，不给材料与给材料，模型的回答各比原文说满了几分？",

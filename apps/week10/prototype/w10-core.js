@@ -466,17 +466,47 @@
     }
   });
 
+  /* ================= 材料说明（顶栏标签；封面只放问题与图例，教师 2026-11-16） ================= */
+  const Info = {
+    html() {
+      const S = window.W10_STATIC, es = Mat.entries(), m = S.matrix, own = (T.page_state.info || {}).own || {};
+      const nrep = M.replays.length + T.runs.filter((r) => r.mode === 'replay').length;
+      const row = (e) => `<tr><td>${esc(e.title)}</td><td class="sub">${esc(e.citation || '')}${e.page?.value ? `｜${esc(e.page.system)} ${esc(e.page.value)}` : ''}</td><td>${esc(e.text_kind === '仅元数据' ? '录文' : e.text_kind)}</td><td>${e.visibility === '公开' ? '随课件' : e.visibility === '本机材料包' ? '本机材料包' : '本浏览器导入'}</td><td>${e.sendable ? '可' : '<b class="nil">不可</b>'}</td><td>${e.text ? '<span class="ok">已载入</span>' : '<span class="nil">需导入本机材料包</span>'}</td></tr>`;
+      const cell = (a, c) => { const [t, p] = m.cells[`${a}|${c}`]; return `<td><a href="#${esc(p)}" data-x="close">${esc(t)}</a> <span class="sub">${esc(p)}</span></td>`; };
+      return `<h3>本课材料</h3><table class="items"><tr><th>材料</th><th>版本与位置</th><th>文本身份</th><th>发布</th><th>送模型</th><th>本页状态</th></tr>${es.map(row).join('')}</table>
+        <p class="sub">埃姆斯两本据 GHDI 德文页，中译为本课教学转述；勅語成文已对国立公文書館原本影像（原本影像只给链接）。茅海建文、稲田录文、井上草案与书翰七条只进本机材料包，线上版只有页码与短引；扫描本不放页影（教师 2026-11-14、11-16）。录文均为据影像目验录入，待人工逐字复核。</p>
+        <h3>导入与接入</h3><ul class="w10-howto">
+          <li><b>本机材料包</b>：${M.local ? `<span class="ok">${esc(M.localMsg)}</span>` : `未载入。经 start_week10.command 打开时自动载入；也可手动 <label class="pack-btn small">选择 week10-pack.json<input type="file" accept=".json" data-local hidden></label>`}　课前记录 ${nrep} 条。</li>
+          <li><b>导入表格</b>（CSV、TSV、JSON）：阅读对照单、原子主张、时间线、成文表、研究说法表、见证本等十一类，中文表头可直接认出；原文纪年照录，不自动换算。<button class="small" data-w10-import="">打开</button></li>
+          <li><b>文献导入</b>：课程通用导入页（PDF、Word、图像），处理后送回本课件，由导入者声明可否送模型。<button class="small" data-open-importer>打开</button></li>
+          <li><b>模型接入</b>：DeepSeek 非思考、温度 0.7；Kimi 只有思考模式、温度固定、档位 low。Key 只存页面内存，不进记录与导出。<button class="small" data-open-model>打开</button></li>
+          <li><b>课前运行</b>：按条件卡批量运行（10 张卡 × 两家 × 3 次），失败可续跑，导出运行记录（不含 Key）。<button class="small" data-open-preclass>打开</button></li>
+          <li><b>网页版</b>（Gemini、ChatGPT）：在 D01、D14 的回答格点"录入网页版回答"，按截图录入，标"录入待核"。提示与条件卡同文，见 第十周/demo/网页版提示/。</li></ul>
+        <h3>三个案例 × 四个动作</h3><table class="items w10-matrix"><tr><th></th>${m.cases.map(([, n]) => `<th>${esc(n)}</th>`).join('')}<th>我的材料（课后自填）</th></tr>${m.actions.map(([a, n, sec]) => `<tr><th>${esc(n)}<span class="sub"> ${esc(sec)}</span></th>${m.cases.map(([c]) => cell(a, c)).join('')}<td><input data-own="${a}" value="${esc(own[a] || '')}" placeholder="做什么、用什么材料" size="20"></td></tr>`).join('')}</table><p class="sub">${esc(m.source)}；点格子进入对应页。自填一列存在贯穿记录里。</p>`;
+    },
+    dialog() {
+      if (document.querySelector('.model-shade.w10-info')) return;
+      const shade = document.createElement('div'); shade.className = 'model-shade w10-info';
+      const draw = () => { if (!shade.isConnected) return; if (shade.contains(document.activeElement) && document.activeElement.tagName === 'INPUT') return; shade.innerHTML = `<div class="model-panel wide" role="dialog" aria-label="材料说明"><header><b>材料说明</b><button data-x="close">关闭</button></header>${Info.html()}</div>`; };
+      const on = () => (shade.isConnected ? draw() : ['w10-materials', 'w10-model', 'w10-through'].forEach((n) => document.removeEventListener(n, on)));
+      ['w10-materials', 'w10-model', 'w10-through'].forEach((n) => document.addEventListener(n, on));
+      shade.addEventListener('click', (e) => { if (e.target.closest('[data-x="close"]') || e.target === shade) shade.remove(); if (e.target.closest('[data-open-model]')) modelDialog(); if (e.target.closest('[data-open-importer]')) openImporter(); if (e.target.closest('[data-open-preclass]')) Preclass.dialog(); });
+      shade.addEventListener('change', (e) => { const a = e.target.dataset.own; if (a) { T.page_state.info = T.page_state.info || {}; T.page_state.info.own = { ...(T.page_state.info.own || {}), [a]: e.target.value }; Through.save(); } });
+      document.body.append(shade); draw();
+    },
+  };
+
   /* ================= 顶栏 ================= */
   function topBar() {
     const top = document.querySelector('.deck-top'); if (!top) return false; if (top.querySelector('.pack-bar')) return true;
     const span = document.createElement('span'); span.className = 'pack-bar';
     const draw = () => {
       const live = MS.mode === 'live', keys = ['deepseek', 'kimi'].filter((p) => MS.keys[p]).length, nrep = M.replays.length + T.runs.filter((r) => r.mode === 'replay').length;
-      span.innerHTML = (M.local ? `<span class="pack-ok" title="${esc(M.localMsg)}">本机材料包已载入（回放 ${nrep} 条）</span>` : `<label class="pack-btn small" title="${esc(M.localMsg || '教师材料录文与课前运行记录')}">导入本机材料包<input type="file" accept=".json" data-local hidden></label>`)
+      span.innerHTML = '<button class="small" data-open-info>材料说明</button> ' + (M.local ? `<span class="pack-ok" title="${esc(M.localMsg)}">本机材料包已载入（回放 ${nrep} 条）</span>` : `<label class="pack-btn small" title="${esc(M.localMsg || '教师材料录文与课前运行记录')}">导入本机材料包<input type="file" accept=".json" data-local hidden></label>`)
         + ` <button class="small" data-w10-import="">导入表格</button> <button class="small" data-open-importer title="课程通用导入页（PDF、Word、图像）">文献导入</button> <button class="small" data-open-preclass>课前运行</button> <button class="small ${live ? 'on' : ''}" data-open-model>模型接入：${live ? `现场调用（Key ${keys}/2）` : '预存回放'}</button>`;
     };
     draw(); ['w10-materials', 'w10-model', 'w10-through'].forEach((n) => document.addEventListener(n, draw));
-    span.addEventListener('click', (e) => { if (e.target.closest('[data-open-model]')) modelDialog(); if (e.target.closest('[data-open-importer]')) openImporter(); if (e.target.closest('[data-open-preclass]')) Preclass.dialog(); });
+    span.addEventListener('click', (e) => { if (e.target.closest('[data-open-model]')) modelDialog(); if (e.target.closest('[data-open-importer]')) openImporter(); if (e.target.closest('[data-open-preclass]')) Preclass.dialog(); if (e.target.closest('[data-open-info]')) Info.dialog(); });
     top.insertBefore(span, top.querySelector('[data-act="presenter"]') || null);
     return true;
   }

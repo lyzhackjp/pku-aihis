@@ -7,7 +7,7 @@
   const fmt = (x, d = 3) => (x == null || Number.isNaN(x) ? '—' : String(Math.round(x * 10 ** d) / 10 ** d));
   const PRESETS4 = ['deepseek', 'kimi', 'gemini', 'chatgpt'];
   const presetSel = (v) => `<select data-o="preset">${PRESETS4.map((p) => `<option value="${p}" ${p === v ? 'selected' : ''}>${esc(W.PRESET_LABEL[p])}</option>`).join('')}</select>`;
-  const MAO = () => Mat.text('mao-history') + '\n' + Mat.text('mao-conclusion');
+  const MAO = () => [Mat.text('mao-history'), Mat.text('mao-conclusion')].filter(Boolean).join('\n');
 
   /* ================= D11 一事几说 ================= */
   class Views extends Lab {
