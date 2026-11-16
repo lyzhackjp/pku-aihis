@@ -99,3 +99,7 @@ apps/week06/src/assets/modules/
 # Week09：通用导入页构建产物与本机材料（录文、课前运行记录、截图、Key）不入库
 /apps/week09/prototype/importer/
 /apps/week09/local-only/
+
+# Week10 prototype: local-only materials and shared importer build output (same as week09)
+/apps/week10/local-only/
+/apps/week10/prototype/importer/

@@ -1,0 +1,30 @@
+{
+ "_note": "结构示例：据扩充部分乙二 @fig-chengwen 袁世凯一行（成文时间一栏的推测如实保留）",
+ "rows": [
+  {
+   "doc_id": "yuan-wuxu-riji",
+   "title": "袁世凯《戊戌日记》（《戊戌纪略》）",
+   "event_date_raw": "光绪二十四年八月初三至初五日前后",
+   "event_date": "1898-09",
+   "signed_date_raw": "八月十四日记于天津督署",
+   "signed_date": "1898-09-29",
+   "written_date_alt": [
+    {
+     "date_raw": "光绪三十年以后（补作之说）",
+     "date": null,
+     "basis": "刘凤翰 1969 第 141、148 页",
+     "certainty": "推测"
+    }
+   ],
+   "printed_date_raw": "宣统元年",
+   "printed_date": "1909",
+   "versions": [
+    "南通翰墨林单行本（1909）",
+    "《申报》连载（1926 年 2 月）",
+    "北京历史博物馆藏钞本"
+   ],
+   "author_relation": "当事人自述",
+   "basis": "刘凤翰 1969；张一麐 1926 年致蔡元培信（郭卫东转引）；成文时间有争议"
+  }
+ ]
+}

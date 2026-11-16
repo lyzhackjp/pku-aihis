@@ -1,0 +1,91 @@
+{
+ "_note": "结构示例，教学构造：扩充部分甲五的十处小例子（本稿虚构）",
+ "pairs": [
+  {
+   "item_id": 1,
+   "label_a": "删",
+   "label_b": "删",
+   "labeler_a": "student",
+   "labeler_b": "model"
+  },
+  {
+   "item_id": 2,
+   "label_a": "删",
+   "label_b": "删",
+   "labeler_a": "student",
+   "labeler_b": "model"
+  },
+  {
+   "item_id": 3,
+   "label_a": "改述",
+   "label_b": "改述",
+   "labeler_a": "student",
+   "labeler_b": "model"
+  },
+  {
+   "item_id": 4,
+   "label_a": "改述",
+   "label_b": "语气",
+   "labeler_a": "student",
+   "labeler_b": "model"
+  },
+  {
+   "item_id": 5,
+   "label_a": "语气",
+   "label_b": "语气",
+   "labeler_a": "student",
+   "labeler_b": "model"
+  },
+  {
+   "item_id": 6,
+   "label_a": "事实",
+   "label_b": "事实",
+   "labeler_a": "student",
+   "labeler_b": "model"
+  },
+  {
+   "item_id": 7,
+   "label_a": "删",
+   "label_b": "删",
+   "labeler_a": "student",
+   "labeler_b": "model"
+  },
+  {
+   "item_id": 8,
+   "label_a": "改述",
+   "label_b": "事实",
+   "labeler_a": "student",
+   "labeler_b": "model"
+  },
+  {
+   "item_id": 9,
+   "label_a": "语气",
+   "label_b": "语气",
+   "labeler_a": "student",
+   "labeler_b": "model"
+  },
+  {
+   "item_id": 10,
+   "label_a": "删",
+   "label_b": "删",
+   "labeler_a": "student",
+   "labeler_b": "model"
+  }
+ ],
+ "result": {
+  "N": 10,
+  "po": 0.8,
+  "pe": 0.27,
+  "kappa": 0.726027397260274,
+  "labels": [
+   "删",
+   "改述",
+   "语气",
+   "事实"
+  ],
+  "disagreements": [
+   4,
+   8
+  ]
+ }
+}
