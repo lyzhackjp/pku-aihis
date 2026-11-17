@@ -38,10 +38,18 @@
       const scholarCol = head.find((h) => /学者/.test(h)) || head[0];
       const pages = mao ? Object.fromEntries(L.splitPages(mao).map((p) => [p.page, p.text])) : {};
       const pageCheck = (row) => {
-        const txt = Object.values(row).join(' '), ps = [...txt.matchAll(/第\s*(\d{3})\s*页/g)].map((m) => m[1]); const name = String(row[scholarCol] || '').split(/[、，,（(]/)[0].trim();
-        if (!ps.length) return '<span class="sub">无页码</span>';
+        // 只认"原刊第×页"（提示要求的写法），可以是区间"第198—199页"；所据材料栏里别的书的页码不算
+        const txt = Object.values(row).join(' '), refs = [...txt.matchAll(/原刊第\s*(\d{3})(?:\s*[—\-－~～至]\s*(\d{3}))?\s*页/g)].map((m) => [m[1], m[2] || m[1]]);
+        const name = String(row[scholarCol] || '').split(/[、，,（(\s]/)[0].trim();
+        if (!refs.length) return '<span class="sub">无"原刊第×页"</span>';
         if (!mao) return '<span class="sub">需材料包</span>';
-        return ps.filter((p, i) => ps.indexOf(p) === i).map((p) => (pages[p] == null ? `<span class="nil">第${p}页不在节录</span>` : name && pages[p].includes(name.slice(0, 2)) ? `<span class="ok">第${p}页✓</span>` : `<b class="nil">第${p}页未见"${esc(name)}"</b>`)).join(' ');
+        const seen = new Set();
+        return refs.filter(([a, b]) => { const k = a + '-' + b; if (seen.has(k)) return false; seen.add(k); return true; }).map(([a, b]) => {
+          const ps = []; for (let p = +a; p <= +b && ps.length < 12; p++) ps.push(String(p));
+          const lab = a === b ? `第${a}页` : `第${a}—${b}页`;
+          if (ps.every((p) => pages[p] == null)) return `<span class="nil">${lab}不在节录</span>`;
+          return name && ps.some((p) => (pages[p] || '').includes(name.slice(0, 2))) ? `<span class="ok">${lab}✓</span>` : `<b class="nil">${lab}未见"${esc(name)}"</b>`;
+        }).join(' ');
       };
       const mineIdx = new Set(String(s.mine).split(/[,，\s]+/).map((x) => +x).filter(Boolean));
       const ck = s.checks[run?.run_id] || {};

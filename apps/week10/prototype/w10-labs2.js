@@ -146,8 +146,10 @@
         else if (s.cond === 'C02A') {
           modelBlock = `<table class="items"><tr><th>编号</th><th>模型的类别</th><th>理由</th></tr>${rows.map((r) => `<tr><td>${esc(r.id)}</td><td>${esc(r.category)}</td><td>${esc(r.reason)}</td></tr>`).join('')}</table><p class="sub">解析出 ${rows.length} 行（程序 20 处）。看它把哪几处归为"改变事实陈述"，你同意吗？分类的一致率与 κ 在 D09（第二批）。</p>`;
         } else {
-          const mv = L.matchVariants(res.variants, rows);
-          modelBlock = `<p class="w10-sum"><b>召回</b> ${mv.hit}／${res.variants.length}＝${fmt(mv.recall)}　<b>多报</b> ${mv.over} 行　<b>漏列</b> ${mv.missed.map(esc).join('、') || '无'}　<span class="sub">（模型一行与程序一处按两边文字的词 Jaccard ≥ 0.5 视为同一处；匹配不上的行由教师人工对应）</span></p><table class="items"><tr><th>模型行</th><th>甲</th><th>乙</th><th>对应程序</th></tr>${rows.map((r, i) => `<tr><td>${esc(r.id || i + 1)}</td><td>${esc(r.a)}</td><td>${esc(r.b)}</td><td>${esc(mv.pairs[i].variant_id || '多报？')} <span class="sub">${fmt(mv.pairs[i].sim, 2)}</span></td></tr>`).join('')}</table>`;
+          const cv = L.coverVariants(res, rows);
+          modelBlock = `<p class="w10-sum"><b>模型列了 ${rows.length} 行；程序 ${res.variants.length} 处中被列到 ${cv.covered.length} 处</b>（${fmt(cv.recall)}）　<b>漏列</b> ${cv.missed.map(esc).join('、') || '无'}　<b>多报</b> ${cv.over} 行　<b>定位不回原文</b> ${cv.unlocated} 行
+            <br><span class="sub">比法：模型常按句列异文，一行覆盖程序的几处，所以不一对一配对；把模型每行的甲、乙文字逐词定位回两本（至少连续 2 词），程序的一处只要落在模型某行定位到的范围里就算列到；定位到的全是两本相同的文字，算多报；定位不回的行（改写了原文、或单词一行）由教师看原文判断。</span></p>
+            <table class="items"><tr><th>模型行</th><th>甲</th><th>乙</th><th>模型的类型</th><th>覆盖程序的</th></tr>${rows.map((r, i) => `<tr><td>${esc(r.id || i + 1)}</td><td>${esc(r.a)}</td><td>${esc(r.b)}</td><td>${esc(r.type)}</td><td>${cv.rows[i].located ? (cv.rows[i].variants.join('、') || '<b class="nil">多报？</b>') : '<span class="nil">定位不回</span>'}</td></tr>`).join('')}</table>`;
         }
       }
       this.out(`<div class="w9-two"><section class="w9-col"><header><b>甲　阿贝肯原电</b></header><p class="w10-de">${esc(A)}</p><p class="w10-zh">${esc(S.emsZh.a)}</p></section><section class="w9-col"><header><b>乙　俾斯麦新闻稿</b></header><p class="w10-de">${esc(B)}</p><p class="w10-zh">${esc(S.emsZh.b)}</p></section></div>

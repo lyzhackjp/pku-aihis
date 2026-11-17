@@ -287,3 +287,24 @@ test('解析：表格形式与只到年的时间线（Kimi 课前回答的写法
   assert.equal(L.parseDateRange('1890年10月30日', 1890).from, '1890-10-30');
   assert.equal(L.parseDateRange('1879年', 1890), null);
 });
+test('C02B 覆盖：模型按句列异文时，一行覆盖程序的几处；整句删除算列到；只含相同文字的一行算多报（2026-11-17 据实测改）', () => {
+  const r = L.align(EMS_A, EMS_B, { unit: 'word' });
+  const rows = [
+    { a: 'Ich wies ihn, zuletzt etwas ernst, zurück, da man à tous jamais dergleichen Engagements nicht nehmen dürfe, noch könne.', b: '' },
+    { a: 'nichts weiter zu sagen habe', b: 'nichts weiter mitzuteilen habe' },
+    { a: 'Benedetti', b: 'Benedetti' },
+    { a: 'völlig erfundener Satz hier', b: '' },
+  ];
+  const c = L.coverVariants(r, rows);
+  assert.ok(c.covered.includes('V10') && c.covered.includes('V19'));
+  assert.equal(c.unlocated, 2, '单词一行（不足 2 词）与编造的一行都定位不回');
+  assert.equal(c.recall, c.covered.length / 20);
+});
+test('时间线预填：措辞不同而日期精确对得上时也预填（2026-11-17）', () => {
+  const s = L.suggestRows(CHAIN, [{ step_id: 'x', date_raw: '1890年10月30日', action: '明治天皇裁可，以《教育ニ関スル勅語》颁布，授予文相' }]);
+  assert.equal(s[0].base_row, 10);
+});
+test('解析：只有月份的小标题不算一步；日期单独一行、事项在下一行的照样接上', () => {
+  const s = L.parseTimeline('**2月**\n- **2月17日** 地方官会议开始\n**6月20日**\n井上毅致书山県');
+  assert.deepEqual(s.map((x) => [x.date_raw, x.action]), [['2月17日', '地方官会议开始'], ['6月20日', '井上毅致书山県']]);
+});

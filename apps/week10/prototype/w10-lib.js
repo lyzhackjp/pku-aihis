@@ -400,7 +400,9 @@
       for (const b of base) {
         const br = parseDateRange(b.date_raw, year);
         if (r && br && !overlaps(r, br, 31)) continue;
-        const sim = jaccard(bigrams(s.action), bigrams(b.action));
+        let sim = jaccard(bigrams(s.action), bigrams(b.action));
+        // 日期相交、基准行的区间不超过一个月、文字二字组 Jaccard ≥ 0.03：加 0.25（措辞不同而日期对得上的，也能预填；2026-11-17 据 Kimi 课前回答补）
+        if (sim >= 0.03 && r && br && overlaps(r, br) && (Date.parse(br.to) - Date.parse(br.from)) / 864e5 <= 31) sim += 0.25; // 文字上至少有一点相同，才给日期加权
         if (sim > bestSim) { bestSim = sim; best = b.row; }
       }
       return { ...s, base_row: bestSim >= minSim ? best : null, suggest_sim: Math.round(bestSim * 1000) / 1000 };
@@ -581,7 +583,7 @@
         if (/^(时间|日期|年月|時期)$/.test(cells[di])) continue;
         push(dm[1], rest, raw); continue;
       }
-      const line = raw.replace(/^\s*(?:[-*•·]|\d+[.、)）]|[（(]\d+[）)])\s*/, '').replace(/\*\*/g, '').trim();
+      const line = raw.replace(/\*\*/g, '').replace(/^\s*(?:[-*•·]|\d+[.、)）]|[（(]\d+[）)])\s*/, '').trim();
       if (!line || /^[#|｜]/.test(line)) continue;
       const ym = !DATE_IN_LINE.test(line) && line.match(YEAR_ONLY);
       if (ym) { push(ym[1], line.slice(ym[0].length), line); continue; }
@@ -591,7 +593,8 @@
       const action = line.replace(m[0], '').replace(LABEL_RE, '').replace(/^[\s：:，,—\-]+/, '').trim();
       out.push({ step_id: `${run_id || 'paste'}-s${out.length + 1}`, run_id, date_raw: m[1].replace(/\s+/g, ''), action, label: lab ? lab[1] : null, label_by: lab ? 'model' : null, label_date: lab && lab[2] ? lab[2].trim() : null, base_row: null, match: null });
     }
-    return out;
+    // 只有日期、没有事项的行（"**2月**"一类小标题，且其后没有接续的文字）不算一步；重新编号
+    return out.filter((x) => x.action.replace(/[\s\p{P}\p{S}]/gu, '')).map((x, i) => ({ ...x, action: x.action.trim(), step_id: `${run_id || 'paste'}-s${i + 1}` }));
   }
   // 阿拉伯数字月日 → 稲田录文里的写法（六月二十日）；用于在年表录文中抽查［材料：月日］
   const KN = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
@@ -626,6 +629,31 @@
     const hit = pairs.filter((p) => p.variant_id).length;
     return { pairs, hit, recall: programVariants.length ? hit / programVariants.length : null, over: pairs.filter((p) => !p.variant_id).length, missed: programVariants.filter((v) => !used.has(v.variant_id)).map((v) => v.variant_id) };
   }
+  // C02B 的正式比较（2026-11-17 据课前实测改）：模型常按句列异文，一行覆盖程序的几处，一对一配对会冤枉它。
+  // 改为"覆盖"：把模型每行的甲、乙文字定位回两本（逐词，最长公共片段，至少 2 词），程序的一处异文只要有一个单位落在
+  // 模型某行定位到的范围里，就算被模型列到；模型一行定位到的单位全落在两本相同处、碰不到任何异文，算"多报"；定位不回原文的行另计。
+  function coverVariants(res, modelRows, { minSeg = 2 } = {}) {
+    const ua = res.unitsA.map((u) => u.norm), ub = res.unitsB.map((u) => u.norm);
+    const smA = new SequenceMatcher(null, ua), smB = new SequenceMatcher(null, ub);
+    const locate = (text, units, sm) => {
+      const q = tokenize(text, 'word').map((t) => t.raw);
+      const hit = new Set(); if (!q.length) return hit;
+      sm.a = q; // q 作 a，原文作 b（b2j 已按原文建好）
+      const stack = [[0, q.length]];
+      while (stack.length) { const [lo, hi] = stack.pop(); if (hi - lo < minSeg) continue; const [i, j, k] = sm.findLongestMatch(lo, hi, 0, units.length); if (k < minSeg) continue; for (let t = j; t < j + k; t++) hit.add(t); stack.push([lo, i], [i + k, hi]); }
+      return hit;
+    };
+    const varA = res.variants.map((v) => new Set(range(v.a_units))), varB = res.variants.map((v) => new Set(range(v.b_units)));
+    const covered = new Set(), rows = modelRows.map((r, idx) => {
+      const ha = locate(r.a || '', ua, smA), hb = locate(r.b || '', ub, smB);
+      const hits = res.variants.filter((v, vi) => [...varA[vi]].some((t) => ha.has(t)) || [...varB[vi]].some((t) => hb.has(t)) ).map((v) => v.variant_id);
+      hits.forEach((h) => covered.add(h));
+      return { model_row: idx, located: ha.size + hb.size > 0, variants: hits };
+    });
+    return { rows, covered: [...covered], recall: res.variants.length ? covered.size / res.variants.length : null, missed: res.variants.filter((v) => !covered.has(v.variant_id)).map((v) => v.variant_id),
+      over: rows.filter((r) => r.located && !r.variants.length).length, unlocated: rows.filter((r) => !r.located).length };
+  }
+  function range(p) { const out = []; for (let t = p[0]; t < p[1]; t++) out.push(t); return out; }
   // 宽松地从表格行中取"甲本／乙本"两栏
   function variantRowsFromTable(t) {
     if (!t) return [];
@@ -674,7 +702,7 @@
   }
 
   const api = {
-    splitSentences, parseMdTable, parseTimeline, monthDayForms, checkLabelDate, toKanjiNum, matchVariants, variantRowsFromTable,
+    splitSentences, parseMdTable, parseTimeline, coverVariants, monthDayForms, checkLabelDate, toKanjiNum, matchVariants, variantRowsFromTable,
     orderRuns, pickRun, emptyThrough, exportThrough, importThrough, planPreclass, THROUGH_KEYS,
     hasCJK, KYUJITAI, tokenize, normalizeUnits, units,
     SequenceMatcher, lcsTable, lcsBacktrack, lcsOpcodes, align, toTEI,

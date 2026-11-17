@@ -80,6 +80,7 @@ if RUNS and os.path.isdir(RUNS):
             s = json.dumps(r)
             assert not re.search(r'"(apiKey|api_key|authorization)"\s*:', s, re.I), fn
             if not r.get('reply'): continue
+            if 'C01test' in r.get('run_id', ''): continue  # 连通测试不作回放
             replays.append(dict(r, origin_mode=r.get('origin_mode') or r.get('mode'), mode='replay'))
 
 os.makedirs(os.path.join(APP, 'prototype/data'), exist_ok=True); os.makedirs(os.path.join(APP, 'local-only'), exist_ok=True)
