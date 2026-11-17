@@ -277,3 +277,13 @@ test('课前运行队列：条件 × 模型 × 次数；已成功的跳过（续
   assert.equal(q.jobs.length, 4);
   assert.deepEqual(q.jobs.filter((j) => j.state === '完成').map((j) => j.run_id), ['C02B_kimi_1']);
 });
+test('解析：表格形式与只到年的时间线（Kimi 课前回答的写法，2026-11-17 实测后补）', () => {
+  const t = '| 时间 | 事件 | 与起草的关系 |\n|---|---|---|\n| 1890年6月20日 | 井上毅致书山県，附初稿 | 底本 |\n| 2月17—26日 | 地方官会议 | 发端 |';
+  const s = L.parseTimeline(t);
+  assert.deepEqual(s.map((x) => x.date_raw), ['1890年6月20日', '2月17—26日']);
+  assert.equal(s[0].action, '井上毅致书山県，附初稿；底本');
+  const y = L.parseTimeline('- **1879年**：颁布《教学聖旨》\n- **1890年10月30日**：下赐');
+  assert.deepEqual(y.map((x) => x.date_raw), ['1879年', '1890年10月30日']);
+  assert.equal(L.parseDateRange('1890年10月30日', 1890).from, '1890-10-30');
+  assert.equal(L.parseDateRange('1879年', 1890), null);
+});

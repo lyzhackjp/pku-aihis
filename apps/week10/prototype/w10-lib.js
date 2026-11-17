@@ -561,11 +561,30 @@
   // 时间线：每行一个步骤；行首或行内取第一个日期写法；方括号内的出处标注另取
   const DATE_IN_LINE = /((?:明治二十三年|1890\s*年)?\s*(?:[0-9]{1,2}|[一二三四五六七八九十]{1,3})\s*月(?:\s*(?:[0-9]{1,2}|[一二三四五六七八九十]{1,3})\s*日?(?:\s*[—\-－~～至到]\s*(?:[0-9]{1,2}|[一二三四五六七八九十]{1,3})\s*日)?)?(?:前后|左右|ごろ|頃|以后|以後|上旬|中旬|下旬|底|末|初)?)/u;
   const LABEL_RE = /[［\[]\s*(材料|自知|推测)(?:\s*[：:]\s*([^］\]]*))?\s*[］\]]/u;
+  // 只到年的写法（"1879年""明治二十三年"）：作步骤的日期，区间按整年（parseDateRange 返回 null 时只比事项）
+  const YEAR_ONLY = /^((?:1[89]\d{2}|明治[一二三四五六七八九十〇0-9]+)\s*年(?:代|内|初|末|前后|左右|ごろ)?)/u;
   function parseTimeline(text, { run_id = null } = {}) {
     const out = [];
+    const push = (date_raw, action, labLine) => {
+      const lab = labLine.match(LABEL_RE);
+      out.push({ step_id: `${run_id || 'paste'}-s${out.length + 1}`, run_id, date_raw: date_raw.replace(/\s+/g, ''), action: action.replace(LABEL_RE, '').replace(/^[\s：:，,—\-]+/, '').trim(), label: lab ? lab[1] : null, label_by: lab ? 'model' : null, label_date: lab && lab[2] ? lab[2].trim() : null, base_row: null, match: null });
+    };
     for (const raw of String(text ?? '').split(/\r?\n/)) {
+      // 表格行：第一个像日期的格作时间，其余格合成事项
+      if (/^\s*[|｜]/.test(raw)) {
+        const cells = raw.trim().replace(/^[|｜]|[|｜]$/g, '').split(/[|｜]/).map((c) => c.replace(/\*\*/g, '').trim());
+        if (cells.every((c) => /^:?-{2,}:?$/.test(c) || !c)) continue;
+        const di = cells.findIndex((c) => DATE_IN_LINE.test(c) || YEAR_ONLY.test(c));
+        if (di < 0) continue;
+        const dm = cells[di].match(DATE_IN_LINE) || cells[di].match(YEAR_ONLY);
+        const rest = cells.filter((_, i) => i !== di && cells[i]).join('；');
+        if (/^(时间|日期|年月|時期)$/.test(cells[di])) continue;
+        push(dm[1], rest, raw); continue;
+      }
       const line = raw.replace(/^\s*(?:[-*•·]|\d+[.、)）]|[（(]\d+[）)])\s*/, '').replace(/\*\*/g, '').trim();
       if (!line || /^[#|｜]/.test(line)) continue;
+      const ym = !DATE_IN_LINE.test(line) && line.match(YEAR_ONLY);
+      if (ym) { push(ym[1], line.slice(ym[0].length), line); continue; }
       const m = line.match(DATE_IN_LINE);
       if (!m) { if (out.length && !/[：:]$/.test(line)) out[out.length - 1].action += ' ' + line; continue; }
       const lab = line.match(LABEL_RE);

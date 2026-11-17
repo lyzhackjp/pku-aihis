@@ -45,3 +45,6 @@ tr.w10-mine td { background: #f5f9ff; }
 tr.pc-完成 td { background: #e6f2e3; } tr.pc-失败 td { background: #ffe4de; } tr.pc-运行中 td { background: #fff4cc; }
 .nowrap { white-space: nowrap; }
 @media (max-width: 760px) { .w10-tcards, .w10-four { grid-template-columns: 1fr; } }
+.w10-fuzzy { border: 1px dashed #c98a00; padding: 0 4px; font-size: 12px; color: #8a5a00; }
+.w10-prem { display: block; margin: 4px 0; }
+.w10-prem.struck { color: #9aa3ab; text-decoration: line-through; }
