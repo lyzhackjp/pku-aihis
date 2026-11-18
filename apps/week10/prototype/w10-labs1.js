@@ -136,7 +136,7 @@
   const SOURCES = [['mao', '茅文结论一节＋学术史一节（中文，有页码）', ['mao-conclusion', 'mao-history']], ['ems-a', '埃姆斯原电（德文，按词切分）', ['ems-a']], ['chokugo', '勅語成文（旧字形）', ['chokugo-seibun']]];
   const VERD = ['有据', '无据', '说宽'];
   class Claims extends Lab {
-    defaults() { return { src: 'mao', threshold: null, preset: 'deepseek', claims: Array.from({ length: 5 }, () => ({ text: '', verdict: null, quote: '' })), points: Array.from({ length: 3 }, () => ({ text: '', in: null })) }; }
+    defaults() { return { src: 'mao', threshold: null, preset: 'deepseek', demo: false, claims: Array.from({ length: 5 }, () => ({ text: '', verdict: null, quote: '' })), points: Array.from({ length: 3 }, () => ({ text: '', in: null })) }; }
     srcText() { const s = SOURCES.find((x) => x[0] === this.s.src); return s[2].map((id) => Mat.text(id)).filter(Boolean).join('\n'); }
     render() {
       const s = this.s, src = this.srcText(), srcMissing = !src;
@@ -158,7 +158,8 @@
         ${srcMissing ? needPack('茅海建 2002 两节') : ''}
         <table class="items w10-claims"><tr><th>#</th><th>原子主张</th><th>标记</th><th>所贴原文</th><th>① 引文在不在（程序）</th><th>② 概括对不对（自己判断）</th><th></th></tr>
         ${s.claims.map((c, i) => `<tr><td>${i + 1}</td><td><textarea data-c="${i}" data-f="text" rows="2">${esc(c.text)}</textarea></td><td>${VERD.map((v) => `<label class="nowrap"><input type="radio" name="v-${i}" data-c="${i}" data-f="verdict" value="${v}" ${c.verdict === v ? 'checked' : ''}>${v}</label>`).join('<br>')}</td><td><textarea data-c="${i}" data-f="quote" rows="2">${esc(c.quote)}</textarea></td><td class="w10-qcell">${qcell(checks[i], c)}</td><td class="sub">${c.verdict ? esc(c.verdict) + '（学生判断，程序不判）' : ''}</td><td>${c.text ? W.sendBtn('c' + i) : ''}</td></tr>`).join('')}</table>
-        <p><button class="small" data-x="addc">加一条</button></p>
+        <p><button class="small" data-x="addc">加一条</button>　${this.demoHtml(run, src, opts, fs, pr) ? `<label><input type="checkbox" data-o="demo" ${s.demo ? 'checked' : ''}> 显示 Claude 示范版（预存，供对照）</label>` : ''}</p>
+        ${s.demo ? this.demoHtml(run, src, opts, fs, pr) || '' : ''}
         <div class="w9-two"><section class="w9-col"><header><b>FActScore</b></header><p class="w9-formula">FActScore ＝ 被支持的条数 ／ 全部条数 ＝ ${fs.supported} ／ ${fs.total} ＝ <b>${fmt(fs.score)}</b></p><p class="sub">"说宽""无据"都不算被支持；未标的不计。它只看说了的话，查不到遗漏。</p></section>
         <section class="w9-col"><header><b>反方向：原文要点 → 摘要（要点召回）</b></header><p class="sub">先写茅文结论最要紧的三点，再勾摘要里有没有。这一步只能由读过原文的人做。</p>
           ${s.points.map((p, i) => `<p><input data-p="${i}" data-f="text" value="${esc(p.text)}" size="34" placeholder="要点 ${i + 1}"> ${[['yes', '有'], ['partial', '部分'], ['no', '无']].map(([v, l]) => `<label><input type="radio" name="p-${i}" data-p="${i}" data-f="in" value="${v}" ${p.in === v ? 'checked' : ''}>${l}</label>`).join(' ')} ${p.text && p.in === 'no' ? W.sendBtn('p' + i, '送入（遗漏）') : ''}</p>`).join('')}
@@ -169,6 +170,18 @@
           <p>MiniCheck（Tang 等 2024）用一个小模型判断"这句话能否由这段原文支持"；页面不运行模型。<button class="small" data-x="minicheck">导出主张表（JSON）</button> <span class="sub">MiniCheck 的输入格式待据其 README 核定，这里只导出主张与所贴原文。</span></p>
           <p class="sub">本页的引文核对按 llm-for-zotero 的思路实现（扩充部分甲二），不是它的移植：统一写法后，中日文按字、西文按词，找引文在原文中的连续片段（至少 3 字或 2 词），覆盖率达到门槛算"近似"，等于 1 算"核实"。</p></details>`);
     }
+    // Claude 示范版：本机材料包 refs.D04（按 run_id 取）；引文核对现场计算，判定是 Claude 的
+    demoHtml(run, src, opts, fs, pr) {
+      const R = W.Mat.state().refs?.D04, d = run && R?.runs?.[run.run_id]; if (!d) return null;
+      const rows = d.claims.map((c, i) => { const r = src ? L.quoteCheck(c.quote, src, opts) : null; return `<tr><td>${i + 1}</td><td>${esc(c.text)}</td><td><b>${esc(c.verdict)}</b></td><td>${esc(c.quote)}</td><td>${r ? `<span class="w10-qc ${r.status}">${esc(L.QUOTE_STATUS_ZH[r.status])}</span> ${fmt(r.coverage)}${r.pages.length ? `｜第 ${r.pages.map(esc).join('、')} 页` : ''}` : '<span class="nil">原文未载入</span>'}</td><td class="sub">${esc(c.why)}</td></tr>`; }).join('');
+      const dfs = L.factScore(d.claims.map((c) => ({ verdict: c.verdict }))), dpr = L.pointRecall(d.points.map((p) => ({ in_summary: p.in })));
+      const IN = { yes: '有', partial: '部分', no: '无' };
+      return `<div class="w10-tcard"><b>Claude 示范版</b> <span class="w9-badge replay">预存</span>　<span class="sub">${esc(R.judge)}。${esc(R.note)}。</span>
+        <table class="items w10-claims"><tr><th>#</th><th>原子主张</th><th>标记</th><th>所贴原文</th><th>① 引文在不在（程序，现场算）</th><th>理由</th></tr>${rows}</table>
+        <p><b>原文要点 → 摘要</b>：${R.points.map((p, i) => `${i + 1}. ${esc(p)}：<b>${IN[d.points[i].in]}</b>${d.points[i].why ? `（${esc(d.points[i].why)}）` : ''}`).join('<br>')}</p>
+        <p class="w9-formula">示范版 FActScore ＝ ${dfs.supported} ／ ${dfs.total} ＝ <b>${fmt(dfs.score)}</b>；要点召回 ＝ ${dpr.hit} ／ ${dpr.K} ＝ <b>${fmt(dpr.recall)}</b>${fs.total ? `　｜　上表（课堂版）FActScore ${fmt(fs.score)}，要点召回 ${fmt(pr.recall)}` : ''}</p>
+        <p class="sub">对照时看三处：拆出的主张是不是同几句；同一句是否判得一样（尤其"无据"与"说宽"的分界）；要点召回里"一无所获"那一点有没有人勾"有"。示范版只是一种拆法，不是标准答案。</p></div>`;
+    }
     sheetRow(k) {
       if (k[0] === 'p') { const p = this.s.points[+k.slice(1)]; return { from_page: 'D04', point: p.text, verdict: '遗漏', model_says: null }; }
       const c = this.s.claims[+k.slice(1)], r = c.quote ? L.quoteCheck(c.quote, this.srcText()) : null, { run } = W.pickedRun('D1B', this.s.preset);
@@ -177,7 +190,7 @@
     onInput(e) { const t = e.target; if (t.dataset.thr !== undefined) this.set({ threshold: +t.value }); }
     onChange(e) {
       const t = e.target;
-      if (t.dataset.o) return this.set({ [t.dataset.o]: t.value });
+      if (t.dataset.o) return this.set({ [t.dataset.o]: t.type === 'checkbox' ? t.checked : t.value });
       if (t.dataset.c != null) { const cl = this.s.claims.map((x) => ({ ...x })); cl[+t.dataset.c][t.dataset.f] = t.value; Through.patch; this.set({ claims: cl }); Through.get().claims = cl.map((c, i) => ({ claim_id: 'D04-' + i, run_id: W.pickedRun('D1B', this.s.preset).run?.run_id || null, claim_text: c.text, verdict: c.verdict, evidence_quote: c.quote })); Through.save(); }
       if (t.dataset.p != null) { const ps = this.s.points.map((x) => ({ ...x })); ps[+t.dataset.p][t.dataset.f] = t.value; this.set({ points: ps }); }
     }
