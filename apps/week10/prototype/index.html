@@ -17,6 +17,7 @@
 <script src="w10-labs2.js"></script>
 <script src="w10-labs3.js"></script>
 <script src="w10-labs4.js"></script>
+<script src="w10-labs5.js"></script>
 <!-- 模型接入（ES 模块；须经 HTTP 打开）。由 scripts/assemble-prototype.mjs 补入。 -->
 <script type="module" src="live/w10-live.js"></script>
 </head><body><div id="app"></div>
@@ -73,18 +74,18 @@
 <deck-slide slide-id="D16" data-status="prototype" kicker="D16 / 结语" header-title="结语与贯穿记录" transition="回到中心问题：四个动作。" theme="light" layout="hero" mode="实际计算（导出与恢复）｜浏览器实时（导出与恢复）" notes="目的：让学生带走全讲记录。
 范例引导：念四个动作，各点一次回链；示范导出。
 机制背景：w10-through/v1；导入先验证，坏文件保留旧记录；导出去 Key。"><closing-lab></closing-lab><div slot="footer">D16 · 浏览器实时（导出与恢复）；讲义结语。</div></deck-slide>
-<deck-slide slide-id="D17" data-status="planned" kicker="D17 / 三 对校（进阶）" header-title="序列对齐怎样算：LCS 小例表" transition="课后：LCS 表一格一格地填。" theme="light" layout="flow4" mode="实际计算｜浏览器实时" notes="目的：让有兴趣的学生亲手算一次对齐。
+<deck-slide slide-id="D17" data-status="prototype" kicker="D17 / 三 对校（进阶）" header-title="序列对齐怎样算：LCS 小例表" transition="课后：LCS 表一格一格地填。" theme="light" layout="flow4" mode="实际计算｜浏览器实时" notes="目的：让有兴趣的学生亲手算一次对齐。
 范例引导：课后自学。
-机制背景：lcsTable、lcsBacktrack；回溯平局先退上。"><planned-page page-id="D17"></planned-page><div slot="footer">D17 · 浏览器实时；扩充部分甲三。</div></deck-slide>
-<deck-slide slide-id="D18" data-status="planned" kicker="D18 / 三 对校（进阶）" header-title="TEI 校勘记" transition="课后：把对齐结果写成 TEI 校勘记。" theme="light" layout="flow4" mode="实际计算（格式转换）｜浏览器实时（格式转换）" notes="目的：让学生能写出 app、rdg、listWit。
+机制背景：lcsTable、lcsBacktrack；回溯平局先退上。"><lcs-lab></lcs-lab><div slot="footer">D17 · 浏览器实时；扩充部分甲三。</div></deck-slide>
+<deck-slide slide-id="D18" data-status="prototype" kicker="D18 / 三 对校（进阶）" header-title="TEI 校勘记" transition="课后：把对齐结果写成 TEI 校勘记。" theme="light" layout="flow4" mode="实际计算（格式转换）｜浏览器实时（格式转换）" notes="目的：让学生能写出 app、rdg、listWit。
 范例引导：课后自学。
-机制背景：toTEI：平行分段；类别写入 interpGrp。"><planned-page page-id="D18"></planned-page><div slot="footer">D18 · 浏览器实时（格式转换）；扩充部分甲四。</div></deck-slide>
-<deck-slide slide-id="D19" data-status="planned" kicker="D19 / 一 读法（进阶）" header-title="长上下文测试怎样设计；最小对计分" transition="课后：长上下文测试是怎样设计的。" theme="light" layout="flow4" mode="实际计算（基线、模拟）；学生题为实际调用（课后）｜浏览器实时（基线与模拟）" notes="目的：让学生理解按对计分与新书设计。
+机制背景：toTEI：平行分段；类别写入 interpGrp。"><tei-lab></tei-lab><div slot="footer">D18 · 浏览器实时（格式转换）；扩充部分甲四。</div></deck-slide>
+<deck-slide slide-id="D19" data-status="prototype" kicker="D19 / 一 读法（进阶）" header-title="长上下文测试怎样设计；最小对计分" transition="课后：长上下文测试是怎样设计的。" theme="light" layout="flow4" mode="实际计算（基线、模拟）；学生题为实际调用（课后）｜浏览器实时（基线与模拟）" notes="目的：让学生理解按对计分与新书设计。
 范例引导：课后自学。
-机制背景：随机基线 (1/2)^k；代掷硬币的模拟。"><planned-page page-id="D19"></planned-page><div slot="footer">D19 · 浏览器实时（基线与模拟）；扩充部分甲一</div></deck-slide>
-<deck-slide slide-id="D20" data-status="planned" kicker="D20 / 二 成文／三 对校（进阶）" header-title="《教育勅語》逐稿与初稿之争" transition="课后：勅語草稿的三个系统与初稿之争。" theme="light" layout="diagram" mode="静态（研究者的结论）；草案间对齐为实际计算｜静态内容" notes="目的：让学生看到同一批无日期草稿可以排出不同先后。
+机制背景：随机基线 (1/2)^k；代掷硬币的模拟。"><truth-lab></truth-lab><div slot="footer">D19 · 浏览器实时（基线与模拟）；扩充部分甲一</div></deck-slide>
+<deck-slide slide-id="D20" data-status="prototype" kicker="D20 / 二 成文／三 对校（进阶）" header-title="《教育勅語》逐稿与初稿之争" transition="课后：勅語草稿的三个系统与初稿之争。" theme="light" layout="diagram" mode="静态（研究者的结论）；草案间对齐为实际计算｜静态内容" notes="目的：让学生看到同一批无日期草稿可以排出不同先后。
 范例引导：课后自学。
-机制背景：草案表；三种排序切换。"><planned-page page-id="D20"></planned-page><div slot="footer">D20 · 静态内容；扩充部分乙一</div></deck-slide>
+机制背景：草案表；三种排序切换。"><drafts-lab></drafts-lab><div slot="footer">D20 · 静态内容；扩充部分乙一</div></deck-slide>
 <deck-slide slide-id="D21" data-status="prototype" kicker="D21 / 附录" header-title="材料包与工具" transition="课后：本讲的材料包、工具与练习数据。" theme="light" layout="diagram" mode="静态；CollateX 输出为课前实际运行的结果｜静态内容／保存结果回放（CollateX 输出）" notes="目的：让学生知道去哪里找工具与数据，以及每份材料的使用边界。
 范例引导：发材料时用一次。
 机制背景：材料状态读本机材料包；CollateX 输出为课前运行的存档。"><tools-lab></tools-lab><div slot="footer">D21 · 静态内容／保存结果回放（CollateX 输出）；讲义附录&quot;工具与资源&quot;</div></deck-slide>

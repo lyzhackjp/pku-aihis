@@ -1575,7 +1575,7 @@
   "footer": "D16 · 浏览器实时（导出与恢复）；讲义结语。"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",
@@ -1585,7 +1585,9 @@
   "cases": [
    "C-12"
   ],
-  "changes": [],
+  "changes": [
+   "第三批：两种模式都在表里同一串单位上算（不另行切词），异文与表一一对应；移位示意用本页自拟的两行，标教学构造。"
+  ],
   "missing": [],
   "checks": [
    "@fig-lcs 各行与程序实算一致（tests/lib.test.mjs，已通过）。"
@@ -1641,7 +1643,7 @@
   "footer": "D17 · 浏览器实时；扩充部分甲三。"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",
@@ -1651,7 +1653,9 @@
   "cases": [
    "C-13"
   ],
-  "changes": [],
+  "changes": [
+   "第三批：导出文件把 interpGrp 放在 teiHeader 内（按扩充部分甲四\"写在文件头\"）；Rdgai 是否接受此位置、能否通过 TEI 模式验证均未测，页上写明。"
+  ],
   "missing": [],
   "checks": [
    "V16 增、V19 改写成平行分段（tests/lib.test.mjs，已通过）；未用 TEI 模式验证（同扩充部分）。"
@@ -1718,7 +1722,7 @@
   "footer": "D18 · 浏览器实时（格式转换）；扩充部分甲四。"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",
@@ -1729,7 +1733,8 @@
    "C-04"
   ],
   "changes": [
-   "扩充部分把 D19 定为\"最小对计分小游戏\"（甲一），MiniCheck 部分归 D04 进阶层；方案的\"FActScore 与 MiniCheck\"移出本页。"
+   "扩充部分把 D19 定为\"最小对计分小游戏\"（甲一），MiniCheck 部分归 D04 进阶层；方案的\"FActScore 与 MiniCheck\"移出本页。",
+   "第三批：学生题的模型判断可来自现场调用，也可手录（网页版）；判断来源随结果记入贯穿记录 truthpairs。加\"一律答真\"一项，说明按对计分的用意。"
   ],
   "missing": [],
   "checks": [],
@@ -1784,7 +1789,7 @@
   "footer": "D19 · 浏览器实时（基线与模拟）；扩充部分甲一"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",
@@ -1796,7 +1801,9 @@
    "C-24",
    "C-25"
   ],
-  "changes": [],
+  "changes": [
+   "第三批：草案表未整理，页面只放扩充部分乙一已写明的三系与三家初稿说；草案表导入后才画逐稿排序，不编造稿数、日期与排序。"
+  ],
   "missing": [
    "草案表数据（须教师或助教据原书整理）",
    "芳川文书本录文（建议本轮不做）",

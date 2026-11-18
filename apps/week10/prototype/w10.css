@@ -48,3 +48,22 @@ tr.pc-完成 td { background: #e6f2e3; } tr.pc-失败 td { background: #ffe4de; 
 .w10-fuzzy { border: 1px dashed #c98a00; padding: 0 4px; font-size: 12px; color: #8a5a00; }
 .w10-prem { display: block; margin: 4px 0; }
 .w10-prem.struck { color: #9aa3ab; text-decoration: line-through; }
+
+/* 第三批 D17—D20 */
+.w10-lcs-wrap { overflow-x: auto; }
+.w10-lcs { border-collapse: collapse; font-size: 15px; }
+.w10-lcs th, .w10-lcs td { border: 1px solid #ccc; width: 2.1em; height: 2.1em; text-align: center; padding: 0; }
+.w10-lcs th { background: #f3f1ec; }
+.w10-lcs td.same { background: #eef6ea; }
+.w10-lcs td.path, .w10-lcs-key.path { outline: 2px solid #b5651d; outline-offset: -2px; }
+.w10-lcs td.eq, .w10-lcs-key.eq { background: #3f6f3a; color: #fff; font-weight: 700; }
+.w10-lcs-key { padding: 0 4px; }
+.w10-tei { max-height: 460px; overflow: auto; white-space: pre-wrap; font-size: 12.5px; background: #f7f6f2; padding: 8px; }
+.w10-scroll { max-height: 460px; overflow: auto; }
+.w10-lane { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 4px 0; }
+.w10-node { display: inline-block; border: 1px solid #999; border-radius: 4px; padding: 1px 6px; font-size: 13px; background: #fff; cursor: pointer; }
+.w10-node.on { box-shadow: 0 0 0 2px #333; }
+.w10-node.b-dated { background: #d6f0d2; }
+.w10-node.b-inferred { background: #fff0c2; }
+.w10-node.b-none { background: #eee; }
+.w10-arrow { color: #888; }

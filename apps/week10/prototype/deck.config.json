@@ -9,7 +9,8 @@
     "w10-labs1.js",
     "w10-labs2.js",
     "w10-labs3.js",
-    "w10-labs4.js"
+    "w10-labs4.js",
+    "w10-labs5.js"
   ],
   "deck": {
     "name": "第十周 · 人工智能辅助文献阅读",
@@ -45,6 +46,10 @@
     "D05": "chengwen-lab",
     "D09": "division-lab",
     "D13": "debate-lab",
-    "D21": "tools-lab"
+    "D21": "tools-lab",
+    "D17": "lcs-lab",
+    "D18": "tei-lab",
+    "D19": "truth-lab",
+    "D20": "drafts-lab"
   }
 }

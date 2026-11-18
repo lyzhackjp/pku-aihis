@@ -308,3 +308,16 @@ test('解析：只有月份的小标题不算一步；日期单独一行、事�
   const s = L.parseTimeline('**2月**\n- **2月17日** 地方官会议开始\n**6月20日**\n井上毅致书山県');
   assert.deepEqual(s.map((x) => [x.date_raw, x.action]), [['2月17日', '地方官会议开始'], ['6月20日', '井上毅致书山県']]);
 });
+
+test('第三批 D17：移位示意——整段挪动被 LCS 算成一增一删（教学构造的两行）', () => {
+  const a = [...'一旦緩急アレハ義勇公ニ奉シ'], b = [...'義勇公ニ奉シ一旦緩急アレハ'];
+  const ops = L.lcsOpcodes(a, b).filter((o) => o[0] !== 'equal').map((o) => o[0]);
+  assert.deepEqual(ops, ['insert', 'delete']);
+  assert.equal(L.lcsTable(a, b)[a.length][b.length], 7);
+});
+
+test('第三批 D19、D20：贯穿记录含 truthpairs、drafts，导入时缺字段补空数组', () => {
+  const r = L.importThrough(JSON.stringify({ format: 'w10-through/v1' }));
+  assert.ok(r.ok); assert.deepEqual(r.record.truthpairs, []); assert.deepEqual(r.record.drafts, []);
+  assert.equal(L.importThrough(JSON.stringify({ format: 'w10-through/v1', drafts: {} })).ok, false);
+});

@@ -667,7 +667,7 @@
   // 同一格的多条记录排序：课前回放按次序，其后是本机现场、网页版
   function orderRuns(rs) { const w = { replay: 0, 'web-paste': 1, live: 2 }; return rs.slice().sort((a, b) => (w[a.mode] ?? 3) - (w[b.mode] ?? 3) || (a.sample_index || 0) - (b.sample_index || 0) || String(a.date).localeCompare(String(b.date))); }
   function pickRun(rs, selId) { return rs.find((r) => r.run_id === selId) || rs[0] || null; }
-  const THROUGH_KEYS = ['runs', 'labels', 'claims', 'points', 'timeline', 'varlabels', 'effects', 'cellchecks', 'namechecks', 'sheet', 'packs', 'matrix', 'chengwen', 'arguments'];
+  const THROUGH_KEYS = ['runs', 'labels', 'claims', 'points', 'timeline', 'varlabels', 'effects', 'cellchecks', 'namechecks', 'sheet', 'packs', 'matrix', 'chengwen', 'arguments', 'truthpairs', 'drafts'];
   function emptyThrough() { const t = { format: 'w10-through/v1' }; for (const k of THROUGH_KEYS) t[k] = []; t.page_state = {}; return t; }
   function exportThrough(T, secrets = [], { restricted = false } = {}) {
     const o = stripSecrets({ ...T, format: 'w10-through/v1', exported_at: new Date().toISOString(), contains_restricted_text: !!restricted }, secrets);

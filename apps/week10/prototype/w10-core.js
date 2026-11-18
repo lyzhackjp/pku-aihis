@@ -242,7 +242,7 @@
     if (kind === 'sheet') out.forEach((r, i) => { if (r.verdict === '模型新见' && !r.confirmed) report.problems.push([rows[i]._line, '"模型新见"未标"已回原文确认"，汇总时不计入']); });
     return { rows: out, report };
   }
-  const TARGET = { sheet: 'sheet', claims: 'claims', points: 'points', timeline: 'timeline', chengwen: 'chengwen', varlabels: 'varlabels', cellchecks: 'cellchecks', names: 'namechecks' };
+  const TARGET = { sheet: 'sheet', claims: 'claims', points: 'points', timeline: 'timeline', chengwen: 'chengwen', varlabels: 'varlabels', cellchecks: 'cellchecks', names: 'namechecks', drafts: 'drafts' };
   const Importer = {
     open(prefKind) {
       if (document.querySelector('.model-shade.w9-importer')) return;
