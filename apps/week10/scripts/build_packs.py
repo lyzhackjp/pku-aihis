@@ -100,7 +100,15 @@ k10 = json.load(open(os.path.join(ROOT, 'docs/week10/schemas/importer-kinds.w10.
 kinds = {'_note': k10['_note'], '_guess': k10['_guess'], 'sourcepack': k9['sourcepack'], 'runs': k9['runs'], 'web': k9['web']}
 kinds.update({k: v for k, v in k10.items() if not k.startswith('_')})
 js('w10-kinds.js', 'W10_KINDS', kinds, '导入对话框类型：第九周 sourcepack、runs、web ＋ docs/week10/schemas/importer-kinds.w10.json。')
-pack = {'format': 'w10-pack/v1', 'generated': gen, 'packs': [{'id': 'w10-materials', 'title': '第十周课堂材料（本机）', 'entries': loc}], 'replays': replays,
+# 本课判定（教师认可的参考判定；引了模型回答的句首与原文短语，只进本机材料包）
+refs = {}
+_rd = os.path.join(W10, 'demo', '本课判定')
+if os.path.isdir(_rd):
+    for _f in sorted(os.listdir(_rd)):
+        if _f.endswith('_本课判定.json'):
+            _j = json.load(open(os.path.join(_rd, _f), encoding='utf-8'))
+            if _j.get('format') == 'w10-ref/v1': refs[_j['page']] = _j
+pack = {'format': 'w10-pack/v1', 'generated': gen, 'packs': [{'id': 'w10-materials', 'title': '第十周课堂材料（本机）', 'entries': loc}], 'replays': replays, 'refs': refs,
         '_note': '本机材料包：教师材料录文与课前运行记录。不入 Git、不发布、不分发。'}
 json.dump(pack, open(os.path.join(APP, 'local-only/week10-pack.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-print(f'公开条目 {len(pub)}（含正文 {sum(1 for e in pub if e["text"])}）；本机条目 {len(loc)}；条件卡 {len(cards)}；回放 {len(replays)}')
+print(f'本课判定 {sorted(refs)}；'); print(f'公开条目 {len(pub)}（含正文 {sum(1 for e in pub if e["text"])}）；本机条目 {len(loc)}；条件卡 {len(cards)}；回放 {len(replays)}')

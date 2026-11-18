@@ -20,6 +20,7 @@
     }
     const seen = new Set(M.replays.map((r) => r.run_id));
     for (const r of j.replays || []) if (!seen.has(r.run_id)) M.replays.push({ ...r, origin_mode: r.origin_mode || r.mode, mode: 'replay' });
+    if (j.refs && typeof j.refs === 'object') M.refs = { ...(M.refs || {}), ...j.refs };
     M.local = { from, generated: j.generated, n: (j.packs || []).reduce((n, p) => n + p.entries.length, 0), runs: (j.replays || []).length };
     M.localMsg = `已载入本机材料包（${M.local.n} 条材料、${M.local.runs} 条运行记录；${from}）。`;
     emit('w10-materials');
@@ -131,7 +132,7 @@
     if (!run) return '<span class="w9-badge none">待课前运行</span>';
     const m = run.mode, om = run.origin_mode;
     if (m === 'web-paste' || om === 'web-paste') {
-      const d = `${run.web?.platform || ''}｜界面型号 ${run.web?.model_shown || '—'}｜${run.web?.entry_type || ''}｜记忆${run.web?.memory || '不详'}、联网${run.web?.search || '不详'}｜${(run.date || '').slice(0, 16)}｜截图 ${run.web?.screenshot || '—'}｜${run.transcription || '录入待核'}`;
+      const d = `${run.web?.platform || ''}｜界面型号 ${run.web?.model_shown || '—'}｜${run.web?.entry_type || ''}｜记忆${run.web?.memory || '不详'}、联网${run.web?.search || '不详'}｜${(run.date || '').slice(0, 16)}｜原件／截图 ${run.web?.screenshot || '—'}｜${run.transcription || '录入待核'}`;
       return `<span class="w9-badge web-paste" title="${esc(d)}">${m === 'replay' ? '网页版·课前' : '网页版粘贴'}</span><span class="sub">${esc(d)}</span>`;
     }
     const detail = m === 'replay' ? `课前运行，非史料｜${run.model || ''}｜${(run.date || '').slice(0, 10)}｜温度 ${run.temperature ?? '—'}｜第 ${run.sample_index || '?'} 次` : m === 'live' ? `${run.model || ''}（返回 ${run.model_returned || '—'}）｜${(run.date || '').replace('T', ' ').slice(0, 19)}｜温度 ${run.temperature ?? '—'}${run.environment === 'preclass-panel' ? '｜课前运行面板' : ''}` : '';

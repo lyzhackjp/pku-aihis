@@ -103,23 +103,29 @@
   /* ================= D03 摘要会丢什么 ================= */
   const TYPES = ['遗漏', '说满', '归属', '无问题'];
   class Three extends Lab {
-    defaults() { return { preset: 'deepseek', labels: {}, ref: {} }; }
+    defaults() { return { preset: 'deepseek', labels: {}, ref: {}, reveal: false }; }
     render() {
       const { run } = W.pickedRun('D1B', this.s.preset);
       const sents = run ? L.splitSentences(run.reply).slice(0, 12) : [];
-      const lab = this.s.labels[run?.run_id] || {}, ref = this.s.ref[run?.run_id] || {};
+      const lab = this.s.labels[run?.run_id] || {}, mine = this.s.ref[run?.run_id] || {};
+      // 本课判定：教师认可的参考判定（本机材料包 refs.D03，句首对得上才用）；教师在页上改过的以页上为准
+      const R = W.Mat.state().refs?.D03, rr = (run && R?.runs?.[run.run_id]) || {};
+      const given = Object.fromEntries(sents.map((x, i) => [i, rr[i] && x.startsWith(rr[i].head) ? rr[i] : null]));
+      const ref = Object.fromEntries(sents.map((_, i) => [i, mine[i] || given[i]?.type || ''])).valueOf();
+      for (const k of Object.keys(ref)) if (!ref[k]) delete ref[k];
       const dist = Object.fromEntries(TYPES.map((t) => [t, Object.values(lab).filter((x) => x === t).length]));
       const cards = S.three.map((t) => `<div class="w10-tcard"><b>${esc(t.label || t.id)}</b><p>${esc(t.show)}</p><p class="sub">史学论著中的例子：${esc(t.eg)}</p><p class="sub">怎样查：${esc(t.how)}</p></div>`).join('');
       this.out(`<div class="w10-tcards">${cards}</div><p class="sub">${esc(S.threeSource)}</p>
         <div class="w9-toolbar"><b>从演示① D1B（给材料）的回答抽句定类</b>　<label>模型 <select data-o="preset">${['deepseek', 'kimi', 'gemini', 'chatgpt'].map((p) => `<option value="${p}" ${p === this.s.preset ? 'selected' : ''}>${esc(W.PRESET_LABEL[p])}</option>`).join('')}</select></label> ${W.badge(run)}</div>
-        ${run ? `<table class="items"><tr><th>#</th><th>句子</th><th>学生定类</th><th>本课判定（教师填）</th><th></th></tr>${sents.map((s, i) => `<tr><td>${i + 1}</td><td>${esc(s)}</td><td>${TYPES.map((t) => `<label class="nowrap"><input type="radio" name="t-${i}" data-lab="${i}" value="${t}" ${lab[i] === t ? 'checked' : ''}>${t}</label>`).join(' ')}</td><td><select data-ref="${i}"><option value=""></option>${TYPES.map((t) => `<option ${ref[i] === t ? 'selected' : ''}>${t}</option>`).join('')}</select></td><td>${lab[i] && lab[i] !== '无问题' ? W.sendBtn(String(i)) : ''}</td></tr>`).join('')}</table>
-          <p class="w10-sum"><b>分布（本浏览器）</b>：${TYPES.map((t) => `${t} ${dist[t]}`).join('；')}。${Object.keys(ref).length ? `与本课判定一致 ${Object.keys(ref).filter((i) => ref[i] && ref[i] === lab[i]).length}／${Object.keys(ref).filter((i) => ref[i]).length}` : '本课判定待教师在课前记录出来后填写（教师 2026-11-16 定），页面不预填。'}</p>` : '<p class="w10-pending">待课前运行：D1B 尚无记录。抽句定类在课前记录生成后可用；这里不放构造的句子。</p>'}
+        ${run ? `<table class="items"><tr><th>#</th><th>句子</th><th>学生定类</th><th>本课判定${R ? '' : '（教师填）'}</th><th></th></tr>${sents.map((s, i) => `<tr><td>${i + 1}</td><td>${esc(s)}</td><td>${TYPES.map((t) => `<label class="nowrap"><input type="radio" name="t-${i}" data-lab="${i}" value="${t}" ${lab[i] === t ? 'checked' : ''}>${t}</label>`).join(' ')}</td><td>${this.s.reveal || !R ? `<select data-ref="${i}"><option value=""></option>${TYPES.map((t) => `<option ${ref[i] === t ? 'selected' : ''}>${t}</option>`).join('')}</select>${given[i] && !mine[i] ? `<div class="sub">${esc(given[i].why)}</div>` : mine[i] ? '<div class="sub">（页上改过）</div>' : ''}` : '<span class="sub">先自己定类</span>'}</td><td>${lab[i] && lab[i] !== '无问题' ? W.sendBtn(String(i)) : ''}</td></tr>`).join('')}</table>
+          <p class="w10-sum"><b>分布（本浏览器）</b>：${TYPES.map((t) => `${t} ${dist[t]}`).join('；')}。${R ? `<label><input type="checkbox" data-o="reveal" ${this.s.reveal ? 'checked' : ''}> 显示本课判定</label>　` : ''}${Object.keys(ref).length && (this.s.reveal || !R) ? `与本课判定一致 ${Object.keys(ref).filter((i) => ref[i] && ref[i] === lab[i]).length}／${Object.keys(ref).filter((i) => ref[i]).length}` : R ? '' : '本课判定未载入（在本机材料包里）。'}</p>
+          ${R && this.s.reveal ? `<div class="w10-tcard"><b>整份回答看"遗漏"</b>（不在单句上判）<ul>${R.whole.map((w) => `<li>${esc(w)}</li>`).join('')}</ul><p class="sub">${esc(R.judge)}；${esc(R.note)}。</p></div>` : ''}` : '<p class="w10-pending">待课前运行：D1B 尚无记录。抽句定类在课前记录生成后可用；这里不放构造的句子。</p>'}
         <details><summary>进阶：三项研究的数字与条件</summary><ul><li>Kim 等 2024（FABLES）：26 部当时新出版的英文小说，3,158 条说法；摘要过分侧重书末；让另一个模型检查摘要，与读过全书的人相差很远。</li><li>Peters 与 Chin-Yee 2025：十个模型、4,900 份科学论文摘要；DeepSeek、ChatGPT-4o 与 LLaMA 3.3 70B 有过度概括的占 26% 到 73%。</li><li>Hagar 等 2025：ChatGPT、Gemini、NotebookLM 回答 300 份文件的问题；约三成回答至少一处不符；NotebookLM 约 13%，另两个约 40%。</li></ul><p class="sub">三项研究的材料都不是史学论著（讲义 1.2 出处注）。</p></details>`);
     }
     sheetRow(i) { const { run } = W.pickedRun('D1B', this.s.preset), s = L.splitSentences(run.reply)[+i], t = (this.s.labels[run.run_id] || {})[+i]; return { from_page: 'D03', run_id: run.run_id, model_says: s, verdict: { 遗漏: '遗漏', 说满: '过度概括', 归属: '归属错误' }[t] || null }; }
     onChange(e) {
       const t = e.target, { run } = W.pickedRun('D1B', this.s.preset);
-      if (t.dataset.o) this.set({ [t.dataset.o]: t.value });
+      if (t.dataset.o) this.set({ [t.dataset.o]: t.type === 'checkbox' ? t.checked : t.value });
       if (t.dataset.lab && run) this.set({ labels: { ...this.s.labels, [run.run_id]: { ...(this.s.labels[run.run_id] || {}), [t.dataset.lab]: t.value } } });
       if (t.dataset.ref && run) this.set({ ref: { ...this.s.ref, [run.run_id]: { ...(this.s.ref[run.run_id] || {}), [t.dataset.ref]: t.value } } });
     }
