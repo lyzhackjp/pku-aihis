@@ -1,0 +1,76 @@
+/* 第十周样式｜候选，2026-11-16。在第九周 w09.css（同目录复制为 w09.css，类名 w9-* 照用）之上补充 */
+.w10-hero { padding: 6px 4px; }
+.w10-q { font-size: 22px; margin: 4px 0 12px; }
+.w10-matrix td a { text-decoration: none; }
+.w10-matrix td, .w10-matrix th { vertical-align: top; font-size: 14px; }
+.w10-legend { margin: 10px 0; line-height: 2; font-size: 14px; }
+.w10-status { font-size: 14px; }
+.w10-hushi { color: #40506a; border-left: 3px solid #164ec7; padding-left: 8px; margin: 6px 0; }
+.w10-need { background: #fff4e0; border-left: 3px solid #c98a00; padding: 4px 8px; font-size: 14px; }
+.w10-pending { background: #f1f1ec; border: 1px dashed #9aa3ab; padding: 6px 8px; color: #4a5560; font-size: 14px; }
+.w10-sum { background: #eef3fb; border-left: 3px solid #164ec7; padding: 6px 8px; margin: 8px 0; font-size: 14px; line-height: 1.8; }
+.w10-card summary { cursor: pointer; font-size: 14px; }
+.w10-tcards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.w10-tcard { border: 1px solid #cbd2d7; padding: 6px 8px; background: #fff; }
+mark.cause { background: #ffd9d2; }
+mark.agg { background: #d6f0d2; }
+mark.credit { background: #dfe7ff; }
+mark.miss { background: #ffb3a7; text-decoration: underline wavy #b0301a; }
+.w10-circle .sent { cursor: pointer; }
+.w10-circle .sent.circled, .w9-reply .sent.circled { outline: 2px solid #c0392b; border-radius: 3px; background: #fff0ee; }
+.w10-claims textarea, .w10-sheet textarea { width: 100%; min-width: 110px; font: inherit; font-size: 13px; }
+.w10-qc { display: inline-block; padding: 0 5px; border-radius: 3px; font-size: 13px; }
+.w10-qc.exact, .w10-qc.spliced { background: #d6f0d2; }
+.w10-qc.near { background: #fff0c2; }
+.w10-qc.not_found { background: #ffd9d2; }
+.w10-qtext { font-size: 14px; }
+.w10-qcell { min-width: 180px; font-size: 13px; }
+.w10-miss td { background: #fff4f2; }
+tr.w10-m-多出 td { background: #fff8e6; }
+tr.w10-m-日期不符 td { background: #fff0ee; }
+.w10-mtx td { text-align: center; min-width: 32px; }
+.w10-mtx td.diag { background: #e6f2e3; }
+.w10-mtx td.off { background: #ffe9e4; font-weight: bold; }
+.w10-vtab td { font-size: 13px; vertical-align: top; }
+tr.w10-key td { background: #fff8e1; }
+.w10-de { font-size: 14px; } .w10-zh { font-size: 14px; color: #40506a; }
+.w10-note { background: #f4f3ee; padding: 4px 8px; }
+.w10-t3 td { font-size: 13px; vertical-align: top; }
+tr.w10-mine td { background: #f5f9ff; }
+.w10-four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0; }
+.w10-act { display: flex; flex-direction: column; gap: 6px; border: 1px solid #164ec7; padding: 10px; text-decoration: none; color: #20272e; }
+.w10-act b { color: #164ec7; font-size: 17px; }
+.model-shade .model-panel.wide { width: min(1180px, 96vw); max-width: none; max-height: 90vh; overflow: auto; }
+.w10-pctable td { font-size: 12px; padding: 2px 6px; }
+tr.pc-完成 td { background: #e6f2e3; } tr.pc-失败 td { background: #ffe4de; } tr.pc-运行中 td { background: #fff4cc; }
+.nowrap { white-space: nowrap; }
+@media (max-width: 760px) { .w10-tcards, .w10-four { grid-template-columns: 1fr; } }
+.w10-fuzzy { border: 1px dashed #c98a00; padding: 0 4px; font-size: 12px; color: #8a5a00; }
+.w10-prem { display: block; margin: 4px 0; }
+.w10-prem.struck { color: #9aa3ab; text-decoration: line-through; }
+
+/* 第三批 D17—D20 */
+.w10-lcs-wrap { overflow-x: auto; }
+.w10-lcs { border-collapse: collapse; font-size: 15px; }
+.w10-lcs th, .w10-lcs td { border: 1px solid #ccc; width: 2.1em; height: 2.1em; text-align: center; padding: 0; }
+.w10-lcs th { background: #f3f1ec; }
+.w10-lcs td.same { background: #eef6ea; }
+.w10-lcs td.path, .w10-lcs-key.path { outline: 2px solid #b5651d; outline-offset: -2px; }
+.w10-lcs td.eq, .w10-lcs-key.eq { background: #3f6f3a; color: #fff; font-weight: 700; }
+.w10-lcs-key { padding: 0 4px; }
+.w10-tei { max-height: 460px; overflow: auto; white-space: pre-wrap; font-size: 12.5px; background: #f7f6f2; padding: 8px; }
+.w10-scroll { max-height: 460px; overflow: auto; }
+.w10-lane { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 4px 0; }
+.w10-node { display: inline-block; border: 1px solid #999; border-radius: 4px; padding: 1px 6px; font-size: 13px; background: #fff; cursor: pointer; }
+.w10-node.on { box-shadow: 0 0 0 2px #333; }
+.w10-node.b-dated { background: #d6f0d2; }
+.w10-node.b-inferred { background: #fff0c2; }
+.w10-node.b-none { background: #eee; }
+.w10-arrow { color: #888; }
+/* 窄屏（≤1280px）：顶栏换成两行，不让按钮竖排（2026-11-18 教师 Chrome 1000px 宽实测） */
+@media (max-width: 1280px) {
+  .deck-top { flex-wrap: wrap; row-gap: 4px; height: auto; min-height: 0; }
+  .deck-top > * { white-space: nowrap; flex-shrink: 0; }
+  .deck-top .deck-name { display: none; }
+  .deck-top .pack-bar { flex-wrap: wrap; row-gap: 4px; }
+}

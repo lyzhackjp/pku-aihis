@@ -1,0 +1,38 @@
+{
+ "_note": "结构示例：尚未运行的格。页面显示\"待课前运行\"；不得改标为预存回放。",
+ "run_id": "D1B_kimi_1",
+ "card_id": "D1B",
+ "sample_index": 1,
+ "mode": "pending",
+ "origin_mode": null,
+ "preset": "kimi",
+ "model": "kimi-k3",
+ "model_returned": null,
+ "endpoint": "https://api.moonshot.cn/v1/chat/completions",
+ "temperature": "固定（kimi-k3 只有思考模式，不传温度）",
+ "reasoning_effort": "low",
+ "thinking": "always",
+ "prompt": {
+  "messages": [],
+  "source_ids": [
+   "mao-history",
+   "mao-conclusion"
+  ],
+  "gate": {
+   "ok": null
+  },
+  "template_hash": null
+ },
+ "reply": null,
+ "reasoning": null,
+ "finish_reason": null,
+ "usage": null,
+ "ms": null,
+ "attempts": 0,
+ "date": "2026-11-16T00:00:00+08:00",
+ "error": null,
+ "web": null,
+ "transcription": null,
+ "parsed": null,
+ "environment": null
+}

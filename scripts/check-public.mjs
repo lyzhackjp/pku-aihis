@@ -246,3 +246,20 @@ if (manifest4.weeks?.includes('week09')) {
   assert(home.includes('href="week09/"') && home.includes('第九周 · 历史人物模拟、历史共情与历史仿真'));
   console.log('Week09: 28 pages, public pack with public-domain texts only (no 章太炎全集 transcription, no run records), embedded importer; no material pack, screenshots, keys or weights');
 }
+if (manifest4.weeks?.includes('week10')) {
+  const week = path.join(site, 'week10');
+  const html10 = await fs.readFile(path.join(week, 'index.html'), 'utf8');
+  const map10 = JSON.parse(await fs.readFile(path.join(root, 'docs/week10/page-map.json'), 'utf8'));
+  assert.equal(map10.length, 23);
+  assert.deepEqual([...html10.matchAll(/<deck-slide\b[^>]*slide-id="([^"]+)"/g)].map(m => m[1]), map10.map(p => p.id));
+  const files10 = manifest4.files.filter(f => f.path.startsWith('week10/'));
+  assert(!files10.some(f => (/\.(pdf|zip|sqlite|db|onnx|safetensors|gguf|pt|pth|ckpt|bin|typ|py|jpe?g|png|env)$/i.test(f.path) && !f.path.startsWith('week10/importer/')) || /week10-pack\.json$|local-only|keys\.env/.test(f.path)), 'week10: 本机材料、截图、密钥文件或权重进入站点');
+  const pub10 = await fs.readFile(path.join(week, 'data/w10-public.js'), 'utf8');
+  for (const marker of ['第二道密诏很可能是口', '育勅語の発布について', '主トシ自ラ愛シテ他ニ', 'ハ政事上之臭味を避ケ', '"model_returned"', 'w10-ref/v1', 'w10-drafts/v1']) assert(!pub10.includes(marker), 'week10 public pack: ' + marker);
+  assert(/"replays":\s*\[\]/.test(pub10), 'week10: 公开包不得带运行记录');
+  const importer10 = await fs.readFile(path.join(week, 'importer/index.html'), 'utf8');
+  assert(importer10.includes('./assets/') && !importer10.includes('/pku-aihis/material-importer/assets/'));
+  const home = await fs.readFile(path.join(site, 'index.html'), 'utf8');
+  assert(home.includes('href="week10/"') && home.includes('第十周 · 人工智能辅助文献阅读'));
+  console.log('Week10: 23 pages, public pack with public texts only (Ems telegram, Rescript; no 茅海建/稲田/井上 transcriptions, run records, reference judgments or draft table), embedded importer; no material pack, keys or weights');
+}

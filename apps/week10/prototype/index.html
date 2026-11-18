@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第十周 · 人工智能辅助文献阅读</title>
+<link rel="stylesheet" href="deck.css">
+<link rel="stylesheet" href="week09-base.css">
+<link rel="stylesheet" href="w09.css">
+<link rel="stylesheet" href="w10.css">
+<script src="data/data.js"></script>
+<script src="data/w10-public.js"></script>
+<script src="data/w10-static.js"></script>
+<script src="data/w10-kinds.js"></script>
+<script src="data/w10-cards.js"></script>
+<script src="deck-core.js"></script>
+<script src="w10-lib.js"></script>
+<script src="w10-core.js"></script>
+<script src="w10-labs1.js"></script>
+<script src="w10-labs2.js"></script>
+<script src="w10-labs3.js"></script>
+<script src="w10-labs4.js"></script>
+<script src="w10-labs5.js"></script>
+<!-- 模型接入（ES 模块；须经 HTTP 打开）。由 scripts/assemble-prototype.mjs 补入。 -->
+<script type="module" src="live/w10-live.js"></script>
+</head><body><div id="app"></div>
+<!-- 由 assemble-prototype.mjs 依 page-map.json 生成；请改页表后重新生成，不要直接改这里。 -->
+<template id="deck-template"><deck-container>
+<deck-slide slide-id="D00" data-status="prototype" kicker="D00 / 全讲" header-title="模型替我们读过的东西" transition="这一讲问一个问题：模型替我们读过的东西，哪些可以直接用，哪些必须回到原文。" theme="dark" layout="hero" mode="静态；学生自填部分为页面内记录｜静态内容" notes="目的：让学生一眼看到全讲的四个动作与三个案例，并知道每一格在哪一页做。
+范例引导：开课时停留一分钟：念中心问题，点四个动作；说明页右上角的运行性质标签。
+机制背景：矩阵每格是一个页面链接；状态条读本机材料包、模型接入与课前记录三处状态。"><hero-cover10></hero-cover10><div slot="footer">D00 · 静态内容；讲义导入&quot;中心问题&quot;与四个动作</div></deck-slide>
+<deck-slide slide-id="D01" data-status="prototype" kicker="D01 / 导入" header-title="几分证据：茅海建怎样看袁世凯告密" transition="先看一次运行：同一个问题，不给材料与给材料，各问两个模型。" theme="light" layout="workbench" mode="实际调用／预存回放／网页版粘贴分格标注；圈词汇总与关键词高亮为实际计算｜保存结果回放／浏览器实时（圈词汇总）" notes="目的：让学生亲手找出&quot;说满了&quot;的词，为第一节的三种毛病埋下问题。
+范例引导：约 4 分钟。先放 D1A，再放 D1B；每段请学生点一个词；看完打开核对要点，对第 175 页原话。
+机制背景：回答格读运行记录（现场／回放／网页版）；圈词写入句子标注 type＝说满；关键词高亮与&quot;黄彰健&quot;检查是页内规则，规则文字写在页上。"><demo1-lab></demo1-lab><div slot="footer">D01 · 保存结果回放／浏览器实时（圈词汇总）；讲义导入演示①与其后的核对段</div></deck-slide>
+<deck-slide slide-id="D02" data-status="prototype" kicker="D02 / 一 读法 1.1" header-title="放得进，读不完：先定读什么" transition="材料放得进模型，接下来要问：它读了哪一部分。" theme="light" layout="flow4" mode="实际计算（篇幅与词元估算、选段）；研究数字为静态；位置三档为学生现场调用（课后）｜浏览器实时（篇幅估算）／静态内容（研究数字）" notes="目的：让学生把&quot;给模型读什么&quot;当作一项要记录的研究条件。
+范例引导：选两节与全文各一次，看字数与词元估算；三张研究卡各讲一句&quot;变的是什么&quot;。
+机制背景：字数据材料包实算；词元估算办法写在页上；不画位置曲线。"><fit-lab></fit-lab><div slot="footer">D02 · 浏览器实时（篇幅估算）／静态内容（研究数字）；讲义 1.1</div></deck-slide>
+<deck-slide slide-id="D03" data-status="prototype" kicker="D03 / 一 读法 1.2" header-title="摘要会丢什么：三种毛病" transition="把演示①的回答拆开来看：毛病出在哪几句。" theme="light" layout="flow4" mode="实际计算（定类汇总、按页汇总）；示例句为演示①的预存回放｜浏览器实时（定类汇总）／保存结果回放（示例句）" notes="目的：让学生能把一句话归入遗漏、说满、归属三类之一。
+范例引导：抽 6—8 句，全班选类，看分布；本课判定由教师课上给出。
+机制背景：句子来自 D1B 运行记录；定类写入句子标注；进阶按页位置汇总。"><three-lab></three-lab><div slot="footer">D03 · 浏览器实时（定类汇总）／保存结果回放（示例句）；讲义 1.2 @fig-three</div></deck-slide>
+<deck-slide slide-id="D04" data-status="prototype" kicker="D04 / 一 读法 1.3" header-title="拆成可核的话：原子主张与引文核对" transition="把一段回答拆成可以逐条核对的话。" theme="light" layout="workbench" mode="实际计算（FActScore、要点召回、覆盖率）；模型回答为预存回放或&quot;待课前运行&quot;｜浏览器实时（quote-check、FActScore）／保存结果回放（回答）" notes="目的：让学生分清&quot;引文在不在&quot;（程序可做）、&quot;概括对不对&quot;（人判断）、&quot;漏了什么&quot;（只有读过原文的人能查）。
+范例引导：学生拆五条、贴原文；演示&quot;加剧&quot;改&quot;导致&quot;仍过门槛，看标红的字。
+机制背景：quote-check：归一（NFKC、去控制字符与空白、去标点），中日文按字、西文按词，最长公共片段递归，片段至少 3 字（西文 2 词）；状态四档。"><claims-lab></claims-lab><div slot="footer">D04 · 浏览器实时（quote-check、FActScore）／保存结果回放（回答）；讲义 1.3（含 llm-for-zotero 注）</div></deck-slide>
+<deck-slide slide-id="D05" data-status="prototype" kicker="D05 / 二 成文 2.1" header-title="当时的文本与事后的叙述" transition="回答里的&quot;背景&quot;，先要问每份材料是什么时候写的。" theme="light" layout="flow4" mode="实际计算；材料为静态｜浏览器实时（距离与标签）／静态内容（材料）" notes="目的：让学生把事件、自署、实际成文、首次公开四种时间分开记。
+范例引导：先填埃姆斯三行，再改袁世凯自述的成文时间，看标签变化。
+机制背景：成文距离按公历计算；原文纪年并列，不自动换算；阈值为本课约定，可调。"><chengwen-lab></chengwen-lab><div slot="footer">D05 · 浏览器实时（距离与标签）／静态内容（材料）；讲义 2.1</div></deck-slide>
+<deck-slide slide-id="D06" data-status="prototype" kicker="D06 / 二 成文 2.2" header-title="起草链：让模型写起草经过" transition="请模型写一份起草经过，再一步一步对照年表。" theme="light" layout="workbench" mode="实际调用／预存回放／网页版粘贴；对照为实际计算（timeline-match、set-overlap）｜保存结果回放／浏览器实时（timeline-match）" notes="目的：让学生看到不给材料、给材料、要求标注三种条件下时间线的差别。
+范例引导：约 3 分钟放三条件；对照简表 2 分钟；四项计数读给全班。
+机制背景：模糊日期按本课约定化区间；预填对应行按日期相交与文字二字组 Jaccard；学生可改。"><chain-lab></chain-lab><div slot="footer">D06 · 保存结果回放／浏览器实时（timeline-match）；讲义 2.2 @fig-chain、演示②</div></deck-slide>
+<deck-slide slide-id="D07" data-status="prototype" kicker="D07 / 二 成文 2.3" header-title="背景知识从哪里来：出处层级" transition="时间线的每一步来自哪里？请模型自己标，再由我们抽查。" theme="light" layout="flow4" mode="实际计算（label-agree、日期抽查）；时间线为预存回放；κ 小例子为教学构造｜浏览器实时（label-agree）／保存结果回放（D2B、D2C）／教学构造（κ 小例子）" notes="目的：让学生把［自知］［推测］当作待查线索，并知道［材料］也要抽查。
+范例引导：学生给 D2B 标三种记号 3 分钟；展示 D2C 与一致率；点开不一致的格。
+机制背景：一致率、κ、混淆矩阵；［材料：月日］到年表录文中查月日与关键词。"><layers-lab></layers-lab><div slot="footer">D07 · 浏览器实时（label-agree）／保存结果回放（D2B、D2C）／教学构造（κ 小例子）；讲义 2.3</div></deck-slide>
+<deck-slide slide-id="D08" data-status="prototype" kicker="D08 / 三 对校 3.1" header-title="机器怎样对校：井上草案与成文" transition="对齐交给程序：先看井上草案与成文。" theme="light" layout="flow4" mode="实际计算（seq-align）｜浏览器实时（seq-align）" notes="目的：让学生看到比对单位与归一一改，异文数就变；程序比不出先后。
+范例引导：默认八处视图；切字／词、开关踊字，各一次；最后切换初稿之争两说。
+机制背景：seq-align：difflib 兼容（Python SequenceMatcher 移植，autojunk 关）与 LCS 两种；每处异文带原文下标。"><align8-lab></align8-lab><div slot="footer">D08 · 浏览器实时（seq-align）；讲义 3.1 @fig-align、附录井上草案与成文</div></deck-slide>
+<deck-slide slide-id="D09" data-status="prototype" kicker="D09 / 三 对校 3.2" header-title="让模型对校会怎样：分工" transition="分类可以交给模型，但准确率要拿自己的标注来量。" theme="light" layout="flow4" mode="静态（两项研究）；小练习为实际计算；练习的规则与数字标&quot;教学构造&quot;｜静态内容（两项研究）／浏览器实时（一致率、κ）／教学构造（练习规则）" notes="目的：让学生知道对齐、分类、判断三步的分工，以及&quot;准确率&quot;相对于谁。
+范例引导：分工表讲一遍；小练习留作课后。
+机制背景：以学生标注为答案，计算 C02A 模型分类的一致率与 κ。"><division-lab></division-lab><div slot="footer">D09 · 静态内容（两项研究）／浏览器实时（一致率、κ）／教学构造（练习规则）；讲义 3.2 @fig-division</div></deck-slide>
+<deck-slide slide-id="D10" data-status="prototype" kicker="D10 / 三 对校 3.3" header-title="埃姆斯电报两本" transition="现在看埃姆斯电报：程序比出二十处，哪几处要紧由我们判断。" theme="light" layout="workbench" mode="实际计算（seq-align 复现对齐表、召回与多报）；模型分类与直接对校为预存回放｜浏览器实时（seq-align 复现）／保存结果回放（C02A、C02B）" notes="目的：让学生亲眼看到对齐表在页面上算出来，并与课前脚本一致；体会&quot;生成不是比对&quot;。
+范例引导：读中译 2 分钟；两人一组写三处效果 6 分钟；看模型分类 3 分钟。
+机制背景：difflib 兼容模式复现 ems_align.py；C02B 的异文与程序 20 处逐一匹配，算召回与多报。"><ems-lab></ems-lab><div slot="footer">D10 · 浏览器实时（seq-align 复现）／保存结果回放（C02A、C02B）；讲义 3.3 与附录&quot;埃姆斯电报两本&quot;</div></deck-slide>
+<deck-slide slide-id="D11" data-status="prototype" kicker="D11 / 四 互证与分歧 4.1" header-title="一事几说：九家对照" transition="转到研究文献：同一件事，九家怎么说。" theme="light" layout="flow4" mode="静态（@fig-views）；归栏对照为实际计算｜静态内容（九家表）／浏览器实时（归栏对照）" notes="目的：让学生看清各家用的动词与所据史料。
+范例引导：动词高亮讲一遍；归栏 2 分钟。
+机制背景：每格链茅文节录（本机材料包）；线上版显示页码与短引。"><views-lab></views-lab><div slot="footer">D11 · 静态内容（九家表）／浏览器实时（归栏对照）；讲义 4.1 @fig-views</div></deck-slide>
+<deck-slide slide-id="D12" data-status="prototype" kicker="D12 / 四 互证与分歧 4.2" header-title="让模型做各说对照表" transition="请模型做一张对照表，再逐格核对。" theme="light" layout="workbench" mode="实际调用／预存回放；逐格核对汇总与页码核对为实际计算｜保存结果回放／浏览器实时（逐格汇总、页码核对）" notes="目的：让学生在表格里找到说满、归属错误、自填与漏列。
+范例引导：演示③约 4 分钟；每人两行核对 5 分钟；请两三位说说。
+机制背景：页码一栏由 quote-check 在该页节录中找学者名与关键词。"><table3-lab></table3-lab><div slot="footer">D12 · 保存结果回放／浏览器实时（逐格汇总、页码核对）；讲义 4.2 演示③</div></deck-slide>
+<deck-slide slide-id="D13" data-status="prototype" kicker="D13 / 四 互证与分歧 4.3" header-title="论证缺口：郭卫东与刘路生" transition="看论证本身：郭卫东与刘路生。" theme="light" layout="flow4" mode="实际计算（拆分与归类汇总）；四行对照静态；&quot;删去自我限定之后&quot;一句为教学构造｜静态内容（四行对照）／浏览器实时（归类汇总）／教学构造（删去自我限定一句）" notes="目的：让学生分清反驳前提与反驳推理，并留意作者的自我限定。
+范例引导：四行各选一次；第三行单独讲。
+机制背景：论证卡；进阶拖放后计算剩余支撑。"><debate-lab></debate-lab><div slot="footer">D13 · 静态内容（四行对照）／浏览器实时（归类汇总）／教学构造（删去自我限定一句）；讲义 4.3 @fig-debate</div></deck-slide>
+<deck-slide slide-id="D14" data-status="prototype" kicker="D14 / 四 互证与分歧 4.4" header-title="分歧不能核对掉" transition="有一种差别核对不掉：解释上的分歧。" theme="light" layout="workbench" mode="实际调用／预存回放；点名与一致性为实际计算（set-overlap）｜保存结果回放／浏览器实时（set-overlap）" notes="目的：让学生看到模型默认给出比实际更一致的学界图景。
+范例引导：演示④约 4 分钟；指出一处被调和的分歧 2 分钟。
+机制背景：findNames 按名单与简称抽点名；两两 Jaccard；调和语列表写在页上。"><split4-lab></split4-lab><div slot="footer">D14 · 保存结果回放／浏览器实时（set-overlap）；讲义 4.4 演示④</div></deck-slide>
+<deck-slide slide-id="D15" data-status="prototype" kicker="D15 / 五 对照（全讲）" header-title="阅读对照单（贯穿页）" transition="把前面各页的核对收到一张表里：模型的整理对本人的细读。" theme="light" layout="through" mode="实际计算（汇总、原文核对）；内容由使用者导入或填写｜浏览器实时（汇总、quote-check）" notes="目的：让学生用一张表完成对照，并带走&quot;人工智能使用情况说明&quot;附表。
+范例引导：教师导入自己的例子演示；学生各填至少五行。
+机制背景：各页&quot;送入对照单&quot;按钮写入同一份记录；模型新见须勾选确认才计入；导入先验证。"><sheet-lab></sheet-lab><div slot="footer">D15 · 浏览器实时（汇总、quote-check）；讲义第五节 @fig-sheet（示例行待教师例子）</div></deck-slide>
+<deck-slide slide-id="D16" data-status="prototype" kicker="D16 / 结语" header-title="结语与贯穿记录" transition="回到中心问题：四个动作。" theme="light" layout="hero" mode="实际计算（导出与恢复）｜浏览器实时（导出与恢复）" notes="目的：让学生带走全讲记录。
+范例引导：念四个动作，各点一次回链；示范导出。
+机制背景：w10-through/v1；导入先验证，坏文件保留旧记录；导出去 Key。"><closing-lab></closing-lab><div slot="footer">D16 · 浏览器实时（导出与恢复）；讲义结语。</div></deck-slide>
+<deck-slide slide-id="D17" data-status="prototype" kicker="D17 / 三 对校（进阶）" header-title="序列对齐怎样算：LCS 小例表" transition="课后：LCS 表一格一格地填。" theme="light" layout="flow4" mode="实际计算｜浏览器实时" notes="目的：让有兴趣的学生亲手算一次对齐。
+范例引导：课后自学。
+机制背景：lcsTable、lcsBacktrack；回溯平局先退上。"><lcs-lab></lcs-lab><div slot="footer">D17 · 浏览器实时；扩充部分甲三。</div></deck-slide>
+<deck-slide slide-id="D18" data-status="prototype" kicker="D18 / 三 对校（进阶）" header-title="TEI 校勘记" transition="课后：把对齐结果写成 TEI 校勘记。" theme="light" layout="flow4" mode="实际计算（格式转换）｜浏览器实时（格式转换）" notes="目的：让学生能写出 app、rdg、listWit。
+范例引导：课后自学。
+机制背景：toTEI：平行分段；类别写入 interpGrp。"><tei-lab></tei-lab><div slot="footer">D18 · 浏览器实时（格式转换）；扩充部分甲四。</div></deck-slide>
+<deck-slide slide-id="D19" data-status="prototype" kicker="D19 / 一 读法（进阶）" header-title="长上下文测试怎样设计；最小对计分" transition="课后：长上下文测试是怎样设计的。" theme="light" layout="flow4" mode="实际计算（基线、模拟）；学生题为实际调用（课后）｜浏览器实时（基线与模拟）" notes="目的：让学生理解按对计分与新书设计。
+范例引导：课后自学。
+机制背景：随机基线 (1/2)^k；代掷硬币的模拟。"><truth-lab></truth-lab><div slot="footer">D19 · 浏览器实时（基线与模拟）；扩充部分甲一</div></deck-slide>
+<deck-slide slide-id="D20" data-status="prototype" kicker="D20 / 二 成文／三 对校（进阶）" header-title="《教育勅語》逐稿与初稿之争" transition="课后：勅語草稿的三个系统与初稿之争。" theme="light" layout="diagram" mode="静态（研究者的结论）；草案间对齐为实际计算｜静态内容" notes="目的：让学生看到同一批无日期草稿可以排出不同先后。
+范例引导：课后自学。
+机制背景：草案表；三种排序切换。"><drafts-lab></drafts-lab><div slot="footer">D20 · 静态内容；扩充部分乙一</div></deck-slide>
+<deck-slide slide-id="D21" data-status="prototype" kicker="D21 / 附录" header-title="材料包与工具" transition="课后：本讲的材料包、工具与练习数据。" theme="light" layout="diagram" mode="静态；CollateX 输出为课前实际运行的结果｜静态内容／保存结果回放（CollateX 输出）" notes="目的：让学生知道去哪里找工具与数据，以及每份材料的使用边界。
+范例引导：发材料时用一次。
+机制背景：材料状态读本机材料包；CollateX 输出为课前运行的存档。"><tools-lab></tools-lab><div slot="footer">D21 · 静态内容／保存结果回放（CollateX 输出）；讲义附录&quot;工具与资源&quot;</div></deck-slide>
+<deck-slide slide-id="D22" data-status="prototype" kicker="D22 / 附录" header-title="概念表" transition="本讲首次出现的概念。" theme="light" layout="concepts" mode="静态｜静态内容" notes="目的：随时查概念。
+范例引导：顶栏&quot;概念表&quot;进出。
+机制背景：由概念讲解表.typ 转换；首次出现页回链。"><concept-table></concept-table><div slot="footer">D22 · 静态内容；第十周/概念讲解表.typ（2026-11-15 稿）。</div></deck-slide>
+</deck-container></template>
+</body></html>

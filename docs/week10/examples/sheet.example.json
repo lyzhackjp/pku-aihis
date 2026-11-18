@@ -1,0 +1,79 @@
+{
+ "_note": "结构示例，教学构造：说明字段与汇总规则，不是对照单的预置行（D15 不预置示例行，教师 2026-11-16）。",
+ "rows": [
+  {
+   "row_id": "r1",
+   "from_page": "D04",
+   "run_id": "D1B_deepseek_1",
+   "point": null,
+   "source_ref": {
+    "entry_id": "mao-conclusion",
+    "page": "175",
+    "page_system": "原刊页",
+    "quote": "（学生贴的原文）"
+   },
+   "my_reading": null,
+   "model_says": "（示例）",
+   "verdict": "过度概括",
+   "verdict_prefilled": true,
+   "confirmed": false,
+   "action": null,
+   "reason": null
+  },
+  {
+   "row_id": "r2",
+   "from_page": "import",
+   "run_id": null,
+   "point": "（示例要点）",
+   "source_ref": {
+    "citation": "（示例）",
+    "page": null,
+    "page_system": "无",
+    "quote": null
+   },
+   "my_reading": "（示例）",
+   "model_says": "（示例）",
+   "verdict": "模型新见",
+   "verdict_prefilled": false,
+   "confirmed": false,
+   "action": null,
+   "reason": null,
+   "tool_record": {
+    "tool": "（示例：某只依据上传文件作答的工具）",
+    "version_or_date": "2026-11-16",
+    "model": null,
+    "files": [
+     {
+      "title": "（示例）",
+      "edition": "（示例）",
+      "text_layer": "有"
+     }
+    ],
+    "web_access": false,
+    "question": "（示例）",
+    "reply": "（示例）",
+    "citations_verified": null
+   }
+  }
+ ],
+ "summary": {
+  "count": {
+   "一致": 0,
+   "遗漏": 0,
+   "过度概括": 1,
+   "归属错误": 0,
+   "曲解": 0,
+   "模型新见": 0
+  },
+  "total": 1,
+  "share": {
+   "一致": 0,
+   "遗漏": 0,
+   "过度概括": 1,
+   "归属错误": 0,
+   "曲解": 0,
+   "模型新见": 0
+  },
+  "pending_new": 1
+ }
+}

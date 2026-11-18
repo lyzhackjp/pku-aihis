@@ -1,0 +1,36 @@
+{
+ "_note": "候选，未经教师确认（2026-11-16，第一步）。只列不跑：初版完成后由教师在页面填 Key，Claude 经 Chrome 插件在\"课前运行\"面板运行（教师已定 2）；网页版由 Claude 指引教师在网页上运行、截图，Claude 录入（教师已定 4）。本线程不运行、不读 keys.env。",
+ "api": {
+  "models": ["deepseek", "kimi"],
+  "samples": 3,
+  "settings_pending": "待决 1：DeepSeek 关思考＋温度 0.7（第九周课件做法）还是思考 low（温度不生效）；Kimi 固定温度、reasoning_effort low",
+  "cards": [
+   {"card_id": "D1A", "page": "D01", "materials": [], "needs_local_pack": false},
+   {"card_id": "D1B", "page": "D01", "materials": ["mao-history", "mao-conclusion"], "needs_local_pack": true},
+   {"card_id": "D2A", "page": "D06", "materials": [], "needs_local_pack": false},
+   {"card_id": "D2B", "page": "D06、D07", "materials": ["inada-chronology-1890"], "needs_local_pack": true},
+   {"card_id": "D2C", "page": "D06、D07", "materials": ["inada-chronology-1890"], "needs_local_pack": true},
+   {"card_id": "D3", "page": "D12", "materials": ["mao-history"], "needs_local_pack": true},
+   {"card_id": "D4A", "page": "D14", "materials": [], "needs_local_pack": false},
+   {"card_id": "D4B", "page": "D14", "materials": ["inada-pp3-4"], "needs_local_pack": true},
+   {"card_id": "C02A", "page": "D10、D09", "materials": ["ems-a", "ems-b", "ems-align-table"], "needs_local_pack": false},
+   {"card_id": "C02B", "page": "D10", "materials": ["ems-a", "ems-b"], "needs_local_pack": false}
+  ],
+  "total_calls": 60,
+  "optional_extra": [
+   {"card_id": "D1C（拟）", "page": "D01 进阶", "what": "追问\"学界对此有共识吗\"（讲义导入 note）；是否课前预存，待教师定", "calls": "2 × 3"},
+   {"card_id": "D3B（拟）", "page": "D12 进阶", "what": "\"按各家对告密时间的判定排序\"（讲义 4.2 note）；是否课前预存，待教师定", "calls": "2 × 3"}
+  ]
+ },
+ "web": {
+  "platforms": ["Gemini", "ChatGPT"],
+  "proposal": "方案建议演示①与④：D1A、D1B、D4A、D4B 各 1 次 × 两家 = 8 次；教师可增删（待决 5）",
+  "runs": [
+   {"card_id": "D1A", "platforms": ["Gemini", "ChatGPT"], "samples": 1},
+   {"card_id": "D1B", "platforms": ["Gemini", "ChatGPT"], "samples": 1, "note": "整段粘贴含茅文两节（约 1 万字）"},
+   {"card_id": "D4A", "platforms": ["Gemini", "ChatGPT"], "samples": 1},
+   {"card_id": "D4B", "platforms": ["Gemini", "ChatGPT"], "samples": 1}
+  ],
+  "record_fields": ["platform", "model_shown", "entry_type（新对话／临时对话）", "memory（开／关）", "search（开／关）", "date", "screenshot", "reply（录入待核）"]
+ }
+}

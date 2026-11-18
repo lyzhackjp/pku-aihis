@@ -1,0 +1,31 @@
+{
+ "_note": "结构示例：见证本（公开）",
+ "witnesses": [
+  {
+   "witness_id": "ems-a",
+   "siglum": "甲",
+   "title": "阿贝肯自埃姆斯发给俾斯麦的原电",
+   "date_raw": "1870年7月13日",
+   "date_iso": "1870-07-13",
+   "source_citation": "GHDI 德文页（底本 Friedrichsruher Ausgabe 第 6b 卷第 1612 号）",
+   "page_range": null,
+   "text": "Seine Majestät schreibt mir: „Graf Benedetti fing mich auf der Promenade ab, um auf zuletzt sehr zudringliche Art von mir zu verlangen, ich sollte ihn autorisieren, sofort zu telegraphieren, daß ich für alle Zukunft mich verpflichtete, niemals wieder meine Zustimmung zu geben, wenn die Hohenzollern auf ihre Kandidatur zurückkämen. Ich wies ihn, zuletzt etwas ernst, zurück, da man à tous jamais dergleichen Engagements nicht nehmen dürfe, noch könne. – Natürlich sagte ich ihm, daß ich noch nichts erhalten hätte, und da er über Paris und Madrid früher benachrichtigt sei als ich, er wohl einsähe, daß mein Gouvernement wiederum außer Spiel sei.“ Seine Majestät hat seitdem ein Schreiben des Fürsten bekommen. Da Seine Majestät dem Grafen Benedetti gesagt, daß er Nachricht vom Fürsten erwarte, hat Allerhöchstderselbe, mit Rücksicht auf die obige Zumutung, auf des Grafen Eulenburg und meinen Vortrag beschlossen, den Grafen Benedetti nicht mehr zu empfangen, sondern ihm nur durch einen Adjutanten sagen lassen: daß Seine Majestät jetzt vom Fürsten die Bestätigung der Nachricht erhalten, die Benedetti aus Paris schon gehabt, und dem Botschafter nichts weiter zu sagen habe. Seine Majestät stellt Eurer Exzellenz anheim, ob nicht die neue Forderung Benedettis und ihre Zurückweisung sogleich sowohl unseren Gesandten als in der Presse mitgeteilt werden sollte.",
+   "editor_note": null,
+   "sendable": true,
+   "public": true
+  },
+  {
+   "witness_id": "ems-b",
+   "siglum": "乙",
+   "title": "俾斯麦改定的新闻稿",
+   "date_raw": "1870年7月13日",
+   "date_iso": "1870-07-13",
+   "source_citation": "同上",
+   "page_range": null,
+   "text": "Nachdem die Nachrichten von der Entsagung des Erbprinzen von Hohenzollern der Kaiserlich Französischen Regierung von der Königlich Spanischen amtlich mitgeteilt worden sind, hat der französische Botschafter in Ems an Seine Majestät den König noch die Forderung gestellt, ihn zu autorisieren, daß er nach Paris telegraphiere, daß Seine Majestät der König sich für alle Zukunft verpflichte, niemals wieder seine Zustimmung zu geben, wenn die Hohenzollern auf ihre Kandidatur wieder zurückkommen sollten. Seine Majestät der König hat es darauf abgelehnt, den französischen Botschafter nochmals zu empfangen, und demselben durch den Adjutanten vom Dienst sagen lassen, daß Seine Majestät dem Botschafter nichts weiter mitzuteilen habe.",
+   "editor_note": null,
+   "sendable": true,
+   "public": true
+  }
+ ]
+}

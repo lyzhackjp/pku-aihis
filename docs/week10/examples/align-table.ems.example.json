@@ -1,0 +1,281 @@
+{
+ "_note": "结构示例：页面实算的埃姆斯对齐表（与 demo/材料/埃姆斯_对齐表.md 逐条一致）。",
+ "format": "w10-align/v1",
+ "witnesses": [
+  "ems-a",
+  "ems-b"
+ ],
+ "settings": {
+  "unit": "word",
+  "normalize": [],
+  "algorithm": "difflib"
+ },
+ "stats": {
+  "a": 238,
+  "b": 113,
+  "equal": 46,
+  "variants": 20
+ },
+ "origin": "页面实算（w10-lib.js align，difflib 兼容）",
+ "variants": [
+  {
+   "variant_id": "V01",
+   "op": "增",
+   "a_text": "",
+   "b_text": "Nachdem die Nachrichten von der Entsagung des Erbprinzen von Hohenzollern der Kaiserlich Französischen Regierung von der Königlich Spanischen amtlich mitgeteilt worden sind , hat der französische Botschafter in Ems an",
+   "a_span": null,
+   "b_span": [
+    0,
+    216
+   ]
+  },
+  {
+   "variant_id": "V02",
+   "op": "改",
+   "a_text": "schreibt mir : „ Graf Benedetti fing mich auf der Promenade ab",
+   "b_text": "den König noch die Forderung gestellt",
+   "a_span": [
+    15,
+    75
+   ],
+   "b_span": [
+    232,
+    269
+   ]
+  },
+  {
+   "variant_id": "V03",
+   "op": "改",
+   "a_text": "um auf zuletzt sehr zudringliche Art von mir",
+   "b_text": "ihn",
+   "a_span": [
+    77,
+    121
+   ],
+   "b_span": [
+    271,
+    274
+   ]
+  },
+  {
+   "variant_id": "V04",
+   "op": "删",
+   "a_text": "verlangen , ich sollte ihn",
+   "b_text": "",
+   "a_span": [
+    125,
+    150
+   ],
+   "b_span": null
+  },
+  {
+   "variant_id": "V05",
+   "op": "改",
+   "a_text": "sofort zu telegraphieren",
+   "b_text": "daß er nach Paris telegraphiere",
+   "a_span": [
+    165,
+    189
+   ],
+   "b_span": [
+    292,
+    323
+   ]
+  },
+  {
+   "variant_id": "V06",
+   "op": "改",
+   "a_text": "ich",
+   "b_text": "Seine Majestät der König sich",
+   "a_span": [
+    195,
+    198
+   ],
+   "b_span": [
+    329,
+    358
+   ]
+  },
+  {
+   "variant_id": "V07",
+   "op": "改",
+   "a_text": "mich verpflichtete",
+   "b_text": "verpflichte",
+   "a_span": [
+    216,
+    234
+   ],
+   "b_span": [
+    376,
+    387
+   ]
+  },
+  {
+   "variant_id": "V08",
+   "op": "改",
+   "a_text": "meine",
+   "b_text": "seine",
+   "a_span": [
+    251,
+    256
+   ],
+   "b_span": [
+    404,
+    409
+   ]
+  },
+  {
+   "variant_id": "V09",
+   "op": "改",
+   "a_text": "zurückkämen",
+   "b_text": "wieder zurückkommen sollten",
+   "a_span": [
+    320,
+    331
+   ],
+   "b_span": [
+    473,
+    500
+   ]
+  },
+  {
+   "variant_id": "V10",
+   "op": "删",
+   "a_text": "Ich wies ihn , zuletzt etwas ernst , zurück , da man à tous jamais dergleichen Engagements nicht nehmen dürfe , noch könne . – Natürlich sagte ich ihm , daß ich noch nichts erhalten hätte , und da er über Paris und Madrid früher benachrichtigt sei als ich , er wohl einsähe , daß mein Gouvernement wiederum außer Spiel sei . “",
+   "b_text": "",
+   "a_span": [
+    333,
+    648
+   ],
+   "b_span": null
+  },
+  {
+   "variant_id": "V11",
+   "op": "增",
+   "a_text": "",
+   "b_text": "der König",
+   "a_span": null,
+   "b_span": [
+    517,
+    526
+   ]
+  },
+  {
+   "variant_id": "V12",
+   "op": "改",
+   "a_text": "seitdem ein Schreiben des Fürsten bekommen . Da Seine Majestät dem Grafen Benedetti gesagt , daß er Nachricht vom Fürsten erwarte , hat Allerhöchstderselbe , mit Rücksicht auf die obige Zumutung , auf des Grafen Eulenburg und meinen Vortrag beschlossen",
+   "b_text": "es darauf abgelehnt",
+   "a_span": [
+    668,
+    915
+   ],
+   "b_span": [
+    531,
+    550
+   ]
+  },
+  {
+   "variant_id": "V13",
+   "op": "改",
+   "a_text": "Grafen Benedetti nicht mehr",
+   "b_text": "französischen Botschafter nochmals",
+   "a_span": [
+    921,
+    948
+   ],
+   "b_span": [
+    556,
+    590
+   ]
+  },
+  {
+   "variant_id": "V14",
+   "op": "改",
+   "a_text": "sondern ihm nur",
+   "b_text": "und demselben",
+   "a_span": [
+    963,
+    978
+   ],
+   "b_span": [
+    605,
+    618
+   ]
+  },
+  {
+   "variant_id": "V15",
+   "op": "改",
+   "a_text": "einen",
+   "b_text": "den",
+   "a_span": [
+    985,
+    990
+   ],
+   "b_span": [
+    625,
+    628
+   ]
+  },
+  {
+   "variant_id": "V16",
+   "op": "增",
+   "a_text": "",
+   "b_text": "vom Dienst",
+   "a_span": null,
+   "b_span": [
+    640,
+    650
+   ]
+  },
+  {
+   "variant_id": "V17",
+   "op": "改",
+   "a_text": ":",
+   "b_text": ",",
+   "a_span": [
+    1014,
+    1015
+   ],
+   "b_span": [
+    663,
+    664
+   ]
+  },
+  {
+   "variant_id": "V18",
+   "op": "删",
+   "a_text": "jetzt vom Fürsten die Bestätigung der Nachricht erhalten , die Benedetti aus Paris schon gehabt , und",
+   "b_text": "",
+   "a_span": [
+    1035,
+    1134
+   ],
+   "b_span": null
+  },
+  {
+   "variant_id": "V19",
+   "op": "改",
+   "a_text": "zu sagen",
+   "b_text": "mitzuteilen",
+   "a_span": [
+    1165,
+    1173
+   ],
+   "b_span": [
+    714,
+    725
+   ]
+  },
+  {
+   "variant_id": "V20",
+   "op": "删",
+   "a_text": "Seine Majestät stellt Eurer Exzellenz anheim , ob nicht die neue Forderung Benedettis und ihre Zurückweisung sogleich sowohl unseren Gesandten als in der Presse mitgeteilt werden sollte .",
+   "b_text": "",
+   "a_span": [
+    1180,
+    1365
+   ],
+   "b_span": null
+  }
+ ]
+}

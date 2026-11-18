@@ -1,0 +1,253 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://lyzhackjp.github.io/pku-aihis/week10/schemas/w10-structures.schema.json",
+ "title": "第十周演示的通用输入（候选，未经教师确认，2026-11-16）",
+ "description": "在第九周 w09-structures.schema.json（史料包、条件卡、运行记录、句子标注、贯穿记录）之上，增加第十周的结构。每个结构一节，在 $defs 下。日期一律分原文与公元两栏；Key 不进任何结构。",
+ "$defs": {
+  "noSecrets": {
+   "description": "任何结构都不得含这些键（导入对话框遇到这些列整份拒绝）",
+   "not": { "anyOf": [ { "required": ["apiKey"] }, { "required": ["api_key"] }, { "required": ["key"] }, { "required": ["authorization"] }, { "required": ["Authorization"] } ] }
+  },
+  "dateRaw": { "type": ["string", "null"], "description": "原文写法，照录（\"明治二十三年六月二十日\"\"光绪二十四年八月十四日\"\"6 月 10 日前后\"）" },
+  "dateIso": { "type": ["string", "null"], "pattern": "^-?\\d{1,4}(-\\d{2}(-\\d{2})?)?$", "description": "公元值，YYYY、YYYY-MM 或 YYYY-MM-DD；不自动从原文纪年换算" },
+  "sourceRef": {
+   "type": "object",
+   "description": "出处：所据文本与位置。页码体系分清（原书页、原刊页、PDF 页序、扫描图编号、电子文本段落）",
+   "properties": {
+    "entry_id": { "type": "string" },
+    "citation": { "type": "string" },
+    "page": { "type": ["string", "null"] },
+    "page_system": { "enum": ["原书页", "原刊页", "PDF页序", "扫描图编号", "电子文本段落", "无"] },
+    "quote": { "type": ["string", "null"], "description": "所贴原文；页面对它跑 quote-check" }
+   },
+   "additionalProperties": true
+  },
+
+  "sourceEntry": {
+   "description": "史料包条目（沿用第九周 w09-sourcepack/v1，第十周只用到下列字段；sendable=false 的条目在公开包中 text 必须为空）",
+   "type": "object",
+   "allOf": [ { "$ref": "#/$defs/noSecrets" } ],
+   "required": ["id", "title", "citation", "text_kind", "sendable", "visibility"],
+   "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string" },
+    "author": { "type": "string" },
+    "citation": { "type": "string" },
+    "written_date_raw": { "$ref": "#/$defs/dateRaw" },
+    "written_date": { "$ref": "#/$defs/dateIso" },
+    "page": { "type": "object", "properties": { "system": { "type": "string" }, "value": { "type": "string" } } },
+    "page_marker": { "type": ["string", "null"], "description": "text 中的页码标记正则，如 〔原刊第(\\d+)页〕" },
+    "text": { "type": "string" },
+    "text_kind": { "enum": ["原文", "录文", "转写", "教学转述", "仅元数据"] },
+    "transcriber": { "type": "string" },
+    "sendable": { "type": "boolean" },
+    "sendable_basis": { "type": "string" },
+    "visibility": { "enum": ["公开", "本机材料包"] },
+    "note": { "type": "string" }
+   },
+   "if": { "properties": { "sendable": { "const": false } }, "required": ["sendable"] },
+   "then": { "properties": { "visibility": { "const": "本机材料包" } } }
+  },
+
+  "witness": {
+   "description": "见证本（D08、D10、D18、D20）",
+   "type": "object", "allOf": [ { "$ref": "#/$defs/noSecrets" } ],
+   "required": ["witness_id", "siglum", "text", "source_citation"],
+   "properties": {
+    "witness_id": { "type": "string" }, "siglum": { "type": "string", "description": "简称，如 甲、乙、A、B" },
+    "title": { "type": "string" }, "date_raw": { "$ref": "#/$defs/dateRaw" }, "date_iso": { "$ref": "#/$defs/dateIso" },
+    "source_citation": { "type": "string" }, "page_range": { "type": ["string", "null"] },
+    "text": { "type": "string" }, "editor_note": { "type": ["string", "null"], "description": "如\"海後复原（除去墨笔添改）\"" },
+    "sendable": { "type": "boolean" }, "public": { "type": "boolean" }
+   }
+  },
+  "alignSettings": {
+   "type": "object", "required": ["unit", "normalize", "algorithm"],
+   "properties": {
+    "unit": { "enum": ["char", "word"] },
+    "normalize": { "type": "array", "items": { "enum": ["case", "width", "kyujitai", "odoriji", "dakuten", "de_orth", "punct"] }, "uniqueItems": true },
+    "algorithm": { "enum": ["difflib", "lcs"] }
+   }
+  },
+  "variant": {
+   "description": "对齐表一行（D08、D10、D18）。a_span/b_span 是原文下标，供回原文",
+   "type": "object", "required": ["variant_id", "op", "a_text", "b_text"],
+   "properties": {
+    "variant_id": { "type": "string", "pattern": "^V\\d{2,}$" }, "op": { "enum": ["增", "删", "改"] },
+    "a_text": { "type": "string" }, "b_text": { "type": "string" },
+    "a_span": { "type": ["array", "null"], "items": { "type": "integer" }, "minItems": 2, "maxItems": 2 },
+    "b_span": { "type": ["array", "null"], "items": { "type": "integer" }, "minItems": 2, "maxItems": 2 }
+   }
+  },
+  "alignTable": {
+   "type": "object", "required": ["format", "witnesses", "settings", "variants"],
+   "properties": {
+    "format": { "const": "w10-align/v1" }, "witnesses": { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 2 },
+    "settings": { "$ref": "#/$defs/alignSettings" },
+    "stats": { "type": "object", "properties": { "a": { "type": "integer" }, "b": { "type": "integer" }, "equal": { "type": "integer" }, "variants": { "type": "integer" } } },
+    "variants": { "type": "array", "items": { "$ref": "#/$defs/variant" } },
+    "origin": { "type": "string", "description": "页面实算／课前脚本（ems_align.py）／导入" }
+   }
+  },
+  "variantLabel": {
+   "description": "异文分类（D09、D10）",
+   "type": "object", "required": ["variant_id", "category", "labeler"],
+   "properties": {
+    "variant_id": { "type": "string" }, "category": { "type": "string" }, "reason": { "type": "string" },
+    "labeler": { "enum": ["student", "model", "teacher"] }, "run_id": { "type": ["string", "null"] }, "is_example": { "type": "boolean" }
+   }
+  },
+  "category": { "type": "object", "required": ["id", "label"], "properties": { "id": { "type": "string" }, "label": { "type": "string" }, "definition": { "type": "string" } } },
+
+  "atomicClaim": {
+   "description": "原子主张（D04、D15）",
+   "type": "object", "required": ["claim_id", "claim_text"],
+   "properties": {
+    "claim_id": { "type": "string" }, "run_id": { "type": ["string", "null"] }, "claim_text": { "type": "string" },
+    "verdict": { "enum": ["有据", "无据", "说宽", null] },
+    "evidence_quote": { "type": ["string", "null"] }, "source_ref": { "$ref": "#/$defs/sourceRef" },
+    "quote_check": { "type": ["object", "null"], "properties": { "coverage": { "type": ["number", "null"] }, "status": { "enum": ["exact", "spliced", "near", "not_found", "empty"] }, "pages": { "type": "array" }, "threshold": { "type": "number" } } }
+   }
+  },
+  "keyPoint": {
+   "description": "要点（原文→摘要，D04）",
+   "type": "object", "required": ["point_id", "text"],
+   "properties": { "point_id": { "type": "string" }, "text": { "type": "string" }, "source_ref": { "$ref": "#/$defs/sourceRef" }, "in_summary": { "enum": ["yes", "no", "partial", null] } }
+  },
+
+  "timelineStep": {
+   "description": "时间线步（D06、D07）。date_from/date_to 缺时由页面按本课约定从 date_raw 推出区间，规则写在页上",
+   "type": "object", "required": ["step_id", "action"],
+   "properties": {
+    "step_id": { "type": "string" }, "run_id": { "type": ["string", "null"] }, "date_raw": { "$ref": "#/$defs/dateRaw" },
+    "date_from": { "$ref": "#/$defs/dateIso" }, "date_to": { "$ref": "#/$defs/dateIso" }, "actor": { "type": ["string", "null"] }, "action": { "type": "string" },
+    "label": { "enum": ["材料", "自知", "推测", "无", null] }, "label_by": { "enum": ["model", "student", null] }, "label_date": { "type": ["string", "null"], "description": "［材料：月日］中的月日" },
+    "base_row": { "type": ["integer", "null"] }, "match": { "enum": ["相合", "多出", "缺失", "日期不符", null] }
+   }
+  },
+  "baseRow": { "type": "object", "required": ["row", "date_raw", "action"], "properties": { "row": { "type": "integer" }, "date_raw": { "type": "string" }, "from": { "$ref": "#/$defs/dateIso" }, "to": { "$ref": "#/$defs/dateIso" }, "action": { "type": "string" }, "source_ref": { "$ref": "#/$defs/sourceRef" } } },
+
+  "labelPair": {
+   "description": "标注对照表（D07、D09）",
+   "type": "object", "required": ["item_id", "label_a", "label_b"],
+   "properties": { "item_id": { "type": ["string", "integer"] }, "label_a": { "type": ["string", "null"] }, "label_b": { "type": ["string", "null"] }, "labeler_a": { "type": "string" }, "labeler_b": { "type": "string" } }
+  },
+  "nameList": { "description": "名单（D14）", "type": "object", "required": ["run_id", "names"], "properties": { "run_id": { "type": "string" }, "names": { "type": "array", "items": { "type": "string" } } } },
+
+  "chengwenRow": {
+   "description": "成文表（D05）。纪年原文保留，公历另列",
+   "type": "object", "required": ["doc_id", "title"],
+   "properties": {
+    "doc_id": { "type": "string" }, "title": { "type": "string" },
+    "event_date_raw": { "$ref": "#/$defs/dateRaw" }, "event_date": { "$ref": "#/$defs/dateIso" },
+    "signed_date_raw": { "$ref": "#/$defs/dateRaw" }, "signed_date": { "$ref": "#/$defs/dateIso" },
+    "written_date_alt": { "type": "array", "items": { "type": "object", "properties": { "date_raw": { "$ref": "#/$defs/dateRaw" }, "date": { "$ref": "#/$defs/dateIso" }, "basis": { "type": "string" }, "certainty": { "enum": ["自署", "推测", "约数", "确定"] } } } },
+    "printed_date_raw": { "$ref": "#/$defs/dateRaw" }, "printed_date": { "$ref": "#/$defs/dateIso" },
+    "versions": { "type": "array", "items": { "type": "string" } }, "author_relation": { "type": "string" }, "basis": { "type": "string" }
+   }
+  },
+  "viewRow": {
+   "description": "研究说法表（D11、D12、D14）",
+   "type": "object", "required": ["scholar", "claim"],
+   "properties": {
+    "scholar": { "type": "string" }, "aliases": { "type": "array", "items": { "type": "string" } }, "year": { "type": ["string", "integer", "null"] }, "claim": { "type": "string" }, "verb": { "type": ["string", "null"] },
+    "evidence_type": { "type": ["string", "null"], "description": "袁自述／维新派记述／清宫档案／日记函电／笔记小说" }, "evidence": { "type": ["string", "null"] },
+    "dispute": { "type": ["string", "null"] }, "page": { "type": ["string", "null"] }, "source": { "enum": ["茅文", "原书", "稲田概述", "本课概括"] }
+   }
+  },
+  "cellCheck": {
+   "description": "逐格核对（D12）",
+   "type": "object", "required": ["run_id", "row", "column", "verdict"],
+   "properties": { "run_id": { "type": "string" }, "row": { "type": "integer" }, "column": { "type": "string" }, "verdict": { "enum": ["一致", "说满", "归属错误", "自填", "页码不符"] }, "note": { "type": "string" }, "checker": { "type": "string" } }
+  },
+  "argumentCard": {
+   "description": "论证卡（D13）",
+   "type": "object", "required": ["row_id"],
+   "properties": { "row_id": { "type": "string" }, "claim": { "type": "string" }, "premise": { "type": "string" }, "inference": { "type": "string" }, "rebuttal_type": { "enum": ["前提", "推理", null] }, "hedge_quote": { "type": ["string", "null"] }, "page": { "type": ["string", "null"] }, "construct": { "type": "boolean", "description": "教学构造（\"删去自我限定之后\"一句）" } }
+  },
+  "draftRow": {
+   "description": "草案表（D20）",
+   "type": "object", "required": ["draft_id", "system"],
+   "properties": { "draft_id": { "type": "string" }, "system": { "enum": ["中村", "元田", "井上"] }, "author": { "type": "string" }, "date_raw": { "$ref": "#/$defs/dateRaw" }, "date_basis": { "enum": ["dated", "inferred", "none"] }, "paper": { "type": ["string", "null"] }, "holder": { "type": ["string", "null"] }, "source_ref": { "$ref": "#/$defs/sourceRef" }, "order_kaigo": { "type": ["integer", "null"] }, "order_inada": { "type": ["integer", "null"] }, "order_asao": { "type": ["integer", "null"] } }
+  },
+  "docStructure": {
+   "description": "文献结构表（D02）",
+   "type": "object", "required": ["section", "title"],
+   "properties": { "section": { "type": "string" }, "title": { "type": "string" }, "issue": { "type": ["string", "null"] }, "page_from": { "type": ["integer", "null"] }, "page_to": { "type": ["integer", "null"] }, "chars": { "type": ["integer", "null"] }, "chars_basis": { "enum": ["材料包实算", "估计", "未知"] } }
+  },
+  "truthPair": { "description": "真假句对（D19）", "type": "object", "required": ["pair_id", "claim_true", "claim_false"], "properties": { "pair_id": { "type": "string" }, "claim_true": { "type": "string" }, "claim_false": { "type": "string" }, "scope": { "enum": ["sentence", "passage", "global"] }, "evidence_ref": { "$ref": "#/$defs/sourceRef" } } },
+  "toolRecord": {
+   "description": "工具使用记录（扩充部分丙二；D15、D21）",
+   "type": "object", "allOf": [ { "$ref": "#/$defs/noSecrets" } ],
+   "properties": { "tool": { "type": "string" }, "version_or_date": { "type": "string" }, "model": { "type": ["string", "null"] }, "files": { "type": "array", "items": { "type": "object", "properties": { "title": { "type": "string" }, "edition": { "type": "string" }, "text_layer": { "enum": ["有", "无", "有错"] } } } }, "web_access": { "type": ["boolean", "null"] }, "question": { "type": "string" }, "reply": { "type": "string" }, "citations_verified": { "type": ["boolean", "null"] } }
+  },
+  "sheetRow": {
+   "description": "阅读对照单一行（D15）。verdict=模型新见 且 confirmed≠true 的行不计入汇总",
+   "type": "object", "allOf": [ { "$ref": "#/$defs/noSecrets" } ], "required": ["row_id"],
+   "properties": {
+    "row_id": { "type": "string" }, "from_page": { "type": ["string", "null"], "description": "D01……D14，或 import" }, "run_id": { "type": ["string", "null"] },
+    "point": { "type": ["string", "null"] }, "source_ref": { "$ref": "#/$defs/sourceRef" }, "my_reading": { "type": ["string", "null"] }, "model_says": { "type": ["string", "null"] },
+    "verdict": { "enum": ["一致", "遗漏", "过度概括", "归属错误", "曲解", "模型新见", null] }, "verdict_prefilled": { "type": "boolean" },
+    "confirmed": { "type": "boolean" }, "action": { "enum": ["采纳", "修正", "舍弃", null] }, "reason": { "type": ["string", "null"] },
+    "tool_record": { "$ref": "#/$defs/toolRecord" }
+   }
+  },
+
+  "conditionCard": {
+   "description": "条件卡（第十周版）。不存材料正文：user_template 中的 {{material:ID}} 在发出前由史料包条目回填，先过 gate（sendable）",
+   "type": "object", "allOf": [ { "$ref": "#/$defs/noSecrets" } ],
+   "required": ["card_id", "title", "lecture_ref", "question", "user_template", "materials", "models", "samples"],
+   "properties": {
+    "card_id": { "type": "string", "description": "沿用 prompts.json 的 id：D1A、D1B、D2A、D2B、D2C、D3、D4A、D4B、C02A、C02B" },
+    "title": { "type": "string" }, "topic": { "type": "string" }, "lecture_ref": { "type": "string" }, "page": { "type": "string" },
+    "question": { "type": "string" }, "requirements": { "type": ["string", "null"] },
+    "materials": { "type": "array", "items": { "type": "object", "required": ["entry_id"], "properties": { "entry_id": { "type": "string" }, "label": { "type": "string" } } } },
+    "user_template": { "type": "string" }, "system_prompt": { "type": ["string", "null"] },
+    "models": { "type": "array", "items": { "enum": ["deepseek", "kimi"] } },
+    "samples": { "type": "integer", "minimum": 1 },
+    "settings": { "type": "object", "description": "按教师所定（见第一步待决）；记录写实际传了什么", "properties": { "deepseek": { "type": "object" }, "kimi": { "type": "object" } } },
+    "web_prompt_file": { "type": ["string", "null"], "description": "第十周/demo/网页版提示/ 中与本卡同文的文件名" },
+    "source": { "type": "string", "description": "prompts.json 版本，如 w10-demo/v1（2026-11-15）" }
+   }
+  },
+  "runRecord": {
+   "description": "运行记录（与第九周 runRecord 同构；新增 card_id、prompt.template_hash、parsed）",
+   "type": "object", "allOf": [ { "$ref": "#/$defs/noSecrets" } ],
+   "required": ["run_id", "card_id", "mode", "date"],
+   "properties": {
+    "run_id": { "type": "string", "description": "<card_id>_<preset>_<sample>，如 D1B_kimi_2" },
+    "card_id": { "type": "string" }, "sample_index": { "type": "integer" },
+    "mode": { "enum": ["live", "replay", "web-paste", "teaching-construct", "pending"] }, "origin_mode": { "enum": ["live", "web-paste", null] },
+    "preset": { "enum": ["deepseek", "kimi", "local", "web"] }, "model": { "type": ["string", "null"] }, "model_returned": { "type": ["string", "null"] },
+    "endpoint": { "type": ["string", "null"] }, "temperature": { "type": ["number", "string", "null"] }, "reasoning_effort": { "type": ["string", "null"] }, "thinking": { "type": ["string", "null"] },
+    "prompt": { "type": "object", "properties": { "messages": { "type": "array" }, "source_ids": { "type": "array" }, "gate": { "type": "object" }, "template_hash": { "type": ["string", "null"] } } },
+    "reply": { "type": ["string", "null"] }, "reasoning": { "type": ["string", "null"], "description": "Kimi 的思考内容，另存，课上不显示" },
+    "finish_reason": { "type": ["string", "null"] }, "usage": { "type": ["object", "null"] }, "ms": { "type": ["integer", "null"] }, "attempts": { "type": ["integer", "null"] },
+    "date": { "type": "string" }, "error": { "type": ["string", "null"] },
+    "web": { "type": ["object", "null"], "properties": { "platform": { "type": "string" }, "model_shown": { "type": "string" }, "entry_type": { "type": "string" }, "memory": { "type": "string" }, "search": { "type": "string" }, "screenshot": { "type": "string" } } },
+    "transcription": { "type": ["string", "null"], "description": "网页版：回答文字怎样录入（据截图目验等），标\"录入待核\"" },
+    "parsed": { "type": ["object", "null"], "description": "从回答中解析出的结构（时间线步、表格行、名单、异文），注明解析方式：程序／人工" },
+    "environment": { "type": ["string", "null"] }
+   }
+  },
+  "preclassQueue": {
+   "description": "课前运行面板的队列状态（只在页面内存与导出的运行记录中出现，不含 Key）",
+   "type": "object", "allOf": [ { "$ref": "#/$defs/noSecrets" } ],
+   "properties": { "format": { "const": "w10-preclass/v1" }, "jobs": { "type": "array", "items": { "type": "object", "required": ["run_id", "card_id", "preset", "sample_index", "state"], "properties": { "run_id": { "type": "string" }, "card_id": { "type": "string" }, "preset": { "type": "string" }, "sample_index": { "type": "integer" }, "state": { "enum": ["待运行", "运行中", "完成", "失败"] }, "error": { "type": ["string", "null"] }, "attempts": { "type": "integer" } } } } }
+  },
+  "throughRecord": {
+   "description": "全讲贯穿记录（D16 总导出）",
+   "type": "object", "allOf": [ { "$ref": "#/$defs/noSecrets" } ],
+   "required": ["format", "exported_at"],
+   "properties": {
+    "format": { "const": "w10-through/v1" }, "exported_at": { "type": "string" },
+    "contains_restricted_text": { "type": "boolean", "description": "导出时是否带有本机材料包里的受限文字（提示分发前留意）" },
+    "cards": { "type": "array", "items": { "$ref": "#/$defs/conditionCard" } }, "runs": { "type": "array", "items": { "$ref": "#/$defs/runRecord" } },
+    "sentence_labels": { "type": "array" }, "claims": { "type": "array", "items": { "$ref": "#/$defs/atomicClaim" } }, "points": { "type": "array", "items": { "$ref": "#/$defs/keyPoint" } },
+    "timeline": { "type": "array", "items": { "$ref": "#/$defs/timelineStep" } }, "variant_labels": { "type": "array", "items": { "$ref": "#/$defs/variantLabel" } },
+    "cell_checks": { "type": "array", "items": { "$ref": "#/$defs/cellCheck" } }, "arguments": { "type": "array", "items": { "$ref": "#/$defs/argumentCard" } },
+    "sheet": { "type": "array", "items": { "$ref": "#/$defs/sheetRow" } }, "packs": { "type": "array" }, "page_state": { "type": "object" }
+   }
+  }
+ }
+}
