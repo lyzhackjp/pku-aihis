@@ -10,3 +10,12 @@
 - 协作：Blackboard System发布请求、各能力角色自愿响应、追加黑板和中心汇总；Ant System实际概率路线、沉积与挥发。两者不能只换提示词名称。
 - 版式：概念历史用大阶段选择和下部展开；实际结果用结构表；步骤高亮随选择／操作移动；图可放大；复杂页不用固定四栏约束。
 - 验收：实际公开材料的小范围计算与接口协议分别验证；测试替身只证明协议。原PDF、论文原图登记版本、PDF页序、取得方式与SHA-256。生成未实际调用时保留待试跑状态，不能把备选文本叫生成结果。
+
+## v5 补充（2026-10-15）
+
+- **程序库备用来源**：`services.mjs` 的 `importLibrary()` 先从本站 `assets/vendor/transformers/` 载入，失败或 60 秒超时改用 jsDelivr 同版本（`@huggingface/transformers@3.8.1/dist/`，`wasmPaths` 随之切换）。失败过的模块地址会被浏览器缓存为失败，重试时加 `?retry=n`。
+- **权重备用来源**：`pickHost()` 先探测 `huggingface.co`，8 秒不通改用 `hf-mirror.com`（国内）；用户可在模型接入页手选并保存在 `week05/v3/embeddingHost`。`env.remoteHost`、`env.remotePathTemplate="{model}/resolve/{revision}/"`。线上不要探测不存在的本地 `/models/`（只在 localhost 探测）。
+- **加载状态**：`embState`（phase：idle／library／host／downloading／ready／error，逐文件 loaded／total，来源、用时）经 `week05-embedding-state` 事件节流广播；模型接入页嵌入原生 `<embedding-status>` 元素显示进度条、文件表、重试与来源选择；各页编码时的进度消息复用同一状态。
+- **模型调用**：`generate(task, records, question, { allowCloud, onDelta, maxTokens })`。长输入任务（上下文化检索）用流式 `onDelta` 显示首字用时与生成过程，限制输出长度，全文超过约 6000 字只发目标前后若干段并写明，同一目标同一设置复用上次结果；页面显示发送字数、模型用时、编码用时。
+- **状态键**：页面状态存 `rev2/Dxx`；不同页的同名字段必须改名（第五周 D06 的 `threshold` 与 D14 去重阈值冲突，改为 `dupThreshold`），并对旧存储值做合法性清洗。
+- **依赖**：不新增 npm 包（CI 冻结锁文件）。公式排版用内置 HTML／CSS（`.fr` 分式），不引 KaTeX。
