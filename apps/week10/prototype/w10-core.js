@@ -20,6 +20,7 @@
     }
     const seen = new Set(M.replays.map((r) => r.run_id));
     for (const r of j.replays || []) if (!seen.has(r.run_id)) M.replays.push({ ...r, origin_mode: r.origin_mode || r.mode, mode: 'replay' });
+    if (j.drafts && Array.isArray(j.drafts.rows)) M.drafts = j.drafts;
     if (j.refs && typeof j.refs === 'object') M.refs = { ...(M.refs || {}), ...j.refs };
     M.local = { from, generated: j.generated, n: (j.packs || []).reduce((n, p) => n + p.entries.length, 0), runs: (j.replays || []).length };
     M.localMsg = `已载入本机材料包（${M.local.n} 条材料、${M.local.runs} 条运行记录；${from}）。`;

@@ -1,6 +1,6 @@
 /* 公开材料：埃姆斯两本（GHDI）、对齐表、勅語成文；教师材料只留元数据。 由 scripts/build_packs.py 生成，请勿手改。 */
 window.W10_PUBLIC = {
-"generated": "2026-11-18T14:55:31+00:00",
+"generated": "2026-11-18T15:09:14+00:00",
 "packs": [
 {
 "id": "w10-materials",

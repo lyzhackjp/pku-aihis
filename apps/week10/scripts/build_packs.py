@@ -108,7 +108,12 @@ if os.path.isdir(_rd):
         if _f.endswith('_本课判定.json'):
             _j = json.load(open(os.path.join(_rd, _f), encoding='utf-8'))
             if _j.get('format') == 'w10-ref/v1': refs[_j['page']] = _j
-pack = {'format': 'w10-pack/v1', 'generated': gen, 'packs': [{'id': 'w10-materials', 'title': '第十周课堂材料（本机）', 'entries': loc}], 'replays': replays, 'refs': refs,
+# 草案表（D20；据麻尾 2014 付録整理，只进本机材料包）
+drafts = None
+_dp = os.path.join(W10, 'demo', '草案表', 'D20_草案表.json')
+if os.path.isfile(_dp):
+    drafts = json.load(open(_dp, encoding='utf-8'))
+pack = {'format': 'w10-pack/v1', 'generated': gen, 'packs': [{'id': 'w10-materials', 'title': '第十周课堂材料（本机）', 'entries': loc}], 'replays': replays, 'refs': refs, 'drafts': drafts,
         '_note': '本机材料包：教师材料录文与课前运行记录。不入 Git、不发布、不分发。'}
 json.dump(pack, open(os.path.join(APP, 'local-only/week10-pack.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print(f'本课判定 {sorted(refs)}；'); print(f'公开条目 {len(pub)}（含正文 {sum(1 for e in pub if e["text"])}）；本机条目 {len(loc)}；条件卡 {len(cards)}；回放 {len(replays)}')

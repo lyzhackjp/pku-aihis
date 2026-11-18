@@ -225,7 +225,7 @@ ${body.trim()}
   const SYSTEMS = [
     { id: '中村', who: '中村正直', text: '草案 6 月 10 日前后提交文部大臣，后被搁置。' },
     { id: '元田', who: '元田永孚', text: '以 6 月 17 日的"教育大旨"案为起点，有原案、修正案与再修正案。' },
-    { id: '井上', who: '井上毅', text: '草案数量最多，海後列出二十一种（浏览所见，未逐一点数）；多数没有日期，海後"修正過程の分析によって比較し、前後の関係を明らかにする"排定先后。成文以井上稿为底本，经元田往复修正，再经文部、内阁与天皇几轮修改而成。' },
+    { id: '井上', who: '井上毅', text: '草案数量最多，海後编号至井上草案二十三（目次）；麻尾一览列井上系 68 份（含同文抄本）；多数没有日期，海後"修正過程の分析によって比較し、前後の関係を明らかにする"排定先后。成文以井上稿为底本，经元田往复修正，再经文部、内阁与天皇几轮修改而成。' },
   ];
   const CLAIMS = {
     kaigo: { who: '海後宗臣', first: '井上文书中写在法制局十行罫纸上的一份（海後书中所印为除去墨笔修改的复原；讲义 3.1 对齐图所用即此）',
@@ -239,8 +239,9 @@ ${body.trim()}
   const ORDERS = [['order_kaigo', '海後'], ['order_inada', '稲田'], ['order_asao', '麻尾']];
   const normBasis = (v) => { v = String(v || '').trim(); return /^(dated|有|有日期)/i.test(v) ? 'dated' : /^(inferred|推)/i.test(v) ? 'inferred' : /^(none|无|無)/i.test(v) ? 'none' : v || 'none'; };
   class Drafts extends Lab {
-    defaults() { return { claim: 'kaigo', order: 'order_kaigo', pick: null }; }
-    rows() { const own = T().drafts || []; const imp = (T().page_state.imports || []).filter((x) => x.kind === 'drafts').flatMap((x) => x.rows); return [...own, ...imp].map((r) => ({ ...r, date_basis: normBasis(r.date_basis) })); }
+    defaults() { return { claim: 'kaigo', order: 'order_kaigo', pick: null, hideUnranked: true, dedupe: true }; }
+    meta() { return W.Mat.state().drafts || null; }
+    rows() { const own = [...((this.meta() && this.meta().rows) || []), ...(T().drafts || [])]; const imp = (T().page_state.imports || []).filter((x) => x.kind === 'drafts').flatMap((x) => x.rows); return [...own, ...imp].map((r) => ({ ...r, date_basis: normBasis(r.date_basis) })); }
     render() {
       const s = this.s, rows = this.rows(), c = CLAIMS[s.claim];
       const pick = rows.find((r) => r.draft_id === s.pick);
@@ -248,16 +249,19 @@ ${body.trim()}
         const rs = rows.filter((r) => String(r.system).includes(sys));
         if (!rs.length) return '<p class="sub">（草案表未载入）</p>';
         const ord = (r) => { const v = parseInt(r[s.order], 10); return Number.isNaN(v) ? null : v; };
-        const listed = rs.filter((r) => ord(r) != null).sort((a, b) => ord(a) - ord(b)), rest = rs.filter((r) => ord(r) == null);
-        return `<div class="w10-lane">${listed.map((r) => `<button class="w10-node ${BASIS[r.date_basis]?.[1] || ''} ${r.draft_id === s.pick ? 'on' : ''}" data-pick="${esc(r.draft_id)}" title="${esc(r.date_raw || '')}">${ord(r)}. ${esc(r.draft_id)}</button>`).join('<span class="w10-arrow">→</span>')}${rest.length ? `<span class="sub">　此家未排：${rest.map((r) => `<button class="w10-node ${BASIS[r.date_basis]?.[1] || ''}" data-pick="${esc(r.draft_id)}">${esc(r.draft_id)}</button>`).join(' ')}</span>` : ''}</div>`;
+        let listed = rs.filter((r) => ord(r) != null).sort((a, b) => ord(a) - ord(b)); const rest = rs.filter((r) => ord(r) == null);
+        const copies = {}; if (s.dedupe) { const seen = new Map(); listed = listed.filter((r) => { const k = ord(r); if (seen.has(k)) { copies[seen.get(k)] = (copies[seen.get(k)] || 0) + 1; return false; } seen.set(k, r.draft_id); return true; }); }
+        const DISPUTE = ['井上草案一', '井上草案二'];
+        return `<div class="w10-lane">${listed.map((r) => `<button class="w10-node ${BASIS[r.date_basis]?.[1] || ''} ${r.draft_id === s.pick ? 'on' : ''}" data-draft="${esc(r.draft_id)}" title="${esc(r.date_raw || '')}" style="${DISPUTE.includes(r.draft_id) ? 'border:2px solid #b5651d' : ''}">${ord(r)}. ${esc(r.draft_id.replace(/^(中村|元田|井上)草案/, '$1'))}${copies[r.draft_id] ? `<sup>+${copies[r.draft_id]}</sup>` : ''}</button>`).join('<span class="w10-arrow">→</span>')}${rest.length && !s.hideUnranked ? `<span class="sub">　此家未排：${rest.map((r) => `<button class="w10-node ${BASIS[r.date_basis]?.[1] || ''}" data-draft="${esc(r.draft_id)}">${esc(r.draft_id)}</button>`).join(' ')}</span>` : ''}</div>`;
       };
       const kd = Mat.text('inoue-kaigo-draft'), sb = Mat.text('chokugo-seibun');
       const kv = kd && sb ? L.align(kd, sb, { unit: 'char' }).stats : null;
-      this.out(`<div class="w9-two"><section class="w9-col"><header><b>三个系统</b>（海後的分法）　排序 ${ORDERS.map(([k, n]) => `<label><input type="radio" name="d20o" data-o="order" value="${k}" ${s.order === k ? 'checked' : ''}>${n}</label>`).join(' ')}</header>
+      this.out(`<div class="w9-two"><section class="w9-col"><header><b>三个系统</b>（海後的分法）　排序 ${ORDERS.map(([k, n]) => `<label><input type="radio" name="d20o" data-o="order" value="${k}" ${s.order === k ? 'checked' : ''}>${n}</label>`).join(' ')}　<label><input type="checkbox" data-o="dedupe" ${s.dedupe ? 'checked' : ''}>同位次的抄本并成一格</label> <label><input type="checkbox" data-o="hideUnranked" ${s.hideUnranked ? 'checked' : ''}>隐去此家未排的稿</label></header>
+          ${this.meta() ? `<details><summary>草案表的来源与三种次序怎样排的（<b>${esc(this.meta().status)}</b>）</summary><p class="sub">草案表：${esc(this.meta().basis)}<br>${ORDERS.map(([k, n]) => `${n}次序——${esc(this.meta().orders[k])}`).join('<br>')}<br>日期依据——${esc(this.meta().date_rule)}</p></details>` : ''}
           ${SYSTEMS.map((x) => `<div class="w10-tcard"><b>${x.id}系（${x.who}）</b><p class="sub">${esc(x.text)}</p>${lane(x.id)}</div>`).join('')}
           <p class="sub">日期依据：<span class="w10-node b-dated">有日期</span> <span class="w10-node b-inferred">推定</span> <span class="w10-node b-none">无</span>　点一稿看它的日期依据与出处。</p>
           ${rows.length ? '' : `<p class="w10-need"><b>缺：草案表</b>（draft_id, system, author, date_raw, date_basis, paper, holder, source_ref, order_kaigo, order_inada, order_asao）。须教师或助教据海後目次、稲田、麻尾逐稿整理；本页不编造稿数、日期与排序。整理好后用 <button class="small" data-x="imp">导入表格（类型：草案表）</button> 载入，或 <button class="small" data-x="tpl">下载空表头</button>。</p>`}
-          ${pick ? `<div class="w10-tcard"><b>${esc(pick.draft_id)}</b>（${esc(pick.system)}系${pick.author ? '，' + esc(pick.author) : ''}）<p>日期：${esc(pick.date_raw || '—')}　依据：<b>${esc(BASIS[pick.date_basis]?.[0] || pick.date_basis)}</b>　用纸：${esc(pick.paper || '—')}　所藏：${esc(pick.holder || '—')}</p><p>三家排序：${ORDERS.map(([k, n]) => `${n} ${esc(pick[k] ?? '—')}`).join('，')}</p><p class="sub">出处：${esc(typeof pick.source_ref === 'object' ? JSON.stringify(pick.source_ref) : pick.source_ref || '—')}（录文在本机材料包；扫描本不放页影）</p></div>` : ''}</section>
+          ${pick ? `<div class="w10-tcard"><b>${esc(pick.draft_id)}</b>（${esc(pick.system)}系${pick.author ? '，' + esc(pick.author) : ''}）<p>日期：${esc(pick.date_raw || '—')}　依据：<b>${esc(BASIS[pick.date_basis]?.[0] || pick.date_basis)}</b>　用纸：${esc(pick.paper || '—')}　所藏：${esc(pick.holder || '—')}</p><p>三家排序：${ORDERS.map(([k, n]) => `${n} ${esc(pick[k] ?? '—')}`).join('，')}</p>${pick.name_kaigo !== undefined ? `<p>三家（及梅渓）的称呼：海後"${esc(pick.name_kaigo || '（未列）')}"；稲田"${esc(pick.name_inada || '（未列）')}"；梅渓"${esc(pick.name_umetani || '（未列）')}"${pick.asao_label ? `；麻尾所录题名、日付：${esc(pick.asao_label)}` : ''}</p>` : ''}<p class="sub">出处：${esc(typeof pick.source_ref === 'object' && pick.source_ref ? `${pick.source_ref.citation || ''}${pick.source_ref.page ? ` 第 ${pick.source_ref.page} 页` : ''}` : pick.source_ref || '—')}（录文在本机材料包；扫描本不放页影）</p></div>` : ''}</section>
         <section class="w9-col"><header><b>初稿之争</b>　${Object.entries(CLAIMS).map(([k, v]) => `<label><input type="radio" name="d20c" data-o="claim" value="${k}" ${s.claim === k ? 'checked' : ''}>${v.who}</label>`).join(' ')}</header>
           <div class="w10-tcard"><b>${esc(c.who)}所定的初稿</b><p>${esc(c.first)}</p><ul>${c.why.map((w) => `<li>${esc(w)}</li>`).join('')}</ul><p class="sub">出处：${esc(c.ref)}。据教师所给扫描本或 PDF 目验（扩充部分乙一）。</p></div>
           <p><b>这场分歧说明什么</b>：两位研究者看的是同一批没有日期的草稿，用的办法也相同（文字比较加旁证），排出的先后却不一样。纸张与笔迹只有看原件的人能用，同一种稿纸可以用很久；文字比较程序可以代劳，但<b>程序只能说两稿差在哪里，不能说谁照着谁改</b>；旁证要先确定旁证本身的日期。</p>
@@ -266,10 +270,10 @@ ${body.trim()}
             <p>稲田所定初稿（芳川文书本）→ 成文：<span class="nil">未录</span>。全文需另行录入稲田书第 198 页（教师 2026-11-16：本轮不做）。录入后可在 D08 以"自选文字"对齐，比较两种初稿说法下的异文数。</p>
             <p class="sub">异文数只说明差多少，不说明谁在前。</p></details></section></div>`);
     }
-    onChange(e) { const t = e.target; if (t.dataset.o) this.set({ [t.dataset.o]: t.value }); }
+    onChange(e) { const t = e.target; if (t.dataset.o) this.set({ [t.dataset.o]: t.type === 'checkbox' ? t.checked : t.value }); }
     onClick(e) {
-      const t = e.target.closest('[data-pick],[data-x]'); if (!t) return;
-      if (t.dataset.pick) return this.set({ pick: t.dataset.pick === this.s.pick ? null : t.dataset.pick });
+      const t = e.target.closest('[data-draft],[data-x]'); if (!t) return;
+      if (t.dataset.draft) return this.set({ pick: t.dataset.draft === this.s.pick ? null : t.dataset.draft });
       if (t.dataset.x === 'imp') W.Importer.open('drafts');
       if (t.dataset.x === 'tpl') window.Deck.download('w10-drafts-template.csv', '﻿draft_id,system,author,date_raw,date_basis,paper,holder,source_ref,order_kaigo,order_inada,order_asao\n', 'text/csv');
     }
