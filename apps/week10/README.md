@@ -1,6 +1,6 @@
 # 第十周 · 人工智能辅助文献阅读（开发中）
 
-候选，未经教师确认。2026-11-16。分支 `week10`（自 `origin/main` a1afb92 拉出），不合并 main，不在 `published-weeks.json` 中，未部署。
+候选，未经教师确认。2026-11-16。分支 `week10`（自 `origin/main` a1afb92 拉出），2026-11-18 教师授权合入 main 并发布（见 docs/ci-and-release.md）。
 
 ## 现状：三批完成（2026-11-18）
 
@@ -9,7 +9,7 @@
 - 课前记录（只在本机）：接口两家 60 次（11-17）；网页版两家 8 次（11-18，教师运行、Claude 录入，录入待核）。
 - 打开：双击 `scripts/start_week10.command`（127.0.0.1:8780，自动载入 `local-only/week10-pack.json`）。直接打开 HTML 时只能回放，现场调用不可用。
 - 重新生成：`python3 docs/week10/plan-src/make_page_map.py docs/week10/page-map.json`；`python3 apps/week10/scripts/build_packs.py <第十周文件夹> [<运行记录目录>]`；`node apps/week10/scripts/assemble-prototype.mjs [<课程技能 assemble-prototype.mjs>]`。
-- 测试：`cd apps/week10 && node --test tests/*.test.mjs`（49 项）。浏览器验收记录：`docs/week10/verification/`（20261116-batch1、20261117-preclass-batch2、20261118-web-batch3）。
+- 测试与发布构建：`pnpm test`（53 项，含 release.test.mjs）；`pnpm build`（组装 `www/pku-aihis/week10/`，内嵌导入页；本机无 pnpm 时可 `WEEK10_SKIP_IMPORTER=1 node scripts/assemble.mjs`）；`pnpm run check`（可设 `WEEK10_LOCAL_PACK=local-only/week10-pack.json` 做本机片段比对）。浏览器验收记录：`docs/week10/verification/`（20261116-batch1、20261117-preclass-batch2、20261118-web-batch3）。
 - 课前运行面板的失败续跑测试可用 `scripts/mock_api.py`（本机模拟接口，只回固定文字）；2026-11-16 的验收改用页面内替换的模拟接口，没有发出真实请求。
 - 样式与外壳：`deck-core.js`、`deck.css`、`week09-base.css`、`w09.css` 原样复制第九周（类名 w9-* 照用），第十周补充在 `w10.css`；模型接入 `live/vendor/` 原样复制。
 
