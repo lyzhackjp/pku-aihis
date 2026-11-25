@@ -1,0 +1,19 @@
+{
+ "run_id": "D2A_kimi_1",
+ "card_id": "D2A",
+ "sample_index": 1,
+ "mode": "pending",
+ "origin_mode": null,
+ "preset": "kimi",
+ "model": "kimi-k3",
+ "temperature": null,
+ "reasoning_effort": "low",
+ "prompt": {},
+ "reply": null,
+ "reasoning": null,
+ "ms": null,
+ "date": "待课前运行",
+ "error": null,
+ "web": null,
+ "transcription": null
+}
