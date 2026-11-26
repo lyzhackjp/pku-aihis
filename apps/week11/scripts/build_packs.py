@@ -97,6 +97,45 @@ entries += [
 D15 = json.load(open(os.path.join(C, '第十周', 'demo', 'D15_李原榛2023', '史料包_帝国议会会议录4则.json'), encoding='utf-8'))['packs'][0]['entries']
 for e in D15:
     entries.append(dict(E(e['id'], e['title'], e['citation'], e['text'], page=e.get('page'), basis='NDL 公开；第十周 D15 史料包', note='第十周 D15 史料包（只在本机，照第十周边界）'), visibility='本机材料包', sendable=True))
+
+# 文风账本学生样板（D12）：课程文件夹 style/LEDGER.md（lesson-agent 的文风账本）L-001—L-019；
+# 教师 2026-11-26：直接用这本账本，去掉涉及教师或助教的具体人名即可。角色称呼（教师、助教）保留。
+NAMES = ['李原榛', 'lyzhack', 'liyuanzhen']  # 教师、助教的具体人名（账本中出现即替换）；账本原文核对时未见人名
+def ledger_entries(md):
+    out = []
+    for blk in re.split(r'\n## (?=L-\d{3})', md)[1:]:
+        head, *lines = blk.split('\n')
+        m = re.match(r'(L-\d{3})｜体裁：([^｜]+)｜功能：(.+)', head.strip())
+        e = {'entry_id': m.group(1), 'genre': m.group(2).strip(), 'function': m.group(3).strip(), 'examples': []}
+        key, buf = None, []
+        def flush():
+            if key is None: return
+            t = '\n'.join(x[2:] if x.startswith('> ') else ('' if x == '>' else x) for x in buf).strip()
+            t = re.sub(r'\n{2,}', '\n', t)
+            if key.startswith('例'): e['examples'].append({'kind': key[2:-1] if '（' in key else '', 'text': t})
+            else: e[key] = t
+        for ln in lines:
+            if ln.startswith('---') or ln.startswith('## '): break
+            fm = re.match(r'^(状态|偏好|理由|来源与确认|适用范围|补充[^：]*|例（[^）]+）)：\s*(.*)$', ln)
+            if fm: flush(); key, buf = fm.group(1), [fm.group(2)] if fm.group(2) else []
+            elif key is not None: buf.append(ln)
+        flush()
+        st = e.get('状态', ''); e['status'] = next((x for x in ['归纳认可', '直接要求', '原段认可', '候选'] if st.startswith(x)), '候选'); e['status_note'] = st
+        e['preference'] = e.pop('偏好', ''); e['reason'] = e.pop('理由', ''); e['source'] = e.pop('来源与确认', ''); e['scope'] = e.pop('适用范围', ''); e.pop('状态', None)
+        bef = next((x['text'] for x in e['examples'] if x['kind'].startswith('改前')), None); aft = next((x['text'] for x in e['examples'] if x['kind'].startswith('改后') or x['kind'].startswith('好')), None)
+        e['before'], e['after'] = bef, aft
+        out.append(e)
+    return out
+ledger_md = rd(os.path.join(C, 'style', 'LEDGER.md'))
+name_hits = [n for n in NAMES if n.lower() in ledger_md.lower()]
+for n in NAMES: ledger_md = re.sub(re.escape(n), '（略）', ledger_md, flags=re.I)
+LEDGER = ledger_entries(ledger_md)
+assert [e['entry_id'] for e in LEDGER] == [f'L-{k:03d}' for k in range(1, 20)], [e['entry_id'] for e in LEDGER]
+def snippet(es):
+    return '\n\n'.join('\n'.join(x for x in [f"偏好：{e['preference']}", e['before'] and f"例（改前）：{e['before']}", e['after'] and f"例（改后）：{e['after']}", e['scope'] and f"适用范围：{e['scope']}"] if x) for e in es)
+LEDGER3 = ['L-019', 'L-007', 'L-005']  # S3 附入的三条：连接套语、主语与语境、语法自然（与文风演示段相关的三条）
+entries.append(E('ledger-3', '文风账本三条（LEDGER 学生样板 L-019、L-007、L-005）', '课程文风账本 style/LEDGER.md（教师 2026-11-26 同意作学生样板）', snippet([e for e in LEDGER if e['entry_id'] in LEDGER3]),
+   text_kind='账本节录', basis='教师 2026-11-26 同意以课程文风账本作学生样板', visibility='公开'))
 for e in entries: e['sha256'] = hashlib.sha256(e['text'].encode()).hexdigest()
 pub, loc = [], []
 for e in entries:
@@ -106,7 +145,7 @@ for e in entries:
 for e in pub: assert e['visibility'] == '公开' or not e['text'], e['id']
 
 cards = json.load(open(os.path.join(ROOT, 'docs/week11/examples/condition-cards.w11.json'), encoding='utf-8'))['cards']
-ids = {e['id'] for e in entries} | {'ledger-3'}
+ids = {e['id'] for e in entries}
 for c in cards:
     c['settings'] = {'deepseek': {'thinking': 'disabled', 'temperature': 0.7}, 'kimi': {'reasoning_effort': 'low', 'temperature': '固定（不传）'}, '_basis': '教师 2026-11-25：沿用第十周做法'}
     for m in c['materials']: assert m['entry_id'] in ids, m
@@ -188,7 +227,7 @@ for c in cases: assert all(c.get(f) for f in ['title', 'lecture', 'question', 'm
 iterater = json.load(open(os.path.join(ROOT, 'docs/week11/data/iterater_sample10.json'), encoding='utf-8'))
 li_pub = {'source': li['source'], 'citation': LI_CIT, 'note': li['_note'], 'paragraphs': li['paragraphs'], 'notes': {str(p['page']): p['notes'] for p in li['pages'] if p['notes']}}
 local_docx = {'book_preset.docx': b64(os.path.join(MAT, '书稿_明治中期一节_带修订_本机.docx'))}
-js('w11-public.js', 'W11_PUBLIC', {'generated': gen, 'packs': [{'id': 'w11-materials', 'title': '第十一周课堂材料', 'entries': pub}], 'replays': [], 'docx': docs, 'demo3b': demo3b, 'li2023': li_pub, 'cases': cases, 'iterater': iterater},
+js('w11-public.js', 'W11_PUBLIC', {'generated': gen, 'packs': [{'id': 'w11-materials', 'title': '第十一周课堂材料', 'entries': pub}], 'replays': [], 'docx': docs, 'demo3b': demo3b, 'li2023': li_pub, 'cases': cases, 'iterater': iterater, 'ledger': {'entries': LEDGER, 'source': 'style/LEDGER.md（课程文风账本，L-001—L-019）', 'names_removed': name_hits, 's3': LEDGER3}},
    '公开材料：练习材料甲（教学构造）、修订夹具（程序构造）、演示③(b) 修订稿、案例整理 23 案、ITERATER 十条（Apache-2.0）、讲义图 1 摘编、陈澧录文、教师 2023 年论文刊本文字；茅、郭、刘原文、会议录与植入副本只留元数据。')
 js('w11-cards.js', 'W11_CARDS', cards, '条件卡（模板＋材料编号，不含材料正文）。')
 k9 = json.load(open(os.path.join(ROOT, 'docs/week09/schemas/importer-kinds.w09.json'), encoding='utf-8'))

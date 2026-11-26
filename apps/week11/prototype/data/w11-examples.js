@@ -374,10 +374,10 @@ window.W11_EXAMPLES = {
 "materials": [
 {
 "entry_id": "ledger-3",
-"label": "文风账本三条（LEDGER 学生样板中选）",
-"sendable": false,
-"sendable_basis": "学生样板未经教师确认前不送",
-"visibility": "本机材料包"
+"label": "文风账本三条（课程文风账本 L-019、L-007、L-005）",
+"sendable": true,
+"sendable_basis": "教师 2026-11-26 同意以课程文风账本作学生样板",
+"visibility": "公开"
 },
 {
 "entry_id": "li2023-p152-153",
@@ -402,9 +402,9 @@ window.W11_EXAMPLES = {
 "sources": [
 "扩充部分乙二进阶层\"账本检验\""
 ],
-"wording_status": "本线程整理，待教师确认；样板未确认前 sendable=false，无法发出",
+"wording_status": "本线程整理；账本样板教师 2026-11-26 同意",
 "source": "w11-demo/v1（2026-11-25）；模板 sha256 1595e020a91651c4",
-"blocked_until": "有材料 sendable=false，发不出"
+"blocked_until": null
 },
 {
 "card_id": "R1",

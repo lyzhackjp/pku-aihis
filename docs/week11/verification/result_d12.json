@@ -1,0 +1,50 @@
+{
+ "results": [
+  {
+   "check": "[local] D12 账本 21 条（LEDGER 19＋乙二 2），无人名",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D12 勾两条：附入文字含两条偏好",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D12 新建条目存入，状态默认候选、不可附入",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D12 S3 未运行：待课前运行",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D12 账本 21 条（LEDGER 19＋乙二 2），无人名",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D12 勾两条：附入文字含两条偏好",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D12 新建条目存入，状态默认候选、不可附入",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D12 S3 未运行：待课前运行",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "全程无页面错误",
+   "pass": true,
+   "note": ""
+  }
+ ],
+ "errors": []
+}

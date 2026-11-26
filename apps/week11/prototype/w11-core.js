@@ -368,7 +368,7 @@
     },
     html() {
       const q = PC.q, cnt = (st) => (q ? q.jobs.filter((j) => j.state === st).length : 0);
-      return `<div class="w11-preclass"><p class="sub">按条件卡批量运行（条件 × 模型 × 次数），失败的可续跑，完成后导出运行记录（不含 Key）。Key 在"模型接入"里填，只存页面内存。需要本机材料包的卡（D1B、D2P、S1、S2、S3、R1）未载入材料包时会被拦下并写明原因；S3 在 LEDGER 学生样板确认前不可送。每格次数为 0 时按各卡所定（D1A、D1B、D2P 三次；D2A、S1、R1 两次；其余一次）。</p>
+      return `<div class="w11-preclass"><p class="sub">按条件卡批量运行（条件 × 模型 × 次数），失败的可续跑，完成后导出运行记录（不含 Key）。Key 在"模型接入"里填，只存页面内存。需要本机材料包的卡（D1B、D2P、S1、S2、S3、R1）未载入材料包时会被拦下并写明原因；S3 附的账本三条取自课程文风账本（教师 2026-11-26 同意作学生样板）。每格次数为 0 时按各卡所定（D1A、D1B、D2P 三次；D2A、S1、R1 两次；其余一次）。</p>
         <p><b>条件卡</b> ${API_CARDS().map((c) => `<label><input type="checkbox" data-pc-card="${esc(c.card_id)}" ${PC.cards.includes(c.card_id) ? 'checked' : ''} ${PC.running ? 'disabled' : ''}> ${esc(c.card_id)}${c.optional ? '（可选）' : ''}</label>`).join(' ')}</p>
         <p><b>服务</b> ${['deepseek', 'kimi', 'local'].map((p) => `<label><input type="checkbox" data-pc-preset="${p}" ${PC.presets.includes(p) ? 'checked' : ''} ${PC.running ? 'disabled' : ''}> ${esc(PRESET_LABEL[p])}${MS.keys[p] ? '（Key 已填）' : p === 'local' ? '' : '（未填 Key）'}</label>`).join(' ')}　<label>每格次数 <input data-pc-samples size="2" value="${PC.samples}" ${PC.running ? 'disabled' : ''}></label>　<label>同时 <input data-pc-conc size="2" value="${PC.concurrency}" ${PC.running ? 'disabled' : ''}></label></p>
         <p><button data-pc="plan" ${PC.running ? 'disabled' : ''}>生成队列</button> <button data-pc="start" ${PC.running || !q ? 'disabled' : ''}>开始／续跑</button> <button data-pc="failed" ${PC.running || !cnt('失败') ? 'disabled' : ''}>只重跑失败的</button> <button data-pc="stop" ${PC.running ? '' : 'disabled'}>停止</button> <button data-pc="export">导出运行记录</button>

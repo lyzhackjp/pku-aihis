@@ -143,3 +143,7 @@ mark.w11-hit { background: #f6c9c0; border-bottom: 2px solid #b3462e; }
 .w11-case dl { display: grid; grid-template-columns: 6.5em 1fr; gap: .2em .6em; margin: .3em 0 0; }
 .w11-case dt { color: #5c6670; }
 .w11-case dd { margin: 0; }
+.w11-dl { display: grid; grid-template-columns: 5.5em 1fr; gap: .15em .5em; font-size: .88em; margin: .3em 0; }
+.w11-dl dt { color: #5c6670; } .w11-dl dd { margin: 0; white-space: pre-wrap; }
+.w11-form label { display: block; margin: .2em 0; } .w11-form textarea { width: 100%; }
+.w11-ops { max-height: 14em; overflow: auto; font-size: .9em; }

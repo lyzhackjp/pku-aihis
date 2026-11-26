@@ -103,3 +103,69 @@
   }
   register('cases-lab', Cases);
 })();
+
+/* ================= D12 文风账本（进阶）｜第三批补做（教师 2026-11-26：用课程文风账本作样板，去掉人名） ================= */
+(() => {
+  'use strict';
+  const { esc, register } = window.Deck;
+  const W = window.W11, { L, Mat, Through, Lab, runsFor, cardBox, answerCell } = W;
+  const S2 = window.W11_STATIC2, EX = window.W11_EXAMPLES, PUB = window.W11_PUBLIC || {};
+  const STATUS = ['归纳认可', '直接要求', '原段认可', '候选'];
+  const COLS = [['preference', '偏好'], ['before', '改前'], ['after', '改后'], ['reason', '理由'], ['source', '来源与确认'], ['scope', '适用范围']];
+  const viol = (orig, rev) => { const b = L.boundsCheck(orig, rev), r2 = L.styleCount(rev, S2.styleRules.filter((x) => x.rule_id === 'R2')).counts.R2.n - L.styleCount(orig, S2.styleRules.filter((x) => x.rule_id === 'R2')).counts.R2.n; return { hedges: b.lostHedges.reduce((a, x) => a + x.before - x.after, 0), quotes: b.lostQuotes.reduce((a, x) => a + x.before - x.after, 0), generic: b.newGeneric.length, cliche: Math.max(0, r2) }; };
+  class Ledger extends Lab {
+    defaults() { return { pick: {}, open: {}, form: null, filter: '' }; }
+    base() { const lg = PUB.ledger || { entries: [] }; return [...lg.entries.map((e) => ({ ...e, _from: 'ledger' })), ...EX['ledger.jia2'].entries.filter((e) => e.status !== '候选').map((e) => ({ ...e, _from: 'jia2' }))]; }
+    mine() { return Through.get().ledger; }
+    pair() {
+      const original = Mat.text('li2023-p152-153').replace(/〔原刊第\d+页〕/g, ''), d11 = Through.pageState('D11');
+      const run = ['deepseek', 'kimi'].flatMap((p) => runsFor('S1', p))[0];
+      return { original, revised: d11.paste || (run ? run.reply : ''), from: d11.paste ? 'D11 粘贴的润色稿' : run ? run.run_id : '' };
+    }
+    render() {
+      const s = this.s, all = [...this.base(), ...this.mine().map((e) => ({ ...e, _from: 'mine' }))];
+      const shown = all.filter((e) => !s.filter || e.status === s.filter);
+      const picked = all.filter((e) => s.pick[e.entry_id]);
+      const snippet = L.ledgerSnippet(picked);
+      const pr = this.pair(), ops = pr.original && pr.revised ? L.charDiff(pr.original, pr.revised).filter((o) => o.tag !== 'equal') : [];
+      const s3 = ['deepseek', 'kimi'].flatMap((p) => runsFor('S3', p).map((r) => ({ ...r, p }))), s1 = ['deepseek', 'kimi'].flatMap((p) => runsFor('S1', p).map((r) => ({ ...r, p })));
+      const vrow = (r, tag) => { const v = viol(pr.original, r.reply); return `<tr><td>${tag}</td><td class="sub">${esc(r.run_id)}</td><td>${v.hedges}</td><td>${v.quotes}</td><td>${v.generic}</td><td>${v.cliche}</td></tr>`; };
+      const f = s.form;
+      this.out(`<p class="sub">样板：课程教案准备系统的文风账本（${esc((PUB.ledger || {}).source || '')}），记录教师和助教对讲义文风的每一次校准；条目中的具体人名已去掉${(PUB.ledger || {}).names_removed?.length ? '' : '（核对时未见人名，只有"教师""助教"一类称呼）'}。另附扩充部分乙二两条史学样例（${W.nat.tc}）。</p>
+        <div class="w11-two"><section><h4>账本（${all.length} 条）${W.nat.stat}</h4>
+          <p>${['', ...STATUS].map((k) => `<label><input type="radio" name="lgf" value="${k}" ${s.filter === k ? 'checked' : ''}> ${k || '全部'}</label>`).join(' ')}</p>
+          <table class="items w11-ledger"><tr><th>附入</th><th>条目</th><th>状态</th></tr>${shown.map((e) => { const ok = L.ledgerSelectable(e) || e.status === '原段认可'; return `<tr><td><input type="checkbox" data-lp="${esc(e.entry_id)}" ${s.pick[e.entry_id] ? 'checked' : ''} ${ok ? '' : 'disabled title="候选条目不能附入改稿提示"'}></td>
+            <td><b>${esc(e.entry_id)}</b>${e._from === 'jia2' ? ` ${W.nat.tc}` : e._from === 'mine' ? ' <span class="w9-badge calc">我的</span>' : ''} ${esc(e.preference || '')}${e.function ? `<span class="sub">　${esc(e.genre)}｜${esc(e.function)}</span>` : ''}
+              <button class="small" data-open="${esc(e.entry_id)}">${s.open[e.entry_id] ? '收起' : '七栏'}</button>${s.open[e.entry_id] ? `<dl class="w11-dl">${COLS.map(([k, z]) => e[k] ? `<dt>${z}</dt><dd>${esc(e[k])}</dd>` : '').join('')}${e.status_note && e.status_note !== e.status ? `<dt>状态说明</dt><dd>${esc(e.status_note)}</dd>` : ''}</dl>` : ''}</td><td>${esc(e.status)}</td></tr>`; }).join('')}</table>
+          <p class="sub">四种状态：归纳认可、直接要求可以作为偏好附入；原段认可只附例句，不附归纳句；候选不能附入。状态只能由账本主人的明确表态改变——这是为了不让模型把一次改稿泛化成规则。</p></section>
+        <section><h4>一　从一处差异建一条 ${W.nat.calc}</h4>
+          ${ops.length ? `<p class="sub">差异来自 D11 的润色稿（${esc(pr.from)}）。</p><ul class="w11-ops">${ops.slice(0, 30).map((o, i) => `<li><del>${esc(o.a)}</del> → <ins>${esc(o.b)}</ins> <button class="small" data-use="${i}">建条目</button></li>`).join('')}</ul>` : '<p class="w11-pending">D11 还没有润色稿（S1 待课前运行，或在 D11 粘贴一份）；也可以直接新建一条。</p>'}
+          <p><button class="small" data-x="blank">新建空白条目</button></p>
+          ${f ? `<div class="w11-form">${COLS.map(([k, z]) => `<label>${z}<textarea data-f="${k}" rows="${k === 'preference' || k === 'scope' ? 1 : 2}">${esc(f[k] || '')}</textarea></label>`).join('')}
+            <label>状态 <select data-f="status">${STATUS.map((x) => `<option ${f.status === x ? 'selected' : ''}>${x}</option>`).join('')}</select></label>
+            <p class="sub">自己建的条目，在没有用几次改稿验证之前，先记"候选"。</p><button class="small" data-x="save">存入账本</button> <button class="small" data-x="cancel">取消</button></div>` : ''}
+          <h4>二　只附相关几条 ${W.nat.calc}</h4>
+          <p>已选 ${picked.length} 条${picked.length > 5 ? '<span class="nil">（太多：只附与这一段相关的几条）</span>' : ''}。下面是要附进改稿提示的文字（候选条目不进入；原段认可只给例句）：</p>
+          <pre class="srcbox">${esc(snippet || '（未选）')}</pre><p><button class="small" data-x="copy" ${snippet ? '' : 'disabled'}>复制</button></p>
+          <details><summary>进阶：账本检验（附账本润色 S3 与不附账本 S1 的对比）</summary>${cardBox('S3')}${['deepseek', 'kimi'].map((p) => answerCell('S3', p).html).join('')}
+            ${s3.length || s1.length ? `<table class="items"><tr><th></th><th>运行</th><th>限定语减少</th><th>引号词语减少</th><th>泛化归属</th><th>套语增加</th></tr>${s1.map((r) => vrow(r, '不附账本')).join('')}${s3.map((r) => vrow(r, '附账本')).join('')}</table><p class="sub">${W.nat.calc} 计数规则同 D11；只是提示，越界与否仍要逐处读。S3 附的三条是 ${esc(((PUB.ledger || {}).s3 || []).join('、'))}。</p>` : '<p class="w11-pending">待课前运行（S3 可选，两家各一次）。</p>'}</details></section></div>`);
+    }
+    onClick(e) {
+      const t = e.target, s = this.s;
+      if (t.dataset.open) { s.open[t.dataset.open] = !s.open[t.dataset.open]; this.set({}); }
+      if (t.dataset.use != null && t.dataset.use !== undefined && t.dataset.use !== '') { const pr = this.pair(); const o = L.charDiff(pr.original, pr.revised).filter((x) => x.tag !== 'equal')[+t.dataset.use]; this.set({ form: { preference: '', before: o.a, after: o.b, reason: '', source: `D11 润色稿（${pr.from}）`, scope: '', status: '候选' } }); }
+      const x = t.dataset.x;
+      if (x === 'blank') this.set({ form: { preference: '', before: '', after: '', reason: '', source: '自拟', scope: '', status: '候选' } });
+      if (x === 'cancel') this.set({ form: null });
+      if (x === 'save') { const f = s.form; if (!f.preference.trim()) { W.toast('先写"偏好"一句'); return; } Through.add('ledger', { ...f, entry_id: 'M-' + (this.mine().length + 1) }, 'entry_id'); this.set({ form: null }); W.toast('已存入账本（贯穿记录）'); }
+      if (x === 'copy') { const all = [...this.base(), ...this.mine()]; navigator.clipboard?.writeText(L.ledgerSnippet(all.filter((q) => s.pick[q.entry_id]))); W.toast('已复制'); }
+    }
+    onChange(e) {
+      const t = e.target, s = this.s;
+      if (t.name === 'lgf') this.set({ filter: t.value });
+      if (t.dataset.lp) { s.pick[t.dataset.lp] = t.checked; this.set({}); }
+      if (t.dataset.f && s.form) { s.form[t.dataset.f] = t.value; this.set({}, { redraw: t.dataset.f === 'status' }); }
+    }
+  }
+  register('ledger-lab', Ledger);
+})();
