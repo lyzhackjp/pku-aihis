@@ -349,10 +349,12 @@
 
   /* ================= D20 材料包、数据与工具 ================= */
   class Materials extends Lab {
-    defaults() { return { filter: 'all', mine: {} }; }
+    defaults() { return { filter: 'all', mine: {}, set: 'iterater' }; }
     render() {
       const s = this.s, ms = S2.materials.filter((m) => s.filter === 'all' || (s.filter === 'pub' ? m[4] : !m[4]));
-      const items = EX['edits.fig10'].edits.map((e) => ({ id: e.edit_id, before: e.before, after: e.after, gold: e.intention, mine: s.mine[e.edit_id] || null }));
+      const IT = PUB.iterater, useIT = s.set === 'iterater' && IT;
+      const items = useIT ? IT.items.map((e) => ({ id: e.rev_id, before: e.before, after: e.after, gold: e.gold_intention, mine: s.mine[e.rev_id] || null, link: /^\d{4}\.\d{4,5}$/.test(e.doc_id) ? `https://arxiv.org/abs/${e.doc_id}` : null, line: e.line, doc: e.doc_id }))
+        : EX['edits.fig10'].edits.map((e) => ({ id: e.edit_id, before: e.before, after: e.after, gold: e.intention, mine: s.mine[e.edit_id] || null }));
       const ag = L.labelAgreement(items), zh = Object.fromEntries(S.iterater.map(([k, z]) => [k, z]));
       this.out(`<h4>一　本讲课堂材料包（扩充部分丁一）${W.nat.stat}</h4>
         <p>${[['all', '全部'], ['pub', '可分发'], ['class', '只在本机与课堂']].map(([k, z]) => `<label><input type="radio" name="mfil" value="${k}" ${s.filter === k ? 'checked' : ''}> ${z}</label>`).join(' ')}</p>
@@ -364,13 +366,15 @@
         <table class="items"><tr><th>名称</th><th>内容</th><th>可以拿来做什么</th><th>许可</th></tr>${S2.datasets.map(([a, b, c, d]) => `<tr><td>${esc(a)}</td><td>${esc(b)}</td><td>${esc(c)}</td><td>${esc(d)}</td></tr>`).join('')}</table>
         <p class="sub">这些都以英文与理工科为主；史学论文没有公开的审读评测，也没有中文的修改意图语料。</p>
         <details><summary>四　进阶：标修改意图，与原标注比一致率 ${W.nat.calc}</summary>
-          <p class="sub">ITERATER 英文小样本待取（须教师同意访问 HuggingFace 取数据，许可 Apache-2.0）。先用练习材料甲的四条修改（讲义图 10，${W.nat.tc}）。</p>
-          <table class="items"><tr><th>改前</th><th>改后</th><th>我标的意图</th><th>原标注</th></tr>${items.map((x) => `<tr class="${x.mine && x.mine !== x.gold ? 'w11-bad' : ''}"><td>${esc(x.before)}</td><td>${esc(x.after)}</td><td>${sel(`data-mine="${esc(x.id)}"`, x.mine, S.iterater.map(([k, z]) => [k, z]))}</td><td>${x.mine ? esc(zh[x.gold]) : '<span class="sub">标了再看</span>'}</td></tr>`).join('')}</table>
+          <p>${IT ? `<label><input type="radio" name="itset" value="iterater" ${useIT ? 'checked' : ''}> ITERATER 十条（英文，人工标注句级测试集；${esc(IT.license)}；教师 2026-11-26 同意取数）</label> ` : ''}<label><input type="radio" name="itset" value="fig10" ${useIT ? '' : 'checked'}> 练习材料甲的四条修改（讲义图 10，${W.nat.tc}；作对照：史学的"意思改变"更细）</label></p>
+          ${useIT ? `<p class="sub">${esc(IT.citation)}；${esc(IT.source)}（${esc(IT.file)}，修订 ${esc(IT.sha_revision.slice(0, 8))}）。五类各两条，次序打乱；原数据的 others 一类未取。</p>` : ''}
+          <table class="items"><tr><th>改前</th><th>改后</th><th>我标的意图</th><th>原标注</th></tr>${items.map((x) => `<tr class="${x.mine && x.mine !== x.gold ? 'w11-bad' : ''}"><td>${esc(x.before)}${x.line ? `<div class="sub">${esc(x.id)}｜test.json 第 ${x.line} 行｜${x.link ? `<a href="${esc(x.link)}" target="_blank" rel="noopener">arXiv ${esc(x.doc)}</a>` : `文档 ${esc(x.doc)}`}</div>` : ''}</td><td>${esc(x.after)}</td><td>${sel(`data-mine="${esc(x.id)}"`, x.mine, S.iterater.map(([k, z]) => [k, z]))}</td><td>${x.mine ? esc(zh[x.gold]) : '<span class="sub">标了再看</span>'}</td></tr>`).join('')}</table>
           <p>一致率 ${ag.n ? `${ag.agree}/${ag.n}（${W.pct(ag.rate)}）` : '—'}：一致条数除以总条数，不做 κ 校正（只有几条时偶然一致的影响很大，见第十周甲五）。</p></details>`);
     }
     onChange(e) {
       const t = e.target;
       if (t.name === 'mfil') this.set({ filter: t.value });
+      if (t.name === 'itset') this.set({ set: t.value });
       if (t.dataset.mine) { this.s.mine[t.dataset.mine] = t.value || null; this.set({}); }
     }
   }

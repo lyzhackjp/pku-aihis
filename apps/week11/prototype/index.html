@@ -19,6 +19,7 @@
 <script src="w11-labs2.js"></script>
 <script src="w11-labs3.js"></script>
 <script src="w11-labs4.js"></script>
+<script src="w11-labs5.js"></script>
 <!-- 模型接入（ES 模块；须经 HTTP 打开）。由 scripts/assemble-prototype.mjs 补入。 -->
 <script type="module" src="live/w11-live.js"></script>
 </head><body><div id="app"></div>
@@ -48,9 +49,9 @@
 <deck-slide slide-id="D07" data-status="prototype" kicker="D07 / 二 结构 2.3" header-title="深度审读（演示②′）" transition="同样的思路推到一篇已刊论文上。" theme="light" layout="workbench" mode="发现为预存回放；裁决与召回率为实际计算｜保存结果回放（D2P）／浏览器实时（召回率）" notes="目的：让学生看到裁决标准是原文，&quot;几家都这么说&quot;不算。
 范例引导：先讲三处植入；放六次发现；请学生为两条写裁决；最后看第三处（删限定）为什么最难查。
 机制背景：发现与植入的对应由学生勾选（经裁决才计入）；召回率用 recall-pool；D15 三处归属问题只作&quot;发现&quot;，不写结论（待核实事项 C-02）。"><review-lab></review-lab><div slot="footer">D07 · 保存结果回放（D2P）／浏览器实时（召回率）；讲义 2.3 @fig-review 与演示②′（教师 2023 年论文第 156—159 页</div></deck-slide>
-<deck-slide slide-id="D08" data-status="planned" kicker="D08 / 二 结构 2.3（进阶）" header-title="查出率、精确率与合并（进阶）" transition="深度审读的发现，要数清查出了几成。" theme="light" layout="flow4" mode="实际计算；小例为教学构造，演示②′运行后替换｜浏览器实时（recall-pool）／教学构造（小例假设数字）" notes="目的：讲清召回率与合并召回率，以及&quot;不重合才有收益&quot;。
+<deck-slide slide-id="D08" data-status="prototype" kicker="D08 / 二 结构 2.3（进阶）" header-title="查出率、精确率与合并（进阶）" transition="深度审读的发现，要数清查出了几成。" theme="light" layout="flow4" mode="实际计算；小例为教学构造，演示②′运行后替换｜浏览器实时（recall-pool）／教学构造（小例假设数字）" notes="目的：讲清召回率与合并召回率，以及&quot;不重合才有收益&quot;。
 范例引导：先手算 |{E1,E2}∪{E2}|=2，2/3；再改一格看跳到 1。
-机制背景：recall-pool：查出须经裁决（matched=1）才计入；贪心顺序每步加入新增最多的系统。"><planned-page page-id="D08"></planned-page><div slot="footer">D08 · 浏览器实时（recall-pool）／教学构造（小例假设数字）；扩充部分甲二（Litvak 2026 表 1 与第 3 节</div></deck-slide>
+机制背景：recall-pool：查出须经裁决（matched=1）才计入；贪心顺序每步加入新增最多的系统。"><pool-lab></pool-lab><div slot="footer">D08 · 浏览器实时（recall-pool）／教学构造（小例假设数字）；扩充部分甲二（Litvak 2026 表 1 与第 3 节</div></deck-slide>
 <deck-slide slide-id="D09" data-status="prototype" kicker="D09 / 二 结构 2.3；4.3 讲评" header-title="史学深度审读流水线：确定性检查与植入错误自测" transition="能写成规则的检查，先用规则做。" theme="light" layout="workbench" mode="规则检查为实际计算；模型对照为预存回放；植入为学生实时操作｜浏览器实时（quote-check、borrow-scan、note-rules）／保存结果回放（模型对照）" notes="目的：让学生分清规则查得了的（相同与不同）与查不了的（转述是否被原页支持）。
 范例引导：点运行；指出萧一山一句&quot;相同&quot;但未注转引要人判断；第 5 段说反了刘路生，规则查不出。
 机制背景：quote-check（第十周移入）＋borrow-scan＋note-rules；页码按片段首个非标点字（原脚本报第 197 页，见 algorithms.md）；跨页引文只报起始页。"><pipeline-lab></pipeline-lab><div slot="footer">D09 · 浏览器实时（quote-check、borrow-scan、note-rules）／保存结果回放（模型对照）；扩充部分乙一（流水线六步与练习材料甲的实际运行）</div></deck-slide>
@@ -81,17 +82,17 @@
 <deck-slide slide-id="D18" data-status="prototype" kicker="D18 / 结语" header-title="结语：使用说明与贯穿记录" transition="回到导入：分得清，查得到。" theme="light" layout="through" mode="实际计算（声明生成、导出与恢复）｜浏览器实时（declaration、导出恢复）／教学构造（示例声明）" notes="目的：让学生知道要交的是声明本身，五张表是自己留档的记录。
 范例引导：演示勾选一项附件；导出再恢复。
 机制背景：declaration 由贯穿记录生成声明草稿；导出前 stripSecrets，导出中出现 Key 即中止；导入先验证，坏文件保留旧记录。"><closing-lab></closing-lab><div slot="footer">D18 · 浏览器实时（declaration、导出恢复）／教学构造（示例声明）；讲义结语（据助教 2026-11-25 意见改写）与附录五</div></deck-slide>
-<deck-slide slide-id="D19" data-status="planned" kicker="D19 / 全讲（进阶）" header-title="多方法与多材料" transition="课上只来得及在练习材料甲上做每一步。" theme="light" layout="diagram" mode="静态信息与规则推荐｜静态内容（矩阵）／浏览器实时（推荐规则）" notes="目的：课后自选材料重做时的地图。
+<deck-slide slide-id="D19" data-status="prototype" kicker="D19 / 全讲（进阶）" header-title="多方法与多材料" transition="课上只来得及在练习材料甲上做每一步。" theme="light" layout="diagram" mode="静态信息与规则推荐｜静态内容（矩阵）／浏览器实时（推荐规则）" notes="目的：课后自选材料重做时的地图。
 范例引导：课上不讲；顶栏&quot;材料说明&quot;也能进入。
-机制背景：推荐规则写在页上（扩充部分乙〇）。"><planned-page page-id="D19"></planned-page><div slot="footer">D19 · 静态内容（矩阵）／浏览器实时（推荐规则）；扩充部分乙〇（材料 × 步骤，本课归纳）。</div></deck-slide>
+机制背景：推荐规则写在页上（扩充部分乙〇）。"><methods-lab></methods-lab><div slot="footer">D19 · 静态内容（矩阵）／浏览器实时（推荐规则）；扩充部分乙〇（材料 × 步骤，本课归纳）。</div></deck-slide>
 <deck-slide slide-id="D20" data-status="prototype" kicker="D20 / 附录" header-title="材料包、数据与工具" transition="本讲用到的材料与课后可用的数据。" theme="light" layout="diagram" mode="静态信息；进阶一致率为实际计算｜静态内容（材料表、二维码）／浏览器实时（一致率）" notes="目的：交代每份材料的边界。
 范例引导：课上只指出 M-2、M-3 只在课堂分发。
 机制背景：材料表与页表、材料包清单同源；只列丁一 M-1—M-8。"><materials-lab></materials-lab><div slot="footer">D20 · 静态内容（材料表、二维码）／浏览器实时（一致率）；扩充部分丁一（M-1—M-8）、丁二</div></deck-slide>
 <deck-slide slide-id="D21" data-status="prototype" kicker="D21 / 附录" header-title="概念页" transition="本讲的七个概念。" theme="light" layout="concepts" mode="静态内容｜静态内容（概念表）" notes="目的：随时可查的概念入口。
 范例引导：课上不单独讲。
 机制背景：由概念讲解表.typ 转出 glossary.json（课程技能 typ-concepts-to-md.mjs），公式对原 Typst 复核。"><concept-table></concept-table><div slot="footer">D21 · 静态内容（概念表）；概念讲解表.typ（7 条）。</div></deck-slide>
-<deck-slide slide-id="D22" data-status="planned" kicker="D22 / 附录" header-title="案例页" transition="本讲点名的研究案例。" theme="light" layout="diagram" mode="静态内容｜静态内容（卡片）" notes="目的：课后自学的入口。
+<deck-slide slide-id="D22" data-status="prototype" kicker="D22 / 附录" header-title="案例页" transition="本讲点名的研究案例。" theme="light" layout="diagram" mode="静态内容｜静态内容（卡片）" notes="目的：课后自学的入口。
 范例引导：课上不单独讲。
-机制背景：卡片字段取自案例整理.typ 的十三栏；读取深度照抄&quot;出处&quot;一栏。"><planned-page page-id="D22"></planned-page><div slot="footer">D22 · 静态内容（卡片）；案例整理.typ（23 案）。</div></deck-slide>
+机制背景：卡片字段取自案例整理.typ 的十三栏；读取深度照抄&quot;出处&quot;一栏。"><cases-lab></cases-lab><div slot="footer">D22 · 静态内容（卡片）；案例整理.typ（23 案）。</div></deck-slide>
 </deck-container></template>
 </body></html>

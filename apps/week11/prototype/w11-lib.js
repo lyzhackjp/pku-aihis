@@ -961,6 +961,29 @@
     return { n: done.length, agree: done.filter((x) => x.mine === x.gold).length, rate: done.length ? done.filter((x) => x.mine === x.gold).length / done.length : null };
   }
 
+  // D19 推荐先做哪两步（扩充部分乙〇的两条规则＋本课约定的"主要毛病"对应）
+  const STEPS = ['综述矩阵', '逆向大纲', '深度审读', '文风与修改', '注释核验'];
+  const PROBLEM_STEP = { 学术史罗列: '综述矩阵', 结构不清: '逆向大纲', 引文与转述可疑: '深度审读', 文字毛病: '文风与修改', 注释体例乱: '注释核验' };
+  function recommendSteps({ sources_in_hand = 'yes', note_count = 0, problem = null } = {}) {
+    const why = [], order = [];
+    const push = (st, r) => { if (!order.includes(st) && !(st === '深度审读' && sources_in_hand === 'no')) { order.push(st); why.push(`${st}：${r}`); } };
+    if (+note_count > 30) push('注释核验', `脚注 ${note_count} 条，多于 30 条，先逐条核`);
+    if (problem && PROBLEM_STEP[problem]) {
+      const st = PROBLEM_STEP[problem];
+      if (st === '深度审读' && sources_in_hand === 'no') push('注释核验', '引文可疑但原文不在手，先把注释能核的核了');
+      else push(st, `主要毛病是"${problem}"`);
+    }
+    push('逆向大纲', '自己的草稿最看不清自己的结构（讲义 2.1）');
+    if (sources_in_hand !== 'no') push('深度审读', sources_in_hand === 'partial' ? '原文部分在手，只审在手的单元' : '原文在手，可以逐条对照');
+    push('注释核验', '逐条回原页');
+    const excluded = sources_in_hand === 'no' ? ['深度审读：原文不在手，不推荐（扩充部分乙〇）'] : [];
+    return { first: order.slice(0, 2), why: why.slice(0, 2), excluded };
+  }
+  // D08 合并召回率：把勾选表（run → 查出的错误）变成 recallPool 的输入
+  function gridToFindings(grid) {
+    return Object.entries(grid).flatMap(([run, errs]) => errs.map((e) => ({ run_id: run, error_id: e, matched: 1 })));
+  }
+
   /* =====================================================================
    * 十八、贯穿记录（w11-through/v1）
    * ===================================================================== */
@@ -997,6 +1020,7 @@
     emptyThrough, exportThrough, importThrough, THROUGH_KEYS, checkKeys, runQueue,
     // 第十一周第二批
     applyImplants, pagedSentences, speakerRules, consistency, revisionView, previewSegs, boundsCheck, BOUND_HEDGES, charDiff, labelAgreement,
+    STEPS, PROBLEM_STEP, recommendSteps, gridToFindings,
     IMPLEMENTED: true,
   };
   root.W11Lib = api;

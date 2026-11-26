@@ -9,7 +9,8 @@
     "w11-labs1.js",
     "w11-labs2.js",
     "w11-labs3.js",
-    "w11-labs4.js"
+    "w11-labs4.js",
+    "w11-labs5.js"
   ],
   "deck": {
     "name": "第十一周 · 人工智能辅助论文写作",
@@ -45,6 +46,9 @@
     "D11": "style-lab",
     "D14": "three-lab",
     "D16": "cite-lab",
-    "D20": "materials-lab"
+    "D20": "materials-lab",
+    "D08": "pool-lab",
+    "D19": "methods-lab",
+    "D22": "cases-lab"
   }
 }

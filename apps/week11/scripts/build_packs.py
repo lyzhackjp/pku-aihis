@@ -132,10 +132,64 @@ docs = {'jia_draft.docx': b64(os.path.join(FX, 'jia_draft.docx')), 'jia_revision
         'demo3b_reviser.docx': b64(os.path.join(REV, '演示3b_reviser写入.docx'))}
 demo3b = {'plan': json.load(open(os.path.join(REV, '演示3b_修订计划.json'), encoding='utf-8')), 'audit': json.load(open(os.path.join(REV, '演示3b_审计.json'), encoding='utf-8')),
           'log': rd(os.path.join(REV, '演示3b_运行日志.txt')).split('\n')[0]}
+# 案例整理（D22）：解析 第十一周/案例整理.typ 的 #case(...)，十三栏原样转成纯文字（去 typst 标记）
+def typ_plain(t):
+    t = re.sub(r'#link\("([^"]+)"\)(\[[^\]]*\])?', r'\1', t)
+    t = re.sub(r'#(?:hei|term|song|emph|strong)\[([^\[\]]*)\]', r'\1', t)
+    t = t.replace('\\_', '\x00')
+    t = re.sub(r'_([^_]+)_', r'\1', t)
+    t = t.replace('\x00', '_').replace('\\#', '#').replace('\\$', '$').replace('\\*', '*')
+    t = re.sub(r'\$([^$]*)\$', r'\1', t)
+    return re.sub(r'\s+', ' ', t).strip()
+def parse_cases(src):
+    cases, group = [], None
+    i = 0
+    while i < len(src):
+        m = re.compile(r'^= (.+)$|#case\(', re.M).search(src, i)
+        if not m: break
+        if m.group(1): group = m.group(1).strip(); i = m.end(); continue
+        j, depth = m.end(), 1
+        while depth:
+            c = src[j]
+            if c == '(' : depth += 1
+            elif c == ')': depth -= 1
+            elif c == '[':  # 跳过方括号内容（内容里可有圆括号）
+                d2 = 1; j += 1
+                while d2:
+                    if src[j] == '[': d2 += 1
+                    elif src[j] == ']': d2 -= 1
+                    elif src[j] == '\\': j += 1
+                    j += 1
+                continue
+            elif c == '"':
+                j += 1
+                while src[j] != '"': j += 1
+            j += 1
+        body = src[m.end():j - 1]
+        fields, k = {}, 0
+        for fm in re.finditer(r'(\w+):\s*', body):
+            if fm.start() < k: continue
+            key, p0 = fm.group(1), fm.end()
+            if body[p0] == '"': e = body.index('"', p0 + 1); fields[key] = body[p0 + 1:e]; k = e + 1; continue
+            if body[p0] != '[': continue
+            d2, q = 1, p0 + 1
+            while d2:
+                if body[q] == '[': d2 += 1
+                elif body[q] == ']': d2 -= 1
+                elif body[q] == '\\': q += 1
+                q += 1
+            fields[key] = typ_plain(body[p0 + 1:q - 1]); k = q
+        fields['group'] = re.sub(r'^[一二三四五六七八九十]+\s*', '', group or '')
+        cases.append(fields); i = j
+    return cases
+cases = parse_cases(rd(os.path.join(W11, '案例整理.typ')))
+assert [c['id'] for c in cases] == [f'C-{k:02d}' for k in range(1, 24)], [c.get('id') for c in cases]
+for c in cases: assert all(c.get(f) for f in ['title', 'lecture', 'question', 'material', 'methods', 'steps', 'findings', 'limits', 'task', 'demo', 'access', 'source']), c['id']
+iterater = json.load(open(os.path.join(ROOT, 'docs/week11/data/iterater_sample10.json'), encoding='utf-8'))
 li_pub = {'source': li['source'], 'citation': LI_CIT, 'note': li['_note'], 'paragraphs': li['paragraphs'], 'notes': {str(p['page']): p['notes'] for p in li['pages'] if p['notes']}}
 local_docx = {'book_preset.docx': b64(os.path.join(MAT, '书稿_明治中期一节_带修订_本机.docx'))}
-js('w11-public.js', 'W11_PUBLIC', {'generated': gen, 'packs': [{'id': 'w11-materials', 'title': '第十一周课堂材料', 'entries': pub}], 'replays': [], 'docx': docs, 'demo3b': demo3b, 'li2023': li_pub},
-   '公开材料：练习材料甲（教学构造）、修订夹具（程序构造）、演示③(b) 修订稿、讲义图 1 摘编、陈澧录文、教师 2023 年论文刊本文字；茅、郭、刘原文、会议录与植入副本只留元数据。')
+js('w11-public.js', 'W11_PUBLIC', {'generated': gen, 'packs': [{'id': 'w11-materials', 'title': '第十一周课堂材料', 'entries': pub}], 'replays': [], 'docx': docs, 'demo3b': demo3b, 'li2023': li_pub, 'cases': cases, 'iterater': iterater},
+   '公开材料：练习材料甲（教学构造）、修订夹具（程序构造）、演示③(b) 修订稿、案例整理 23 案、ITERATER 十条（Apache-2.0）、讲义图 1 摘编、陈澧录文、教师 2023 年论文刊本文字；茅、郭、刘原文、会议录与植入副本只留元数据。')
 js('w11-cards.js', 'W11_CARDS', cards, '条件卡（模板＋材料编号，不含材料正文）。')
 k9 = json.load(open(os.path.join(ROOT, 'docs/week09/schemas/importer-kinds.w09.json'), encoding='utf-8'))
 k11 = json.load(open(os.path.join(ROOT, 'docs/week11/schemas/importer-kinds.w11.json'), encoding='utf-8'))

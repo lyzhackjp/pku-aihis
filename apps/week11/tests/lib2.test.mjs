@@ -85,3 +85,22 @@ test('甲二小例：合并召回率 2/3（D07 的"先看计数办法"）', () =
   const r = L.recallPool(EX('implants-findings.toy.example.json'));
   assert.equal(r.union.length, 2); assert.equal(r.N, 3);
 });
+
+test('recommendSteps：原文不在手不推荐深度审读；脚注多于 30 条先做注释核验', () => {
+  const a = L.recommendSteps({ sources_in_hand: 'no', note_count: 45, problem: '引文与转述可疑' });
+  assert.deepEqual(a.first, ['注释核验', '逆向大纲']); assert.ok(!a.first.includes('深度审读')); assert.equal(a.excluded.length, 1);
+  const b = L.recommendSteps({ sources_in_hand: 'yes', note_count: 12, problem: '引文与转述可疑' });
+  assert.deepEqual(b.first, ['深度审读', '逆向大纲']);
+  const c = L.recommendSteps({ sources_in_hand: 'partial', note_count: 31, problem: '文字毛病' });
+  assert.deepEqual(c.first, ['注释核验', '文风与修改']);
+});
+
+test('甲二小例：把 A-3 改为查出 E3，合并召回率跳到 1；两次相同集合不增加合并', () => {
+  const g = { 'A-1': ['E1', 'E2'], 'A-2': ['E1'], 'A-3': ['E1', 'E2'], 'B-1': ['E2'], 'B-2': ['E1'], 'B-3': ['E1', 'E2'] };
+  const N = ['E1', 'E2', 'E3'].map((e) => ({ error_id: e }));
+  const r = (gr) => L.recallPool({ implants: N, findings: L.gridToFindings(gr), runs: Object.keys(gr) });
+  assert.equal(r(g).union.length, 2);
+  assert.equal(r({ ...g, 'A-3': ['E1', 'E2', 'E3'] }).recallUnion, 1);
+  const two = r({ 'A-1': ['E1'], 'A-2': ['E1'] });
+  assert.equal(two.greedy[1].added.length, 0);
+});
