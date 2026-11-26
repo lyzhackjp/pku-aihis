@@ -42,6 +42,7 @@ const weekTitles = {
   week08: "第八周 · 数字人文方法与人工智能",
   week09: "第九周 · 历史人物模拟、历史共情与历史仿真",
   week10: "第十周 · 人工智能辅助文献阅读",
+  week11: "第十一周 · 人工智能辅助论文写作",
 };
 for (const tool of releases.tools || []) {
   if (tool !== 'material-importer') throw Error('Unapproved public tool');

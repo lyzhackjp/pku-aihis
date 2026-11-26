@@ -60,6 +60,8 @@ jobs:
         working-directory: apps/week10
       - run: pnpm test && pnpm build && pnpm run check
         working-directory: apps/week10
+      - run: pnpm test && pnpm build
+        working-directory: apps/week11
       - run: pnpm test && pnpm run check && pnpm build
         working-directory: apps/material-importer
       - run: python3 -m unittest discover -s local/tests

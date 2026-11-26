@@ -32,6 +32,10 @@
     if (!q) return;
     try { mergeLocal(await (await fetch(q, { cache: 'no-store' })).json(), q); } catch (e) { M.localMsg = '本机材料包未载入：' + e.message; emit('w11-materials'); }
   })();
+  function pageReference(e) {
+    const primary = e.page?.value ? `${e.page.system} ${e.page.value}` : '';
+    return [primary, e.pdfPage && e.page?.system !== 'PDF页序' ? `PDF页序 ${e.pdfPage}` : ''].filter(Boolean).join('｜');
+  }
   const Mat = {
     packs: () => [...M.packs, ...T.packs.filter((p) => !M.packs.some((x) => x.id === p.id))],
     entries: () => Mat.packs().flatMap((p) => p.entries || []),
@@ -42,7 +46,7 @@
     state: () => M,
     loadLocalFile: async (f) => { try { mergeLocal(JSON.parse(await f.text()), f.name); return null; } catch (e) { return e.message; } },
     /* 一份材料的身份说明（作者、版本、页码体系、可否送模型、文本身份） */
-    ident: (e) => [e.title, e.citation, e.page?.value ? `${e.page.system} ${e.page.value}` : '', e.written_date_raw || '', e.text_kind, e.sendable ? '可送模型' : '不可送模型', e.visibility, e.transcriber].filter(Boolean).join('｜'),
+    ident: (e) => [e.title, e.citation, pageReference(e), e.written_date_raw || '', e.text_kind, e.sendable ? '可送模型' : '不可送模型', e.visibility, e.transcriber].filter(Boolean).join('｜'),
     restrictedLoaded: () => Mat.entries().some((e) => e.visibility === '本机材料包' && e.text),
     teacher: () => M.teacher || null,
     pageImage: (src, page) => (M.pageImages && M.pageImages[src] && M.pageImages[src][String(page)]) || null,
@@ -118,23 +122,23 @@
       Through.add('runs', run, 'run_id');
       return run;
     },
-    /* 页面上的一格：回放模式只取记录；现场模式发请求，失败时退回回放或"待课前运行"，如实写明 */
+    /* 页面上的一格：回放模式只取记录；现场模式发请求，失败时退回回放或"未载入回答"，如实写明 */
     async run(cardId, preset) {
       const c = card(cardId); if (!c) throw new Error('没有条件卡 ' + cardId);
       const back = () => { const r = pickedRun(cardId, preset).run; return r ? { kind: r.mode, run: r } : { kind: 'none', run: null }; };
-      if (MS.mode !== 'live') return { ...back(), error: back().run ? '' : '预存回放：本格尚无课前运行记录（待课前运行）' };
+      if (MS.mode !== 'live') return { ...back(), error: back().run ? '' : '预存回放：本格尚未载入回答，请载入本机材料包。' };
       try {
         const run = await Model.call(c, preset);
         if (!run.error) { const sel = store.get('sample-sel', {}); sel[cardId + '|' + preset] = run.run_id; store.set('sample-sel', sel); return { kind: 'live', run }; }
-        return { ...back(), error: '现场调用失败：' + run.error + '。已改显' + (back().run ? '预存回放' : '"待课前运行"') };
-      } catch (e) { return { ...back(), error: String(e.message || e) + '。已改显' + (back().run ? '预存回放' : '"待课前运行"') }; }
+        return { ...back(), error: '现场调用失败：' + run.error + '。已改显' + (back().run ? '预存回放' : '"未载入回答"') };
+      } catch (e) { return { ...back(), error: String(e.message || e) + '。已改显' + (back().run ? '预存回放' : '"未载入回答"') }; }
     },
   };
 
   /* ================= 显示用的小件 ================= */
   const MODE_LABEL = { live: '实际调用', replay: '预存回放', 'web-paste': '网页版粘贴', 'teaching-construct': '教学构造', pending: '待课前运行' };
   function badge(run) {
-    if (!run) return '<span class="w9-badge none">待课前运行</span>';
+    if (!run) return '<span class="w9-badge none">未载入回答</span>';
     const m = run.mode, om = run.origin_mode;
     if (m === 'web-paste' || om === 'web-paste') {
       const d = `${run.web?.platform || ''}｜界面型号 ${run.web?.model_shown || '—'}｜${run.web?.entry_type || ''}｜记忆${run.web?.memory || '不详'}、联网${run.web?.search || '不详'}｜${(run.date || '').slice(0, 16)}｜原件／截图 ${run.web?.screenshot || '—'}｜${run.transcription || '录入待核'}`;
@@ -150,7 +154,7 @@
     const btn = isWeb(preset) ? `<button class="small" data-webpaste="${esc(k)}">录入网页版回答</button>`
       : `<button class="small" data-run="${esc(k)}" ${busy.has(k) ? 'disabled' : ''}>${busy.has(k) ? '运行中…' : MS.mode === 'live' ? '现场调用' : '取预存回放'}</button>`;
     const picker = all.length > 1 ? `<span class="w9-pick">${all.map((r, i) => `<button class="small ${r.run_id === run.run_id ? 'on' : ''}" data-pick="${esc(k)}" data-id="${esc(r.run_id)}" title="${esc(MODE_LABEL[r.mode] || r.mode)}">${r.mode === 'live' ? '现' : r.mode === 'web-paste' || r.origin_mode === 'web-paste' ? '网' : ''}${i + 1}</button>`).join('')}</span>` : '';
-    const content = run ? (body ? body(run) : `<div class="w9-reply">${esc(run.reply)}</div>`) : `<p class="w11-pending">待课前运行。课前记录由教师填 Key 后在"课前运行"面板生成${isWeb(preset) ? '；网页版由教师运行后截图，录入此格' : ''}；这里不放构造的回答。</p>`;
+    const content = run ? (body ? body(run) : `<div class="w9-reply">${esc(run.reply)}</div>`) : `<p class="w11-pending">载入本机材料包可查看课前回放。${isWeb(preset) ? '新取得的回答可用“录入网页版回答”保存。' : '填写 Key 后也可在“课前运行”面板生成新记录。'}</p>`;
     return { run, html: `<div class="w9-cell" data-cell="${esc(k)}"><div class="w9-cell-head"><b>${esc(PRESET_LABEL[preset] || preset)}</b> ${badge(run)} ${btn} ${picker}</div>${err ? `<p class="nil small">${esc(err)}</p>` : ''}${content}</div>` };
   }
   async function cellClick(e, host) {
@@ -459,7 +463,7 @@
     if (location.protocol === 'file:') { toast('通用导入页须经本机服务打开（start_week11.command）；表格材料可用顶栏"导入表格"。'); return; }
     importerWin = window.open('', 'week11-material-importer');
     if (!importerWin) { toast('浏览器拦截了弹出窗口，请允许本站弹窗后再点"文献导入"。'); return; }
-    try { const r = await fetch(u.href, { method: 'HEAD', cache: 'no-store' }); if (!r.ok) { importerWin.close(); importerWin = null; toast('通用导入页尚未构建：在终端运行 apps/week11/scripts/build_importer.sh 后再点；表格材料可先用"导入表格"。'); return; } } catch { /* 离线：照常打开 */ }
+    try { const r = await fetch(u.href, { method: 'HEAD', cache: 'no-store' }); if (!r.ok) { importerWin.close(); importerWin = null; toast('通用导入页尚未构建：从课件仓库根目录运行 apps/week11/scripts/build_importer.sh 后再点；表格材料可先用"导入表格"。'); return; } } catch { /* 离线：照常打开 */ }
     importerWin.location.href = u.href;
   }
   window.addEventListener('message', (e) => {
@@ -469,12 +473,31 @@
       try {
         const p = e.data.project;
         if (!p || p.schema !== 'pku-history-project/v1' || !Array.isArray(p.sources) || !Array.isArray(p.segments)) throw new Error('不是 pku-history-project/v1 项目');
-        const segs = p.segments.filter((x) => typeof x.text === 'string' && x.text.trim() && !x.derived && !x.supersededBy); if (!segs.length) throw new Error('没有可用的正文片段');
-        const send = confirm(`通用导入页送回 ${segs.length} 个正文片段。\n这些文字可以送给模型吗？（公开文本或已得到许可选"确定"；否则选"取消"，只在本机显示，任何提示都不会带上它。）`);
-        const src = (id) => p.sources.find((x) => x.id === id) || {}, stamp = Date.now().toString(36);
-        T.packs.push({ id: 'pack-importer-' + stamp, title: p.title || '导入的材料', entries: segs.map((x, i) => ({ id: `impg-${stamp}-${i}`, title: `${src(x.sourceId).title || x.sourceId}${x.printedPage ? '（' + x.printedPage + '）' : ''}`, citation: src(x.sourceId).title || '', text: x.text, text_kind: '通用导入页识读或提取，未必经过校订', page: x.printedPage ? { system: '原书页', value: String(x.printedPage) } : x.pdfPage ? { system: 'PDF页序', value: String(x.pdfPage) } : { system: '电子文本段落', value: String(x.locator || '') }, sendable: send, sendable_basis: send ? '导入者声明可送' : '导入者未声明可送', visibility: '本浏览器' })) });
-        Through.save(); emit('w11-materials');
-        importerWin.postMessage({ type: 'PKU_IMPORT_ACCEPTED', message: `第十一周已接收 ${segs.length} 个正文片段（${send ? '可送模型' : '不可送模型'}）；可在 D04、D08、D15 中选用。` }, location.origin);
+        const segs = p.segments.filter((x) => typeof x?.text === 'string' && x.text.trim() && !x.derived && !x.supersededBy);
+        if (!segs.length) throw new Error('没有可用的正文片段');
+        const sources = new Map(p.sources.map((source) => [source.id, source]));
+        if (segs.some((x) => !sources.has(x.sourceId))) throw new Error('正文片段缺少对应的来源');
+        const send = confirm(`通用导入页送回 ${segs.length} 个正文片段。\n这些文字可以送给模型吗？（公开文本或已得到许可选"确定"；否则选"取消"，只在本机使用。）`);
+        const stamp = crypto.randomUUID();
+        const entries = segs.map((x, i) => {
+          const source = sources.get(x.sourceId);
+          const page = x.printedPage ? { system: '印刷页码／档号', value: String(x.printedPage) }
+            : x.pdfPage ? { system: 'PDF页序', value: String(x.pdfPage) }
+            : { system: '原件定位', value: x.locator || '' };
+          return {
+            id: `impg-${stamp}-${i}`, title: source.title || x.sourceId,
+            citation: [source.author, source.title, source.date].filter(Boolean).join('，'),
+            text: x.text, text_kind: x.method || '通用导入页识读或提取', page, pdfPage: x.pdfPage || null,
+            sendable: send, sendable_basis: send ? '导入者声明可送' : '导入者选择只在本机使用', visibility: '本浏览器',
+          };
+        });
+        const pack = { id: 'pack-importer-' + stamp, title: p.title || '导入的材料', entries };
+        const next = { ...T, packs: [...T.packs, pack] };
+        store.set(TKEY, L.stripSecrets(next, Model.secrets()));
+        if (!store.get(TKEY, {}).packs?.some((x) => x.id === pack.id)) throw new Error('浏览器未能保存材料，请缩小所选片段后重试');
+        T = next;
+        emit('w11-through'); emit('w11-materials');
+        importerWin.postMessage({ type: 'PKU_IMPORT_ACCEPTED', message: `第十一周已接收 ${entries.length} 个正文片段（${send ? '可送模型' : '只在本机使用'}）。请回课件顶栏“材料说明”，展开“查看正文”核对片段和出处。` }, location.origin);
       } catch (err) { importerWin.postMessage({ type: 'PKU_IMPORT_REJECTED', message: err.message }, location.origin); toast('导入失败，原有材料保留：' + err.message); }
     }
   });
@@ -483,7 +506,7 @@
   const Info = {
     html() {
       const es = Mat.entries(), nrep = M.replays.length + T.runs.filter((r) => r.mode === 'replay').length;
-      const row = (e) => `<tr><td>${esc(e.title)}</td><td class="sub">${esc(e.citation || '')}${e.page?.value ? `｜${esc(e.page.system)} ${esc(e.page.value)}` : ''}</td><td>${esc(e.text_kind)}</td><td>${e.visibility === '公开' ? '随课件' : e.visibility === '本机材料包' ? '本机材料包' : '本浏览器导入'}</td><td>${e.sendable ? '可' : '<b class="nil">不可</b>'}</td><td>${e.text ? '<span class="ok">已载入</span>' : '<span class="nil">需导入本机材料包</span>'}</td></tr>`;
+      const row = (e) => `<tr><td>${esc(e.title)}${e.id?.startsWith('impg-') ? `<details><summary>查看正文</summary><pre class="srcbox">${esc(e.text)}</pre></details>` : ''}</td><td class="sub">${esc([e.citation, pageReference(e)].filter(Boolean).join('｜'))}</td><td>${esc(e.text_kind)}</td><td>${e.visibility === '公开' ? '随课件' : e.visibility === '本机材料包' ? '本机材料包' : '本浏览器导入'}</td><td>${e.sendable ? '可' : '<b class="nil">不可</b>'}</td><td>${e.text ? '<span class="ok">已载入</span>' : '<span class="nil">需导入本机材料包</span>'}</td></tr>`;
       return `<h3>本课材料</h3><table class="items"><tr><th>材料</th><th>版本与位置</th><th>文本身份</th><th>发布</th><th>送模型</th><th>本页状态</th></tr>${es.map(row).join('')}</table>
         <p class="sub">练习材料甲是教学构造，可以分发；教师 2023 年论文已刊，教师 2026-11-25 同意线上使用全文；茅海建、郭卫东、刘路生原文只进本机材料包，线上只有页码与短引；扫描本不放页影。4.3 答案只在本机材料包的教师模式。</p>
         <h3>导入与接入</h3><ul class="w11-howto">
@@ -493,7 +516,7 @@
           <li><b>文献导入</b>：课程通用导入页（PDF、Word、图像），处理后送回本课件，由导入者声明可否送模型。<button class="small" data-open-importer>打开</button></li>
           <li><b>模型接入</b>：DeepSeek 非思考、温度 0.7；Kimi 只有思考模式、温度固定、档位 low（沿用第十周）。Key 只存页面内存，不进记录与导出。<button class="small" data-open-model>打开</button></li>
           <li><b>课前运行</b>：按条件卡批量运行（必跑 30 次，可选 8 次），失败可续跑，导出运行记录（不含 Key）。<button class="small" data-open-preclass>打开</button></li>
-          <li><b>网页版</b>（Gemini、ChatGPT）：演示③(a) 的修改建议在 D14 录入，标"录入待核"。</li></ul>`;
+          <li><b>网页版</b>（Gemini、ChatGPT）：演示③(a) 的六份课前回放已核对原件。新录入的回答在 D14 按各自的核对状态显示。</li></ul>`;
     },
     dialog() {
       if (document.querySelector('.model-shade.w11-info')) return;

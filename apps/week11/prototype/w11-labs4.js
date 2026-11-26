@@ -42,7 +42,7 @@
         <details><summary>四　进阶：同一格问两次（重现性，案例 C-02）</summary>${cardBox('R1')}
           <div class="w9-cols">${pairs.map((x) => `<section class="w9-col">${answerCell('R1', x.p).html}
             ${x.rs.length >= 2 ? `<p class="sub">第 1 次短引：${esc(x.q1 || '（无引号）')}<br>第 2 次短引：${esc(x.q2 || '（无引号）')}</p><label>两次的"值"（主张）相同吗？${sel(`data-same="${x.p}"`, s.same[x.p], [['y', '相同'], ['n', '不同']], '（判断）')}</label>` : '<p class="sub">同一服务有两次运行后，在这里并排比较。</p>'}</section>`).join('')}</div>
-          <p>${W.nat.calc} ${cells.length ? `值一致 ${cs.n_value ? W.pct(cs.value) : '—'}（${cs.n_value} 格，人判）；引文一致 ${cs.n_quote ? W.pct(cs.quote) : '—'}（${cs.n_quote} 格，去空白与引号后逐字比）。` : '待课前运行（R1 为可选运行，每家两次）。'} 一致率＝两次相同的格数／格数，值与引文分开算。Lagisz 等：值约九成一致，引文 46%。</p></details>`);
+          <p>${W.nat.calc} ${cells.length ? `值一致 ${cs.n_value ? W.pct(cs.value) : '—'}（${cs.n_value} 格，人判）；引文一致 ${cs.n_quote ? W.pct(cs.quote) : '—'}（${cs.n_quote} 格，去空白与引号后逐字比）。` : '载入本机材料包可对照 R1 每家两次的运行。'} 一致率＝两次相同的格数／格数，值与引文分开算。Lagisz 等：值约九成一致，引文 46%。</p></details>`);
     }
     onChange(e) {
       const t = e.target;
@@ -56,7 +56,7 @@
 
   /* ================= D07 深度审读（演示②′） ================= */
   const IMP = () => EX['implants-findings.toy'].implants;
-  const MATCH = () => [...IMP().map((i) => [i.error_id, `${i.error_id} ${i.category}：${i.after}`]), ...S2.d15Issues.map((q) => [q.id, `${q.id} D15 已知归属问题（第 ${q.page} 页）`]), ['other', '其他问题'], ['interp', '解释分歧（不是错误）']];
+  const MATCH = () => [...IMP().map((i) => [i.error_id, `${i.error_id} ${i.category}：${i.after}`]), ...S2.d15Issues.map((q) => [q.id, `${q.id} 第十周 D15 的归属疑问（第 ${q.page} 页）`]), ['other', '其他问题'], ['interp', '解释分歧（不是错误）']];
   class Review extends Lab {
     defaults() { return { findings: [], toy: false, form: {} }; }
     runIds() { return ['deepseek', 'kimi'].flatMap((p) => runsFor('D2P', p).map((r) => [r.run_id, `${W.PRESET_LABEL[p]}｜${r.run_id}`])); }
@@ -73,18 +73,18 @@
         <details><summary>所引会议录 3 则（发言番号定位）</summary><p class="sub">${esc(S2.liCitesNote)}</p>${['d15-A', 'd15-B', 'd15-C'].map((id) => sourceBox(id)).join('')}</details></section>
         <section><h4>两家各三次的发现</h4>${cardBox('D2P')}${['deepseek', 'kimi'].map((p) => answerCell('D2P', p).html).join('')}</section></div>
         <h4>逐条裁决（审读发现登记表）</h4>
-        <p class="sub">从上面的回答里摘一条发现，选它对上了哪一处植入或 D15 的哪一处归属问题，再写裁决与理由；存疑的写明要回哪一份原件。裁决的标准是原文，不是"几家都这么说"。</p>
+        <p class="sub">从上面的回答里摘一条发现，选它对上了哪一处植入或第十周 D15 的哪一处归属疑问，再写裁决与理由；存疑的写明要回哪一份原件。裁决的标准是原文，不是"几家都这么说"。</p>
         <table class="items"><tr><th>运行</th><th>发现（摘录）</th><th>对上了</th><th>裁决</th><th>理由</th><th>要回的原件</th><th></th></tr>
         ${fs.map((f, i) => `<tr><td class="sub">${esc(f.run_id)}</td><td>${esc(f.finding_text)}</td><td>${sel(`data-fm="${i}"`, f.error_id, MATCH())}</td><td>${sel(`data-fd="${i}"`, f.decision, [['成立', '成立'], ['不成立', '不成立'], ['存疑', '存疑']])}</td><td><input data-fr="${i}" value="${esc(f.adjudication_note || '')}" size="18"></td><td><input data-fs="${i}" value="${esc(f.source_needed || '')}" size="12"></td><td><button class="small" data-del="${i}">删</button></td></tr>`).join('')}
         <tr><td>${ids.length ? sel('data-new="run"', s.form.run, ids, '（选运行）') : '<span class="sub">（暂无运行记录）</span>'}</td><td><input data-new="text" value="${esc(s.form.text || '')}" size="30" placeholder="摘一条发现"></td><td>${sel('data-new="err"', s.form.err, MATCH())}</td><td colspan="4"><button class="small" data-x="add" ${ids.length ? '' : 'disabled'}>加入</button> <button class="small" data-x="send" ${fs.length ? '' : 'disabled'}>送入贯穿记录（D18）</button></td></tr></table>
-        <div class="w11-two"><section><h4>召回率 ${W.nat.calc}</h4>
+        <div class="w11-two"><section><h4>按本页已登记的裁决计算召回率 ${W.nat.calc}</h4>
           ${ids.length ? `<table class="items"><tr><th>运行</th><th>查出的植入</th><th>召回率</th></tr>${Object.entries(real.perRun).map(([r, v]) => `<tr><td class="sub">${esc(r)}</td><td>${v.hits.join('、') || '—'}</td><td>${W.frac(v.hits.length, real.N)}</td></tr>`).join('')}</table><p>合并召回率 <b>${W.frac(real.union.length, real.N)}</b>（${real.union.join('、') || '无'}）。只计裁决为"成立"且对上植入的发现。</p>`
-            : `<p class="w11-pending">待课前运行（D2P，两家各三次）。召回率＝查出的植入数／3；合并召回率＝几次运行查出的并集／3。</p>`}
-          <p><button class="small" data-x="toy">${s.toy ? '收起' : '先看计数办法：'}甲二小例（教学构造的假设数字）</button></p>
-          ${toyR ? `<table class="items"><tr><th>运行（假设）</th><th>查出</th><th>召回率</th></tr>${Object.entries(toyR.perRun).map(([r, v]) => `<tr><td>${esc(r)}</td><td>${v.hits.join('、')}</td><td>${W.frac(v.hits.length, toyR.N)}</td></tr>`).join('')}</table><p>${W.nat.tc} 单次 1/3—2/3，合并 ${W.frac(toyR.union.length, toyR.N)}；E3（删限定）六次都没查出。完整讲解见 D08（进阶，第三批）。</p>` : ''}</section>
-        <section><h4>另看两件事</h4><p><b>D15 已发现的三处归属问题</b>（教师尚未回速记录裁决，C-02，这里只作"发现"）：</p><ul>${S2.d15Issues.map((q) => `<li>${esc(q.id)}（第 ${q.page} 页）${esc(q.text)}<span class="sub">　本页记到 ${d15hit.find((x) => x[0] === q.id)[1]} 条</span></li>`).join('')}</ul>
+            : `<p class="w11-pending">此处尚未载入 D2P 回答。本机材料包保存了两家各三次的回放。召回率＝查出的植入数／3；合并召回率＝几次运行查出的并集／3。</p>`}
+          <p><button class="small" data-x="toy">${s.toy ? '收起' : '先看计数办法：'}试算小例（教学构造的假设数字）</button></p>
+          ${toyR ? `<table class="items"><tr><th>运行（假设）</th><th>查出</th><th>召回率</th></tr>${Object.entries(toyR.perRun).map(([r, v]) => `<tr><td>${esc(r)}</td><td>${v.hits.join('、')}</td><td>${W.frac(v.hits.length, toyR.N)}</td></tr>`).join('')}</table><p>${W.nat.tc} 单次 1/3—2/3，合并 ${W.frac(toyR.union.length, toyR.N)}；E3（删限定）六次都没查出。D08 可与六份课前回放的判读对照。</p>` : ''}</section>
+        <section><h4>另看两件事</h4><p><b>第十周 D15 已发现的三处归属疑问</b>（教师尚未回速记录裁决，C-02，这里只作"发现"）：</p><ul>${S2.d15Issues.map((q) => `<li>${esc(q.id)}（第 ${q.page} 页）${esc(q.text)}<span class="sub">　本页记到 ${d15hit.find((x) => x[0] === q.id)[1]} 条</span></li>`).join('')}</ul>
           <p><b>有没有把解释分歧报成错误</b>：记为"解释分歧"的 ${fs.filter((f) => f.error_id === 'interp').length} 条。</p>
-          <p class="sub">E3 把"少数议员"改成"议员们普遍"，史料包只收 3 则，原文里没有一句话与它直接矛盾：这一类属于"删去的信息"，最难查（讲义 2.3；Litvak 2026 未被任何系统查出的 7 处全是这一类）。</p></section></div>`);
+          <p class="sub">课前六份回放的候选判读：E1、E2 各 6/6，E3 为 1/6，合并 3/3。先看 DeepSeek 第一次遗漏了什么，再到 Kimi 第三次找“不能证明”的理由。E3 把"少数议员"改成"议员们普遍"，史料包只收 3 则，原文里没有一句话与它直接矛盾：这一类属于"删去的信息"，最难查（讲义 2.3；Litvak 2026 未被任何系统查出的 7 处全是这一类）。</p></section></div>`);
     }
     onClick(e) {
       const x = e.target.dataset.x, fs = this.s.findings;
@@ -155,7 +155,7 @@
         <section><h4>二　确定性检查 ${W.nat.calc}</h4><p><button class="small" data-x="run">${s.ran ? '重新运行规则' : '运行规则'}</button></p>
           ${r1 ? `${r1.need ? needPack(r1.need) : ''}${r1.unchecked.length ? `<p class="nil">原文不在手：${[...new Set(r1.unchecked.map((u) => `第 ${u.page} 页 → ${u.entry}`))].join('；')}，标"无法核"（第三步）。</p>` : ''}
             <ul class="w11-rules">${r1.list.map((f) => `<li class="${f.ok ? 'sub' : ''} ${fresh.includes(f) ? 'w11-new' : ''}"><b>${esc(f.rule)}</b>　${esc(f.what)}${fresh.includes(f) ? ' <span class="w9-badge calc">植入后新出</span>' : ''}</li>`).join('') || '<li class="sub">没有命中。</li>'}</ul>
-            ${s.src === 'li' && r1.checked ? `<p class="sub">核了 ${r1.checked} 句带会议录注的句子。D15 已知的三处归属问题（Q1—Q3），规则一处也查不出：人名都在原文里，错的是"谁说的、在什么语境下说的"。</p>` : ''}
+            ${s.src === 'li' && r1.checked ? `<p class="sub">核了 ${r1.checked} 句带会议录注的句子。第十周 D15 提出的三处归属疑问（Q1—Q3），规则一处也查不出：人名都在原文里，错的是"谁说的、在什么语境下说的"。</p>` : ''}
             ${s.src === 'jia' && !r1.need ? '<p class="sub">对照扩充部分乙一：引号内相同 5 处、找不到 5 处；引号外 4 处；第 2 页首条注"同上"。第 5 段把刘路生说反了，规则查不出。</p>' : ''}` : '<p class="sub">点"运行规则"。规则的结果每次都一样，可以逐条复查。</p>'}</section></div>
         <h4>六　植入错误自测 ${W.nat.calc}</h4>
         <p class="sub">在副本里植入几处已知错误，重跑规则，看哪几处被查出。植入什么比植入多少更要紧（五类见扩充部分乙一第六步）。</p>
@@ -163,7 +163,7 @@
         <p>原文片段 <input data-f="before" value="${esc(s.form.before || '')}" size="18"> 改为 <input data-f="after" value="${esc(s.form.after || '')}" size="18"> 类型 ${sel('data-f="cat"', s.form.cat, S2.implantTypes.map(([k, z]) => [k, `${k}：${z}`]), '（类型）')} <button class="small" data-x="add">植入</button></p>
         ${ap.applied.filter((a) => !a.ok).map((a) => `<p class="nil">${esc(a.error_id)}：${esc(a.reason)}</p>`).join('')}
         ${det.length ? `<table class="items"><tr><th>植入</th><th>类型</th><th>改前 → 改后</th><th>规则查出了吗</th></tr>${det.map((d) => `<tr><td>${esc(d.error_id)}</td><td>${esc(d.category)}</td><td><del>${esc(d.before)}</del> → <ins>${esc(d.after)}</ins></td><td>${!s.ran ? '（未运行）' : r1.need && !r1.list.length ? '无法核（原文不在手）' : d.hit ? '<b class="ok">查出</b>' : '<span class="nil">没有</span>'}</td></tr>`).join('')}</table>
-          <p>${W.nat.calc} 规则召回率 ${s.ran ? W.frac(nHit, det.length) : '—'}。模型对照：讲义的三处植入见 D07（D2P 预存回放，${runsFor('D2P', 'deepseek').length + runsFor('D2P', 'kimi').length ? '已有记录' : '待课前运行'}）；自选植入要另跑。</p>` : ''}`);
+          <p>${W.nat.calc} 规则召回率 ${s.ran ? W.frac(nHit, det.length) : '—'}。模型对照：讲义的三处植入见 D07（D2P 预存回放，${runsFor('D2P', 'deepseek').length + runsFor('D2P', 'kimi').length ? '已有记录' : '载入本机材料包后可读'}）；这里的发言人与院别规则不检查“少数”这一限定。D2P 的六份模型回答另在 D07 对读，一份指出删去“少数”后的概括缺乏依据。自选植入要另跑。</p>` : ''}`);
     }
     onClick(e) {
       const x = e.target.dataset.x, s = this.s, demos = S2.implantDemos[s.src === 'li' ? 'li' : 'jia'];
@@ -184,6 +184,10 @@
   register('pipeline-lab', Pipeline);
 
   /* ================= D11 文风：润色到哪里为止 ================= */
+  // 回放保留完整回答；逐字比对只使用模型标出的润色正文。
+  W.styleBody = (text) => text.split(/\n(?:\*\*主要(?:修改|改动)说明：\*\*|〔修改说明〕)/u)[0]
+    .replace(/^(?:润色后的文字如下：|〔润色稿〕)\s*/u, '').replace(/\s*---\s*$/u, '')
+    .replace(/〔原刊第\d+页〕/g, '').trim();
   class Style extends Lab {
     defaults() { return { src: 'li', run: '', own: '', ownRev: '', paste: '', rules: clone(S2.styleRules), off: {}, marks: {}, nr: { name: '', pattern: '' }, ex: { y3: { a: 30, b: 100000 }, y2: { a: 40, b: 100000 }, y: { a: 1100, b: 100000 } } }; }
     pair() {
@@ -192,9 +196,10 @@
       if (s.src === 'toy') { const p = EX['style.toy'].pairs[0]; return { original: p.original, revised: p.revised, from: '计数示例（教学构造）' }; }
       const id = s.src === 'li' ? 'li2023-p152-153' : 'jia-p3';
       const original = Mat.text(id).replace(/〔原刊第\d+页〕/g, '');
-      const all = ['deepseek', 'kimi'].flatMap((p) => runsFor('S1', p).map((r) => ({ ...r, p })));
+      const card = s.src === 'jia' ? 'S1J' : 'S1';
+      const all = ['deepseek', 'kimi'].flatMap((p) => runsFor(card, p).map((r) => ({ ...r, p })));
       const run = all.find((r) => r.run_id === s.run) || all[0];
-      return { original, revised: s.paste || (s.src === 'li' && run ? run.reply : ''), from: s.paste ? '粘贴的润色稿（网页版或其他工具）' : run ? `${W.PRESET_LABEL[run.p]}｜${run.run_id}` : '', runs: all };
+      return { original, revised: s.paste || (run ? W.styleBody(run.reply) : ''), from: s.paste ? '粘贴的润色稿（网页版或其他工具）' : run ? `${W.PRESET_LABEL[run.p]}｜${run.run_id}` : '', runs: all, card };
     }
     render() {
       const s = this.s, pr = this.pair(), rules = s.rules.filter((r) => !s.off[r.rule_id]);
@@ -207,10 +212,11 @@
       const num = (k, f) => `<input type="number" data-ex="${k}|${f}" value="${s.ex[k][f]}" style="width:7em">`;
       this.out(`<p><b>段落</b> ${[['li', '教师 2023 年论文第 152—153 页（文风演示）'], ['jia', '练习材料甲第 3 段（对照）'], ['own', '自己的一段'], ['toy', '计数示例']].map(([k, z]) => `<label><input type="radio" name="stsrc" value="${k}" ${s.src === k ? 'checked' : ''}> ${z}</label>`).join(' ')}</p>
         ${s.src === 'own' ? `<div class="w11-two"><label>原段<textarea data-own rows="4">${esc(s.own)}</textarea></label><label>润色稿<textarea data-ownrev rows="4">${esc(s.ownRev)}</textarea></label></div>` : ''}
-        ${s.src === 'li' || s.src === 'jia' ? `<details ${pr.revised ? '' : 'open'}><summary>润色稿来源：${esc(pr.from || '尚无')}</summary>${s.src === 'li' ? `${cardBox('S1')}<div class="w9-cols">${['deepseek', 'kimi'].map((p) => `<section class="w9-col">${answerCell('S1', p).html}</section>`).join('')}</div>${(pr.runs || []).length > 1 ? `<p>比对哪一次：${sel('data-run', s.run, pr.runs.map((r) => [r.run_id, `${W.PRESET_LABEL[r.p]}｜${r.run_id}`]), '（第一条）')}</p>` : ''}` : '<p class="sub">练习材料甲第 3 段的润色稿需另跑（建议并入 S1，见课前运行清单）。</p>'}
+        ${s.src === 'li' || s.src === 'jia' ? `<details ${pr.revised ? '' : 'open'}><summary>润色稿来源：${esc(pr.from || '尚无')}</summary>${cardBox(pr.card)}<div class="w9-cols">${['deepseek', 'kimi'].map((p) => `<section class="w9-col">${answerCell(pr.card, p).html}</section>`).join('')}</div>${(pr.runs || []).length > 1 ? `<p>比对哪一次：${sel('data-style-run', s.run, pr.runs.map((r) => [r.run_id, `${W.PRESET_LABEL[r.p]}｜${r.run_id}`]), '（第一条）')}</p>` : ''}
+          <p class="sub">${s.src === 'li' ? '对读 S1_kimi_1 的“之嫌”和原段的“之虞”。作者是在说这种做法有风险，还是在评价大谷的论述已有此嫌疑？' : '对读 S1J 两份润色稿，检查引号里的“於”“發”“與”“關”是否保留了原文字形。'}</p>
           <p><label>或粘贴一份润色稿（网页版等；只存本浏览器）<textarea data-paste rows="3">${esc(s.paste)}</textarea></label></p>
           ${s.src === 'li' ? `<details><summary>"只列问题"（S2）</summary>${cardBox('S2')}${['deepseek', 'kimi'].map((p) => answerCell('S2', p).html).join('')}</details>` : ''}</details>` : ''}
-        ${!pr.original ? '<p class="nil">缺原段。</p>' : !pr.revised ? `<div class="srcbox">${esc(pr.original)}</div><p class="w11-pending">待课前运行（S1：两家各两次）。有了润色稿，这里显示两栏差异、计数与越界处；这里不放构造的润色稿。</p>` : `
+        ${!pr.original ? '<p class="nil">缺原段。</p>' : !pr.revised ? `<div class="srcbox">${esc(pr.original)}</div><p class="w11-pending">载入本机材料包或粘贴润色稿后，可逐处比对原句和改句。</p>` : `
         <div class="w11-two"><section><h4>原段</h4><div class="srcbox w11-diff">${left}</div></section><section><h4>润色稿 <span class="sub">${esc(pr.from)}</span></h4><div class="srcbox w11-diff">${right}</div></section></div>
         <div class="w11-two"><section><h4>四条界线 ${W.nat.calc}</h4>
           <table class="items">${S2.bounds.map(([k, what]) => `<tr><td><b>${esc(k)}</b></td><td class="sub">${esc(what)}</td></tr>`).join('')}</table>
@@ -219,7 +225,7 @@
         <section><h4>规则计数（每百字）${W.nat.calc}</h4><table class="items"><tr><th></th><th>现象</th><th>原段</th><th>润色稿</th><th>差</th></tr>
           ${s.rules.map((r) => { const on = !s.off[r.rule_id], o = d.original.counts[r.rule_id], v = d.revised.counts[r.rule_id]; return `<tr><td><input type="checkbox" data-rule="${esc(r.rule_id)}" ${on ? 'checked' : ''}></td><td title="${esc(r.pattern)}">${esc(r.name)}<span class="sub">　${esc(r.note || '')}</span></td>${on ? `<td>${o.n}（${o.per100.toFixed(2)}）</td><td>${v.n}（${v.per100.toFixed(2)}）</td><td class="${d.delta[r.rule_id] > 0.2 ? 'nil' : ''}">${d.delta[r.rule_id] >= 0 ? '+' : ''}${d.delta[r.rule_id].toFixed(2)}</td>` : '<td colspan="3" class="sub">未计</td>'}</tr>`; }).join('')}</table>
           <p>新增一项：<input data-nr="name" value="${esc(s.nr.name)}" size="8" placeholder="如：笔者以为"> 词表（用 | 分隔）<input data-nr="pattern" value="${esc(s.nr.pattern)}" size="14"> <button class="small" data-x="addrule">加入</button></p>
-          <p class="sub">原段 ${d.original.chars} 字，润色稿 ${d.revised.chars} 字。这些只是个人自查的办法，不能用来判断别人的文字是否出自模型（扩充部分甲四）。</p></section></div>
+          <p class="sub">原段 ${d.original.chars} 字，润色稿 ${d.revised.chars} 字。预存回放只比较润色正文，略去原刊页标和模型另列的修改说明。计数供自己逐处核对（扩充部分甲四）。</p></section></div>
         <h4>逐处标出（${ch.length} 处改动）</h4><table class="items"><tr><th>改前</th><th>改后</th><th>越界了吗</th></tr>${ch.map((o, i) => `<tr><td><del>${esc(o.a)}</del></td><td><ins>${esc(o.b)}</ins></td><td>${sel(`data-mk="${i}"`, s.marks[i], [['ok', '没越界（文风）'], ['meaning', '改了意思'], ['source', '碰了原文'], ['stance', '替我选了立场']])}</td></tr>`).join('')}</table>
         <p>${W.nat.calc} 越界 ${Object.values(s.marks).filter((v) => v && v !== 'ok').length} 处：${[['meaning', '改了意思'], ['source', '碰了原文'], ['stance', '替我选了立场']].map(([k, z]) => `${z} ${Object.values(s.marks).filter((v) => v === k).length}`).join('，')}。</p>`}
         <details><summary>进阶：超额词计算器（Kobak 等 2025；示例数字为示意）</summary>
@@ -230,7 +236,7 @@
     onChange(e) {
       const t = e.target, s = this.s;
       if (t.name === 'stsrc') this.set({ src: t.value, marks: {}, paste: '' });
-      if (t.dataset.run !== undefined) this.set({ run: t.value, marks: {} });
+      if (t.dataset.styleRun !== undefined) this.set({ run: t.value, marks: {} });
       if (t.dataset.rule) { s.off[t.dataset.rule] = !t.checked; this.set({}); }
       if (t.dataset.mk) { s.marks[t.dataset.mk] = t.value || null; this.set({}); }
       if (t.dataset.ex) { const [k, f] = t.dataset.ex.split('|'); s.ex[k][f] = Math.max(0, +t.value || 0); this.set({}); }
@@ -247,57 +253,81 @@
 
   /* ================= D14 改三段（演示③） ================= */
   const VIEWS = {};
+  const SAMPLES = {
+    a: ['demo3a_manual.docx', '演示3a_网页版建议手工落入.docx'],
+    b: ['demo3b_reviser.docx', '演示3b_reviser写入.docx'],
+  };
   class ThreeParas extends Lab {
-    defaults() { return { rows: { a: null, b: null }, names: { a: '', b: '' }, dec: {}, int: {}, why: {} }; }
-    async load(k, buf, name) {
+    defaults() { return { rows: { a: null, b: null }, names: { a: '', b: '' }, custom: {}, dec: {}, int: {}, why: {} }; }
+    async load(k, buf, name, custom = false) {
       try {
         const [r, v] = await Promise.all([L.docxRevisions(buf), L.revisionView(buf)]);
         VIEWS[k] = v; this.s.rows[k] = r.edits.filter((x) => !x.in_footnote).map((x) => ({ id: `${k}:${x.edit_id}`, edit_id: x.edit_id, para_index: x.para_index, author: x.author, date: x.date, removed: x.removed, added: x.added, before: x.before, after: x.after }));
-        this.s.names[k] = name; this.set({});
+        if (custom) {
+          for (const map of [this.s.dec, this.s.int, this.s.why]) for (const id of Object.keys(map)) if (id.startsWith(k + ':')) delete map[id];
+        }
+        this.s.custom[k] = custom; this.s.names[k] = name; this.set({});
       } catch (err) { W.toast('解析失败：' + err.message); }
     }
     plan() { return (PUB.demo3b && PUB.demo3b.plan) || null; }
     render() {
       const s = this.s;
-      if (!s.rows.b && !this._lb) { this._lb = true; const b = Mat.docx('demo3b_reviser.docx'); if (b) this.load('b', b, '演示3b_reviser写入.docx'); }
-      if (!s.rows.a && !this._la2) { this._la2 = true; const a = Mat.docx('demo3a_manual.docx'); if (a) this.load('a', a, '演示3a_网页版建议手工落入.docx'); }
-      if (s.rows.a && !VIEWS.a && !this._la) { this._la = true; }
+      this._loading ??= {};
+      for (const [k, [file, name]] of Object.entries(SAMPLES)) {
+        if (s.names[k] && s.names[k] !== name) s.custom[k] = true;
+        const preset = !s.custom[k];
+        if (preset && !VIEWS[k] && !this._loading[k]) {
+          this._loading[k] = true;
+          const buf = Mat.docx(file);
+          if (buf) this.load(k, buf, name);
+        }
+      }
       const plan = this.plan(), notesB = plan ? plan.replacements : [], planA = (PUB.demo3a && PUB.demo3a.plan) || null, notesA = planA ? planA.replacements : [];
+      const sourceRun = runsFor('W3a', 'chatgpt').find((r) => r.run_id === planA?.source_run);
+      const advice14 = sourceRun?.reply.match(/(?:^|\n)(14\.[^]*?)(?=\n15\.)/u)?.[1];
+      const change14 = notesA.find((n) => n.note.includes('建议 14'));
+      const example14 = change14 ? `<details><summary>ChatGPT 第一次 · 第 14 条：告密怎样影响政变？</summary>
+        ${advice14 ? `<pre class="srcbox">${esc(advice14.trim())}</pre>` : needPack('W3a_chatgpt_1 第 14 条的回答原文')}
+        <p>对照茅文（三）原刊第 175 页的“大大加剧了政变的激烈程度”，读出课前样稿与网页建议在措辞上的差别。</p>
+        ${sourceBox('mao-conclusion', { highlight: '大大加剧了政变的激烈程度' })}
+        <p>原稿：${esc(change14.old)}<br>样稿：${esc(change14.new)}</p>
+        <p><button class="small" data-x="draft">下载练习材料甲 Word 副本</button> 打开“审阅 → 修订”，在第 6 段选一种处理：照建议改、核原文后改、保留原句。用一条批注写明理由。</p></details>` : '';
       const col = (k, title, nat) => {
         const rows = s.rows[k];
-        if (!rows) return `<section class="w9-col"><h4>${title}</h4>${nat}<p class="w11-pending">${k === 'a' ? '正在解析…（若无：演示③(a) 修订稿待生成，存为 demo/修订稿/演示3a_网页版建议手工落入.docx）' : '正在解析…'}</p><label class="pack-btn small">载入 .docx<input type="file" accept=".docx" data-up="${k}" hidden></label></section>`;
+        if (!rows) return `<section class="w9-col"><h4>${title}</h4>${nat}<p class="w11-pending">正在解析 Word 修订稿…</p><label class="pack-btn small">载入 .docx<input type="file" accept=".docx" data-up="${k}" hidden></label></section>`;
         const v = VIEWS[k] || [];
         const decs = Object.fromEntries(rows.map((r) => [r.edit_id, s.dec[r.id] || null]));
         const prev = v.filter((p) => p.segs.some((x) => x.edit_id)).map((p) => `<p>${L.previewSegs(p.segs, decs).map((x) => x.state === 'plain' ? esc(x.text) : x.state === 'ins' ? `<ins>${esc(x.text)}</ins>` : `<del>${esc(x.text)}</del>`).join('')}</p>`).join('');
-        const st = L.editStats(rows.map((r) => ({ proposer: { kind: 'model' }, decision: s.dec[r.id] === 'modify' ? 'modify' : s.dec[r.id], intention: s.int[r.id] || null, before: r.removed, after: r.added })).filter((x) => x.decision || x.intention));
-        return `<section class="w9-col"><h4>${title}</h4>${nat}<p class="sub">${esc(s.names[k])}｜修订者：<b>${esc([...new Set(rows.map((r) => r.author))].join('、'))}</b>｜修订 ${rows.length} 处 <label class="pack-btn small">换一份<input type="file" accept=".docx" data-up="${k}" hidden></label></p>
-          <table class="items w11-rev"><tr><th>改动</th><th>意图</th><th>处理</th><th>理由</th></tr>${rows.map((r) => { const n = (k === 'b' ? notesB : notesA).find((x) => x.new === r.added && x.old === r.removed), mc = s.int[r.id] === 'meaning-changed', why = (s.why[r.id] || '').trim();
-            return `<tr><td>${r.removed ? `<del>${esc(r.removed)}</del>` : ''}${r.added ? `<ins>${esc(r.added)}</ins>` : ''}${n ? `<div class="sub">${k === 'b' ? '工具自述' : '取舍理由'}：${esc(n.note)}</div>` : ''}</td>
+        const st = L.editStats(rows.map((r) => ({ proposer: { kind: s.custom[k] ? 'other' : 'model' }, decision: s.dec[r.id] === 'modify' ? 'modify' : s.dec[r.id], intention: s.int[r.id] || null, before: r.removed, after: r.added })).filter((x) => x.decision || x.intention));
+        return `<section class="w9-col"><h4>${s.custom[k] ? '自行载入的修订稿' : title}</h4>${s.custom[k] ? '<p class="sub">请在 D13 对照制作记录标注自选稿的提议者。此处只从文件读取修订者显示名。</p>' : nat}<p class="sub">${esc(s.names[k])}｜Word 修订者显示名：<b>${esc([...new Set(rows.map((r) => r.author))].join('、'))}</b>｜修订 ${rows.length} 处 <label class="pack-btn small">换一份<input type="file" accept=".docx" data-up="${k}" hidden></label></p>
+          <table class="items w11-rev"><tr><th>改动</th><th>意图</th><th>处理</th><th>理由</th></tr>${rows.map((r) => { const n = !s.custom[k] && (k === 'b' ? notesB : notesA).find((x) => x.new === r.added && x.old === r.removed), mc = s.int[r.id] === 'meaning-changed', why = (s.why[r.id] || '').trim();
+            return `<tr><td>${r.removed ? `<del>${esc(r.removed)}</del>` : ''}${r.added ? `<ins>${esc(r.added)}</ins>` : ''}${n ? `<div class="sub">${k === 'b' ? 'Claude 的计划说明' : 'Claude 的取舍理由'}：${esc(n.note)}</div>` : ''}</td>
             <td>${sel(`data-int="${esc(r.id)}"`, s.int[r.id], S.iterater.map(([a, z]) => [a, z]), '（选）')}</td>
             <td><button class="small ${s.dec[r.id] === 'accept' ? 'on' : ''}" data-dec="${esc(r.id)}|accept" ${mc && !why ? 'disabled title="意思改变一类不能一键接受：先写理由"' : ''}>接受</button> <button class="small ${s.dec[r.id] === 'reject' ? 'on' : ''}" data-dec="${esc(r.id)}|reject">拒绝</button></td>
             <td><input data-why="${esc(r.id)}" value="${esc(s.why[r.id] || '')}" size="16"></td></tr>`; }).join('')}</table>
           <p>${W.nat.calc} 已处理 ${st.n} 条：采纳率 ${W.pct(st.adoption)}（${st.a_m}/${st.n_m}），意思改变占比 ${W.pct(st.meaningShare)}。</p>
-          <details open><summary>"改后文字"预览（接受的落入、拒绝的还原、未定的两种都标出；只改页面内预览，不写回文件）</summary><div class="srcbox w11-diff">${prev}</div></details></section>`;
+          <details open><summary>"改后文字"预览（接受的落入、拒绝的还原、未定的两种都标出；只改页面内预览，不写回文件）</summary><div class="srcbox w11-diff">${prev || '请重新载入这份修订稿查看段落预览。'}</div></details></section>`;
       };
       const audit = PUB.demo3b && PUB.demo3b.audit;
-      this.out(`<p class="sub">全班逐条决定接受或拒绝，选意图、写理由。页面不提供"全部接受"；"意思改变"一类要先写理由才能接受。判断发生在"敲进去"的时候，还是"点接受"的时候？</p>
-        <div class="w11-stack">${col('a', '(a) 网页版建议，逐条取舍后落入', `<p><span class="w9-badge web-paste">网页版</span> 修订者名为"作者"：每一处都经过一次"要不要敲进去"的判断。${planA ? `这一份据 ChatGPT 第 1 次的十五条建议，取舍由 Claude 经教师授权作出（2026-11-26）：采纳 ${notesA.length - 1}、修改后采纳 1、未采纳 ${planA.skipped.length}（理由见下）。` : ''}</p>${cardBox('W3a')}<div class="w9-cols"><section class="w9-col">${answerCell('W3a', 'chatgpt').html}</section><section class="w9-col">${answerCell('W3a', 'gemini').html}</section></div>${planA ? `<details><summary>未采纳的 ${planA.skipped.length} 条及理由</summary><ul>${planA.skipped.map((x) => `<li>第 ${esc(String(x.item))} 条：${esc(x.why)}</li>`).join('')}</ul></details>` : ''}`)}
-          ${col('b', '(b) word-paper-tracked-reviser 写入', `<p><span class="w9-badge replay">预存回放</span> 修订者是工具名。修订计划由 Claude Opus 5.5 按"使结构更清楚"拟定（2026-11-26，本课件制作线程），工具写入；${audit ? `审计${audit.passed ? '通过' : '未通过'}：计划外改动 ${audit.unexpected_changed_parts.length} 处，脚注部件未改动` : ''}。这不是 DeepSeek／Kimi 的输出，也没有在带 Zotero 域代码的稿子上验证（域代码一项未验证）。</p>`)}</div>
+      this.out(`<p class="sub">全班逐条决定接受或拒绝，选意图、写理由。页面不提供"全部接受"；"意思改变"一类要先写理由才能接受。两份样稿都由工具写入。对照建议、计划和 Word 显示名，找出各次取舍发生在哪一步。</p>
+        <div class="w11-stack">${col('a', '(a) 据网页版建议逐条取舍的课前样稿', `<p>${W.nat.replay} 2026 年 11 月 26 日，ChatGPT 提出十五条建议。Claude 经教师授权采纳七条、修改后采纳一条、舍弃七条，另搁置第四部分的整段重组。word-paper-tracked-reviser 按计划写入八处，审计通过。“作者”是这份 Word 样稿的修订者显示名。</p>${example14}${cardBox('W3a')}<div class="w9-cols"><section class="w9-col">${answerCell('W3a', 'chatgpt').html}</section><section class="w9-col">${answerCell('W3a', 'gemini').html}</section></div>${planA ? `<details><summary>舍弃与搁置的理由</summary><ul>${planA.skipped.map((x) => `<li>${x.item === '四' ? '第四部分' : '第 ' + esc(String(x.item)) + ' 条'}：${esc(x.why)}</li>`).join('')}</ul></details>` : ''}`)}
+          ${col('b', '(b) 据模型修订计划生成的课前样稿', `<p>${W.nat.replay} Claude 按同一要求拟定八处修改，交 word-paper-tracked-reviser 写入。Word 在这份样稿里显示工具名。${audit ? `审计${audit.passed ? '通过' : '未通过'}，计划外改动 ${audit.unexpected_changed_parts.length} 处，普通文字脚注部件保持一致。` : ''}带 Zotero 域的修订稿能否继续编辑和刷新，须在 Word 中验证。</p>`)}</div>
         <p><button class="small" data-x="send">把已处理的修订送入贯穿记录（修改对照表，D18）</button> <button class="small" data-x="csv">导出修改对照表（.csv）</button></p>`);
     }
     async onChange(e) {
       const t = e.target, s = this.s;
-      if (t.dataset.up && t.files[0]) { const f = t.files[0]; await this.load(t.dataset.up, await f.arrayBuffer(), f.name); t.value = ''; }
+      if (t.dataset.up && t.files[0]) { const f = t.files[0]; await this.load(t.dataset.up, await f.arrayBuffer(), f.name, true); t.value = ''; }
       if (t.dataset.int) { s.int[t.dataset.int] = t.value || null; if (t.value === 'meaning-changed' && s.dec[t.dataset.int] === 'accept' && !(s.why[t.dataset.int] || '').trim()) s.dec[t.dataset.int] = null; this.set({}); }
       if (t.dataset.why) { s.why[t.dataset.why] = t.value; this.set({}); }
     }
     onClick(e) {
       const t = e.target, s = this.s;
       if (t.dataset.dec) { const [id, d] = t.dataset.dec.split('|'); s.dec[id] = s.dec[id] === d ? null : d; this.set({}); return; }
+      if (t.dataset.x === 'draft') { download('练习材料甲_修订练习.docx', Mat.docx('jia_draft.docx'), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'); return; }
       const all = ['a', 'b'].flatMap((k) => (s.rows[k] || []).map((r) => ({ ...r, k })));
-      const row = (r) => ({ edit_id: `D14-${r.id}`, para: String(r.para_index), before: r.before, after: r.after, removed: r.removed, added: r.added, author: r.author, date: r.date, location: `演示③(${r.k}) Word 段 ${r.para_index}`, proposer: { kind: 'model', name: r.author, run_id: null }, intention: s.int[r.id] || null, intention_shown: null, decision: s.dec[r.id] || null, reason: s.why[r.id] || '', in_footnote: false });
+      const row = (r) => ({ edit_id: `D14-${r.id}`, para: String(r.para_index), before: r.before, after: r.after, removed: r.removed, added: r.added, author: r.author, date: r.date, location: `演示③(${r.k}) Word 段 ${r.para_index}`, proposer: s.custom[r.k] ? { kind: 'other', name: '自选稿，提议者待核', run_id: null } : r.k === 'a' ? { kind: 'model', name: 'ChatGPT（Claude 取舍）', run_id: 'W3a_chatgpt_1' } : { kind: 'model', name: 'Claude', run_id: null }, intention: s.int[r.id] || null, intention_shown: null, decision: s.dec[r.id] || null, reason: s.why[r.id] || '', in_footnote: false });
       if (t.dataset.x === 'send') { const done = all.filter((r) => s.dec[r.id] || s.int[r.id]); for (const r of done) Through.add('edits', row(r), 'edit_id'); W.toast(`已送入贯穿记录：修改 ${done.length} 条`); }
-      if (t.dataset.x === 'csv') { const head = ['edit_id', 'location', 'author', 'removed', 'added', 'intention', 'decision', 'reason']; const c = (v) => { const x = v == null ? '' : String(v); return /[",\n]/.test(x) ? '"' + x.replace(/"/g, '""') + '"' : x; }; download('演示③_修改对照表.csv', '﻿' + [head.join(','), ...all.map((r) => { const o = row(r); return head.map((h) => c(o[h])).join(','); })].join('\n'), 'text/csv'); }
+      if (t.dataset.x === 'csv') { const head = ['edit_id', 'location', 'author', 'proposer_name', 'run_id', 'removed', 'added', 'intention', 'decision', 'reason']; const c = (v) => { const x = v == null ? '' : String(v); return /[",\n]/.test(x) ? '"' + x.replace(/"/g, '""') + '"' : x; }; download('演示③_修改对照表.csv', '﻿' + [head.join(','), ...all.map((r) => { const o = row(r); o.proposer_name = o.proposer.name; o.run_id = o.proposer.run_id; return head.map((h) => c(o[h])).join(','); })].join('\n'), 'text/csv'); }
     }
   }
   register('three-lab', ThreeParas);

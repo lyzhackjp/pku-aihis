@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "check:blocklist": "node scripts/check-blocklist.mjs"
+    "check:blocklist": "node scripts/check-blocklist.mjs",
+    "build": "sh scripts/build_importer.sh && node scripts/build-public.mjs"
   },
+  "packageManager": "pnpm@11.19.0",
   "engines": {
     "node": ">=22"
   }

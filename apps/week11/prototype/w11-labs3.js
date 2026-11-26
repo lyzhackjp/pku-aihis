@@ -26,7 +26,11 @@
           　<label><input type="checkbox" data-rs ${s.restart ? 'checked' : ''}> 每页重新编号</label></p>
         <div class="w11-pages">${page(1)}${page(2)}</div>
         <p>${r.issues.length ? r.issues.map((x) => `<span class="nil">注 ${esc(r.notes.find((n) => n.note_id === x.note_id).label)}：${esc(x.why)}</span>`).join('<br>') : '<span class="ok">note-rules 没有报问题。</span>'}</p>
-        <p class="sub">练习材料甲的 Word 稿在注⑥后分页（文件中的 w:pageBreakBefore），编号格式 ${esc(JIA.settings.numFmt)}、${JIA.settings.numRestart === 'eachPage' ? '每页重新编号' : '连续编号'}。把分页线拖到第 7 条之后，两条郭卫东引文同页，"同上"无害；换成简式，问题消失；关掉每页重新编号，第 2 页首条变成⑦。郭卫东文第 33—35、38 页${Mat.pageImage('guo-2002', 38) ? '见 D17 原页面板' : '在本机材料包'}。</p>
+        <p class="sub">练习材料甲的 Word 稿在注⑥后分页（文件中的 w:pageBreakBefore），编号格式 ${esc(JIA.settings.numFmt)}、${JIA.settings.numRestart === 'eachPage' ? '每页重新编号' : '连续编号'}。本页默认在第 6 条后分页。切换到连续编号，第 2 页首注是⑦；再把分页线移到第 7 条之后，两条郭卫东引文就同页了。郭卫东文第 33—35、38 页${Mat.pageImage('guo-2002', 38) ? '见 D17 原页面板' : '在本机材料包'}。</p>
+        <details><summary>Mac Word 操作副本：同一条注怎样从⑥变为①</summary><p>2026 年 11 月 26 日，Mac 中文 Word 订阅版，教学构造的 C09 操作副本，第一页五条注。菜单栏“插入 → 脚注…”中更改编号后，第二页首注如下。</p>
+          <figure><img class="w11-pageimg" loading="lazy" src="assets/word/step_5b_continuous_mac_word365.png" alt="第二页首条注采用连续编号，为⑥"><figcaption>连续编号：⑥</figcaption></figure>
+          <figure><img class="w11-pageimg" loading="lazy" src="assets/word/step_5b_perpage_mac_word365.png" alt="第二页首条注采用每页重新编号，为①"><figcaption>每页重新编号：①</figcaption></figure>
+          <p class="sub">两图记录 Word 的注号设置。另用本机 Zotero 7.0.32 所附 citeproc-js 1.4.61 排同一条目的相邻两引（33–35、38 页），《世界历史》样式给出“同上，第38页。”，Chicago Notes and Bibliography（第 18 版）给出作者、短题和页码。两种样式在 Word 翻页后的实际注文仍待核。</p></details>
         <p class="sub">${'《历史研究》现行做法据编辑部调整过的稿件格式归纳，非正式规定，以投稿时编辑部要求为准。'}</p></section></div>`);
     }
     onChange(e) {

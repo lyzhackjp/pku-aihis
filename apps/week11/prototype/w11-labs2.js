@@ -37,7 +37,7 @@
           <td><details><summary>${esc(p.text.slice(0, 18))}…</summary><p class="w9-reply">${esc(p.text)}</p>${ref[i] ? `<p class="sub">讲义图 3 右列（备课者逐段概括，${W.nat.tc}）：${esc(ref[i].reader_summary_construct)}</p>` : ''}</details></td></tr>`).join('')}</table>
         <p><button class="small" data-x="move">示范：把第 7 段的问题移到第 1 段后</button> <button class="small" data-x="fig4">填入讲义图 4 的标注（${W.nat.tc}）</button> <button class="small" data-x="reset">清空我的标注</button> <button class="small" data-x="send">送入贯穿记录</button></p>
         <details><summary>模型写的逆向大纲（演示②；点开再看，先写自己的）</summary><div class="w9-cols"><section class="w9-col">${cardBox('D2A')}${['deepseek', 'kimi'].map((p) => answerCell('D2A', p).html).join('')}</section><section class="w9-col">${cardBox('D2B')}${['deepseek', 'kimi'].map((p) => answerCell('D2B', p).html).join('')}</section></div>
-          <p class="sub">D2A 末句"列出三处结构问题"会诱导模型必须找出三处；D2B 改为"若没有结构问题，写'无'"。凡是模型说得比自己顺的地方，回原段看一看。</p></details>`);
+          <p class="sub">D2A 要求列三处，四份回答各列三处。D2B 允许写“无”，两份回答分别列了两处和四处。回看练习材料甲第 2 段：六份大纲都概括了段意，却都没有在结构意见中指出这段逐家罗列。</p></details>`);
     }
     onClick(e) {
       const x = e.target.dataset.x, ps = this.paras();
@@ -61,7 +61,20 @@
   /* ================= D06 结构诊断与登记 ================= */
   class Diag extends Lab {
     defaults() { return { rows: null, score: {} }; }
-    rows() { if (!this.s.rows) this.s.rows = clone(EX['register.fig-reg'].rows).map((r) => ({ ...r, decision: null, decision_raw: null, reason: '', _construct: true })); return this.s.rows; }
+    rows() {
+      const s = this.s;
+      if (!s.rows) s.rows = clone(EX['register.fig-reg'].rows).map((r) => ({ ...r, decision: null, decision_raw: null, reason: '', _construct: true }));
+      // 旧浏览器可能已在第四条示例上填过意见，保留该行及其打分。
+      const old = s.rows.findIndex((r) => r.reg_id === 'diag-4' && r._construct);
+      const sample = W.runsFor('D2A', 'kimi').find((r) => r.run_id === 'D2A_kimi_2');
+      const excerpt = '〔6〕与〔7〕连续总结，功能重复。';
+      if (sample?.reply.includes(excerpt) && !s.rows.some((r) => r.reg_id === 'D2A_kimi_2-2')) {
+        const row = { reg_id: 'D2A_kimi_2-2', kind: 'diagnosis', target: 'P6—P7', proposer: { kind: 'model', name: 'Kimi', run_id: sample.run_id }, content: excerpt, decision: null, reason: '' };
+        if (old >= 0 && !s.rows[old].decision && !s.rows[old].reason && !s.score[old + '|acc'] && !s.score[old + '|key']) s.rows[old] = row;
+        else s.rows.push(row);
+      }
+      return s.rows;
+    }
     render() {
       const rows = this.rows(), sum = L.registerSummary(rows.filter((r) => r.decision), 'diagnosis'), ps = EX['paragraphs.jia'].paragraphs;
       this.out(`<details open><summary>诊断表（讲义图 4；"功能"与"回答哪个问题"可先请模型填候选，再自己改）${W.nat.tc}</summary><table class="items"><tr><th>段</th><th>功能</th><th>回答哪个问题</th><th>诊断</th></tr>${ps.map((p) => `<tr><td>${p.para_id}</td><td>${esc([p.function, p.function2].filter(Boolean).join('＋'))}${p.function_note ? `<span class="sub">（${esc(p.function_note)}）</span>` : ''}</td><td>${esc(p.answers || '—')}</td><td>${esc(S.diag[p.para_id])}</td></tr>`).join('')}</table></details>
@@ -69,9 +82,9 @@
         ${rows.map((r, i) => `<tr><td>${i + 1}</td><td>${esc(r.content)}<span class="sub">（${r._construct ? '预期典型意见，' + W.nat.tc : esc(r.proposer?.name || r.proposer?.kind)}${r.proposer?.run_id ? '，' + esc(r.proposer.run_id) : ''}）</span></td><td>${esc(r.target)}</td>
           <td><select data-dec="${i}"><option value="">（未定）</option>${['采纳', '修正', '舍弃'].map((d) => `<option ${r.decision === d ? 'selected' : ''}>${d}</option>`).join('')}</select></td><td><input data-reason="${i}" value="${esc(r.reason || '')}" size="24"></td>
           ${['acc', 'key'].map((k) => `<td><select data-score="${i}|${k}">${['', '1', '2', '3'].map((v) => `<option ${(this.s.score[i + '|' + k] || '') === v ? 'selected' : ''}>${v}</option>`).join('')}</select></td>`).join('')}</tr>`).join('')}</table>
-        <p>${W.nat.calc} 已处理 ${sum.total} 条：采纳 ${sum.count.采纳}、修正 ${sum.count.修正}、舍弃 ${sum.count.舍弃}（${['采纳', '修正', '舍弃'].map((k) => k + ' ' + W.pct(sum.share[k])).join('，')}）。讲义图 5 第 4 行原写"部分采纳"，按"修正"计。</p>
+        <p>${W.nat.calc} 已处理 ${sum.total} 条：采纳 ${sum.count.采纳}、修正 ${sum.count.修正}、舍弃 ${sum.count.舍弃}（${['采纳', '修正', '舍弃'].map((k) => k + ' ' + W.pct(sum.share[k])).join('，')}）。</p>
         <p><label>加一条模型意见 <input data-new size="36" placeholder="从下方模型回答中摘一条"></label> <label>段 <input data-newp size="5"></label> <button class="small" data-x="add">加入</button> <button class="small" data-x="send">送入贯穿记录（D18）</button></p>
-        <details><summary>演示②的实际结构意见（D2A）</summary>${cardBox('D2A')}${['deepseek', 'kimi'].map((p) => answerCell('D2A', p).html).join('')}<p class="sub">课前记录到位后，用这里的意见替换上表的预期典型意见（C-05）。</p></details>
+        <details><summary>演示②的实际结构意见（D2A）</summary>${cardBox('D2A')}${['deepseek', 'kimi'].map((p) => answerCell('D2A', p).html).join('')}<p class="sub">对照 D2A_kimi_2 的第 2 条，再读练习材料甲第 6、7 段，决定是否采纳这条意见。</p></details>
         <details><summary>进阶：三项研究（C-05—C-07）与严耕望论体式</summary><ul><li>Steiss 等 2024：200 篇中学生历史论文，受过训练的评阅者五项中四项优于 GPT-3.5（对象是中学生，模型是 2023 年的）。</li><li>Farrokhnia 等 2026：逐步推理的模型反馈质量评分最高，三组修改后的论文质量提高得差不多。</li><li>Thakkar 等 2025：ICLR 2025 两万多份审稿意见，收到建议者中 26.6% 修改了意见。</li><li>严耕望：写文章"尤當考慮讀者領受之便利"（《治史經驗談》第 88—89 页）。</li></ul></details>`);
     }
     onClick(e) {
@@ -137,7 +150,7 @@
       const ctx = (r) => { const a = r.before.indexOf(r.removed || r.added) ; return a; };
       this.out(`<p><b>修订稿</b> <label><input type="radio" name="rvsrc" value="fixture" ${s.src === 'fixture' ? 'checked' : ''}> 练习材料甲修订夹具（程序构造：三处修订、一条批注、一处脚注修订；未在 Word 中打开核对）</label>
         <label><input type="radio" name="rvsrc" value="book" ${s.src === 'book' ? 'checked' : ''} ${hasBook ? '' : 'disabled'}> 教师书稿一节的真实修订（本机预置：第一章第一节之二，修订 11 处、删除 14 处；修订者名已改为"作者"）${hasBook ? '' : '<span class="sub">（需本机材料包）</span>'}</label>
-        <label class="pack-btn small">上传我的 .docx<input type="file" accept=".docx" data-up hidden></label> <span class="sub">演示③两份修订稿见 D14。</span></p>
+        <label class="pack-btn small">上传我的 .docx<input type="file" accept=".docx" data-up hidden></label> <span class="sub">D14 两份样稿的审计均通过，其中 (b) 的普通文字脚注部件保持一致。</span></p>
         <p class="sub">${s.msg || ''}</p>
         <table class="items w11-rev"><tr><th>位置</th><th>修订者</th><th>改动</th><th>改前 → 改后（所在段）</th><th>提议</th><th>意图</th><th>处理</th><th>理由（批注）</th></tr>
         ${rows.map((r, i) => `<tr><td>${esc(r.location)}</td><td>${esc(r.author)}<span class="sub">${esc((r.date || '').slice(0, 16))}</span></td><td>${r.removed ? `<del>${esc(r.removed)}</del>` : ''}${r.added ? `<ins>${esc(r.added)}</ins>` : ''}</td>
@@ -146,7 +159,7 @@
           <td><select data-int="${i}"><option value="">（未标）</option>${S.iterater.map(([k, zh]) => `<option value="${k}" ${r.intention === k ? 'selected' : ''}>${zh}</option>`).join('')}</select></td>
           <td><select data-dec="${i}"><option value="">—</option>${[['accept', '采纳'], ['reject', '拒绝'], ['modify', '修改后采纳']].map(([k, z]) => `<option value="${k}" ${r.decision === k ? 'selected' : ''}>${z}</option>`).join('')}</select></td>
           <td><input data-reason="${i}" value="${esc(r.reason || '')}" size="22"></td></tr>`).join('')}</table>
-        <p>${W.nat.calc} 已标注 ${st.n} 条：模型意见采纳率 ${W.pct(st.adoption)}（${st.a_m}/${st.n_m}），意思改变占比 ${W.pct(st.meaningShare)}（与 D10 同一公式）。修订者一栏自动填"提议者"：约定模型的修改用单独的修订者名，作者自己的修改用本人的名字。</p>
+        <p>${W.nat.calc} 已标注 ${st.n} 条：模型意见采纳率 ${W.pct(st.adoption)}（${st.a_m}/${st.n_m}），意思改变占比 ${W.pct(st.meaningShare)}（与 D10 同一公式）。“修订者”照录 Word 的显示名。“提议”栏按名称预填，须据建议和写入日志核对。D14 样稿 (a) 的显示名是“作者”，建议来自 ChatGPT。</p>
         <p><button class="small" data-x="csv">导出修改对照表（.csv）</button> <button class="small" data-x="send">送入贯穿记录（D10、D18 可用）</button></p>`);
     }
     async onChange(e) {

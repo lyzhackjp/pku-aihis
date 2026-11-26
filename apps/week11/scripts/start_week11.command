@@ -7,11 +7,48 @@ cd "$(dirname "$0")" || exit 1
 PORT=${PORT:-8781}
 URL="http://127.0.0.1:$PORT/prototype/index.html"
 [ -f local-only/week11-pack.json ] && URL="$URL?pack=../local-only/week11-pack.json"
-( sleep 1; open -a "Google Chrome" "$URL" 2>/dev/null || open "$URL" ) &
-echo "第十一周演示：$URL"
-[ -d prototype/importer ] || echo "提示：顶栏“文献导入”用的通用导入页尚未构建（运行 scripts/build_importer.sh）；其余功能不受影响。"
-echo "关闭本窗口即停止服务。"
-exec python3 -c 'import sys, http.server as h
-class H(h.SimpleHTTPRequestHandler):
-    def end_headers(self): self.send_header("Cache-Control", "no-store"); super().end_headers()
-h.ThreadingHTTPServer(("127.0.0.1", int(sys.argv[1])), H).serve_forever()' "$PORT"
+[ -f prototype/importer/index.html ] || echo "顶栏“文献导入”尚未构建。请从课件仓库根目录运行 apps/week11/scripts/build_importer.sh。"
+exec python3 - "$PORT" "$URL" <<'PYTHON'
+import errno
+import http.server
+from pathlib import Path
+import subprocess
+import sys
+from urllib.request import ProxyHandler, build_opener
+
+port, url = int(sys.argv[1]), sys.argv[2]
+
+class Handler(http.server.SimpleHTTPRequestHandler):
+    def end_headers(self):
+        self.send_header("Cache-Control", "no-store")
+        super().end_headers()
+
+def open_chrome():
+    print(f"本机演示：{url}", flush=True)
+    if subprocess.run(["open", "-a", "Google Chrome", url]).returncode:
+        print("Chrome 未能自动打开，可在 Chrome 地址栏粘贴上面的网址。", flush=True)
+
+try:
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", port), Handler)
+except OSError as err:
+    if err.errno != errno.EADDRINUSE:
+        sys.exit(f"未能启动本机课件服务：{err}")
+    entry = Path("prototype/index.html").read_bytes()
+    try:
+        with build_opener(ProxyHandler({})).open(url, timeout=2) as response:
+            same_deck = response.read(len(entry) + 1) == entry
+    except OSError:
+        same_deck = False
+    if not same_deck:
+        sys.exit(f"端口 {port} 已被其他服务占用，请改用 PORT=8782 再启动。")
+    print("已找到运行中的第十一周课件。", flush=True)
+    open_chrome()
+else:
+    with server:
+        open_chrome()
+        print("关闭本窗口即停止服务。", flush=True)
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            pass
+PYTHON

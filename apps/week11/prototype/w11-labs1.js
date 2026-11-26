@@ -61,7 +61,7 @@
             <li><span class="w9-badge replay">预存回放</span>课前真实运行的保存结果，注明模型、日期、提示、温度</li>
             <li><span class="w9-badge web-paste">网页版粘贴</span>教师在网页版运行后录入，附界面型号与截图</li>
             <li><span class="w9-badge teaching-construct">教学构造</span>人工示意：练习材料甲、示范段、预期意见、假设数字</li>
-            <li><span class="w9-badge none">待课前运行</span>尚无记录；这里不放构造的回答</li></ul>
+            <li><span class="w9-badge none">未载入回答</span>可从本机材料包调出课前回放</li></ul>
           <p class="w9-hero-status">材料、导入（含"导入 Word 稿"）与模型接入见顶栏。</p></div></div>`);
     }
   }
@@ -116,28 +116,40 @@
   class Matrix extends Lab {
     defaults() { return { view: 'col', rel: {}, sortRel: false, src: 'wuxu' }; }
     rows() { return this.s.src === 'own' ? Through.get().matrix : EX['matrix.wuxu'].rows; }
+    selections() {
+      return this.s.src === 'own' ? (this.s.ownRel ||= {}) : this.s.rel;
+    }
     render() {
-      const s = this.s, rows = this.rows().map((r) => ({ ...r, rel: s.rel[r.row_id] ?? (s.src === 'own' ? r.relation_to_my_question : '') }));
+      const s = this.s, rows = this.rows().map((r) => ({ ...r, rel: this.selections()[r.row_id] ?? (s.src === 'own' ? r.relation_to_my_question : '') }));
       const ord = s.sortRel ? [...rows].sort((a, b) => (REL.indexOf(a.rel) + 99 * !a.rel) - (REL.indexOf(b.rel) + 99 * !b.rel)) : rows;
       const basis = (b) => `<span class="w11-basis b-${esc(b || 'none')}">${esc(b || '未标')}</span>`;
       const byRow = `<ol class="w11-rowread">${ord.map((r) => `<li><b>${esc(r.scholar)}</b>（${esc(r.year)}）认为：${esc(r.claim)}${r.page ? `<span class="sub">（第 ${esc(r.page)} 页）</span>` : ''}</li>`).join('')}</ol><p class="sub">按行读：一家一家地说，每一句都可能准确，读者却看不出作者要回答什么问题。</p>`;
       const byCol = `<table class="items"><tr><th>学者</th><th>年份</th><th>主张（摘）</th><th>回应对象</th><th>与我的问题的关系</th></tr>${ord.map((r) => `<tr><td>${esc(r.scholar)}</td><td>${esc(r.year)}</td><td>${esc(r.claim)}${r.claim_quote ? `<span class="sub">"${esc(r.claim_quote)}"，第 ${esc(r.page || '?')} 页</span>` : ''}</td><td>${esc(r.responds_to || '')} ${basis(r.responds_basis)}</td><td><select data-rel="${esc(r.row_id)}"><option value="">（尚未表态）</option>${REL.map((x) => `<option ${r.rel === x ? 'selected' : ''}>${x}</option>`).join('')}</select></td></tr>`).join('')}</table>`;
-      const g = (k) => ord.filter((r) => r.rel === k).map((r) => r.scholar);
+      const g = (k) => ord.filter((r) => r.rel === k).map((r) => esc(r.scholar));
       const empty = ord.filter((r) => !r.rel).map((r) => r.scholar);
       const isay = `<div class="w11-isay"><b>可写成的 I say</b>（据最后一列自动拼出骨架，文字要自己写）：<p>本文${g('出发点').length ? `从${g('出发点').join('、')}出发` : '（尚无出发点）'}${g('补证').length ? `，以${g('补证').join('、')}为补证` : ''}${g('反证').length ? `，回应${g('反证').join('、')}的反证` : ''}${g('需要收窄').length ? `，收窄${g('需要收窄').join('、')}之说` : ''}，追问：____。</p>${empty.length ? `<p class="nil">尚未表态：${empty.map(esc).join('、')}</p>` : ''}</div>`;
       this.out(`<p><b>材料</b> <label><input type="radio" name="mxsrc" value="wuxu" ${s.src === 'wuxu' ? 'checked' : ''}> 戊戌告密六家（讲义图 1，本课摘编）</label> <label><input type="radio" name="mxsrc" value="own" ${s.src === 'own' ? 'checked' : ''}> 我的矩阵（导入表格：${Through.get().matrix.length} 行）</label> <button class="small" data-w11-import="matrix">导入表格</button>
         　<b>读法</b> <button class="small ${s.view === 'row' ? 'on' : ''}" data-view="row">按行读（以作者为纲）</button> <button class="small ${s.view === 'col' ? 'on' : ''}" data-view="col">按列读（以问题为纲）</button> <label><input type="checkbox" data-sort ${s.sortRel ? 'checked' : ''}> 按"关系"一列排序</label></p>
-        ${s.src === 'wuxu' ? `<p class="sub">${W.nat.stat} 前五列据茅海建文第 4 期第 198—208 页、第 6 期第 175 页与郭卫东文第 31—33 页摘编；"回应对象"黄彰健一格需回黄著（B-02），丁、赵一格是推断。假设的研究问题：<b>袁世凯告密的消息，在政变过程中的哪一个环节起了作用？</b> 最后一列请自己填（讲义示范为${W.nat.tc}）。</p>` : ''}
+        ${s.src === 'wuxu' ? `<p class="sub">${W.nat.stat} 前五列据茅海建文第 4 期第 198—208 页、第 6 期第 175 页与郭卫东文第 31—33 页摘编；初填矩阵时，黄彰健一格留作“需回原文”。复核黄著原书第 498—499 页，可见他讨论黄鸿寿的“告密致变”说及李剑农对黄说的采用。丁、赵一格仍是推断。假设的研究问题：<b>袁世凯告密的消息，在政变过程中的哪一个环节起了作用？</b> 最后一列请自己填（讲义示范为${W.nat.tc}）。</p>` : ''}
         ${!rows.length ? '<p class="nil">还没有导入自己的矩阵。</p>' : s.view === 'row' ? byRow : byCol}${s.view === 'col' ? isay : ''}
         <p><button class="small" data-x="send">把最后一列送入贯穿记录（D18）</button></p>`);
     }
     onClick(e) {
       if (e.target.dataset.view) this.set({ view: e.target.dataset.view });
-      if (e.target.dataset.x === 'send') { for (const r of this.rows()) Through.add('matrix', { ...r, relation_to_my_question: this.s.rel[r.row_id] ?? r.relation_to_my_question ?? null, filled_by: 'author' }, 'row_id'); W.toast(`已送入贯穿记录：矩阵 ${this.rows().length} 行`); }
+      if (e.target.dataset.x === 'send') {
+        const selections = this.selections();
+        const own = this.s.src === 'own';
+        const changed = this.rows().filter((r) => Object.hasOwn(selections, r.row_id) && (own || selections[r.row_id]));
+        for (const r of changed) {
+          const value = selections[r.row_id];
+          Through.add('matrix', { ...r, relation_to_my_question: value || null, filled_by: value ? 'author' : null }, 'row_id');
+        }
+        W.toast(changed.length ? `已送入贯穿记录：矩阵 ${changed.length} 行` : '请先在最后一列选择自己的判断。');
+      }
     }
     onChange(e) {
       const t = e.target;
-      if (t.dataset.rel) { this.s.rel[t.dataset.rel] = t.value || ''; this.set({}); }
+      if (t.dataset.rel) { this.selections()[t.dataset.rel] = t.value || ''; this.set({}); }
       if (t.dataset.sort !== undefined) this.set({ sortRel: t.checked });
       if (t.name === 'mxsrc') this.set({ src: t.value });
     }
@@ -158,13 +170,14 @@
     body(run) {
       const h = ruleHits(run.reply), pick = this.s.isay[run.run_id];
       return `<div class="w9-reply w10-circle">${h.sents.map((s, i) => `<span class="sent ${pick === i ? 'circled' : ''} ${h.lead[i] ? 'lead' : ''}" data-isay="${esc(run.run_id)}" data-i="${i}">${W.marked(s, [['harm', h.harm], ['fake', h.fake]])}</span>`).join('')}</div>
-        <p class="sub">${W.nat.calc} 逐家罗列：${h.listing ? `连续 ${h.listing} 句` : '无'}｜调和：${h.harm.length ? h.harm.map(esc).join('、') : '无'}｜自造共识：${h.fake.length ? h.fake.map(esc).join('、') : '无'}｜I say：${pick == null ? '未标' : pick === -1 ? '<b>无</b>' : `第 ${pick + 1} 句`} <button class="small" data-isay="${esc(run.run_id)}" data-i="-1">标"无"</button></p>`;
+        <p class="sub">${W.nat.calc} 以作者起句：${h.listing ? `连续 ${h.listing} 句` : '无'}｜调和用语：${h.harm.length ? h.harm.map(esc).join('、') : '无'}｜共识用语：${h.fake.length ? h.fake.map(esc).join('、') : '无'}｜I say：${pick == null ? '未标' : pick === -1 ? '<b>无</b>' : `第 ${pick + 1} 句`} <button class="small" data-isay="${esc(run.run_id)}" data-i="-1">标"无"</button></p>`;
     }
     render() {
       const col = (cid, label) => `<section class="w9-col"><header><b>${esc(label)}</b></header>${cardBox(cid)}${['deepseek', 'kimi'].map((p) => answerCell(cid, p, { body: (r) => this.body(r) }).html).join('')}</section>`;
-      const stat = (cid) => { const rs = Through.get().runs.concat(Mat.replays()).filter((r) => r.card_id === cid && r.reply); const marked = rs.filter((r) => r.run_id in this.s.isay); const yes = marked.filter((r) => this.s.isay[r.run_id] >= 0); return `${cid}：已标 ${marked.length}/${rs.length}，有 I say ${frac(yes.length, marked.length)}`; };
-      this.out(`<div class="w9-cols">${col('D1A', 'D1A 只给矩阵')}${col('D1B', 'D1B 矩阵＋茅文学术史节录')}</div>
+      const stat = (cid) => { const rs = ['deepseek', 'kimi'].flatMap((p) => W.runsFor(cid, p)); const marked = rs.filter((r) => r.run_id in this.s.isay); const yes = marked.filter((r) => this.s.isay[r.run_id] >= 0); return `${cid}：已标 ${marked.length}/${rs.length}，有 I say ${frac(yes.length, marked.length)}`; };
+      this.out(`<div class="w9-cols">${col('D1A', 'D1A 只给矩阵前四列')}${col('D1B', 'D1B 矩阵前四列＋茅文学术史节录')}</div>
         <p>${W.nat.calc} 点一句标为"I say"（再点另一句改选）；找不到就标"无"。${stat('D1A')}；${stat('D1B')}。</p>
+        <details><summary>对照课前十二份综述（11 月 26 日，备课判读）</summary><p>两种条件各六份，全都逐家排列，结尾都没有提出本文要回答的问题。九份把茅海建的判断写成“折中”“折衷”或“调和”（D1A 四份、D1B 五份）。页面标亮的是用词，是否符合所引原文，要回到茅文核对。</p></details>
         <details><summary>讲义 1.3 示范段 ${W.nat.tc}</summary><blockquote class="w11-q">${esc(S.model13)}</blockquote><p class="sub">按"与我的问题的关系"重排：出发点（黄、茅）→ 反证（郭）→ 最后一句 I say。刘路生的商榷有意没写进，留到 4.3。</p></details>
         <details><summary>进阶：借模型写与独写，谁更像谁（C-03）</summary><p class="sub">把几段综述贴入（每段一行，行首写"模型｜"或"独写｜"），页面算两两字符二元组 Jaccard。</p><textarea data-conv rows="5" style="width:100%">${esc(this.s.conv || '')}</textarea>${this.convHtml()}</details>`);
     }
