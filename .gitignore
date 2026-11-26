@@ -103,3 +103,8 @@ apps/week06/src/assets/modules/
 # Week10 prototype: local-only materials and shared importer build output (same as week09)
 /apps/week10/local-only/
 /apps/week10/prototype/importer/
+
+# Week11 prototype: local-only materials (茅、郭、刘原文与页影、4.3 答案、课前运行记录) and shared importer build output
+/apps/week11/local-only/
+/apps/week11/prototype/importer/
+/apps/week11/www/

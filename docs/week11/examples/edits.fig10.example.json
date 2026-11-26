@@ -1,0 +1,81 @@
+{
+ "_note": "候选，未经教师确认（2026-11-25，第一步）。讲义 @fig-revtable 四条（教学构造）。intention_shown 照原表\"意图\"列；intention 为甲三计数所用的最终判断（第 2、3 条理由写\"意思改变\"）。",
+ "edits": [
+  {
+   "edit_id": "1",
+   "para": "3",
+   "before": "茅海建在逐日考订之后接受了这一切分",
+   "after": "茅海建逐日考订后接受了这一切分",
+   "author": null,
+   "date": null,
+   "location": null,
+   "proposer": {
+    "kind": "model",
+    "name": null,
+    "run_id": null
+   },
+   "intention": "fluency",
+   "intention_shown": "fluency",
+   "decision": "accept",
+   "reason": "不改变意思",
+   "in_footnote": false
+  },
+  {
+   "edit_id": "2",
+   "para": "3",
+   "before": "告密的消息\"大大加剧了政变的激烈程度\"",
+   "after": "告密进一步推动了政变",
+   "author": null,
+   "date": null,
+   "location": null,
+   "proposer": {
+    "kind": "model",
+    "name": null,
+    "run_id": null
+   },
+   "intention": "meaning-changed",
+   "intention_shown": "clarity",
+   "decision": "reject",
+   "reason": "意思改变：原话是\"加剧\"，且有\"虽未……但……\"的限定",
+   "in_footnote": false
+  },
+  {
+   "edit_id": "3",
+   "para": "7",
+   "before": "仍有待进一步研究",
+   "after": "本文将对此作出全面回答",
+   "author": null,
+   "date": null,
+   "location": null,
+   "proposer": {
+    "kind": "model",
+    "name": null,
+    "run_id": null
+   },
+   "intention": "meaning-changed",
+   "intention_shown": "style",
+   "decision": "reject",
+   "reason": "意思改变：限定不能删",
+   "in_footnote": false
+  },
+  {
+   "edit_id": "4",
+   "para": "2",
+   "before": "（罗列四家）",
+   "after": "（按与本文问题的关系重排为两句）",
+   "author": null,
+   "date": null,
+   "location": null,
+   "proposer": {
+    "kind": "author",
+    "name": null,
+    "run_id": null
+   },
+   "intention": "meaning-changed",
+   "intention_shown": "meaning-changed",
+   "decision": null,
+   "reason": "据 @fig-reg 第 1 条；属重写，不属润色",
+   "in_footnote": false
+  }
+ ]
+}

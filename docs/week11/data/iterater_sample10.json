@@ -1,0 +1,100 @@
+{
+ "_note": "候选，未经教师确认（2026-11-26）。ITERATER 人工标注句级测试集（wanyu/IteraTeR_human_sent，test.json，HuggingFace，许可 Apache-2.0；教师 2026-11-26 同意访问取数）的十条：五类意图各取两条（改前 60—170 字符、改后不少于 30 字符，取最短的；排除涉及暴力等内容的句子），次序打乱。line 为 test.json 中的行号，doc_id 为 arXiv 编号。",
+ "source": "https://huggingface.co/datasets/wanyu/IteraTeR_human_sent",
+ "file": "test.json",
+ "sha_revision": "e22e0371dac444239b944f9293f5b491d62b73f0",
+ "license": "Apache-2.0",
+ "citation": "Wanyu Du, Vipul Raheja, Dhruv Kumar, Zae Myung Kim, Melissa Lopez, Dongyeop Kang, \"Understanding Iterative Revision from Human-Written Text\", ACL 2022",
+ "items": [
+  {
+   "rev_id": "IT-200",
+   "line": 200,
+   "doc_id": "2103.14972",
+   "revision_depth": 3,
+   "before": "Each comment was annotated by three different annotators, which achieved high inter-annotator agreement.",
+   "after": "Each comment was annotated by three different annotators, and achieved high inter-annotator agreement.",
+   "gold_intention": "coherence"
+  },
+  {
+   "rev_id": "IT-054",
+   "line": 54,
+   "doc_id": "2005.00619",
+   "revision_depth": 2,
+   "before": "Our approach uses a probing model that examines how useful language representations are in discerning between different visual representations.",
+   "after": "Our approach uses a probing model that examines how effective these language representations are in discerning between different visual representations.",
+   "gold_intention": "style"
+  },
+  {
+   "rev_id": "IT-093",
+   "line": 93,
+   "doc_id": "2005.14108",
+   "revision_depth": 1,
+   "before": "This issue has been studied profoundly in  image and audio domain.",
+   "after": "This issue has been studied profoundly in the image and audio domain.",
+   "gold_intention": "fluency"
+  },
+  {
+   "rev_id": "IT-123",
+   "line": 123,
+   "doc_id": "2008.12988",
+   "revision_depth": 3,
+   "before": "We validate  our framework through rigorous proofs of correctness and efficiency .",
+   "after": "We validate our framework through runtime experiments. We find our algorithms are up to 15 and 9 times faster than previous algorithms for computing the Shannon entropy and the gradient of the generalized expectation objective, respectively .",
+   "gold_intention": "meaning-changed"
+  },
+  {
+   "rev_id": "IT-105",
+   "line": 105,
+   "doc_id": "2008.12988",
+   "revision_depth": 2,
+   "before": "We give a general framework for inference in spanning tree models.",
+   "after": "We propose a general framework for inference in spanning tree models.",
+   "gold_intention": "clarity"
+  },
+  {
+   "rev_id": "IT-362",
+   "line": 362,
+   "doc_id": "65581384",
+   "revision_depth": 1,
+   "before": "Jalaluddin, Paderap's first son, cannot replace him because of a physical disability.",
+   "after": "Jalaluddin, Paderap's first son, could not replace him because of a physical disability.",
+   "gold_intention": "fluency"
+  },
+  {
+   "rev_id": "IT-191",
+   "line": 191,
+   "doc_id": "2103.14972",
+   "revision_depth": 2,
+   "before": "The proposed annotation process is also language and domain independent  .",
+   "after": "The proposed annotation process is also language and domain independent , nevertheless, it was currently applied for Brazilian Portuguese .",
+   "gold_intention": "meaning-changed"
+  },
+  {
+   "rev_id": "IT-306",
+   "line": 306,
+   "doc_id": "18842359",
+   "revision_depth": 1,
+   "before": "It is also \"any of the large bodies of water into which the great ocean is divided\".",
+   "after": "Another definition is \"any of the large bodies of water into which the great ocean is divided\".",
+   "gold_intention": "coherence"
+  },
+  {
+   "rev_id": "IT-297",
+   "line": 297,
+   "doc_id": "54370",
+   "revision_depth": 1,
+   "before": "There were few Muslims there with whom they could engage in dialogue, Noack claimed .",
+   "after": "There were few Muslims there with whom they could engage in dialogue, Noack said .",
+   "gold_intention": "style"
+  },
+  {
+   "rev_id": "IT-346",
+   "line": 346,
+   "doc_id": "51355210",
+   "revision_depth": 1,
+   "before": "He is known as one of the winners in Mister Philippines 2011,",
+   "after": "He is known for being one of the winners in Mister Philippines 2011,",
+   "gold_intention": "clarity"
+  }
+ ]
+}

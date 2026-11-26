@@ -1,0 +1,1495 @@
+{
+ "$schema": "http://json-schema.org/draft-07/schema#",
+ "$id": "urn:pku-aihis:week11:w11-structures",
+ "title": "第十一周演示的通用输入（候选，未经教师确认，2026-11-25）",
+ "description": "方案第四节的数据结构。沿用第十周 sourceEntry、conditionCard、runRecord；原刊页码与 PDF 页序分列；Key 不进任何结构。",
+ "$defs": {
+  "noSecrets": {
+   "description": "任何结构都不得含这些键（导入对话框遇到这些列整份拒绝）",
+   "not": {
+    "anyOf": [
+     {
+      "required": [
+       "apiKey"
+      ]
+     },
+     {
+      "required": [
+       "api_key"
+      ]
+     },
+     {
+      "required": [
+       "key"
+      ]
+     },
+     {
+      "required": [
+       "authorization"
+      ]
+     },
+     {
+      "required": [
+       "Authorization"
+      ]
+     }
+    ]
+   }
+  },
+  "proposer": {
+   "description": "提议者：作者本人、模型（附 run_id）、他人（同学、老师、编辑）",
+   "type": "object",
+   "required": [
+    "kind"
+   ],
+   "properties": {
+    "kind": {
+     "enum": [
+      "author",
+      "model",
+      "other"
+     ]
+    },
+    "name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "run_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   }
+  },
+  "sourceEntry": {
+   "description": "史料包条目（沿用第十周 w10-pack/v1）。sendable=false 的条目只能是本机材料包；公开包中 text 必须为空",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "id",
+    "title",
+    "citation",
+    "text_kind",
+    "sendable",
+    "visibility"
+   ],
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "author": {
+     "type": "string"
+    },
+    "citation": {
+     "type": "string"
+    },
+    "page": {
+     "type": "object",
+     "properties": {
+      "system": {
+       "enum": [
+        "原书页",
+        "原刊页",
+        "PDF页序",
+        "扫描图编号",
+        "电子文本段落",
+        "发言番号",
+        "Word页",
+        "无"
+       ]
+      },
+      "value": {
+       "type": "string"
+      }
+     }
+    },
+    "page_marker": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "text 中的页码标记正则，如 〔原刊第(\\d+)页〕"
+    },
+    "text": {
+     "type": "string"
+    },
+    "text_kind": {
+     "enum": [
+      "原文",
+      "录文",
+      "转写",
+      "教学转述",
+      "教学构造",
+      "仅元数据"
+     ]
+    },
+    "sendable": {
+     "type": "boolean"
+    },
+    "sendable_basis": {
+     "type": "string",
+     "description": "教师同意的日期与方式，如\"教师 2026-11-24 同意送模型\""
+    },
+    "visibility": {
+     "enum": [
+      "公开",
+      "本机材料包"
+     ]
+    },
+    "note": {
+     "type": "string"
+    }
+   },
+   "if": {
+    "properties": {
+     "sendable": {
+      "const": false
+     }
+    },
+    "required": [
+     "sendable"
+    ]
+   },
+   "then": {
+    "properties": {
+     "visibility": {
+      "const": "本机材料包"
+     }
+    }
+   }
+  },
+  "sourcePage": {
+   "description": "原文页（原刊页码与 PDF 页序分列，不互相覆盖；offset 为该页在条目全文中的起始下标）",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "source_id",
+    "page",
+    "page_system",
+    "text"
+   ],
+   "properties": {
+    "source_id": {
+     "type": "string"
+    },
+    "page": {
+     "type": "string"
+    },
+    "page_system": {
+     "enum": [
+      "原书页",
+      "原刊页",
+      "PDF页序",
+      "扫描图编号",
+      "电子文本段落",
+      "发言番号",
+      "Word页",
+      "无"
+     ]
+    },
+    "pdf_index": {
+     "type": [
+      "integer",
+      "null"
+     ],
+     "description": "PDF 页序（从 1 起）；与 page 分列"
+    },
+    "text": {
+     "type": "string"
+    },
+    "offset": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    }
+   }
+  },
+  "paragraph": {
+   "description": "段落表一行（D05、D06、D09、D11）。论文段落≠Word 段落：Word 分页断开的续段以 word_paras[] 合并",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "doc_id",
+    "para_id",
+    "text"
+   ],
+   "properties": {
+    "doc_id": {
+     "type": "string"
+    },
+    "para_id": {
+     "type": "string"
+    },
+    "text": {
+     "type": "string"
+    },
+    "word_paras": {
+     "type": "array",
+     "items": {
+      "type": "integer"
+     },
+     "description": "来自 .docx 的 Word 段落序号（从 0 起）"
+    },
+    "page_from": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "page_to": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "page_system": {
+     "enum": [
+      "原书页",
+      "原刊页",
+      "PDF页序",
+      "扫描图编号",
+      "电子文本段落",
+      "发言番号",
+      "Word页",
+      "无"
+     ]
+    },
+    "author_summary": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "model_summary": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "model_run_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "function": {
+     "enum": [
+      "提出问题",
+      "学术史·出发点",
+      "学术史·反证",
+      "学术史·背景",
+      "史料介绍或考订",
+      "推论",
+      "限定",
+      "过渡与小结",
+      "结论",
+      null
+     ]
+    },
+    "function2": {
+     "enum": [
+      "提出问题",
+      "学术史·出发点",
+      "学术史·反证",
+      "学术史·背景",
+      "史料介绍或考订",
+      "推论",
+      "限定",
+      "过渡与小结",
+      "结论",
+      null
+     ],
+     "description": "第二种主要功能（有则提示\"一段多事\"）"
+    },
+    "function_note": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "如\"未完成\"\"反证的回应\""
+    },
+    "answers": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "回答哪个问题"
+    },
+    "responds_to_para": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "回应哪一段的反证"
+    }
+   }
+  },
+  "matrixRow": {
+   "description": "综述矩阵一行（D02—D04）",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "row_id",
+    "scholar"
+   ],
+   "properties": {
+    "row_id": {
+     "type": "string"
+    },
+    "scholar": {
+     "type": "string"
+    },
+    "year": {
+     "type": [
+      "integer",
+      "string",
+      "null"
+     ]
+    },
+    "claim": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "claim_quote": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "page": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "page_system": {
+     "enum": [
+      "原书页",
+      "原刊页",
+      "PDF页序",
+      "扫描图编号",
+      "电子文本段落",
+      "发言番号",
+      "Word页",
+      "无"
+     ]
+    },
+    "source_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "evidence": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "responds_to": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "responds_basis": {
+     "enum": [
+      "原文",
+      "推断",
+      "需回原文",
+      null
+     ]
+    },
+    "responds_page": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "relation_to_my_question": {
+     "enum": [
+      "出发点",
+      "补证",
+      "需要收窄",
+      "反证",
+      "背景",
+      "需要读",
+      "需要处理",
+      null
+     ]
+    },
+    "relation_note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "filled_by": {
+     "enum": [
+      "author",
+      "model",
+      "teaching-construct",
+      null
+     ]
+    }
+   }
+  },
+  "registerRow": {
+   "description": "通用登记行：诊断意见、审读发现、修改、注释核验四种视图共用（D06、D07、D13、D14、D17、D18）",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "reg_id",
+    "kind",
+    "target",
+    "proposer",
+    "content"
+   ],
+   "properties": {
+    "reg_id": {
+     "type": "string"
+    },
+    "kind": {
+     "enum": [
+      "diagnosis",
+      "finding",
+      "edit",
+      "note_check"
+     ]
+    },
+    "target": {
+     "type": "string",
+     "description": "para_id、unit_id、edit_id 或 note_id"
+    },
+    "proposer": {
+     "$ref": "#/$defs/proposer"
+    },
+    "content": {
+     "type": "string"
+    },
+    "decision": {
+     "enum": [
+      "采纳",
+      "修正",
+      "舍弃",
+      "成立",
+      "不成立",
+      "存疑",
+      null
+     ]
+    },
+    "decision_raw": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "原文字（如讲义图 5 的\"部分采纳\"），计数按 decision"
+    },
+    "reason": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "source_needed": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "from_page": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "date": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   }
+  },
+  "reviewUnit": {
+   "description": "审读单元（D07、D09；扩充部分乙一第一步）",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "unit_id",
+    "para_id",
+    "type",
+    "text"
+   ],
+   "properties": {
+    "unit_id": {
+     "type": "string"
+    },
+    "para_id": {
+     "type": "string"
+    },
+    "type": {
+     "enum": [
+      "quote",
+      "source",
+      "claim",
+      "judgment"
+     ]
+    },
+    "text": {
+     "type": "string"
+    },
+    "cited_source": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "locator": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "speaker": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "date": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "in_hand": {
+     "enum": [
+      "是",
+      "否",
+      "部分"
+     ]
+    }
+   }
+  },
+  "implant": {
+   "description": "植入错误（D07—D09）",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "error_id",
+    "category",
+    "before",
+    "after"
+   ],
+   "properties": {
+    "error_id": {
+     "type": "string"
+    },
+    "unit_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "type": {
+     "enum": [
+      "insert",
+      "omit"
+     ]
+    },
+    "category": {
+     "enum": [
+      "归属",
+      "出处",
+      "说满",
+      "遗漏",
+      "引文"
+     ]
+    },
+    "location": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "论文页码与句子"
+    },
+    "before": {
+     "type": "string"
+    },
+    "after": {
+     "type": "string"
+    }
+   }
+  },
+  "finding": {
+   "description": "发现结果（D07、D08）。matched 须经作者裁决才计入召回率",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "run_id",
+    "system",
+    "finding_text"
+   ],
+   "properties": {
+    "run_id": {
+     "type": "string"
+    },
+    "system": {
+     "type": "string"
+    },
+    "finding_text": {
+     "type": "string"
+    },
+    "unit_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "error_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "matched": {
+     "type": [
+      "integer",
+      "null"
+     ],
+     "enum": [
+      0,
+      1,
+      null
+     ]
+    },
+    "adjudication_note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   }
+  },
+  "editRow": {
+   "description": "修改表一行（D10、D13、D14）。intention 为作者最终判断；intention_shown 为表上原标或模型自称（讲义图 10 第 2、3 行即两者不同）",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "edit_id",
+    "before",
+    "after",
+    "proposer"
+   ],
+   "properties": {
+    "edit_id": {
+     "type": "string"
+    },
+    "para": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "before": {
+     "type": "string"
+    },
+    "after": {
+     "type": "string"
+    },
+    "author": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Word 修订者"
+    },
+    "date": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "location": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "段号与前后各二十字"
+    },
+    "proposer": {
+     "$ref": "#/$defs/proposer"
+    },
+    "intention": {
+     "enum": [
+      "fluency",
+      "coherence",
+      "clarity",
+      "style",
+      "meaning-changed",
+      "other",
+      null
+     ]
+    },
+    "intention_shown": {
+     "enum": [
+      "fluency",
+      "coherence",
+      "clarity",
+      "style",
+      "meaning-changed",
+      "other",
+      null
+     ]
+    },
+    "decision": {
+     "enum": [
+      "accept",
+      "reject",
+      "modify",
+      null
+     ]
+    },
+    "reason": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "in_footnote": {
+     "type": "boolean"
+    }
+   }
+  },
+  "styleRule": {
+   "description": "文风规则（D11）",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "rule_id",
+    "name",
+    "pattern"
+   ],
+   "properties": {
+    "rule_id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "pattern": {
+     "type": "string",
+     "description": "正则（JS 语法）或以 | 分隔的词表"
+    },
+    "kind": {
+     "enum": [
+      "regex",
+      "wordlist"
+     ]
+    },
+    "unit": {
+     "enum": [
+      "每百字"
+     ]
+    },
+    "note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   }
+  },
+  "paragraphPair": {
+   "description": "段落对（D11、D12）",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "pair_id",
+    "original",
+    "revised"
+   ],
+   "properties": {
+    "pair_id": {
+     "type": "string"
+    },
+    "original": {
+     "type": "string"
+    },
+    "revised": {
+     "type": "string"
+    },
+    "revised_run_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "source_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   }
+  },
+  "ledgerEntry": {
+   "description": "文风账本条目（D12；七栏四状态）",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "entry_id",
+    "preference",
+    "status"
+   ],
+   "properties": {
+    "entry_id": {
+     "type": "string"
+    },
+    "preference": {
+     "type": "string"
+    },
+    "before": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "after": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "reason": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "source": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "scope": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "status": {
+     "enum": [
+      "归纳认可",
+      "直接要求",
+      "原段认可",
+      "候选"
+     ]
+    }
+   }
+  },
+  "footnote": {
+   "description": "脚注表一行（D15—D17）。number_on_page 为每页重新编号后的号（Word 显示），note_id 为文件中的脚注序号",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "note_id",
+    "text"
+   ],
+   "properties": {
+    "note_id": {
+     "type": "string"
+    },
+    "doc_page": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    },
+    "number_on_page": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    },
+    "text": {
+     "type": "string"
+    },
+    "citation_item": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Zotero 条目编号（若有域代码）"
+    },
+    "locator": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "anchor_para": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   }
+  },
+  "bibEntry": {
+   "description": "参考文献目录一条（D16）",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "ref_id",
+    "text"
+   ],
+   "properties": {
+    "ref_id": {
+     "type": "string"
+    },
+    "text": {
+     "type": "string"
+    },
+    "matched_note_ids": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "changed_fields": {
+     "type": "array",
+     "items": {
+      "enum": [
+       "author",
+       "title",
+       "year",
+       "page",
+       "venue"
+      ]
+     }
+    }
+   }
+  },
+  "declaration": {
+   "description": "使用情况说明（D18）。attachments 默认空，只列学生勾选的部分",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "tool",
+    "attachments"
+   ],
+   "properties": {
+    "tool": {
+     "type": "string"
+    },
+    "developer": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "version": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "mode": {
+     "enum": [
+      "网页",
+      "接口",
+      null
+     ]
+    },
+    "web_search": {
+     "type": [
+      "boolean",
+      "null"
+     ]
+    },
+    "reasoning": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "temperature": {
+     "type": [
+      "number",
+      "string",
+      "null"
+     ]
+    },
+    "dates": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "stage": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "purpose": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "prompts_summary": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "products": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "attachments": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "label"
+      ],
+      "properties": {
+       "label": {
+        "type": "string"
+       },
+       "from": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "checks": {
+     "type": "array",
+     "items": {
+      "enum": [
+       "引文逐字回原页",
+       "转述回原页确认",
+       "参考文献目录两头核对"
+      ]
+     }
+    }
+   }
+  },
+  "conditionCard": {
+   "description": "条件卡（第十一周版）。不存材料正文：{{material:ID}} 发出前由史料包回填，先过 gate（sendable）；sources[] 写提示所据",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "card_id",
+    "title",
+    "lecture_ref",
+    "user_template",
+    "materials",
+    "models",
+    "samples",
+    "sources"
+   ],
+   "properties": {
+    "card_id": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "lecture_ref": {
+     "type": "string"
+    },
+    "page": {
+     "type": "string"
+    },
+    "question": {
+     "type": "string"
+    },
+    "materials": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "entry_id",
+       "sendable"
+      ],
+      "properties": {
+       "entry_id": {
+        "type": "string"
+       },
+       "label": {
+        "type": "string"
+       },
+       "sendable": {
+        "type": "boolean"
+       },
+       "sendable_basis": {
+        "type": "string"
+       },
+       "visibility": {
+        "enum": [
+         "公开",
+         "本机材料包"
+        ]
+       }
+      }
+     }
+    },
+    "user_template": {
+     "type": "string"
+    },
+    "system_prompt": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "models": {
+     "type": "array",
+     "items": {
+      "enum": [
+       "deepseek",
+       "kimi",
+       "web"
+      ]
+     }
+    },
+    "samples": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "optional": {
+     "type": "boolean"
+    },
+    "settings": {
+     "type": "object"
+    },
+    "web_prompt_file": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "sources": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "minItems": 1
+    },
+    "wording_status": {
+     "type": "string",
+     "description": "\"据讲义原文\"或\"本线程据讲义整理，待教师确认\""
+    },
+    "source": {
+     "type": "string"
+    }
+   }
+  },
+  "runRecord": {
+   "description": "运行记录（同第十周）；mode=pending 时页面显示\"待课前运行\"，reply 必须为空",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "run_id",
+    "card_id",
+    "mode",
+    "date"
+   ],
+   "properties": {
+    "run_id": {
+     "type": "string"
+    },
+    "card_id": {
+     "type": "string"
+    },
+    "sample_index": {
+     "type": "integer"
+    },
+    "mode": {
+     "enum": [
+      "live",
+      "replay",
+      "web-paste",
+      "teaching-construct",
+      "pending"
+     ]
+    },
+    "origin_mode": {
+     "enum": [
+      "live",
+      "web-paste",
+      null
+     ]
+    },
+    "preset": {
+     "enum": [
+      "deepseek",
+      "kimi",
+      "web",
+      "local"
+     ]
+    },
+    "model": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "temperature": {
+     "type": [
+      "number",
+      "string",
+      "null"
+     ]
+    },
+    "reasoning_effort": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "prompt": {
+     "type": "object"
+    },
+    "reply": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "reasoning": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "ms": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    },
+    "date": {
+     "type": "string"
+    },
+    "error": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "web": {
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "transcription": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "if": {
+    "properties": {
+     "mode": {
+      "const": "pending"
+     }
+    },
+    "required": [
+     "mode"
+    ]
+   },
+   "then": {
+    "properties": {
+     "reply": {
+      "type": "null"
+     }
+    }
+   }
+  },
+  "throughRecord": {
+   "description": "全讲贯穿记录（D18 导出）。写作时自用、被问到时出示的记录，不是作业",
+   "type": "object",
+   "allOf": [
+    {
+     "$ref": "#/$defs/noSecrets"
+    }
+   ],
+   "required": [
+    "format",
+    "exported_at"
+   ],
+   "properties": {
+    "format": {
+     "const": "w11-through/v1"
+    },
+    "exported_at": {
+     "type": "string"
+    },
+    "contains_restricted_text": {
+     "type": "boolean"
+    },
+    "matrix": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/matrixRow"
+     }
+    },
+    "paragraphs": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/paragraph"
+     }
+    },
+    "register": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/registerRow"
+     }
+    },
+    "edits": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/editRow"
+     }
+    },
+    "findings": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/finding"
+     }
+    },
+    "implants": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/implant"
+     }
+    },
+    "ledger": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/ledgerEntry"
+     }
+    },
+    "footnotes": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/footnote"
+     }
+    },
+    "bib": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/bibEntry"
+     }
+    },
+    "declaration": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/declaration"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "runs": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/runRecord"
+     }
+    },
+    "page_state": {
+     "type": "object"
+    }
+   }
+  }
+ }
+}

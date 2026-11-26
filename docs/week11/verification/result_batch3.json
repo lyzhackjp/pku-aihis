@@ -1,0 +1,150 @@
+{
+ "results": [
+  {
+   "check": "[local] D08 小例：单次 1/3—2/3，合并 2/3，提示相同集合不增益",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D08 A-3 改为查出 E3：合并跳到 3/3",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D08 取消 B-1 的 E2：B-1 单次 0/3，合并仍 3/3",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D08 贪心曲线 SVG",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D08 实际记录：待课前运行",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D08 植入／真实切换",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D19 点格子展开要点与小节",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D19 原文不在手、脚注 45：推荐注释核验 → 逆向大纲，排除深度审读",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D22 23 张卡",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D22 筛\"深度审读\"",
+   "pass": true,
+   "note": "5"
+  },
+  {
+   "check": "[local] D22 展开十栏",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D22 \"学生可做\"跳到页面",
+   "pass": true,
+   "note": "#D07"
+  },
+  {
+   "check": "[local] D20 ITERATER 十条载入，附 test.json 行号",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[local] D20 标十条，七条与原标注同：7/10",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D08 小例：单次 1/3—2/3，合并 2/3，提示相同集合不增益",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D08 A-3 改为查出 E3：合并跳到 3/3",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D08 取消 B-1 的 E2：B-1 单次 0/3，合并仍 3/3",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D08 贪心曲线 SVG",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D08 实际记录：待课前运行",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D08 植入／真实切换",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D19 点格子展开要点与小节",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D19 原文不在手、脚注 45：推荐注释核验 → 逆向大纲，排除深度审读",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D22 23 张卡",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D22 筛\"深度审读\"",
+   "pass": true,
+   "note": "5"
+  },
+  {
+   "check": "[public] D22 展开十栏",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D22 \"学生可做\"跳到页面",
+   "pass": true,
+   "note": "#D07"
+  },
+  {
+   "check": "[public] D20 ITERATER 十条载入，附 test.json 行号",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "[public] D20 标十条，七条与原标注同：7/10",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "全程无页面错误",
+   "pass": true,
+   "note": ""
+  }
+ ],
+ "errors": []
+}

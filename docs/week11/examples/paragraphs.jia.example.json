@@ -1,0 +1,146 @@
+{
+ "_note": "候选，未经教师确认（2026-11-25，第一步）。练习材料甲七段（教学构造）。功能与\"回答哪个问题\"据讲义 @fig-diag；reader_summary_construct 为讲义 @fig-outline 右列（备课者逐段概括，教学构造）。Word 第 4、5 段（分页断开）合为论文第 4 段。",
+ "paragraphs": [
+  {
+   "doc_id": "jia",
+   "para_id": "P1",
+   "text": "戊戌政变的起因，长期与袁世凯的告密联系在一起。康有为、梁启超事后认定，政变是因为袁世凯告密而起，这一说法流传甚广。丁文江、赵丰田在《梁启超年谱长编》中则提出，政变“是不是因为袁项城泄露了密谋才爆发的，还待考证”。",
+   "word_paras": [
+    1
+   ],
+   "page_from": "1",
+   "page_to": "1",
+   "page_system": "Word页",
+   "author_summary": null,
+   "model_summary": null,
+   "model_run_id": null,
+   "function": "提出问题",
+   "function2": null,
+   "function_note": "未完成：只提出了前人的问题",
+   "answers": "告密是否引发政变",
+   "responds_to_para": null,
+   "reader_summary_construct": "康、梁的告密致变说；丁文江、赵丰田说\"还待考证\""
+  },
+  {
+   "doc_id": "jia",
+   "para_id": "P2",
+   "text": "此后学者各有论说。吴相湘1957年认为，政变的起因不在告密，而在御史杨崇伊致慈禧太后的密折，伊藤博文访华是最要之因素。刘凤翰1959年考订梁启超《戊戌政变记》的各个版本，认为梁氏修改的用意在于删改袁世凯告密的史实；1963年他又指出，袁世凯的自述对初四日凌晨至初五日清晨约三十个小时“只字未提，实在令人怀疑”。萧一山1963年认为，“政变虽非纯由袁之告密，然而袁之告密则是政变的导火线”。房德邻1983年以档案考定政变发生于初六日，主因是杨崇伊的密折。以后的研究大体是围绕着此一假设打圈子，走不出太远。",
+   "word_paras": [
+    2
+   ],
+   "page_from": "1",
+   "page_to": "1",
+   "page_system": "Word页",
+   "author_summary": null,
+   "model_summary": null,
+   "model_run_id": null,
+   "function": "学术史·背景",
+   "function2": null,
+   "function_note": null,
+   "answers": "告密是否引发政变",
+   "responds_to_para": null,
+   "reader_summary_construct": "吴相湘、刘凤翰、萧一山、房德邻各说一句；末句是茅海建对丁、赵的评语"
+  },
+  {
+   "doc_id": "jia",
+   "para_id": "P3",
+   "text": "黄彰健将“政变爆发”与“捕拿新党”分为两事，认为政变“於初六日爆發，根本是太后預定的行動，與袁世凱初五日的告密無關”，告密的消息由杨崇伊带到北京之后，才有捕人之举。茅海建在逐日考订之后接受了这一切分，认为“戊戌政变虽未因袁世凯告密而发生，但袁世凯告密的消息传到北京，大大加剧了政变的激烈程度”。",
+   "word_paras": [
+    3
+   ],
+   "page_from": "1",
+   "page_to": "1",
+   "page_system": "Word页",
+   "author_summary": null,
+   "model_summary": null,
+   "model_run_id": null,
+   "function": "学术史·出发点",
+   "function2": null,
+   "function_note": null,
+   "answers": "告密在哪个环节起作用",
+   "responds_to_para": null,
+   "reader_summary_construct": "黄彰健分开\"爆发\"与\"捕人\"；茅海建接受这一切分"
+  },
+  {
+   "doc_id": "jia",
+   "para_id": "P4",
+   "text": "郭卫东则重申告密为政变的起因，主张袁世凯初四日见过谭嗣同之后已在北京告密，对象很可能是庆亲王奕劻。郭文的一个重要依据，是袁世凯自述对初四日的空白。这份自述通称《戊戌日记》，文末自署“时在八月十四日记于天津督署”；宣统元年有南通翰墨林的单行本，民国十五年又在《申报》连载，刘凤翰推测它可能是光绪三十年以后补作的。郭卫东本人也承认，初四日告密之说只是“一种供大家考问的见解”。",
+   "word_paras": [
+    4,
+    5
+   ],
+   "page_from": "1",
+   "page_to": "2",
+   "page_system": "Word页",
+   "author_summary": null,
+   "model_summary": null,
+   "model_run_id": null,
+   "function": "学术史·反证",
+   "function2": "史料介绍或考订",
+   "function_note": null,
+   "answers": "告密时间",
+   "responds_to_para": null,
+   "reader_summary_construct": "郭卫东主张初四日北京告密；袁世凯自述的署时、版本与补作之说；郭的自我限定"
+  },
+  {
+   "doc_id": "jia",
+   "para_id": "P5",
+   "text": "刘路生2005年与郭文商榷，认为袁世凯八月初二至初四日住在城内法华寺，张一麐所记“寓海淀旅店”是误记，进而否认袁世凯曾经告密。",
+   "word_paras": [
+    6
+   ],
+   "page_from": "2",
+   "page_to": "2",
+   "page_system": "Word页",
+   "author_summary": null,
+   "model_summary": null,
+   "model_run_id": null,
+   "function": "学术史·反证",
+   "function2": null,
+   "function_note": "反证的回应",
+   "answers": "告密时间",
+   "responds_to_para": "P4",
+   "reader_summary_construct": "刘路生认为袁初二至初四日住城内，并否认袁世凯告密"
+  },
+  {
+   "doc_id": "jia",
+   "para_id": "P6",
+   "text": "总之，黄彰健、茅海建的研究表明，政变的爆发与告密无关，告密只是加剧了政变。这一判断已为学界普遍接受。",
+   "word_paras": [
+    7
+   ],
+   "page_from": "2",
+   "page_to": "2",
+   "page_system": "Word页",
+   "author_summary": null,
+   "model_summary": null,
+   "model_run_id": null,
+   "function": "过渡与小结",
+   "function2": null,
+   "function_note": null,
+   "answers": null,
+   "responds_to_para": null,
+   "reader_summary_construct": "黄、茅之说表明政变与告密无关，\"已为学界普遍接受\""
+  },
+  {
+   "doc_id": "jia",
+   "para_id": "P7",
+   "text": "综上所述，学界关于告密与政变关系的讨论已基本形成共识，但告密的消息究竟在哪一天、经由何人传到北京，仍有待进一步研究。本文拟以此为中心展开考察。",
+   "word_paras": [
+    8
+   ],
+   "page_from": "2",
+   "page_to": "2",
+   "page_system": "Word页",
+   "author_summary": null,
+   "model_summary": null,
+   "model_run_id": null,
+   "function": "结论",
+   "function2": "提出问题",
+   "function_note": "本文问题",
+   "answers": "告密消息的日期与途径",
+   "responds_to_para": null,
+   "reader_summary_construct": "学界\"已基本形成共识\"；告密消息的日期与途径\"有待进一步研究\"；本文将考察"
+  }
+ ]
+}

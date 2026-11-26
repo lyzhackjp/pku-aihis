@@ -1,0 +1,123 @@
+{
+ "_note": "候选，未经教师确认（2026-11-25，第一步）。扩充部分甲二小例（教学构造的假设数字，演示②′运行后替换，E-01）。植入位置据讲义 2.3 演示②′。",
+ "implants": [
+  {
+   "error_id": "E1",
+   "unit_id": null,
+   "type": "insert",
+   "category": "归属",
+   "location": "第 156 页",
+   "before": "鸠山一郎",
+   "after": "芦田均"
+  },
+  {
+   "error_id": "E2",
+   "unit_id": null,
+   "type": "insert",
+   "category": "出处",
+   "location": "第 157 页",
+   "before": "贵族院议员二荒芳德",
+   "after": "众议院议员二荒芳德"
+  },
+  {
+   "error_id": "E3",
+   "unit_id": null,
+   "type": "omit",
+   "category": "说满",
+   "location": "第 159 页",
+   "before": "少数议员注意到",
+   "after": "议员们普遍注意到"
+  }
+ ],
+ "findings": [
+  {
+   "run_id": "A-1",
+   "system": "A",
+   "finding_text": "（教学构造：假设查出）",
+   "unit_id": null,
+   "error_id": "E1",
+   "matched": 1,
+   "adjudication_note": "教学构造"
+  },
+  {
+   "run_id": "A-1",
+   "system": "A",
+   "finding_text": "（教学构造：假设查出）",
+   "unit_id": null,
+   "error_id": "E2",
+   "matched": 1,
+   "adjudication_note": "教学构造"
+  },
+  {
+   "run_id": "A-2",
+   "system": "A",
+   "finding_text": "（教学构造：假设查出）",
+   "unit_id": null,
+   "error_id": "E1",
+   "matched": 1,
+   "adjudication_note": "教学构造"
+  },
+  {
+   "run_id": "A-3",
+   "system": "A",
+   "finding_text": "（教学构造：假设查出）",
+   "unit_id": null,
+   "error_id": "E1",
+   "matched": 1,
+   "adjudication_note": "教学构造"
+  },
+  {
+   "run_id": "A-3",
+   "system": "A",
+   "finding_text": "（教学构造：假设查出）",
+   "unit_id": null,
+   "error_id": "E2",
+   "matched": 1,
+   "adjudication_note": "教学构造"
+  },
+  {
+   "run_id": "B-1",
+   "system": "B",
+   "finding_text": "（教学构造：假设查出）",
+   "unit_id": null,
+   "error_id": "E2",
+   "matched": 1,
+   "adjudication_note": "教学构造"
+  },
+  {
+   "run_id": "B-2",
+   "system": "B",
+   "finding_text": "（教学构造：假设查出）",
+   "unit_id": null,
+   "error_id": "E1",
+   "matched": 1,
+   "adjudication_note": "教学构造"
+  },
+  {
+   "run_id": "B-3",
+   "system": "B",
+   "finding_text": "（教学构造：假设查出）",
+   "unit_id": null,
+   "error_id": "E1",
+   "matched": 1,
+   "adjudication_note": "教学构造"
+  },
+  {
+   "run_id": "B-3",
+   "system": "B",
+   "finding_text": "（教学构造：假设查出）",
+   "unit_id": null,
+   "error_id": "E2",
+   "matched": 1,
+   "adjudication_note": "教学构造"
+  }
+ ],
+ "runs": [
+  "A-1",
+  "A-2",
+  "A-3",
+  "B-1",
+  "B-2",
+  "B-3"
+ ]
+}

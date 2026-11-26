@@ -1,0 +1,69 @@
+{
+ "_note": "候选，未经教师确认（2026-11-25，第一步）。讲义 @fig-reg 四条（\"模型意见\"一列为教学构造的预期典型意见，课前记录后替换）。第 4 条原表\"部分采纳\"不在三值之内，按\"修正\"计，原文字存 decision_raw。",
+ "rows": [
+  {
+   "reg_id": "diag-1",
+   "kind": "diagnosis",
+   "target": "P2",
+   "proposer": {
+    "kind": "model",
+    "name": "预期典型意见（教学构造）",
+    "run_id": null
+   },
+   "content": "第 2 段罗列各家，建议按时间顺序加过渡句使之连贯",
+   "decision": "修正",
+   "decision_raw": null,
+   "reason": "问题不在缺过渡，而在以作者为纲；改为按与本文问题的关系重排，过渡句不加",
+   "source_needed": null,
+   "from_page": "D06"
+  },
+  {
+   "reg_id": "diag-2",
+   "kind": "diagnosis",
+   "target": "P4",
+   "proposer": {
+    "kind": "model",
+    "name": "预期典型意见（教学构造）",
+    "run_id": null
+   },
+   "content": "第 4 段关于袁世凯自述版本的内容偏离主题，建议删除",
+   "decision": "修正",
+   "decision_raw": null,
+   "reason": "不删，移到讨论史料的一节；版本问题决定郭说的依据能否成立，学术史里只留一句",
+   "source_needed": null,
+   "from_page": "D06"
+  },
+  {
+   "reg_id": "diag-3",
+   "kind": "diagnosis",
+   "target": "P5",
+   "proposer": {
+    "kind": "model",
+    "name": "预期典型意见（教学构造）",
+    "run_id": null
+   },
+   "content": "第 5 段刘路生的商榷与本文关系不大，建议删去以使论证更集中",
+   "decision": "舍弃",
+   "decision_raw": null,
+   "reason": "反证是否已被回应，本身就是本文问题的一部分；删去会让读者以为郭说无人驳过",
+   "source_needed": null,
+   "from_page": "D06"
+  },
+  {
+   "reg_id": "diag-4",
+   "kind": "diagnosis",
+   "target": "P6—P7",
+   "proposer": {
+    "kind": "model",
+    "name": "预期典型意见（教学构造）",
+    "run_id": null
+   },
+   "content": "第 6、7 段可合并，并把\"有待进一步研究\"改为更有力的表述",
+   "decision": "修正",
+   "decision_raw": "部分采纳",
+   "reason": "合并采纳；\"更有力\"不采纳，限定照留，\"共识\"一语删去",
+   "source_needed": null,
+   "from_page": "D06"
+  }
+ ]
+}

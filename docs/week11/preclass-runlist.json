@@ -1,0 +1,46 @@
+{
+ "_note": "候选，未经教师确认（2026-11-25，第一步）。只列不跑：本线程不运行课前记录、不读 keys.env、不发出任何真实请求。运行办法待教师定（待决 1、2）；建议同第十周：初版完成后教师在页面填 Key，Claude 经 Chrome 插件在\"课前运行\"面板运行并导出；网页版由 Claude 指引教师运行、截图，Claude 录入并标\"录入待核\"。",
+ "api": {
+  "models": {"deepseek": {"model": "deepseek-flash", "reasoning_effort": "low", "temperature": "0.7（第十周课件写法；思考模式下温度是否生效以接口返回为准）"}, "kimi": {"model": "kimi-k3", "reasoning_effort": "low", "temperature": "固定（接口不接受自定）"}},
+  "model_check": "型号在课前按账号实际可用者核对；与第十周不同时，在运行记录写实际值",
+  "cards": [
+   {"card_id": "D1A", "page": "D04", "materials": ["matrix-fig1-4col"], "needs_local_pack": false, "samples": 3, "calls": 6, "fills": "C-01"},
+   {"card_id": "D1B", "page": "D04", "materials": ["matrix-fig1-4col", "mao-history"], "needs_local_pack": true, "samples": 3, "calls": 6, "fills": "C-01"},
+   {"card_id": "D2A", "page": "D05、D06", "materials": ["jia-body"], "needs_local_pack": false, "samples": 2, "calls": 4, "fills": "C-05；讲义图 5 模型意见一列"},
+   {"card_id": "D2B", "page": "D05", "materials": ["jia-body"], "needs_local_pack": false, "samples": 1, "calls": 2, "fills": "C-05（若无写无）"},
+   {"card_id": "D2P", "page": "D07、D08、D09", "materials": ["li2023-p156-159-implanted", "d15-A", "d15-B", "d15-C"], "needs_local_pack": true, "samples": 3, "calls": 6, "fills": "C-06、E-01", "precondition": "先确认三处植入都落在史料包覆盖的发言内（C-06）"},
+   {"card_id": "S1", "page": "D11", "materials": ["li2023-p152-153"], "needs_local_pack": true, "samples": 2, "calls": 4, "fills": "C-07"},
+   {"card_id": "S2", "page": "D11", "materials": ["li2023-p152-153"], "needs_local_pack": true, "samples": 1, "calls": 2, "fills": "C-07"}
+  ],
+  "required_calls": 30,
+  "optional": [
+   {"card_id": "S1J", "page": "D11", "calls": 2, "why": "扩充部分甲四列为对照材料（练习材料甲第 3 段的润色稿）；方案未列", "decide": "待决 4"},
+   {"card_id": "S3", "page": "D12", "calls": 2, "why": "账本检验（E-02）；须先有教师确认的 LEDGER 学生样板", "decide": "待决 4、5"},
+   {"card_id": "R1", "page": "D03", "calls": 4, "why": "重现性练习（C-02 卡）；改用茅文结论节（已获准送模型）", "decide": "待决 4"}
+  ],
+  "total_calls": "30（必跑）＋0—8（可选）",
+  "record_fields": ["run_id", "card_id", "sample_index", "preset", "model", "model_returned", "temperature", "reasoning_effort", "prompt.messages", "prompt.source_ids", "prompt.gate", "prompt.template_hash", "reply", "reasoning（Kimi 思考，另存，课上不显示）", "finish_reason", "usage", "ms", "attempts", "date", "error", "environment"],
+  "export": "课前运行面板导出 w11-runs/v1（不含 Key）；存课程文件夹 第十一周/demo/运行记录/<日期>/，只在本机，不入仓库"
+ },
+ "web": {
+  "platforms": ["Gemini", "ChatGPT"],
+  "pick": "课前确认当天可用的一家（讲义 3.4）",
+  "runs": [
+   {"card_id": "W3a", "page": "D13、D14", "material": "练习材料甲第 2、4、6 段", "samples": 1, "then": "教师在 Word 修订模式下把建议手工落入 练习材料/教学构造草稿.docx 的副本，修订者为本人，存为 第十一周/demo/修订稿/演示3a_网页版建议手工落入.docx"}
+  ],
+  "record_fields": ["platform", "model_shown", "entry_type（新对话／临时对话）", "memory（开／关）", "search（开／关）", "date", "screenshot", "reply（录入待核）"]
+ },
+ "reviser": {
+  "card_id": "W3b",
+  "what": "演示③(b)：word-paper-tracked-reviser（教师本机 Codex 中的 skill）对同一份 Word 稿直接生成修订稿",
+  "runner": "待决 2：教师在本机 Codex 运行后放入 第十一周/demo/修订稿/，或授权本线程在本机调用",
+  "input": "练习材料/教学构造草稿.docx 的副本（脚注为纯文字）；若要检验域代码，另需教师用 Zotero 重插引文的版本（C-08）",
+  "checks": ["修订者名", "修订粒度（逐词／逐句／整段）", "脚注编号与每页重新编号是否保留", "Zotero 域代码是否保留（只在重插版本上能验）", "计划外无改动"],
+  "output": "第十一周/demo/修订稿/演示3b_reviser写入.docx；运行日志另存"
+ },
+ "screenshots": {
+  "what": "丙一 Word 操作截图（C-09、E-04）与跨页\"同上\"复现（C-04）",
+  "runner": "教师本机（Word＋Zotero）；Claude 可在教师同意后用电脑操作指引",
+  "output": "第十一周/demo/截图/（step_id, os, version, image）"
+ }
+}

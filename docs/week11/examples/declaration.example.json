@@ -1,0 +1,49 @@
+{
+ "_note": "候选，未经教师确认（2026-11-25，第一步）。第一份是生成器的默认状态（附件空）；第二份据讲义结语示例（教学构造，工具、型号、日期均为假设）。",
+ "declarations": [
+  {
+   "tool": "",
+   "developer": null,
+   "version": null,
+   "mode": null,
+   "web_search": null,
+   "reasoning": null,
+   "temperature": null,
+   "dates": null,
+   "stage": null,
+   "purpose": null,
+   "prompts_summary": null,
+   "products": null,
+   "attachments": [],
+   "checks": []
+  },
+  {
+   "tool": "Kimi",
+   "developer": "月之暗面",
+   "version": "kimi-k3",
+   "mode": "接口",
+   "web_search": false,
+   "reasoning": "low",
+   "temperature": null,
+   "dates": "2026-11-25 至 2026-12-02",
+   "stage": "第一节\"学术史回顾\"",
+   "purpose": "文献要点整理与结构诊断",
+   "prompts_summary": "\"据所附原文填写矩阵前三列，每格附原文短引与页码\"；\"为每段写一句主旨并指出三处结构问题\"",
+   "products": "矩阵候选与诊断意见各一份",
+   "attachments": [
+    {
+     "label": "附件一：综述矩阵",
+     "from": "D02"
+    },
+    {
+     "label": "附件二：诊断意见登记表",
+     "from": "D06"
+    }
+   ],
+   "checks": [
+    "引文逐字回原页",
+    "转述回原页确认"
+   ]
+  }
+ ]
+}

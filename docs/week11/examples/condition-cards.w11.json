@@ -1,0 +1,418 @@
+{
+ "_note": "候选，未经教师确认。由 prompts_to_cards.py 从课程文件夹 第十一周/demo/prompts.json 生成；不含材料正文与本机路径。",
+ "cards": [
+  {
+   "card_id": "D1A",
+   "title": "演示① 只给矩阵",
+   "lecture_ref": "1.3·演示①",
+   "page": "D04",
+   "question": "请据此写一段三四百字的学术史综述。",
+   "materials": [
+    {
+     "entry_id": "matrix-fig1-4col",
+     "label": "综述矩阵（讲义 @fig-matrix 前四列：学者、年份、主张、回应对象）",
+     "sendable": true,
+     "sendable_basis": "本课摘编（讲义图 1），公开",
+     "visibility": "公开"
+    }
+   ],
+   "user_template": "下面是一张关于袁世凯告密与戊戌政变的综述矩阵，每行一位学者，四列依次为学者、年份、主张（摘）、回应对象。\n\n{{material:matrix-fig1-4col}}\n\n请据此写一段三四百字的学术史综述。",
+   "system_prompt": null,
+   "models": [
+    "deepseek",
+    "kimi"
+   ],
+   "samples": 3,
+   "optional": false,
+   "settings": {
+    "_note": "待教师定（待决 1）：沿用第十周的实际传参（DeepSeek deepseek-flash、reasoning_effort low；Kimi kimi-k3、reasoning_effort low），温度以运行记录所传为准"
+   },
+   "web_prompt_file": null,
+   "sources": [
+    "讲义 1.3 演示①：\"据此写一段三四百字的学术史综述\"",
+    "讲义 @fig-matrix 前四列"
+   ],
+   "wording_status": "最后一句据讲义原文；前言为本线程整理，待教师确认",
+   "source": "w11-demo/v1（2026-11-25）；模板 sha256 1bfbab702fe17a44",
+   "blocked_until": null
+  },
+  {
+   "card_id": "D1B",
+   "title": "演示① 矩阵加茅文学术史节录",
+   "lecture_ref": "1.3·演示①",
+   "page": "D04",
+   "question": "请据此写一段三四百字的学术史综述。",
+   "materials": [
+    {
+     "entry_id": "matrix-fig1-4col",
+     "label": "综述矩阵（讲义 @fig-matrix 前四列：学者、年份、主张、回应对象）",
+     "sendable": true,
+     "sendable_basis": "本课摘编（讲义图 1），公开",
+     "visibility": "公开"
+    },
+    {
+     "entry_id": "mao-history",
+     "label": "茅海建 2002 学术史一节（第 4 期第 198—208 页）",
+     "sendable": true,
+     "sendable_basis": "教师 2026-11-14 同意送模型",
+     "visibility": "本机材料包"
+    }
+   ],
+   "user_template": "下面是一张关于袁世凯告密与戊戌政变的综述矩阵，每行一位学者，四列依次为学者、年份、主张（摘）、回应对象。\n\n{{material:matrix-fig1-4col}}\n\n另附茅海建《戊戌政变的时间、过程与原委——先前研究各说的认知、补证、修正（一）》（《近代史研究》2002年第4期）学术史一节的节录，〔原刊第×页〕标出原刊页码。\n\n{{material:mao-history}}\n\n请据此写一段三四百字的学术史综述。",
+   "system_prompt": null,
+   "models": [
+    "deepseek",
+    "kimi"
+   ],
+   "samples": 3,
+   "optional": false,
+   "settings": {
+    "_note": "待教师定（待决 1）：沿用第十周的实际传参（DeepSeek deepseek-flash、reasoning_effort low；Kimi kimi-k3、reasoning_effort low），温度以运行记录所传为准"
+   },
+   "web_prompt_file": null,
+   "sources": [
+    "讲义 1.3 演示①：\"第二次另附茅海建文学术史一节的节录，再写一次\"",
+    "方案第五节第 6 条 D1B"
+   ],
+   "wording_status": "最后一句与 D1A 相同，便于对照；前言为本线程整理，待教师确认",
+   "source": "w11-demo/v1（2026-11-25）；模板 sha256 3a84aab5f7dc6972",
+   "blocked_until": null
+  },
+  {
+   "card_id": "D2A",
+   "title": "演示② 逆向大纲＋三处结构问题",
+   "lecture_ref": "2.1—2.2·演示②",
+   "page": "D05、D06",
+   "question": "请按段编号，为每段写一句主旨（只依据这段文字，不补充背景知识，不超过二十字）；再从以下功能中为每段选一项主要功能：提出问题、学术史·出发点、学术史·反证、学术史·背景、史料介绍或考订、推论、限定、过渡与小结、结论。最后列出你认为的三处结构问题，每处注明段号。",
+   "materials": [
+    {
+     "entry_id": "jia-body",
+     "label": "练习材料甲正文七段（段首〔1〕—〔7〕，不含脚注）",
+     "sendable": true,
+     "sendable_basis": "教学构造，可公开",
+     "visibility": "公开"
+    }
+   ],
+   "user_template": "下面是一节论文草稿，段首〔n〕为段号。\n\n{{material:jia-body}}\n\n请按段编号，为每段写一句主旨（只依据这段文字，不补充背景知识，不超过二十字）；再从以下功能中为每段选一项主要功能：提出问题、学术史·出发点、学术史·反证、学术史·背景、史料介绍或考订、推论、限定、过渡与小结、结论。最后列出你认为的三处结构问题，每处注明段号。",
+   "system_prompt": null,
+   "models": [
+    "deepseek",
+    "kimi"
+   ],
+   "samples": 2,
+   "optional": false,
+   "settings": {
+    "_note": "待教师定（待决 1）：沿用第十周的实际传参（DeepSeek deepseek-flash、reasoning_effort low；Kimi kimi-k3、reasoning_effort low），温度以运行记录所传为准"
+   },
+   "web_prompt_file": null,
+   "sources": [
+    "扩充部分甲一第三部分（提示全文）",
+    "讲义 2.1 演示②（简写版，以扩充部分为准）"
+   ],
+   "wording_status": "提示主体照扩充部分甲一原文；材料前言为本线程整理",
+   "source": "w11-demo/v1（2026-11-25）；模板 sha256 a74c72520411a452",
+   "blocked_until": null
+  },
+  {
+   "card_id": "D2B",
+   "title": "演示② 逆向大纲（若无写无）",
+   "lecture_ref": "2.1·演示②",
+   "page": "D05",
+   "question": "请按段编号，为每段写一句主旨（只依据这段文字，不补充背景知识，不超过二十字）；再从以下功能中为每段选一项主要功能：提出问题、学术史·出发点、学术史·反证、学术史·背景、史料介绍或考订、推论、限定、过渡与小结、结论。最后列出你认为的结构问题，每处注明段号；若没有结构问题，写\"无\"。",
+   "materials": [
+    {
+     "entry_id": "jia-body",
+     "label": "练习材料甲正文七段（段首〔1〕—〔7〕，不含脚注）",
+     "sendable": true,
+     "sendable_basis": "教学构造，可公开",
+     "visibility": "公开"
+    }
+   ],
+   "user_template": "下面是一节论文草稿，段首〔n〕为段号。\n\n{{material:jia-body}}\n\n请按段编号，为每段写一句主旨（只依据这段文字，不补充背景知识，不超过二十字）；再从以下功能中为每段选一项主要功能：提出问题、学术史·出发点、学术史·反证、学术史·背景、史料介绍或考订、推论、限定、过渡与小结、结论。最后列出你认为的结构问题，每处注明段号；若没有结构问题，写\"无\"。",
+   "system_prompt": null,
+   "models": [
+    "deepseek",
+    "kimi"
+   ],
+   "samples": 1,
+   "optional": false,
+   "settings": {
+    "_note": "待教师定（待决 1）：沿用第十周的实际传参（DeepSeek deepseek-flash、reasoning_effort low；Kimi kimi-k3、reasoning_effort low），温度以运行记录所传为准"
+   },
+   "web_prompt_file": null,
+   "sources": [
+    "扩充部分甲一：\"把最后一句改为'若没有结构问题，写\"无\"'\""
+   ],
+   "wording_status": "最后一句据扩充部分甲一改写，待教师确认",
+   "source": "w11-demo/v1（2026-11-25）；模板 sha256 4187bafc219b89ec",
+   "blocked_until": null
+  },
+  {
+   "card_id": "D2P",
+   "title": "演示②′ 深度审读（植入副本＋会议录 3 则）",
+   "lecture_ref": "2.3·演示②′",
+   "page": "D07、D08、D09",
+   "question": "\n逐句核对论文中的发言人、院别、引文与概括是否被所附原文支持；每条发现注明论文页码、原文发言番号，并说明理由；原文中没有的内容标\"无法核\"。",
+   "materials": [
+    {
+     "entry_id": "li2023-p156-159-implanted",
+     "label": "教师 2023 年论文第 156—159 页（第一节后半）植入三处错误的副本",
+     "sendable": true,
+     "sendable_basis": "教师 2026-11-24 同意送模型（已刊论文）",
+     "visibility": "本机材料包"
+    },
+    {
+     "entry_id": "d15-A",
+     "label": "第 89 回帝国议会 众议院本会议第 3 号（鸠山质询、币原答辩；发言 003—004）",
+     "sendable": true,
+     "sendable_basis": "NDL 公开",
+     "visibility": "本机材料包"
+    },
+    {
+     "entry_id": "d15-B",
+     "label": "第 89 回帝国议会 贵族院本会议（二荒质询；发言 009—011）",
+     "sendable": true,
+     "sendable_basis": "NDL 公开",
+     "visibility": "本机材料包"
+    },
+    {
+     "entry_id": "d15-C",
+     "label": "第 89 回帝国议会（水谷质询等；发言 013—047）",
+     "sendable": true,
+     "sendable_basis": "NDL 公开",
+     "visibility": "本机材料包"
+    }
+   ],
+   "user_template": "下面是一篇论文第一节后半（第156—159页）与它所引的三则帝国议会会议录原文。\n\n【论文】\n{{material:li2023-p156-159-implanted}}\n\n【原文甲】\n{{material:d15-A}}\n\n【原文乙】\n{{material:d15-B}}\n\n【原文丙】\n{{material:d15-C}}\n\n逐句核对论文中的发言人、院别、引文与概括是否被所附原文支持；每条发现注明论文页码、原文发言番号，并说明理由；原文中没有的内容标\"无法核\"。",
+   "system_prompt": null,
+   "models": [
+    "deepseek",
+    "kimi"
+   ],
+   "samples": 3,
+   "optional": false,
+   "settings": {
+    "_note": "待教师定（待决 1）：沿用第十周的实际传参（DeepSeek deepseek-flash、reasoning_effort low；Kimi kimi-k3、reasoning_effort low），温度以运行记录所传为准"
+   },
+   "web_prompt_file": null,
+   "sources": [
+    "讲义 2.3 演示②′（提示原文）",
+    "讲义 2.3 植入位置：第 156、157、159 页"
+   ],
+   "wording_status": "最后一段据讲义原文；前言为本线程整理",
+   "source": "w11-demo/v1（2026-11-25）；模板 sha256 339fc7c3fa88d52f",
+   "blocked_until": null
+  },
+  {
+   "card_id": "S1",
+   "title": "文风演示 润色",
+   "lecture_ref": "3.2·文风演示",
+   "page": "D11",
+   "question": "润色这段学术文字，使之更流畅。",
+   "materials": [
+    {
+     "entry_id": "li2023-p152-153",
+     "label": "教师 2023 年论文第 152—153 页评述大谷伸治研究的一段",
+     "sendable": true,
+     "sendable_basis": "教师 2026-11-24 同意送模型（已刊论文）",
+     "visibility": "本机材料包"
+    }
+   ],
+   "user_template": "润色这段学术文字，使之更流畅。\n\n{{material:li2023-p152-153}}",
+   "system_prompt": null,
+   "models": [
+    "deepseek",
+    "kimi"
+   ],
+   "samples": 2,
+   "optional": false,
+   "settings": {
+    "_note": "待教师定（待决 1）：沿用第十周的实际传参（DeepSeek deepseek-flash、reasoning_effort low；Kimi kimi-k3、reasoning_effort low），温度以运行记录所传为准"
+   },
+   "web_prompt_file": null,
+   "sources": [
+    "讲义 3.2 文风演示框：\"润色这段学术文字，使之更流畅\""
+   ],
+   "wording_status": "据讲义原文",
+   "source": "w11-demo/v1（2026-11-25）；模板 sha256 1ba79c85bc7ce9f8",
+   "blocked_until": null
+  },
+  {
+   "card_id": "S2",
+   "title": "文风演示 只列问题",
+   "lecture_ref": "3.2·文风演示",
+   "page": "D11",
+   "question": "只列出这段文字的语言问题，不要改写。",
+   "materials": [
+    {
+     "entry_id": "li2023-p152-153",
+     "label": "教师 2023 年论文第 152—153 页评述大谷伸治研究的一段",
+     "sendable": true,
+     "sendable_basis": "教师 2026-11-24 同意送模型（已刊论文）",
+     "visibility": "本机材料包"
+    }
+   ],
+   "user_template": "只列出这段文字的语言问题，不要改写。\n\n{{material:li2023-p152-153}}",
+   "system_prompt": null,
+   "models": [
+    "deepseek",
+    "kimi"
+   ],
+   "samples": 1,
+   "optional": false,
+   "settings": {
+    "_note": "待教师定（待决 1）：沿用第十周的实际传参（DeepSeek deepseek-flash、reasoning_effort low；Kimi kimi-k3、reasoning_effort low），温度以运行记录所传为准"
+   },
+   "web_prompt_file": null,
+   "sources": [
+    "讲义 3.2 文风演示框：\"只列出这段文字的语言问题，不要改写\""
+   ],
+   "wording_status": "据讲义原文",
+   "source": "w11-demo/v1（2026-11-25）；模板 sha256 e3ebecb80f6a4175",
+   "blocked_until": null
+  },
+  {
+   "card_id": "S1J",
+   "title": "文风对照 润色练习材料甲第 3 段（可选）",
+   "lecture_ref": "3.2；扩充部分甲四",
+   "page": "D11",
+   "question": "润色这段学术文字，使之更流畅。",
+   "materials": [
+    {
+     "entry_id": "jia-p3",
+     "label": "练习材料甲第 3 段",
+     "sendable": true,
+     "sendable_basis": "教学构造，可公开",
+     "visibility": "公开"
+    }
+   ],
+   "user_template": "润色这段学术文字，使之更流畅。\n\n{{material:jia-p3}}",
+   "system_prompt": null,
+   "models": [
+    "deepseek",
+    "kimi"
+   ],
+   "samples": 1,
+   "optional": true,
+   "settings": {
+    "_note": "待教师定（待决 1）：沿用第十周的实际传参（DeepSeek deepseek-flash、reasoning_effort low；Kimi kimi-k3、reasoning_effort low），温度以运行记录所传为准"
+   },
+   "web_prompt_file": null,
+   "sources": [
+    "扩充部分甲四\"可选材料与对照\"：练习材料甲第 3 段及其润色稿"
+   ],
+   "wording_status": "同 S1；方案第五节未列，本线程据扩充部分补，待教师定",
+   "source": "w11-demo/v1（2026-11-25）；模板 sha256 9255ef2a06bdd64e",
+   "blocked_until": null
+  },
+  {
+   "card_id": "S3",
+   "title": "账本检验 附账本润色（可选，E-02）",
+   "lecture_ref": "3.2；扩充部分乙二",
+   "page": "D12",
+   "question": "下面是作者的三条文风偏好，每条附改前、改后的例子。请按这些偏好润色后面的一段学术文字，使之更流畅。",
+   "materials": [
+    {
+     "entry_id": "ledger-3",
+     "label": "文风账本三条（课程文风账本 L-019、L-007、L-005）",
+     "sendable": true,
+     "sendable_basis": "教师 2026-11-26 同意以课程文风账本作学生样板",
+     "visibility": "公开"
+    },
+    {
+     "entry_id": "li2023-p152-153",
+     "label": "教师 2023 年论文第 152—153 页评述大谷伸治研究的一段",
+     "sendable": true,
+     "sendable_basis": "教师 2026-11-24 同意送模型（已刊论文）",
+     "visibility": "本机材料包"
+    }
+   ],
+   "user_template": "下面是作者的三条文风偏好，每条附改前、改后的例子。请按这些偏好润色后面的一段学术文字，使之更流畅。\n\n{{material:ledger-3}}\n\n{{material:li2023-p152-153}}",
+   "system_prompt": null,
+   "models": [
+    "deepseek",
+    "kimi"
+   ],
+   "samples": 1,
+   "optional": true,
+   "settings": {
+    "_note": "待教师定（待决 1）：沿用第十周的实际传参（DeepSeek deepseek-flash、reasoning_effort low；Kimi kimi-k3、reasoning_effort low），温度以运行记录所传为准"
+   },
+   "web_prompt_file": null,
+   "sources": [
+    "扩充部分乙二进阶层\"账本检验\""
+   ],
+   "wording_status": "本线程整理；账本样板教师 2026-11-26 同意",
+   "source": "w11-demo/v1（2026-11-25）；模板 sha256 1595e020a91651c4",
+   "blocked_until": null
+  },
+  {
+   "card_id": "R1",
+   "title": "重现性 茅海建一行\"主张\"格（可选）",
+   "lecture_ref": "1.2；案例 C-02",
+   "page": "D03",
+   "question": "请为综述矩阵中\"茅海建\"一行填写\"主张\"一格：用一句话概括他对袁世凯告密与戊戌政变关系的看法，并附一句原文直接引文和原刊页码。",
+   "materials": [
+    {
+     "entry_id": "mao-conclusion",
+     "label": "茅海建 2002 结论一节（第 6 期第 174—176 页）",
+     "sendable": true,
+     "sendable_basis": "教师 2026-11-14 同意送模型",
+     "visibility": "本机材料包"
+    }
+   ],
+   "user_template": "下面是茅海建《戊戌政变的时间、过程与原委——先前研究各说的认知、补证、修正（三）》（《近代史研究》2002年第6期）结论一节，〔原刊第×页〕标出原刊页码。\n\n{{material:mao-conclusion}}\n\n请为综述矩阵中\"茅海建\"一行填写\"主张\"一格：用一句话概括他对袁世凯告密与戊戌政变关系的看法，并附一句原文直接引文和原刊页码。",
+   "system_prompt": null,
+   "models": [
+    "deepseek",
+    "kimi"
+   ],
+   "samples": 2,
+   "optional": true,
+   "settings": {
+    "_note": "待教师定（待决 1）：沿用第十周的实际传参（DeepSeek deepseek-flash、reasoning_effort low；Kimi kimi-k3、reasoning_effort low），温度以运行记录所传为准"
+   },
+   "web_prompt_file": null,
+   "sources": [
+    "讲义 1.2 @fig-cols\"每格附原文短引与原刊页码\"",
+    "案例 C-02 演示建议（重现性页）"
+   ],
+   "wording_status": "本线程整理，待教师确认；方案原拟\"矩阵一格\"，改用已获准送模型的茅文结论节（郭、刘两文未获准送模型）",
+   "source": "w11-demo/v1（2026-11-25）；模板 sha256 2f0b4c9fccc7afc8",
+   "blocked_until": null
+  },
+  {
+   "card_id": "W3a",
+   "title": "演示③(a) 网页版修改建议",
+   "lecture_ref": "3.4·演示③",
+   "page": "D13、D14",
+   "question": "请修改这三段学术史，使结构更清楚；逐条列出修改建议，说明每条改了什么、为什么，不要直接给出改写后的全文。",
+   "materials": [
+    {
+     "entry_id": "jia-p246",
+     "label": "练习材料甲第 2、4、6 段",
+     "sendable": true,
+     "sendable_basis": "教学构造，可公开",
+     "visibility": "公开"
+    }
+   ],
+   "user_template": "请修改这三段学术史，使结构更清楚；逐条列出修改建议，说明每条改了什么、为什么，不要直接给出改写后的全文。\n\n{{material:jia-p246}}",
+   "system_prompt": null,
+   "models": [
+    "web"
+   ],
+   "samples": 1,
+   "optional": false,
+   "settings": {
+    "_note": "待教师定（待决 1）：沿用第十周的实际传参（DeepSeek deepseek-flash、reasoning_effort low；Kimi kimi-k3、reasoning_effort low），温度以运行记录所传为准"
+   },
+   "web_prompt_file": "W3a.txt",
+   "sources": [
+    "讲义 3.4 演示③(a)（提示原文）"
+   ],
+   "wording_status": "据讲义原文",
+   "source": "w11-demo/v1（2026-11-25）；模板 sha256 6f89eb5e2b31abbb",
+   "blocked_until": null
+  }
+ ]
+}
