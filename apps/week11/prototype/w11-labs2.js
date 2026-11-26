@@ -1,4 +1,4 @@
-/* 第十一周页面组件（二）：D05、D06、D10、D13｜候选，未经教师确认｜2026-11-26（第一批） */
+/* 第十一周页面组件（二）：D05、D06、D10、D13｜候选，未经教师确认｜2026-11-26（第一批；第二批补 D05 教师论文对照、D13 书稿预置） */
 (() => {
   'use strict';
   const { esc, register, download } = window.Deck;
@@ -10,19 +10,23 @@
   /* ================= D05 逆向大纲（演示②） ================= */
   class Outline extends Lab {
     defaults() { return { src: 'jia', paras: null, rules: {}, overlap: 0.3, open: {} }; }
-    base() { return this.s.src === 'jia' ? EX['paragraphs.jia'].paragraphs : Through.get().paragraphs.filter((p) => p.doc_id === this.s.src); }
+    base() {
+      if (this.s.src === 'jia') return EX['paragraphs.jia'].paragraphs;
+      if (this.s.src === 'li2023') { const li = (window.W11_PUBLIC || {}).li2023; return li ? li.paragraphs.filter((p) => !p.heading && !p.quote && p.pages[0] >= 150 && p.para_id >= 'L06').map((p) => ({ para_id: p.para_id, text: p.parts.map((x) => x.text).join(''), doc_id: 'li2023', pages: p.pages })) : []; }
+      return Through.get().paragraphs.filter((p) => p.doc_id === this.s.src);
+    }
     paras() {
-      if (!this.s.paras || this.s.parasFor !== this.s.src) { this.s.paras = clone(this.base()).map((p) => ({ ...p, author_summary: p.author_summary || '', function: this.s.src === 'jia' ? null : p.function, function2: this.s.src === 'jia' ? null : p.function2, answers: this.s.src === 'jia' ? '' : p.answers })); this.s.parasFor = this.s.src; }
+      if (!this.s.paras || this.s.parasFor !== this.s.src) { this.s.paras = clone(this.base()).map((p) => ({ ...p, author_summary: p.author_summary || '', function: this.s.src === 'jia' ? null : p.function || null, function2: this.s.src === 'jia' ? null : p.function2 || null, answers: this.s.src === 'jia' ? '' : p.answers || '' })); this.s.parasFor = this.s.src; }
       return this.s.paras;
     }
     render() {
-      const s = this.s, ps = this.paras(), docs = [...new Set(Through.get().paragraphs.map((p) => p.doc_id))];
+      const s = this.s, ps = this.paras(), docs = [...new Set(Through.get().paragraphs.map((p) => p.doc_id))].filter((d) => d && d !== 'li2023');
       const r = L.outlineRules(ps, { rules: s.rules, overlap: s.overlap });
       const bar = ps.map((p) => `<span class="w11-seg" style="background:${S.funcColor[p.function] || '#e4e2dc'};color:${p.function && !/过渡/.test(p.function) ? '#fff' : '#20272e'}" title="${esc(p.para_id)}：${esc([p.function, p.function2].filter(Boolean).join('＋') || '未标')}">${esc(p.para_id)}${p.function2 ? '<i>＋</i>' : ''}</span>`).join('');
       const fsel = (p, k) => `<select data-fn="${esc(p.para_id)}" data-k="${k}"><option value="">${k === 'function' ? '（选功能）' : '（第二功能）'}</option>${S.functions.map((f) => `<option ${p[k] === f ? 'selected' : ''}>${f}</option>`).join('')}</select>`;
       const ref = this.s.src === 'jia' ? EX['paragraphs.jia'].paragraphs : [];
       this.out(`<p><b>材料</b> <label><input type="radio" name="olsrc" value="jia" ${s.src === 'jia' ? 'checked' : ''}> 练习材料甲（七段）</label> ${docs.map((d) => `<label><input type="radio" name="olsrc" value="${esc(d)}" ${s.src === d ? 'checked' : ''}> ${esc(d)}（导入）</label>`).join(' ')} <button class="small" data-open-docx="paragraphs">导入 Word 稿</button>
-        <span class="sub">　教师 2023 年论文第一、二节作对照：第二批接入。</span></p>
+        <label><input type="radio" name="olsrc" value="li2023" ${s.src === 'li2023' ? 'checked' : ''}> 教师 2023 年论文（刊本分段，作对照）</label></p>
         <div class="w11-seqbar">${bar}</div>
         <div class="w11-flags">${RULES.map((k) => { const f = r.flags.find((x) => x.rule === k); return `<label class="flag ${f ? 'on' : ''}"><input type="checkbox" data-rule="${k}" ${s.rules[k] === false ? '' : 'checked'}> ${k}${f ? `：<b>${f.paras.join('、')}</b>` : ''}</label>`; }).join('')}
           <label class="sub">重复门槛 <input type="number" step="0.05" min="0.1" max="0.9" value="${s.overlap}" data-ov style="width:4.5em"></label></div>
@@ -127,10 +131,13 @@
     render() {
       const s = this.s;
       if (!s.rows && s.src === 'fixture' && !this._loading) { this._loading = true; const b = Mat.docx('jia_revisions.docx'); if (b) this.load(b, 'jia_revisions.docx'); }
+      if (!s.rows && s.src === 'book' && !this._loading) { this._loading = true; const b = Mat.docx('book_preset.docx'); if (b) this.load(b, '教师书稿_明治中期一节.docx'); else { this._loading = false; s.src = 'fixture'; } }
+      const hasBook = !!Mat.docx('book_preset.docx');
       const rows = s.rows || [], st = L.editStats(rows.filter((r) => r.intention || r.decision));
       const ctx = (r) => { const a = r.before.indexOf(r.removed || r.added) ; return a; };
       this.out(`<p><b>修订稿</b> <label><input type="radio" name="rvsrc" value="fixture" ${s.src === 'fixture' ? 'checked' : ''}> 练习材料甲修订夹具（程序构造：三处修订、一条批注、一处脚注修订；未在 Word 中打开核对）</label>
-        <label class="pack-btn small">上传我的 .docx<input type="file" accept=".docx" data-up hidden></label> <span class="sub">演示③两份修订稿：第二批（D14）。</span></p>
+        <label><input type="radio" name="rvsrc" value="book" ${s.src === 'book' ? 'checked' : ''} ${hasBook ? '' : 'disabled'}> 教师书稿一节的真实修订（本机预置：第一章第一节之二，修订 11 处、删除 14 处；修订者名已改为"作者"）${hasBook ? '' : '<span class="sub">（需本机材料包）</span>'}</label>
+        <label class="pack-btn small">上传我的 .docx<input type="file" accept=".docx" data-up hidden></label> <span class="sub">演示③两份修订稿见 D14。</span></p>
         <p class="sub">${s.msg || ''}</p>
         <table class="items w11-rev"><tr><th>位置</th><th>修订者</th><th>改动</th><th>改前 → 改后（所在段）</th><th>提议</th><th>意图</th><th>处理</th><th>理由（批注）</th></tr>
         ${rows.map((r, i) => `<tr><td>${esc(r.location)}</td><td>${esc(r.author)}<span class="sub">${esc((r.date || '').slice(0, 16))}</span></td><td>${r.removed ? `<del>${esc(r.removed)}</del>` : ''}${r.added ? `<ins>${esc(r.added)}</ins>` : ''}</td>
@@ -144,7 +151,7 @@
     }
     async onChange(e) {
       const t = e.target, rows = this.s.rows || [];
-      if (t.name === 'rvsrc') { this.s.rows = null; this._loading = false; this.set({ src: 'fixture' }); }
+      if (t.name === 'rvsrc') { this.s.rows = null; this._loading = false; this.set({ src: t.value === 'book' ? 'book' : 'fixture' }); }
       if (t.dataset.up !== undefined && t.files[0]) { const f = t.files[0]; this.s.src = 'own'; await this.load(await f.arrayBuffer(), f.name); t.value = ''; }
       if (t.dataset.prop) { rows[+t.dataset.prop].proposer.kind = t.value; this.set({}); }
       if (t.dataset.int) { rows[+t.dataset.int].intention = t.value || null; this.set({}); }

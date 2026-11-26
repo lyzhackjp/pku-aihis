@@ -22,6 +22,7 @@
     for (const r of j.replays || []) if (!seen.has(r.run_id)) M.replays.push({ ...r, origin_mode: r.origin_mode || r.mode, mode: 'replay' });
     if (j.teacher && typeof j.teacher === 'object') M.teacher = j.teacher;
     if (j.page_images && typeof j.page_images === 'object') M.pageImages = { ...(M.pageImages || {}), ...j.page_images };
+    if (j.docx && typeof j.docx === 'object') M.docx = { ...(M.docx || {}), ...j.docx };
     M.local = { from, generated: j.generated, n: (j.packs || []).reduce((n, p) => n + p.entries.length, 0), runs: (j.replays || []).length };
     M.localMsg = `已载入本机材料包（${M.local.n} 条材料、${M.local.runs} 条运行记录；${from}）。`;
     emit('w11-materials');
@@ -45,7 +46,7 @@
     restrictedLoaded: () => Mat.entries().some((e) => e.visibility === '本机材料包' && e.text),
     teacher: () => M.teacher || null,
     pageImage: (src, page) => (M.pageImages && M.pageImages[src] && M.pageImages[src][String(page)]) || null,
-    docx: (name) => { const b = (window.W11_PUBLIC && window.W11_PUBLIC.docx || {})[name]; if (!b) return null; const bin = atob(b), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u.buffer; },
+    docx: (name) => { const b = (window.W11_PUBLIC && window.W11_PUBLIC.docx || {})[name] || (M.docx || {})[name]; if (!b) return null; const bin = atob(b), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u.buffer; },
   };
   /* 受限材料缺失时的统一提示（线上版各页不报错） */
   const needPack = (what) => `<p class="w11-need">需导入本机材料包：${esc(what)}。线上版只有页码与短引；教师课上用顶栏"导入本机材料包"载入。</p>`;

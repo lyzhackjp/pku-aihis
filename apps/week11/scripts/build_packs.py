@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""第十一周：由课程文件夹的材料生成课件的公开材料、条件卡与本机材料包｜候选，未经教师确认｜2026-11-26（第一批）
+"""第十一周：由课程文件夹的材料生成课件的公开材料、条件卡与本机材料包｜候选，未经教师确认｜2026-11-26（第一批；第二批补教师 2023 年论文、会议录、植入副本、演示③(b)、书稿一节）
 用法：python3 apps/week11/scripts/build_packs.py <课程文件夹> [<运行记录目录>]
 输出：
   prototype/data/w11-public.js  公开包（随课件发布）：练习材料甲（正文、分段、脚注、.docx 原件 base64）、修订夹具、讲义图 1 摘编、陈澧《引書法》录文；
@@ -74,6 +74,29 @@ entries = [
  E('liu-2005', '刘路生 2005（《清史研究》2005 年第 1 期第 47—54 页）文字层', '刘路生《戊戌政变袁世凯初四告密说不能成立——兼与郭卫东先生商榷》，《清史研究》2005 年第 1 期；知网 PDF（PDF 页序＋46＝原刊页）', pdf_pages(LIU, 1, 8, 46),
    page={'system': '原刊页', 'value': '47—54'}, marker=MAO, sendable=False, basis='未获准送模型（只用于 4.3 原页面板）', note='同上'),
 ]
+
+# 教师 2023 年论文（第二批）：刊本 PDF 文字层，由 scripts/make_li2023.py 生成；教师 2026-11-25、11-26 同意线上使用全文
+MAT = os.path.join(W11, 'demo', '材料')
+li = json.load(open(os.path.join(MAT, '李原榛2023_刊本文字.json'), encoding='utf-8'))
+LI_CIT = '李原榛：《战后初期日本民主化过程中天皇制的应对——以帝国议会中的“国体”论说为中心》，《日本文论》2023 年第 2 辑（总第 10 辑），刊本 PDF 文字层（日文脚注不在文字层中）'
+LI_BASIS = '教师 2026-11-24 同意送模型（已刊论文）；2026-11-25 同意线上使用全文'
+li_style = rd(os.path.join(MAT, '李原榛2023_第152-153页_文风段.txt')).strip()
+li_156 = rd(os.path.join(MAT, '李原榛2023_第156-159页_原文.txt')).strip()
+IMP = json.load(open(os.path.join(ROOT, 'docs/week11/examples/implants-findings.toy.example.json'), encoding='utf-8'))['implants']
+li_imp = li_156
+for im in IMP:
+    assert li_imp.count(im['before']) == 1, (im['error_id'], li_imp.count(im['before']))
+    li_imp = li_imp.replace(im['before'], im['after'])
+entries += [
+ E('li2023-p152-153', '教师 2023 年论文第 152—153 页评述大谷伸治研究的一段（文风演示）', LI_CIT, li_style, page={'system': '原刊页', 'value': '152—153'}, marker=MAO, basis=LI_BASIS, visibility='公开',
+   note='起止句据讲义 3.2 文风演示框；圈码为刊本脚注号（每页重新编号）'),
+ E('li2023-p156-159', '教师 2023 年论文第 156—159 页（第一节后半，原文）', LI_CIT, li_156, page={'system': '原刊页', 'value': '156—159'}, marker=MAO, basis=LI_BASIS, visibility='公开'),
+ E('li2023-p156-159-implanted', '教师 2023 年论文第 156—159 页植入三处错误的副本（演示②′）', LI_CIT + '；据讲义 2.3 植入三处：' + '；'.join(f"{i['location']}“{i['before']}”→“{i['after']}”" for i in IMP),
+   li_imp, page={'system': '原刊页', 'value': '156—159'}, marker=MAO, text_kind='教学构造', basis='教师 2026-11-24 同意送模型（已刊论文的植入副本）', note='植入副本，不是论文原文；只在本机'),
+]
+D15 = json.load(open(os.path.join(C, '第十周', 'demo', 'D15_李原榛2023', '史料包_帝国议会会议录4则.json'), encoding='utf-8'))['packs'][0]['entries']
+for e in D15:
+    entries.append(dict(E(e['id'], e['title'], e['citation'], e['text'], page=e.get('page'), basis='NDL 公开；第十周 D15 史料包', note='第十周 D15 史料包（只在本机，照第十周边界）'), visibility='本机材料包', sendable=True))
 for e in entries: e['sha256'] = hashlib.sha256(e['text'].encode()).hexdigest()
 pub, loc = [], []
 for e in entries:
@@ -83,7 +106,7 @@ for e in entries:
 for e in pub: assert e['visibility'] == '公开' or not e['text'], e['id']
 
 cards = json.load(open(os.path.join(ROOT, 'docs/week11/examples/condition-cards.w11.json'), encoding='utf-8'))['cards']
-ids = {e['id'] for e in entries} | {'d15-A', 'd15-B', 'd15-C', 'li2023-p156-159-implanted', 'li2023-p152-153', 'ledger-3'}
+ids = {e['id'] for e in entries} | {'ledger-3'}
 for c in cards:
     c['settings'] = {'deepseek': {'thinking': 'disabled', 'temperature': 0.7}, 'kimi': {'reasoning_effort': 'low', 'temperature': '固定（不传）'}, '_basis': '教师 2026-11-25：沿用第十周做法'}
     for m in c['materials']: assert m['entry_id'] in ids, m
@@ -104,9 +127,15 @@ gen = datetime.datetime.now().astimezone().isoformat(timespec='seconds')
 def js(name, var, obj, head):
     with open(os.path.join(APP, 'prototype/data', name), 'w', encoding='utf-8') as f:
         f.write(f'/* {head} 由 scripts/build_packs.py 生成，请勿手改。 */\nwindow.{var} = ' + json.dumps(obj, ensure_ascii=False, indent=0) + ';\n')
-docs = {'jia_draft.docx': b64(os.path.join(FX, 'jia_draft.docx')), 'jia_revisions.docx': b64(os.path.join(FX, 'jia_revisions.docx'))}
-js('w11-public.js', 'W11_PUBLIC', {'generated': gen, 'packs': [{'id': 'w11-materials', 'title': '第十一周课堂材料', 'entries': pub}], 'replays': [], 'docx': docs},
-   '公开材料：练习材料甲（教学构造）、修订夹具（程序构造）、讲义图 1 摘编、陈澧录文；茅、郭、刘原文只留元数据。')
+REV = os.path.join(W11, 'demo', '修订稿')
+docs = {'jia_draft.docx': b64(os.path.join(FX, 'jia_draft.docx')), 'jia_revisions.docx': b64(os.path.join(FX, 'jia_revisions.docx')),
+        'demo3b_reviser.docx': b64(os.path.join(REV, '演示3b_reviser写入.docx'))}
+demo3b = {'plan': json.load(open(os.path.join(REV, '演示3b_修订计划.json'), encoding='utf-8')), 'audit': json.load(open(os.path.join(REV, '演示3b_审计.json'), encoding='utf-8')),
+          'log': rd(os.path.join(REV, '演示3b_运行日志.txt')).split('\n')[0]}
+li_pub = {'source': li['source'], 'citation': LI_CIT, 'note': li['_note'], 'paragraphs': li['paragraphs'], 'notes': {str(p['page']): p['notes'] for p in li['pages'] if p['notes']}}
+local_docx = {'book_preset.docx': b64(os.path.join(MAT, '书稿_明治中期一节_带修订_本机.docx'))}
+js('w11-public.js', 'W11_PUBLIC', {'generated': gen, 'packs': [{'id': 'w11-materials', 'title': '第十一周课堂材料', 'entries': pub}], 'replays': [], 'docx': docs, 'demo3b': demo3b, 'li2023': li_pub},
+   '公开材料：练习材料甲（教学构造）、修订夹具（程序构造）、演示③(b) 修订稿、讲义图 1 摘编、陈澧录文、教师 2023 年论文刊本文字；茅、郭、刘原文、会议录与植入副本只留元数据。')
 js('w11-cards.js', 'W11_CARDS', cards, '条件卡（模板＋材料编号，不含材料正文）。')
 k9 = json.load(open(os.path.join(ROOT, 'docs/week09/schemas/importer-kinds.w09.json'), encoding='utf-8'))
 k11 = json.load(open(os.path.join(ROOT, 'docs/week11/schemas/importer-kinds.w11.json'), encoding='utf-8'))
@@ -119,7 +148,7 @@ js('w11-examples.js', 'W11_EXAMPLES', {n[:-len('.example.json')] if n.endswith('
 answers = rd(os.path.join(W11, 'review', '4.3练习答案_教师用.md'))
 pages = {'guo-2002': pdf_images(GUO, [1, 2, 3, 5, 8], 30), 'liu-2005': pdf_images(LIU, [2, 3], 46)}
 pack = {'format': 'w11-pack/v1', 'generated': gen, 'packs': [{'id': 'w11-materials', 'title': '第十一周课堂材料（本机）', 'entries': loc}], 'replays': replays,
-        'teacher': {'answers_43': answers, 'answers_source': '第十一周/review/4.3练习答案_教师用.md'}, 'page_images': pages,
-        '_note': '本机材料包：茅、郭、刘原文（文字层与原页图像）、4.3 答案（教师模式）与课前运行记录。不入 Git、不发布、不分发。'}
+        'teacher': {'answers_43': answers, 'answers_source': '第十一周/review/4.3练习答案_教师用.md'}, 'page_images': pages, 'docx': local_docx,
+        '_note': '本机材料包：茅、郭、刘原文（文字层与原页图像）、会议录 4 则、植入副本、教师书稿一节（D13 预置）、4.3 答案（教师模式）与课前运行记录。不入 Git、不发布、不分发。'}
 json.dump(pack, open(os.path.join(APP, 'local-only/week11-pack.json'), 'w', encoding='utf-8'), ensure_ascii=False)
 print(f'公开条目 {len(pub)}（含正文 {sum(1 for e in pub if e["text"])}）；本机条目 {len(loc)}；条件卡 {len(cards)}；回放 {len(replays)}；原页图像 {sum(len(v) for v in pages.values())} 页')

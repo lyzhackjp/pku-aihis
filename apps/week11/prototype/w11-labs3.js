@@ -66,7 +66,7 @@
         ${JIA.footnotes.map((n, i) => { const r = rows[n.note_id] || {}; return `<tr><td>${esc(nr.notes[i].label)}</td><td>${n.doc_page}</td><td class="sub">${esc(n.text)}</td>${COLS.map(([k]) => `<td><select data-ck="${n.note_id}|${k}">${['', '对', '有误', '存疑', '—'].map((v) => `<option ${r[k] === v ? 'selected' : ''}>${v}</option>`).join('')}</select></td>`).join('')}<td><input data-why="${n.note_id}" value="${esc(r.reason || '')}" size="18"></td></tr>`; }).join('')}</table>
         <p><button class="small" data-x="timer">${s.t0 ? '重新计时' : '开始计时（两人一组，十分钟）'}</button> ${left != null ? `<b>${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}</b>` : ''} <button class="small" data-x="assist">${s.assist ? '收起' : '打开'}规则辅助（讲评时）</button> <button class="small" data-x="send">送入贯穿记录（D18）</button>
           ${T ? `<label class="sub"><input type="checkbox" data-teacher ${s.teacher ? 'checked' : ''}> 教师模式：对照答案</label>` : '<span class="sub">（答案只在本机材料包的教师模式）</span>'}</p>
-        <p class="sub">讲评顺序：${S.review43.map(esc).join(' → ')}。黄彰健书第 498 页：待提供（A-07）。</p>${assist}
+        <p class="sub">讲评顺序：${S.review43.map(esc).join(' → ')}。黄彰健书第 498 页：已核（教师 2026-11-26 提供原书；PDF 页序＝原书页码＋7）。</p>${assist}
         ${s.teacher && T ? `<details open><summary>4.3 答案（教师用，${esc(T.answers_source)}）</summary><pre class="srcbox">${esc(T.answers_43)}</pre></details>` : ''}</section>
         <section><h4>原页面板</h4><p>${SRC.map(([id, l]) => `<label><input type="radio" name="ck-src" value="${id}" ${s.src === id ? 'checked' : ''}> ${l}</label>`).join(' ')}</p>
         ${txt ? `<p>原刊页：${pages.map((p) => `<button class="small ${s.page === p ? 'on' : ''}" data-pg="${p}">${p}</button>`).join(' ')}</p>

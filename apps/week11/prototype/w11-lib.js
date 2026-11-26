@@ -595,7 +595,8 @@
     for (const s of segs) {
       if (s.text == null) continue;
       if (!s.rev) { g = null; continue; }
-      if (!g || g.author !== s.rev.author) { g = { author: s.rev.author, date: s.rev.date, kinds: [], removed: '', added: '', comments: new Set() }; groups.push(g); }
+      // 同一修订者相邻的修订算一处；但先删后增之后又出现删除，是下一处替换（Word 里是两条修订）
+      if (!g || g.author !== s.rev.author || (s.rev.type === 'del' && g.kinds.includes('ins'))) { g = { author: s.rev.author, date: s.rev.date, kinds: [], removed: '', added: '', comments: new Set() }; groups.push(g); }
       if (!g.kinds.includes(s.rev.type)) g.kinds.push(s.rev.type);
       if (s.rev.type === 'del') g.removed += s.text; else g.added += s.text;
       s.comments.forEach((c) => g.comments.add(c));
@@ -843,6 +844,124 @@
   }
 
   /* =====================================================================
+   * 十七之二（第二批）：植入副本、会议录发言人规则、重现性、修订预览、文风界线
+   * ===================================================================== */
+  // 植入：每处 before 须在原文中恰好出现一次；返回副本与各处位置
+  function applyImplants(text, implants) {
+    let out = String(text ?? ''); const applied = [];
+    for (const im of implants) {
+      const n = out.split(im.before).length - 1;
+      if (n !== 1) { applied.push({ error_id: im.error_id, ok: false, reason: n ? `“${im.before}”出现 ${n} 次，须写得更长以唯一定位` : `原文中找不到“${im.before}”` }); continue; }
+      const at = out.indexOf(im.before); out = out.slice(0, at) + im.after + out.slice(at + im.before.length);
+      applied.push({ error_id: im.error_id, ok: true, at, len: im.after.length });
+    }
+    return { text: out, applied };
+  }
+  // 按句切分并记页码与句末圈码（〔原刊第N页〕为页标；句号后紧跟的圈码归上一句）
+  const CIRC = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳';
+  function pagedSentences(text, marker = '〔原刊第(\\d+)页〕') {
+    const s = String(text ?? ''), re = new RegExp(marker, 'g'), parts = [];
+    let last = 0, m;
+    while ((m = re.exec(s))) { parts.push([s.slice(last, m.index), null]); parts.push(['', +m[1]]); last = m.index + m[0].length; }
+    parts.push([s.slice(last), null]);
+    let curPage = null, cur = null; const sents = [];
+    for (const [chunk, pg] of parts) {
+      if (pg != null) { curPage = pg; continue; }
+      for (const ch of chunk) {
+        if (!cur) cur = { text: '', page: curPage, marks: [] };
+        if (CIRC.includes(ch) && !cur.text.trim() && sents.length) { const p0 = sents[sents.length - 1]; p0.marks.push({ mark: ch, page: curPage }); p0.text += ch; continue; }
+        cur.text += ch;
+        if (CIRC.includes(ch)) cur.marks.push({ mark: ch, page: curPage });
+        if (/[。！？\n]/.test(ch)) { if (cur.text.trim()) sents.push(cur); cur = null; }
+      }
+    }
+    if (cur && cur.text.trim()) sents.push(cur);
+    return sents.map((x, i) => ({ ...x, i, text: x.text.replace(/\n/g, '') }));
+  }
+  // 会议录发言人与院别规则（乙一第二步，史料为日文会议录时）：
+  // roster：{中文写法: 原文写法}；cites：{页: {圈码: entry_id}}；entries：{entry_id: {text, house}}（entries 缺某条＝原文不在手）
+  function speakerRules(text, { roster, cites, entries }) {
+    const names = Object.keys(roster).sort((a, b) => b.length - a.length);
+    const flags = [], unchecked = [], checked = [];
+    for (const s of pagedSentences(text)) {
+      const ids = [...new Set(s.marks.map((m) => (cites[m.page] || {})[m.mark]).filter(Boolean))];
+      if (!ids.length) continue;
+      let rest = s.text; const found = [];
+      for (const n of names) if (rest.includes(n)) { found.push(n); rest = rest.split(n).join('　'); }
+      for (const id of ids) {
+        const e = entries[id];
+        if (!e || !e.text) { unchecked.push({ sentence: s.i, page: s.page, entry: id, reason: '原文不在手：无法核' }); continue; }
+        checked.push({ sentence: s.i, page: s.page, entry: id, names: found });
+        for (const n of found) if (!e.text.includes(roster[n])) flags.push({ rule: '发言人不在所注原文', sentence: s.i, page: s.page, entry: id, name: n, text: s.text });
+        for (const m of s.text.matchAll(/(贵族院|众议院)议员/g)) {
+          const house = m[1] === '贵族院' ? '貴族院' : '衆議院';
+          if (e.house && e.house !== house) flags.push({ rule: '院别与所注原文不符', sentence: s.i, page: s.page, entry: id, name: m[1], text: s.text, expected: e.house });
+        }
+      }
+    }
+    return { flags, unchecked, checked };
+  }
+  // 重现性（C-02）：两次输出的值与引文是否相同；值相同由人判，引文相同可机械判（去空白与引号后相等）
+  const normQ = (q) => String(q ?? '').replace(/[\s“”"「」『』‘’'，,。.]/g, '');
+  function consistency(cells) {
+    const val = cells.filter((c) => c.value_same != null), qs = cells.filter((c) => c.q1 != null && c.q2 != null && (c.q1 || c.q2));
+    const qsame = qs.filter((c) => c.quote_same != null ? c.quote_same : normQ(c.q1) === normQ(c.q2));
+    return { n: cells.length, value: val.length ? val.filter((c) => c.value_same).length / val.length : null, n_value: val.length,
+      quote: qs.length ? qsame.length / qs.length : null, n_quote: qs.length };
+  }
+  // 修订预览：正文各段的片段，带 docxRevisions 同一编号（r1, r2…，正文在前）
+  async function revisionView(buf) {
+    const z = await unzip(buf, ['word/document.xml']);
+    let n = 0; const paras = [];
+    walkParas(z['word/document.xml']).forEach((p, index) => {
+      const segs = []; let g = null;
+      for (const s of p.segs) {
+        if (s.text == null) continue;
+        if (!s.rev) { g = null; segs.push({ text: s.text, edit_id: null, type: null }); continue; }
+        if (!g || g.author !== s.rev.author || (s.rev.type === 'del' && g.hasIns)) g = { id: `r${++n}`, author: s.rev.author, hasIns: false };
+        if (s.rev.type === 'ins') g.hasIns = true;
+        segs.push({ text: s.text, edit_id: g.id, type: s.rev.type });
+      }
+      paras.push({ index, segs });
+    });
+    return paras;
+  }
+  // decisions：{edit_id: 'accept'|'reject'|'modify'|null}；未定的两种文字都保留并标出
+  function previewSegs(segs, decisions) {
+    return segs.map((s) => {
+      if (!s.edit_id) return { text: s.text, state: 'plain' };
+      const d = decisions[s.edit_id];
+      if (d === 'accept' || d === 'modify') return s.type === 'ins' ? { text: s.text, state: 'plain' } : null;
+      if (d === 'reject') return s.type === 'del' ? { text: s.text, state: 'plain' } : null;
+      return { text: s.text, state: s.type, edit_id: s.edit_id };
+    }).filter(Boolean);
+  }
+  // 文风界线（讲义 3.2 @fig-bounds）：原段有、改后没有的限定语与引号词语；改后新出的泛化归属
+  const BOUND_HEDGES = ['之虞', '试图', '较为', '部分', '一定程度', '或许', '可能', '似乎', '不过', '注意到'];
+  function boundsCheck(original, revised, { hedges = BOUND_HEDGES, generic = ['学界', '学者们', '研究者', '人们普遍'] } = {}) {
+    const o = String(original ?? ''), r = String(revised ?? '');
+    const cnt = (s, w) => s.split(w).length - 1;
+    const lostHedges = hedges.filter((h) => cnt(o, h) > cnt(r, h)).map((h) => ({ word: h, before: cnt(o, h), after: cnt(r, h) }));
+    const qo = extractQuotes(o).map((q) => q.text), qr = extractQuotes(r).map((q) => q.text);
+    const lostQuotes = [...new Set(qo)].filter((q) => qo.filter((x) => x === q).length > qr.filter((x) => x === q).length).map((q) => ({ term: q, before: qo.filter((x) => x === q).length, after: qr.filter((x) => x === q).length }));
+    // 泛化归属：泛称后面紧跟归属动词（学界注意到、学者们认为……），原段没有而改后新出
+    const ATTR = '(?:注意到|认为|指出|试图|主张|普遍)';
+    const cntA = (s, g) => (s.match(new RegExp(g + ATTR, 'g')) || []).length;
+    const newGeneric = generic.filter((g) => cntA(r, g) > cntA(o, g)).map((g) => ({ word: g, before: cntA(o, g), after: cntA(r, g) }));
+    return { lostHedges, lostQuotes, newGeneric };
+  }
+  // 字级差异（两栏高亮用）
+  function charDiff(a, b) {
+    const A = [...String(a ?? '')], B = [...String(b ?? '')];
+    return lcsOpcodes(A, B).map(([tag, i1, i2, j1, j2]) => ({ tag, a: A.slice(i1, i2).join(''), b: B.slice(j1, j2).join('') }));
+  }
+  // 两人（或人与原标注）标签一致率，不做 κ 校正
+  function labelAgreement(items) {
+    const done = items.filter((x) => x.mine);
+    return { n: done.length, agree: done.filter((x) => x.mine === x.gold).length, rate: done.length ? done.filter((x) => x.mine === x.gold).length / done.length : null };
+  }
+
+  /* =====================================================================
    * 十八、贯穿记录（w11-through/v1）
    * ===================================================================== */
   const THROUGH_KEYS = ['matrix', 'paragraphs', 'register', 'edits', 'findings', 'implants', 'ledger', 'footnotes', 'bib', 'runs', 'packs'];
@@ -876,6 +995,8 @@
     splitSentences, outlineRules, OVERCLAIM, recallPool, editStats, styleCount, styleDiff, excessWord,
     normalizeDecision, registerSummary, DECISIONS, ledgerSelectable, ledgerSnippet, buildDeclaration, copyText, bibCrossCheck,
     emptyThrough, exportThrough, importThrough, THROUGH_KEYS, checkKeys, runQueue,
+    // 第十一周第二批
+    applyImplants, pagedSentences, speakerRules, consistency, revisionView, previewSegs, boundsCheck, BOUND_HEDGES, charDiff, labelAgreement,
     IMPLEMENTED: true,
   };
   root.W11Lib = api;

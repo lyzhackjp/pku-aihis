@@ -2,15 +2,49 @@
   "title": "第十一周 · 人工智能辅助论文写作",
   "pageMap": "../../../docs/week11/page-map.json",
   "glossary": "../../../docs/week11/glossary.json",
-  "scripts": ["deck-core.js", "w11-lib.js", "w11-core.js", "w11-labs1.js", "w11-labs2.js", "w11-labs3.js"],
+  "scripts": [
+    "deck-core.js",
+    "w11-lib.js",
+    "w11-core.js",
+    "w11-labs1.js",
+    "w11-labs2.js",
+    "w11-labs3.js",
+    "w11-labs4.js"
+  ],
   "deck": {
     "name": "第十一周 · 人工智能辅助论文写作",
-    "channel": "pku-aihis-week11-prototype-20261126",
+    "channel": "pku-aihis-week11-prototype-20261126b",
     "store": "week11-prototype/",
-    "entries": { "through": { "label": "贯穿记录", "page": "D18" }, "concepts": { "label": "概念表", "page": "D21" } }
+    "entries": {
+      "through": {
+        "label": "贯穿记录",
+        "page": "D18"
+      },
+      "concepts": {
+        "label": "概念表",
+        "page": "D21"
+      }
+    }
   },
   "bodies": {
-    "D00": "hero-cover11", "D01": "borrow-lab", "D02": "matrix-lab", "D04": "isay-lab", "D05": "outline-lab", "D06": "diag-lab",
-    "D10": "intent-lab", "D13": "revisions-lab", "D15": "footnote-lab", "D17": "check-lab", "D18": "closing-lab", "D21": "concept-table"
+    "D00": "hero-cover11",
+    "D01": "borrow-lab",
+    "D02": "matrix-lab",
+    "D04": "isay-lab",
+    "D05": "outline-lab",
+    "D06": "diag-lab",
+    "D10": "intent-lab",
+    "D13": "revisions-lab",
+    "D15": "footnote-lab",
+    "D17": "check-lab",
+    "D18": "closing-lab",
+    "D21": "concept-table",
+    "D03": "cells-lab",
+    "D07": "review-lab",
+    "D09": "pipeline-lab",
+    "D11": "style-lab",
+    "D14": "three-lab",
+    "D16": "cite-lab",
+    "D20": "materials-lab"
   }
 }

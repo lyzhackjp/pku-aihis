@@ -10,7 +10,7 @@ execFileSync(process.execPath, [skill, proto], { stdio: 'inherit' });
 const f = path.join(proto, 'index.html');
 let html = await fs.readFile(f, 'utf8');
 html = html
-  .replace('<script src="data/data.js"></script>', '<script src="data/data.js"></script>\n<script src="data/w11-public.js"></script>\n<script src="data/w11-static.js"></script>\n<script src="data/w11-examples.js"></script>\n<script src="data/w11-kinds.js"></script>\n<script src="data/w11-cards.js"></script>')
+  .replace('<script src="data/data.js"></script>', '<script src="data/data.js"></script>\n<script src="data/w11-public.js"></script>\n<script src="data/w11-static.js"></script>\n<script src="data/w11-static2.js"></script>\n<script src="data/w11-examples.js"></script>\n<script src="data/w11-kinds.js"></script>\n<script src="data/w11-cards.js"></script>')
   .replace('<link rel="stylesheet" href="deck.css">', '<link rel="stylesheet" href="deck.css">\n<link rel="stylesheet" href="week09-base.css">\n<link rel="stylesheet" href="w09.css">\n<link rel="stylesheet" href="w11.css">')
   .replace('</head>', '<!-- 模型接入（ES 模块；须经 HTTP 打开）。由 scripts/assemble-prototype.mjs 补入。 -->\n<script type="module" src="live/w11-live.js"></script>\n</head>');
 await fs.writeFile(f, html);

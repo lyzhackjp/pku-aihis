@@ -229,7 +229,7 @@
   "footer": "D02 · 浏览器实时（排序与提示）／静态内容（预置矩阵）／教学构造（示范的最后一列）；讲义 1.1 @fig-matrix（前三列据茅海建文第 4 期第 198—208 页、第 6 期第 175 页与郭卫东文第 33 页"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",
@@ -596,7 +596,7 @@
   "footer": "D06 · 浏览器实时（register）／保存结果回放（D2A 结构意见）／教学构造（预期典型意见）；讲义 2.2 @fig-diag、@fig-reg"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [
    "深度审读",
@@ -777,7 +777,7 @@
   "footer": "D08 · 浏览器实时（recall-pool）／教学构造（小例假设数字）；扩充部分甲二（Litvak 2026 表 1 与第 3 节"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",
@@ -958,7 +958,7 @@
   "footer": "D10 · 浏览器实时（edit-stats）／教学构造（讲义图 10 四条）；讲义 3.1 @fig-intent、3.3 @fig-revtable"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [
    "文风账本"
@@ -1242,7 +1242,7 @@
   "footer": "D13 · 浏览器实时（docx-revisions、edit-stats）／静态内容（丙一截图，待课前截取）；讲义 3.3 @fig-revtable"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "修改对照",
@@ -1408,7 +1408,7 @@
   "footer": "D15 · 浏览器实时（note-rules、分页模拟）／静态内容（规范短引、域代码示例）；讲义 4.1 @fig-word"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",
@@ -1710,7 +1710,7 @@
   "footer": "D19 · 静态内容（矩阵）／浏览器实时（推荐规则）；扩充部分乙〇（材料 × 步骤，本课归纳）。"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",

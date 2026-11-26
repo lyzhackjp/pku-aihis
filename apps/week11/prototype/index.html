@@ -8,6 +8,7 @@
 <script src="data/data.js"></script>
 <script src="data/w11-public.js"></script>
 <script src="data/w11-static.js"></script>
+<script src="data/w11-static2.js"></script>
 <script src="data/w11-examples.js"></script>
 <script src="data/w11-kinds.js"></script>
 <script src="data/w11-cards.js"></script>
@@ -17,6 +18,7 @@
 <script src="w11-labs1.js"></script>
 <script src="w11-labs2.js"></script>
 <script src="w11-labs3.js"></script>
+<script src="w11-labs4.js"></script>
 <!-- 模型接入（ES 模块；须经 HTTP 打开）。由 scripts/assemble-prototype.mjs 补入。 -->
 <script type="module" src="live/w11-live.js"></script>
 </head><body><div id="app"></div>
@@ -31,9 +33,9 @@
 <deck-slide slide-id="D02" data-status="prototype" kicker="D02 / 一 立场 1.1" header-title="以问题为纲：综述矩阵" transition="上一讲的九家对照表，再加两列就成了综述矩阵。" theme="light" layout="workbench" mode="实际操作；预置矩阵为本课摘编，最后一列为教学构造｜浏览器实时（排序与提示）／静态内容（预置矩阵）／教学构造（示范的最后一列）" notes="目的：让学生看到最后一列是自己的判断，决定整段综述的次序。
 范例引导：先按行读，念出&quot;某某认为&quot;的罗列感；切到按列；请两位学生各说一格&quot;关系&quot;。
 机制背景：矩阵按通用输入读入；responds_basis 三值（原文／推断／需回原文）原样显示，不由页面补；短引与页码可点回原刊页（本机材料包）。"><matrix-lab></matrix-lab><div slot="footer">D02 · 浏览器实时（排序与提示）／静态内容（预置矩阵）／教学构造（示范的最后一列）；讲义 1.1 @fig-matrix（前三列据茅海建文第 4 期第 198—208 页、第 6 期第 175 页与郭卫东文第 33 页</div></deck-slide>
-<deck-slide slide-id="D03" data-status="planned" kicker="D03 / 一 立场 1.2" header-title="哪些格子能交给模型" transition="做矩阵费时费力，哪些格子可以先交给模型？" theme="light" layout="flow4" mode="静态（研究数字）；分类与一致率为实际计算；重现性输出待课前运行｜浏览器实时（分类与一致率）／静态内容（研究数字）／保存结果回放（R1，可选）" notes="目的：让学生把&quot;封闭列可交、开放列不宜、最后一列不交&quot;变成自己的操作。
+<deck-slide slide-id="D03" data-status="prototype" kicker="D03 / 一 立场 1.2" header-title="哪些格子能交给模型" transition="做矩阵费时费力，哪些格子可以先交给模型？" theme="light" layout="flow4" mode="静态（研究数字）；分类与一致率为实际计算；重现性输出待课前运行｜浏览器实时（分类与一致率）／静态内容（研究数字）／保存结果回放（R1，可选）" notes="目的：让学生把&quot;封闭列可交、开放列不宜、最后一列不交&quot;变成自己的操作。
 范例引导：请学生先拖，再看数字；强调&quot;每格附原文短引与原刊页码&quot;这一条。
-机制背景：分类对照以讲义图 2 为准；研究数字照论文所报，不复算；一致率＝相同条数／总条数（第十周 label-agree）。"><planned-page page-id="D03"></planned-page><div slot="footer">D03 · 浏览器实时（分类与一致率）／静态内容（研究数字）／保存结果回放（R1，可选）；讲义 1.2 @fig-cols</div></deck-slide>
+机制背景：分类对照以讲义图 2 为准；研究数字照论文所报，不复算；一致率＝相同条数／总条数（第十周 label-agree）。"><cells-lab></cells-lab><div slot="footer">D03 · 浏览器实时（分类与一致率）／静态内容（研究数字）／保存结果回放（R1，可选）；讲义 1.2 @fig-cols</div></deck-slide>
 <deck-slide slide-id="D04" data-status="prototype" kicker="D04 / 一 立场 1.3" header-title="从列到段（演示①）" transition="矩阵做好了，先看模型会怎样写成段落。" theme="light" layout="workbench" mode="实际调用或预存回放（回答）；规则高亮与比例为实际计算；示范段为教学构造｜浏览器实时（高亮与比例）／保存结果回放（D1A、D1B）／教学构造（示范段）" notes="目的：让学生在模型的段落里亲手找&quot;我&quot;，找不到时明白缺的是最后一列。
 范例引导：先放 D1A 一份，请学生找三样东西；再放 D1B；最后放示范段，指最后一句。
 机制背景：规则表可增删（同文风规则表结构）；回答文字来自运行记录，页脚注明模型、日期、提示编号；趋同度用字符二元组 Jaccard（第十周 set-overlap）。"><isay-lab></isay-lab><div slot="footer">D04 · 浏览器实时（高亮与比例）／保存结果回放（D1A、D1B）／教学构造（示范段）；讲义 1.3 演示①与示范段（教学构造</div></deck-slide>
@@ -43,36 +45,36 @@
 <deck-slide slide-id="D06" data-status="prototype" kicker="D06 / 二 结构 2.2" header-title="结构诊断与登记" transition="逆向大纲摆出了结构，诊断判断哪里有问题。" theme="light" layout="workbench" mode="诊断表与登记为实际计算；模型意见为预存回放，未运行前用教学构造的预期意见｜浏览器实时（register）／保存结果回放（D2A 结构意见）／教学构造（预期典型意见）" notes="目的：让学生把对模型意见的处理写成可以出示的记录。
 范例引导：讲第 3 条（删去刘路生一段）为什么舍弃；请学生填一行。
 机制背景：register 组件四种视图共用一张表（kind=diagnosis）；处理取值采纳／修正／舍弃，讲义图 5 第 4 行的&quot;部分采纳&quot;按&quot;修正&quot;计并保留原文字（见出入表）。"><diag-lab></diag-lab><div slot="footer">D06 · 浏览器实时（register）／保存结果回放（D2A 结构意见）／教学构造（预期典型意见）；讲义 2.2 @fig-diag、@fig-reg</div></deck-slide>
-<deck-slide slide-id="D07" data-status="planned" kicker="D07 / 二 结构 2.3" header-title="深度审读（演示②′）" transition="同样的思路推到一篇已刊论文上。" theme="light" layout="workbench" mode="发现为预存回放；裁决与召回率为实际计算｜保存结果回放（D2P）／浏览器实时（召回率）" notes="目的：让学生看到裁决标准是原文，&quot;几家都这么说&quot;不算。
+<deck-slide slide-id="D07" data-status="prototype" kicker="D07 / 二 结构 2.3" header-title="深度审读（演示②′）" transition="同样的思路推到一篇已刊论文上。" theme="light" layout="workbench" mode="发现为预存回放；裁决与召回率为实际计算｜保存结果回放（D2P）／浏览器实时（召回率）" notes="目的：让学生看到裁决标准是原文，&quot;几家都这么说&quot;不算。
 范例引导：先讲三处植入；放六次发现；请学生为两条写裁决；最后看第三处（删限定）为什么最难查。
-机制背景：发现与植入的对应由学生勾选（经裁决才计入）；召回率用 recall-pool；D15 三处归属问题只作&quot;发现&quot;，不写结论（待核实事项 C-02）。"><planned-page page-id="D07"></planned-page><div slot="footer">D07 · 保存结果回放（D2P）／浏览器实时（召回率）；讲义 2.3 @fig-review 与演示②′（教师 2023 年论文第 156—159 页</div></deck-slide>
+机制背景：发现与植入的对应由学生勾选（经裁决才计入）；召回率用 recall-pool；D15 三处归属问题只作&quot;发现&quot;，不写结论（待核实事项 C-02）。"><review-lab></review-lab><div slot="footer">D07 · 保存结果回放（D2P）／浏览器实时（召回率）；讲义 2.3 @fig-review 与演示②′（教师 2023 年论文第 156—159 页</div></deck-slide>
 <deck-slide slide-id="D08" data-status="planned" kicker="D08 / 二 结构 2.3（进阶）" header-title="查出率、精确率与合并（进阶）" transition="深度审读的发现，要数清查出了几成。" theme="light" layout="flow4" mode="实际计算；小例为教学构造，演示②′运行后替换｜浏览器实时（recall-pool）／教学构造（小例假设数字）" notes="目的：讲清召回率与合并召回率，以及&quot;不重合才有收益&quot;。
 范例引导：先手算 |{E1,E2}∪{E2}|=2，2/3；再改一格看跳到 1。
 机制背景：recall-pool：查出须经裁决（matched=1）才计入；贪心顺序每步加入新增最多的系统。"><planned-page page-id="D08"></planned-page><div slot="footer">D08 · 浏览器实时（recall-pool）／教学构造（小例假设数字）；扩充部分甲二（Litvak 2026 表 1 与第 3 节</div></deck-slide>
-<deck-slide slide-id="D09" data-status="planned" kicker="D09 / 二 结构 2.3；4.3 讲评" header-title="史学深度审读流水线：确定性检查与植入错误自测" transition="能写成规则的检查，先用规则做。" theme="light" layout="workbench" mode="规则检查为实际计算；模型对照为预存回放；植入为学生实时操作｜浏览器实时（quote-check、borrow-scan、note-rules）／保存结果回放（模型对照）" notes="目的：让学生分清规则查得了的（相同与不同）与查不了的（转述是否被原页支持）。
+<deck-slide slide-id="D09" data-status="prototype" kicker="D09 / 二 结构 2.3；4.3 讲评" header-title="史学深度审读流水线：确定性检查与植入错误自测" transition="能写成规则的检查，先用规则做。" theme="light" layout="workbench" mode="规则检查为实际计算；模型对照为预存回放；植入为学生实时操作｜浏览器实时（quote-check、borrow-scan、note-rules）／保存结果回放（模型对照）" notes="目的：让学生分清规则查得了的（相同与不同）与查不了的（转述是否被原页支持）。
 范例引导：点运行；指出萧一山一句&quot;相同&quot;但未注转引要人判断；第 5 段说反了刘路生，规则查不出。
-机制背景：quote-check（第十周移入）＋borrow-scan＋note-rules；页码按片段首个非标点字（原脚本报第 197 页，见 algorithms.md）；跨页引文只报起始页。"><planned-page page-id="D09"></planned-page><div slot="footer">D09 · 浏览器实时（quote-check、borrow-scan、note-rules）／保存结果回放（模型对照）；扩充部分乙一（流水线六步与练习材料甲的实际运行）</div></deck-slide>
+机制背景：quote-check（第十周移入）＋borrow-scan＋note-rules；页码按片段首个非标点字（原脚本报第 197 页，见 algorithms.md）；跨页引文只报起始页。"><pipeline-lab></pipeline-lab><div slot="footer">D09 · 浏览器实时（quote-check、borrow-scan、note-rules）／保存结果回放（模型对照）；扩充部分乙一（流水线六步与练习材料甲的实际运行）</div></deck-slide>
 <deck-slide slide-id="D10" data-status="prototype" kicker="D10 / 三 修改 3.1" header-title="修改的几种意图" transition="第二节诊断出了问题，这一节动手改。先看修改有哪几种。" theme="light" layout="flow4" mode="实际计算；示范数据为教学构造｜浏览器实时（edit-stats）／教学构造（讲义图 10 四条）" notes="目的：让学生对每处修改只问一个问题：是否改变了判断或限定。
 范例引导：先读 ITERATER 定义；再改第 2 条处理，看采纳率变化。
 机制背景：edit-stats：采纳率 a_m/n_m，意思改变占比 n_mc/n；n_mc 按作者最终的意图判断计（讲义图 10 第 2、3 行&quot;意图&quot;列写&quot;清晰&quot;&quot;文体&quot;，理由写&quot;意思改变&quot;；甲三按意思改变计，见出入表）。"><intent-lab></intent-lab><div slot="footer">D10 · 浏览器实时（edit-stats）／教学构造（讲义图 10 四条）；讲义 3.1 @fig-intent、3.3 @fig-revtable</div></deck-slide>
-<deck-slide slide-id="D11" data-status="planned" kicker="D11 / 三 修改 3.2" header-title="文风：润色到哪里为止（文风演示）" transition="请模型&quot;润色一下&quot;，改的是文风。" theme="light" layout="workbench" mode="规则统计为实际计算；润色稿为预存回放；超额词示例数字为示意｜浏览器实时（style-count）／保存结果回放（S1、S2）／教学构造（超额词示例数字）" notes="目的：让学生逐处判断润色稿有没有越过四条界线。
+<deck-slide slide-id="D11" data-status="prototype" kicker="D11 / 三 修改 3.2" header-title="文风：润色到哪里为止（文风演示）" transition="请模型&quot;润色一下&quot;，改的是文风。" theme="light" layout="workbench" mode="规则统计为实际计算；润色稿为预存回放；超额词示例数字为示意｜浏览器实时（style-count）／保存结果回放（S1、S2）／教学构造（超额词示例数字）" notes="目的：让学生逐处判断润色稿有没有越过四条界线。
 范例引导：先看&quot;有……之虞&quot;&quot;试图&quot;是否被改强；再看&quot;国体&quot;与引号；再看归属是否泛化。
-机制背景：style-count 规则表驱动（正则或词表），每百字报告；差异用逐字对齐（第十周 seq-align）；超额词按 Kobak 方法 4.1—4.3。"><planned-page page-id="D11"></planned-page><div slot="footer">D11 · 浏览器实时（style-count）／保存结果回放（S1、S2）／教学构造（超额词示例数字）；讲义 3.2 @fig-bounds、@fig-ledger 与文风演示（教师 2023 年论文第 152—153 页）</div></deck-slide>
+机制背景：style-count 规则表驱动（正则或词表），每百字报告；差异用逐字对齐（第十周 seq-align）；超额词按 Kobak 方法 4.1—4.3。"><style-lab></style-lab><div slot="footer">D11 · 浏览器实时（style-count）／保存结果回放（S1、S2）／教学构造（超额词示例数字）；讲义 3.2 @fig-bounds、@fig-ledger 与文风演示（教师 2023 年论文第 152—153 页）</div></deck-slide>
 <deck-slide slide-id="D12" data-status="planned" kicker="D12 / 三 修改 3.2（进阶）" header-title="文风账本（进阶）" transition="把自己认可的改法写成成对的例子。" theme="light" layout="workbench" mode="编辑器为实际操作；账本检验为预存回放（待定）｜浏览器实时（编辑器）／保存结果回放（S3，可选）／静态内容（样板）" notes="目的：让学生分开&quot;认可一段改稿&quot;与&quot;认可一条规则&quot;。
 范例引导：从 D11 选一处差异，生成条目；把状态改成&quot;候选&quot;，看它不能被勾入提示。
 机制背景：ledger：七栏四状态；拼提示时只取状态为&quot;归纳认可&quot;&quot;直接要求&quot;的条目，&quot;原段认可&quot;只附例句。"><planned-page page-id="D12"></planned-page><div slot="footer">D12 · 浏览器实时（编辑器）／保存结果回放（S3，可选）／静态内容（样板）；扩充部分乙二</div></deck-slide>
 <deck-slide slide-id="D13" data-status="prototype" kicker="D13 / 三 修改 3.3" header-title="修订与理由：从 Word 修订到对照表" transition="修改要留下三样东西：改前的版本，改了哪里，为什么这样改。" theme="light" layout="workbench" mode="实际计算（浏览器内解析）｜浏览器实时（docx-revisions、edit-stats）／静态内容（丙一截图，待课前截取）" notes="目的：让学生看到修订者一栏可以自动区分模型与自己的修改。
 范例引导：导入夹具稿；指出修订者名；补一行理由；导出。
 机制背景：docx-revisions：DecompressionStream 解 zip，读 document.xml 的 w:ins／w:del／w:delText、comments.xml、footnotes.xml；只读。"><revisions-lab></revisions-lab><div slot="footer">D13 · 浏览器实时（docx-revisions、edit-stats）／静态内容（丙一截图，待课前截取）；讲义 3.3 @fig-revtable</div></deck-slide>
-<deck-slide slide-id="D14" data-status="planned" kicker="D14 / 三 修改 3.4" header-title="改三段（演示③）" transition="全班一起改练习材料甲的第 2、4、6 段。" theme="light" layout="workbench" mode="修订稿为预存回放；接受与拒绝为学生实时操作｜保存结果回放（(a)(b) 修订稿）／浏览器实时（接受拒绝与比例）" notes="目的：让学生体会两种方式里判断发生的时刻不同。
+<deck-slide slide-id="D14" data-status="prototype" kicker="D14 / 三 修改 3.4" header-title="改三段（演示③）" transition="全班一起改练习材料甲的第 2、4、6 段。" theme="light" layout="workbench" mode="修订稿为预存回放；接受与拒绝为学生实时操作｜保存结果回放（(a)(b) 修订稿）／浏览器实时（接受拒绝与比例）" notes="目的：让学生体会两种方式里判断发生的时刻不同。
 范例引导：先看 (a) 的修订者是本人；再看 (b) 的修订者是工具；逐条处理第 6 段。
-机制背景：两份修订稿按 .docx 导入（docx-revisions）；接受／拒绝只改页面内的预览，不写回文件。"><planned-page page-id="D14"></planned-page><div slot="footer">D14 · 保存结果回放（(a)(b) 修订稿）／浏览器实时（接受拒绝与比例）；讲义 3.4 演示③</div></deck-slide>
+机制背景：两份修订稿按 .docx 导入（docx-revisions）；接受／拒绝只改页面内的预览，不写回文件。"><three-lab></three-lab><div slot="footer">D14 · 保存结果回放（(a)(b) 修订稿）／浏览器实时（接受拒绝与比例）；讲义 3.4 演示③</div></deck-slide>
 <deck-slide slide-id="D15" data-status="prototype" kicker="D15 / 四 注释 4.1" header-title="脚注在 Word 里是什么" transition="最后一道关口是注释。" theme="light" layout="flow4" mode="模拟为实际计算；规范对照与域代码示例为静态｜浏览器实时（note-rules、分页模拟）／静态内容（规范短引、域代码示例）" notes="目的：让学生亲手造出跨页&quot;同上&quot;，看到它的来历。
 范例引导：先讲规范一线（陈澧—严耕望—仲伟民）；再拖分页线；再换样式。
 机制背景：note-rules 以脚注表（note_id, doc_page, number_on_page, text）判断；《历史研究》现行做法只写归纳结果，标&quot;非正式规定&quot;，不展示、不引用所据稿件。"><footnote-lab></footnote-lab><div slot="footer">D15 · 浏览器实时（note-rules、分页模拟）／静态内容（规范短引、域代码示例）；讲义 4.1 @fig-word</div></deck-slide>
-<deck-slide slide-id="D16" data-status="planned" kicker="D16 / 四 注释 4.2" header-title="模型与引文" transition="模型介入引文时，会出三种错。" theme="light" layout="workbench" mode="两头对与统计为实际计算；预置模型草拟目录为教学构造｜浏览器实时（匹配与报告）／教学构造（模型草拟目录）／静态内容（研究数字）" notes="目的：让学生知道参考文献目录可以请模型起草，但要两头对。
+<deck-slide slide-id="D16" data-status="prototype" kicker="D16 / 四 注释 4.2" header-title="模型与引文" transition="模型介入引文时，会出三种错。" theme="light" layout="workbench" mode="两头对与统计为实际计算；预置模型草拟目录为教学构造｜浏览器实时（匹配与报告）／教学构造（模型草拟目录）／静态内容（研究数字）" notes="目的：让学生知道参考文献目录可以请模型起草，但要两头对。
 范例引导：先放预置目录，看报告；再请学生找&quot;被改正&quot;的那一条。
-机制背景：按作者＋题名模糊匹配（字符二元组），学生可手改对应；年份、页码逐字比。"><planned-page page-id="D16"></planned-page><div slot="footer">D16 · 浏览器实时（匹配与报告）／教学构造（模型草拟目录）／静态内容（研究数字）；讲义 4.2（三条分工</div></deck-slide>
+机制背景：按作者＋题名模糊匹配（字符二元组），学生可手改对应；年份、页码逐字比。"><cite-lab></cite-lab><div slot="footer">D16 · 浏览器实时（匹配与报告）／教学构造（模型草拟目录）／静态内容（研究数字）；讲义 4.2（三条分工</div></deck-slide>
 <deck-slide slide-id="D17" data-status="prototype" kicker="D17 / 四 注释 4.3" header-title="逐条回原页（4.3 课堂练习）" transition="核对脚注是一件机械而不能省的事。" theme="light" layout="workbench" mode="规则辅助为实际计算；裁决为学生操作；答案只在教师模式｜浏览器实时（quote-check、borrow-scan、note-rules）／本地方案（原页面板与答案，本机材料包）" notes="目的：让学生逐条回原页，并看到规则辅助的边界。
 范例引导：计时十分钟；讲评按答案文件第四节的顺序。
 机制背景：答案来自 review/4.3练习答案_教师用.md，只进本机材料包的教师模式，线上版不含；黄彰健第 498 页显示&quot;待提供&quot;（A-07）。"><check-lab></check-lab><div slot="footer">D17 · 浏览器实时（quote-check、borrow-scan、note-rules）／本地方案（原页面板与答案，本机材料包）；讲义 4.3 @fig-check 与附录四练习材料甲</div></deck-slide>
@@ -82,9 +84,9 @@
 <deck-slide slide-id="D19" data-status="planned" kicker="D19 / 全讲（进阶）" header-title="多方法与多材料" transition="课上只来得及在练习材料甲上做每一步。" theme="light" layout="diagram" mode="静态信息与规则推荐｜静态内容（矩阵）／浏览器实时（推荐规则）" notes="目的：课后自选材料重做时的地图。
 范例引导：课上不讲；顶栏&quot;材料说明&quot;也能进入。
 机制背景：推荐规则写在页上（扩充部分乙〇）。"><planned-page page-id="D19"></planned-page><div slot="footer">D19 · 静态内容（矩阵）／浏览器实时（推荐规则）；扩充部分乙〇（材料 × 步骤，本课归纳）。</div></deck-slide>
-<deck-slide slide-id="D20" data-status="planned" kicker="D20 / 附录" header-title="材料包、数据与工具" transition="本讲用到的材料与课后可用的数据。" theme="light" layout="diagram" mode="静态信息；进阶一致率为实际计算｜静态内容（材料表、二维码）／浏览器实时（一致率）" notes="目的：交代每份材料的边界。
+<deck-slide slide-id="D20" data-status="prototype" kicker="D20 / 附录" header-title="材料包、数据与工具" transition="本讲用到的材料与课后可用的数据。" theme="light" layout="diagram" mode="静态信息；进阶一致率为实际计算｜静态内容（材料表、二维码）／浏览器实时（一致率）" notes="目的：交代每份材料的边界。
 范例引导：课上只指出 M-2、M-3 只在课堂分发。
-机制背景：材料表与页表、材料包清单同源；只列丁一 M-1—M-8。"><planned-page page-id="D20"></planned-page><div slot="footer">D20 · 静态内容（材料表、二维码）／浏览器实时（一致率）；扩充部分丁一（M-1—M-8）、丁二</div></deck-slide>
+机制背景：材料表与页表、材料包清单同源；只列丁一 M-1—M-8。"><materials-lab></materials-lab><div slot="footer">D20 · 静态内容（材料表、二维码）／浏览器实时（一致率）；扩充部分丁一（M-1—M-8）、丁二</div></deck-slide>
 <deck-slide slide-id="D21" data-status="prototype" kicker="D21 / 附录" header-title="概念页" transition="本讲的七个概念。" theme="light" layout="concepts" mode="静态内容｜静态内容（概念表）" notes="目的：随时可查的概念入口。
 范例引导：课上不单独讲。
 机制背景：由概念讲解表.typ 转出 glossary.json（课程技能 typ-concepts-to-md.mjs），公式对原 Typst 复核。"><concept-table></concept-table><div slot="footer">D21 · 静态内容（概念表）；概念讲解表.typ（7 条）。</div></deck-slide>
