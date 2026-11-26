@@ -3,7 +3,7 @@
 用法：python3 docs/week11/plan-src/make_page_map.py docs/week11/page-map.json
 依据：第十一周/demo/演示开发方案.md 第三节（页表草案 D00—D22）；讲义附录_扩充部分.typ 各节"演示接口"（有出入时以扩充部分为准，改动写在 changes）；
 案例整理.typ 各卡"学生可做""演示建议"；讲义.typ（2026-11-25 稿）附录一课堂调度表。字段同第十周（docs/week10/page-map.json），
-必填项按课程技能 history-demo-courseware 的 templates/page-map.schema.json。status 一律 planned（第一步不写页面）。"""
+必填项按课程技能 history-demo-courseware 的 templates/page-map.schema.json。status：第一批实现的页为 prototype，其余 planned。"""
 import json, sys
 
 def page(**k):
@@ -139,7 +139,7 @@ P.append(page(
     title='逆向大纲（演示②）', extension=['甲一'], cases=['C-04'], concepts=['逆向大纲'],
     question='我先写一份逆向大纲，模型再写一份：两份不一致的地方说明了什么？',
     steps=['自写主旨', '选功能', '功能序列条', '看模型那份'],
-    student_operation='七段并排，左列自写主旨（≤20 字），为每段从下拉菜单选功能；点开右列看模型主旨；把第 7 段的问题句移到第 1 段后，或把第 4 段拆成两段。',
+    student_operation='七段并排，左列自写主旨（≤20 字），为每段从下拉菜单选功能；点开右列看模型主旨；把第 7 段的问题移到第 1 段后（示范按钮），或导入 Word 稿时合并、改动段落。',
     observable_output='功能序列条（每段一个色块）随标注与移动重排；六类结构提示出现或消失（例如把问题句移到前面，"问题晚出"消失）；模型主旨旁显示提示全文与运行编号；"列出三处"与"若无写无"两种提示的输出可切换。',
     lesson_evidence='讲义 2.1 @fig-outline；扩充部分甲一（功能取值表、六类结构问题、提示写法）；威斯康星大学写作中心；Dang 等 2022；案例 C-04。',
     layers={'basic': '练习材料甲七段：两列主旨、功能下拉、序列条与提示。',
@@ -160,7 +160,7 @@ P.append(page(
     formula='无公式；以功能序列条代替。',
     missing=['C-05 课前记录（D2A、D2B）'],
     changes=['据扩充部分甲一：提示用甲一的写法（含功能取值表与"不超过二十字"），讲义 2.1 演示框的提示为简写；"若无写无"另跑一次（D2B）。',
-             '罗列规则分两级：段间（连续三段以上"学术史·背景"）与段内（连续三句以上以"人名＋年份"开头）；练习材料甲第 2 段靠段内一级报出。'],
+             '罗列规则分两级：段间（连续三段以上"学术史·背景"）与段内（连续三句以上以"人名＋年份"开头）；练习材料甲第 2 段靠段内一级报出。', '第一批未做"拖动、拆段"：改用"示范：把第 7 段的问题移到第 1 段后"按钮与 Word 稿导入时的续段合并。'],
 ))
 P.append(page(
     id='D06', section='二 结构 2.2', anchor='结构诊断（12分钟）；@fig-diag；@fig-reg', slot='60—72', minutes=12, layout='workbench',
@@ -529,6 +529,11 @@ P.append(page(
     transition='本讲点名的研究案例。',
     notes={'purpose': '课后自学的入口。', 'guide': '课上不单独讲。', 'mechanism': '卡片字段取自案例整理.typ 的十三栏；读取深度照抄"出处"一栏。'},
 ))
+
+# 第一批（2026-11-26）实现的页
+PROTO = {'D00', 'D01', 'D02', 'D04', 'D05', 'D06', 'D10', 'D13', 'D15', 'D17', 'D18', 'D21'}
+for p in P:
+    if p['id'] in PROTO: p['status'] = 'prototype'
 
 # 页号连续检查
 ids = [p['id'] for p in P]

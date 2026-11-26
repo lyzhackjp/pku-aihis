@@ -1,6 +1,6 @@
 [
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",
@@ -54,7 +54,7 @@
   "footer": "D00 · 静态内容（封面与图例）；讲义导入\"四道关口\"与中心问题"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",
@@ -135,7 +135,7 @@
   "footer": "D01 · 浏览器实时（片段比对）／静态内容（陈澧录文）；讲义导入（陈澧《引書法》，《陳澧集》第六册第 232—233 页）"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [
    "概念矩阵"
@@ -315,7 +315,7 @@
   "footer": "D03 · 浏览器实时（分类与一致率）／静态内容（研究数字）／保存结果回放（R1，可选）；讲义 1.2 @fig-cols"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "I say",
@@ -409,7 +409,7 @@
   "footer": "D04 · 浏览器实时（高亮与比例）／保存结果回放（D1A、D1B）／教学构造（示范段）；讲义 1.3 演示①与示范段（教学构造"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [
    "逆向大纲"
@@ -423,7 +423,8 @@
   ],
   "changes": [
    "据扩充部分甲一：提示用甲一的写法（含功能取值表与\"不超过二十字\"），讲义 2.1 演示框的提示为简写；\"若无写无\"另跑一次（D2B）。",
-   "罗列规则分两级：段间（连续三段以上\"学术史·背景\"）与段内（连续三句以上以\"人名＋年份\"开头）；练习材料甲第 2 段靠段内一级报出。"
+   "罗列规则分两级：段间（连续三段以上\"学术史·背景\"）与段内（连续三句以上以\"人名＋年份\"开头）；练习材料甲第 2 段靠段内一级报出。",
+   "第一批未做\"拖动、拆段\"：改用\"示范：把第 7 段的问题移到第 1 段后\"按钮与 Word 稿导入时的续段合并。"
   ],
   "missing": [
    "C-05 课前记录（D2A、D2B）"
@@ -474,7 +475,7 @@
    "功能序列条",
    "看模型那份"
   ],
-  "student_operation": "七段并排，左列自写主旨（≤20 字），为每段从下拉菜单选功能；点开右列看模型主旨；把第 7 段的问题句移到第 1 段后，或把第 4 段拆成两段。",
+  "student_operation": "七段并排，左列自写主旨（≤20 字），为每段从下拉菜单选功能；点开右列看模型主旨；把第 7 段的问题移到第 1 段后（示范按钮），或导入 Word 稿时合并、改动段落。",
   "observable_output": "功能序列条（每段一个色块）随标注与移动重排；六类结构提示出现或消失（例如把问题句移到前面，\"问题晚出\"消失）；模型主旨旁显示提示全文与运行编号；\"列出三处\"与\"若无写无\"两种提示的输出可切换。",
   "lesson_evidence": "讲义 2.1 @fig-outline；扩充部分甲一（功能取值表、六类结构问题、提示写法）；威斯康星大学写作中心；Dang 等 2022；案例 C-04。",
   "layers": {
@@ -507,7 +508,7 @@
   "footer": "D05 · 浏览器实时（outline-rules）／保存结果回放（D2A、D2B）／教学构造（练习材料甲）；讲义 2.1 @fig-outline"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "诊断登记",
@@ -868,7 +869,7 @@
   "footer": "D09 · 浏览器实时（quote-check、borrow-scan、note-rules）／保存结果回放（模型对照）；扩充部分乙一（流水线六步与练习材料甲的实际运行）"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [
    "修改意图"
@@ -1146,7 +1147,7 @@
   "footer": "D12 · 浏览器实时（编辑器）／保存结果回放（S3，可选）／静态内容（样板）；扩充部分乙二"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "修改对照",
@@ -1320,7 +1321,7 @@
   "footer": "D14 · 保存结果回放（(a)(b) 修订稿）／浏览器实时（接受拒绝与比例）；讲义 3.4 演示③"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [
    "域代码"
@@ -1494,7 +1495,7 @@
   "footer": "D16 · 浏览器实时（匹配与报告）／教学构造（模型草拟目录）／静态内容（研究数字）；讲义 4.2（三条分工"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "注释核验",
@@ -1571,7 +1572,7 @@
   "footer": "D17 · 浏览器实时（quote-check、borrow-scan、note-rules）／本地方案（原页面板与答案，本机材料包）；讲义 4.3 @fig-check 与附录四练习材料甲"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",
@@ -1775,7 +1776,7 @@
   "footer": "D20 · 静态内容（材料表、二维码）／浏览器实时（一致率）；扩充部分丁一（M-1—M-8）、丁二"
  },
  {
-  "status": "planned",
+  "status": "prototype",
   "aliases": [],
   "concepts": [],
   "through": "",

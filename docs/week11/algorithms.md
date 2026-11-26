@@ -1,9 +1,9 @@
 # 第十一周演示的计算模块：接口与固定例子
 
-候选，未经教师确认｜Claude（lesson-agent，lesson-demo），2026-11-25｜第一步交付：**只有接口与测试，模块未实现**（`apps/week11/prototype/w11-lib.js` 每个函数都抛"未实现（第一批）"）。
+候选，未经教师确认｜Claude（lesson-agent，lesson-demo），2026-11-25｜第一步交付接口与测试（2026-11-25）；第一批全部实现（2026-11-26），测试 70 项通过。
 
 - 模块挂在 `window.W11Lib`，Node 测试用 `require` 取用；纯函数，不碰 DOM。讲解页与贯穿页共用同一份算法（课程技能 history-demo-courseware 第 4 条）。
-- 测试：`apps/week11/tests/lib.test.mjs`（公开材料，35 项）、`local.test.mjs`（茅文节录上复现 `ext/quote_check_输出.txt`，5 项，只在教师本机跑）、`blocklist.test.mjs`（拦截检查本身，3 项，已通过）。2026-11-25 运行：lib 与 local 共 40 项全部因"未实现"失败（预期），blocklist 3 项通过。
+- 测试：`apps/week11/tests/lib.test.mjs`（公开材料，35 项）、`local.test.mjs`（茅文节录上复现 `ext/quote_check_输出.txt`，5 项，只在教师本机跑）、`blocklist.test.mjs`（拦截检查本身，3 项，已通过）。2026-11-26：lib 37 项、local 5 项、移入的第十周测试 25 项、blocklist 3 项，共 70 项通过。
 - 第十周移入（以函数为单位，第一批做，第十周原测试一并移来）：`quoteUnits`、`quoteCheck`、`splitPages`、`SequenceMatcher`、`jaccard`、`agreement`、`gate`、`fillTemplate`、`stripSecrets`、`orderRuns`、`pickRun`、`planPreclass`。
 - 不引入新的前端库。`.docx` 用浏览器原生 `DecompressionStream('deflate-raw')` 解 zip（Node 22 同样有），`DOMParser` 读 XML；Node 测试里 XML 用同一套轻量解析（第一批定，若需要库先列清单请教师确认）。
 
@@ -100,4 +100,4 @@
 
 ## 十、未刊稿拦截
 
-`scripts/check-blocklist.mjs`：在 `apps/week11`、`docs/week11`、构建产物与 `local-only/` 中查拦截词，含 `.docx`／`.zip` 内文字；命中退出码 1；拦截词文件（课程文件夹 `第十一周/demo/本机_拦截词.txt`，不入仓库，由教师提供）不存在或为空时退出码 2，算"未生效"。输出只显示首字与字数。
+`scripts/check-blocklist.mjs`（教师 2026-11-25：不用拦截词，疑似未刊稿直接进本机材料包；脚本保留备用）：在 `apps/week11`、`docs/week11`、构建产物与 `local-only/` 中查拦截词，含 `.docx`／`.zip` 内文字；命中退出码 1；拦截词文件（课程文件夹 `第十一周/demo/本机_拦截词.txt`，不入仓库，由教师提供）不存在或为空时退出码 2，算"未生效"。输出只显示首字与字数。

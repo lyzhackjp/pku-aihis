@@ -280,3 +280,16 @@ test('borrow-scan：原文中的控制字符（如 U+0082）与空白不影响�
   const dirty = SRC.replace('癸', '\u0082癸').replace('子', ' 子');
   assert.deepEqual(L.borrowScan('前言。己庚辛壬癸子丑寅卯，后语', dirty, { k: 5 }).fragments.map((f) => f.text), ['。己庚辛壬癸子丑寅卯']);
 });
+
+/* ---------------- D16 两头对（教学构造的"模型草拟目录"） ---------------- */
+test('bibCrossCheck：B6 目录里多出、注②（刘凤翰）目录里缺；B4 年份被改、B5 题名被改（删副题）；引号写法不同不算改动', () => {
+  const f = EX('footnotes.jia.example.json').footnotes, bib = EX('bib.jia.example.json').bib;
+  const r = L.bibCrossCheck(f, bib);
+  assert.deepEqual(r.orphans_in_bib, ['B6']); assert.deepEqual(r.missing_in_bib, ['2']);
+  assert.deepEqual(r.changed, [{ ref_id: 'B4', fields: ['year'] }, { ref_id: 'B5', fields: ['title'] }]);
+  for (const b of bib) assert.deepEqual(r.matched[b.ref_id], b.matched_note_ids, b.ref_id);
+});
+test('outline-rules：同一功能标两次不算"一段多事"（D05 把问题句移到第 1 段的示范）', () => {
+  const moved = PARAS.map((p) => (p.para_id === 'P1' ? { ...p, function2: '提出问题', answers: '告密消息的日期与途径' } : p));
+  assert.deepEqual(flags(L.outlineRules(moved), '一段多事'), ['P4', 'P7']);
+});
