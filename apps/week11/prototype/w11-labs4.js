@@ -260,18 +260,19 @@
     render() {
       const s = this.s;
       if (!s.rows.b && !this._lb) { this._lb = true; const b = Mat.docx('demo3b_reviser.docx'); if (b) this.load('b', b, '演示3b_reviser写入.docx'); }
+      if (!s.rows.a && !this._la2) { this._la2 = true; const a = Mat.docx('demo3a_manual.docx'); if (a) this.load('a', a, '演示3a_网页版建议手工落入.docx'); }
       if (s.rows.a && !VIEWS.a && !this._la) { this._la = true; }
-      const plan = this.plan(), notes = plan ? plan.replacements : [];
+      const plan = this.plan(), notesB = plan ? plan.replacements : [], planA = (PUB.demo3a && PUB.demo3a.plan) || null, notesA = planA ? planA.replacements : [];
       const col = (k, title, nat) => {
         const rows = s.rows[k];
-        if (!rows) return `<section class="w9-col"><h4>${title}</h4>${nat}<p class="w11-pending">${k === 'a' ? '待课前生成：教师把网页版（W3a）的建议在 Word 修订模式下手工落入练习材料甲，存为 demo/修订稿/演示3a_网页版建议手工落入.docx；课上从这里载入。这里不放构造的修订稿。' : '正在解析…'}</p><label class="pack-btn small">载入 .docx<input type="file" accept=".docx" data-up="${k}" hidden></label></section>`;
+        if (!rows) return `<section class="w9-col"><h4>${title}</h4>${nat}<p class="w11-pending">${k === 'a' ? '正在解析…（若无：演示③(a) 修订稿待生成，存为 demo/修订稿/演示3a_网页版建议手工落入.docx）' : '正在解析…'}</p><label class="pack-btn small">载入 .docx<input type="file" accept=".docx" data-up="${k}" hidden></label></section>`;
         const v = VIEWS[k] || [];
         const decs = Object.fromEntries(rows.map((r) => [r.edit_id, s.dec[r.id] || null]));
         const prev = v.filter((p) => p.segs.some((x) => x.edit_id)).map((p) => `<p>${L.previewSegs(p.segs, decs).map((x) => x.state === 'plain' ? esc(x.text) : x.state === 'ins' ? `<ins>${esc(x.text)}</ins>` : `<del>${esc(x.text)}</del>`).join('')}</p>`).join('');
         const st = L.editStats(rows.map((r) => ({ proposer: { kind: 'model' }, decision: s.dec[r.id] === 'modify' ? 'modify' : s.dec[r.id], intention: s.int[r.id] || null, before: r.removed, after: r.added })).filter((x) => x.decision || x.intention));
         return `<section class="w9-col"><h4>${title}</h4>${nat}<p class="sub">${esc(s.names[k])}｜修订者：<b>${esc([...new Set(rows.map((r) => r.author))].join('、'))}</b>｜修订 ${rows.length} 处 <label class="pack-btn small">换一份<input type="file" accept=".docx" data-up="${k}" hidden></label></p>
-          <table class="items w11-rev"><tr><th>改动</th><th>意图</th><th>处理</th><th>理由</th></tr>${rows.map((r) => { const n = k === 'b' ? notes.find((x) => x.new === r.added && x.old === r.removed) : null, mc = s.int[r.id] === 'meaning-changed', why = (s.why[r.id] || '').trim();
-            return `<tr><td>${r.removed ? `<del>${esc(r.removed)}</del>` : ''}${r.added ? `<ins>${esc(r.added)}</ins>` : ''}${n ? `<div class="sub">工具自述：${esc(n.note)}</div>` : ''}</td>
+          <table class="items w11-rev"><tr><th>改动</th><th>意图</th><th>处理</th><th>理由</th></tr>${rows.map((r) => { const n = (k === 'b' ? notesB : notesA).find((x) => x.new === r.added && x.old === r.removed), mc = s.int[r.id] === 'meaning-changed', why = (s.why[r.id] || '').trim();
+            return `<tr><td>${r.removed ? `<del>${esc(r.removed)}</del>` : ''}${r.added ? `<ins>${esc(r.added)}</ins>` : ''}${n ? `<div class="sub">${k === 'b' ? '工具自述' : '取舍理由'}：${esc(n.note)}</div>` : ''}</td>
             <td>${sel(`data-int="${esc(r.id)}"`, s.int[r.id], S.iterater.map(([a, z]) => [a, z]), '（选）')}</td>
             <td><button class="small ${s.dec[r.id] === 'accept' ? 'on' : ''}" data-dec="${esc(r.id)}|accept" ${mc && !why ? 'disabled title="意思改变一类不能一键接受：先写理由"' : ''}>接受</button> <button class="small ${s.dec[r.id] === 'reject' ? 'on' : ''}" data-dec="${esc(r.id)}|reject">拒绝</button></td>
             <td><input data-why="${esc(r.id)}" value="${esc(s.why[r.id] || '')}" size="16"></td></tr>`; }).join('')}</table>
@@ -280,7 +281,7 @@
       };
       const audit = PUB.demo3b && PUB.demo3b.audit;
       this.out(`<p class="sub">全班逐条决定接受或拒绝，选意图、写理由。页面不提供"全部接受"；"意思改变"一类要先写理由才能接受。判断发生在"敲进去"的时候，还是"点接受"的时候？</p>
-        <div class="w11-stack">${col('a', '(a) 网页版建议，手工落入', `<p><span class="w9-badge web-paste">网页版</span> 修订者是教师本人：每一处都经过一次"要不要敲进去"的判断。</p>${cardBox('W3a')}${answerCell('W3a', 'gemini').html}`)}
+        <div class="w11-stack">${col('a', '(a) 网页版建议，逐条取舍后落入', `<p><span class="w9-badge web-paste">网页版</span> 修订者名为"作者"：每一处都经过一次"要不要敲进去"的判断。${planA ? `这一份据 ChatGPT 第 1 次的十五条建议，取舍由 Claude 经教师授权作出（2026-11-26）：采纳 ${notesA.length - 1}、修改后采纳 1、未采纳 ${planA.skipped.length}（理由见下）。` : ''}</p>${cardBox('W3a')}<div class="w9-cols"><section class="w9-col">${answerCell('W3a', 'chatgpt').html}</section><section class="w9-col">${answerCell('W3a', 'gemini').html}</section></div>${planA ? `<details><summary>未采纳的 ${planA.skipped.length} 条及理由</summary><ul>${planA.skipped.map((x) => `<li>第 ${esc(String(x.item))} 条：${esc(x.why)}</li>`).join('')}</ul></details>` : ''}`)}
           ${col('b', '(b) word-paper-tracked-reviser 写入', `<p><span class="w9-badge replay">预存回放</span> 修订者是工具名。修订计划由 Claude Opus 5.5 按"使结构更清楚"拟定（2026-11-26，本课件制作线程），工具写入；${audit ? `审计${audit.passed ? '通过' : '未通过'}：计划外改动 ${audit.unexpected_changed_parts.length} 处，脚注部件未改动` : ''}。这不是 DeepSeek／Kimi 的输出，也没有在带 Zotero 域代码的稿子上验证（域代码一项未验证）。</p>`)}</div>
         <p><button class="small" data-x="send">把已处理的修订送入贯穿记录（修改对照表，D18）</button> <button class="small" data-x="csv">导出修改对照表（.csv）</button></p>`);
     }

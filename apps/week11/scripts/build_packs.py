@@ -168,7 +168,8 @@ def js(name, var, obj, head):
         f.write(f'/* {head} 由 scripts/build_packs.py 生成，请勿手改。 */\nwindow.{var} = ' + json.dumps(obj, ensure_ascii=False, indent=0) + ';\n')
 REV = os.path.join(W11, 'demo', '修订稿')
 docs = {'jia_draft.docx': b64(os.path.join(FX, 'jia_draft.docx')), 'jia_revisions.docx': b64(os.path.join(FX, 'jia_revisions.docx')),
-        'demo3b_reviser.docx': b64(os.path.join(REV, '演示3b_reviser写入.docx'))}
+        'demo3b_reviser.docx': b64(os.path.join(REV, '演示3b_reviser写入.docx')), 'demo3a_manual.docx': b64(os.path.join(REV, '演示3a_网页版建议手工落入.docx'))}
+demo3a = {'plan': json.load(open(os.path.join(REV, '演示3a_取舍与修订计划.json'), encoding='utf-8')), 'audit': json.load(open(os.path.join(REV, '演示3a_审计.json'), encoding='utf-8'))}
 demo3b = {'plan': json.load(open(os.path.join(REV, '演示3b_修订计划.json'), encoding='utf-8')), 'audit': json.load(open(os.path.join(REV, '演示3b_审计.json'), encoding='utf-8')),
           'log': rd(os.path.join(REV, '演示3b_运行日志.txt')).split('\n')[0]}
 # 案例整理（D22）：解析 第十一周/案例整理.typ 的 #case(...)，十三栏原样转成纯文字（去 typst 标记）
@@ -227,7 +228,7 @@ for c in cases: assert all(c.get(f) for f in ['title', 'lecture', 'question', 'm
 iterater = json.load(open(os.path.join(ROOT, 'docs/week11/data/iterater_sample10.json'), encoding='utf-8'))
 li_pub = {'source': li['source'], 'citation': LI_CIT, 'note': li['_note'], 'paragraphs': li['paragraphs'], 'notes': {str(p['page']): p['notes'] for p in li['pages'] if p['notes']}}
 local_docx = {'book_preset.docx': b64(os.path.join(MAT, '书稿_明治中期一节_带修订_本机.docx'))}
-js('w11-public.js', 'W11_PUBLIC', {'generated': gen, 'packs': [{'id': 'w11-materials', 'title': '第十一周课堂材料', 'entries': pub}], 'replays': [], 'docx': docs, 'demo3b': demo3b, 'li2023': li_pub, 'cases': cases, 'iterater': iterater, 'ledger': {'entries': LEDGER, 'source': 'style/LEDGER.md（课程文风账本，L-001—L-019）', 'names_removed': name_hits, 's3': LEDGER3}},
+js('w11-public.js', 'W11_PUBLIC', {'generated': gen, 'packs': [{'id': 'w11-materials', 'title': '第十一周课堂材料', 'entries': pub}], 'replays': [], 'docx': docs, 'demo3b': demo3b, 'demo3a': demo3a, 'li2023': li_pub, 'cases': cases, 'iterater': iterater, 'ledger': {'entries': LEDGER, 'source': 'style/LEDGER.md（课程文风账本，L-001—L-019）', 'names_removed': name_hits, 's3': LEDGER3}},
    '公开材料：练习材料甲（教学构造）、修订夹具（程序构造）、演示③(b) 修订稿、案例整理 23 案、ITERATER 十条（Apache-2.0）、讲义图 1 摘编、陈澧录文、教师 2023 年论文刊本文字；茅、郭、刘原文、会议录与植入副本只留元数据。')
 js('w11-cards.js', 'W11_CARDS', cards, '条件卡（模板＋材料编号，不含材料正文）。')
 k9 = json.load(open(os.path.join(ROOT, 'docs/week09/schemas/importer-kinds.w09.json'), encoding='utf-8'))
